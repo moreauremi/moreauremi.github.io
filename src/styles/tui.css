@@ -262,6 +262,12 @@ html[data-view='tui'] body {
 /* --- Petits écrans : une seule colonne -------------------------------------- */
 
 @media (max-width: 720px) {
+  /* Barre du haut réduite à l'essentiel, pour tenir sur une ligne */
+  .tui-bar-title,
+  .tui-bar-extra {
+    display: none;
+  }
+
   .home {
     grid-template-columns: minmax(0, 1fr);
     gap: 20px;

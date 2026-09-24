@@ -14,6 +14,12 @@ export default defineConfig({
   // Plugin maison : convertit les fichiers Markdown de content/ au build
   plugins: [contentPlugin()],
 
+  // Constantes remplacées dans le code au moment du build.
+  // __BUILD_DATE__ : date de génération du site, affichée dans la vue jury.
+  define: {
+    __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)),
+  },
+
   build: {
     // Dossier de sortie du build (valeur par défaut, écrite ici pour être explicite).
     // C'est ce dossier, 100 % statique, que nginx servira.

@@ -34,6 +34,8 @@ src/router.js           routage par hash (#/presentation, #/realisations/nas…)
 src/content.js          accès au contenu (configuration + fiches) pour le reste du code
 src/blocks.js           blocs de contenu communs à RémiOS et à la vue jury
 src/tui/                interface façon whiptail : boîte, menu, rubriques, fiches, visionneuse
+src/jury/               vue rapide jury, sobre et imprimable
+src/ui/                 barre fixe en haut à droite (vue jury)
 src/utils/              petites fonctions partagées (HTML sûr, dates)
 src/styles/index.css    point d'entrée des styles, importe les fichiers ci-dessous
 src/styles/fonts.css    déclaration de la police auto-hébergée
@@ -74,6 +76,7 @@ Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, i
 - **Routage par hash.** Tout le site tient dans `index.html` ; la partie après `#` indique l'écran à afficher (`#/veille`, `#/realisations/nas`). Chaque écran a une URL partageable, les boutons Précédent/Suivant fonctionnent, et le serveur n'a besoin d'aucune règle de réécriture.
 - **Un contenu, deux habillages.** Les rubriques sont produites par `src/blocks.js` ; l'interface RémiOS et la vue jury l'habillent différemment. Le tableau croisé réalisations × compétences est généré à partir des fiches : il est toujours à jour.
 - **Accessibilité du menu.** Les rubriques sont de vrais liens `<a>` et les actions de vrais `<button>` : souris, tactile, clavier et lecteurs d'écran fonctionnent sans code spécial. À l'ouverture d'une boîte, le focus passe sur son titre et une zone `aria-live` annonce la rubrique ouverte.
+- **Vue rapide jury.** Accessible en un clic depuis n'importe quel écran (bouton jaune en haut à droite, premier élément atteint avec Tab) ou directement par l'URL `#/jury`. Fond clair, police système, aucune animation, tout sur une page. La feuille `@media print` retire les boutons, écrit l'adresse des liens en clair et évite de couper un bloc en bas de page.
 - **Visionneuse d'images native.** Les captures s'agrandissent dans un élément HTML `<dialog>` : le navigateur gère lui-même le piège du focus, la touche Échap et le retour du focus à la fermeture. Sans JavaScript, le lien ouvre simplement l'image.
 - **Police auto-hébergée.** IBM Plex Mono est servie par le site lui-même, pas par Google Fonts : le site fonctionne sans accès extérieur (utile sur un réseau fermé ou en démonstration hors ligne) et aucune donnée de visite n'est transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 ko au total). La police principale est préchargée pour que le boot s'affiche directement dans la bonne police.
 - **Variables CSS (« tokens »).** Toutes les couleurs de la maquette sont définies une seule fois dans `tokens.css`. Les tailles de texte sont en `rem` : si le visiteur agrandit le texte dans son navigateur, le site suit (accessibilité).
@@ -86,7 +89,7 @@ Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, i
 - [x] 3. Contenu en Markdown et fiches d'exemple
 - [x] 4. Menu principal et navigation
 - [x] 5. Fiches de réalisation et visionneuse d'images
-- [ ] 6. Vue rapide jury imprimable
+- [x] 6. Vue rapide jury imprimable
 - [ ] 7. Séquence de démarrage
 - [ ] 8. Terminal caché
 - [ ] 9. Sons de démarrage

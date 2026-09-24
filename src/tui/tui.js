@@ -27,7 +27,7 @@ const DEFAULT_TITLE = 'RémiOS — Portfolio BTS SIO de Rémi Moreau';
 export function createTui(root, { onReboot }) {
   root.innerHTML = `
     <header class="tui-bar">
-      <span class="tui-bar-tty">RémiOS 1.0 (tty1)</span>
+      <span class="tui-bar-tty">RémiOS 1.0 <span class="tui-bar-extra">(tty1)</span></span>
       <span class="tui-bar-title">Portfolio BTS SIO SISR</span>
     </header>
     <div class="tui-stage"></div>

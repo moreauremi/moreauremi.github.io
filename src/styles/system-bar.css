@@ -1,0 +1,46 @@
+/* ==========================================================================
+   Barre fixe en haut à droite : son, vue rapide jury
+   Placée au-dessus de tout le reste, même de l'écran de démarrage.
+   ========================================================================== */
+
+.system-bar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 var(--gutter);
+  /* Encoche des iPhone en mode paysage */
+  padding-right: max(var(--gutter), env(safe-area-inset-right));
+}
+
+/* Bouton « Vue rapide jury » : jaune, pour être repéré immédiatement */
+.system-bar-jury {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 4px 12px;
+  background: var(--tui-sel-key);
+  color: var(--tui-ink);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 var(--tui-shadow);
+}
+
+.system-bar-jury:hover {
+  text-decoration: underline;
+}
+
+/* Sur fond bleu ou noir, contour de focus blanc bien visible */
+.system-bar :focus-visible {
+  outline: 2px solid var(--text-bright);
+  outline-offset: 2px;
+}
+
+/* Dans la vue jury, la page a ses propres boutons : la barre est inutile */
+html[data-view='jury'] .system-bar {
+  display: none;
+}

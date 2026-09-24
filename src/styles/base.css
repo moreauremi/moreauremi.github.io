@@ -38,6 +38,13 @@ input {
   color: inherit;
 }
 
+/* L'attribut HTML « hidden » doit toujours cacher l'élément, même si une
+   autre règle lui donne un display (flex, grid…) : sans cette ligne, un
+   `.tui { display: flex }` l'emporterait et la vue resterait visible. */
+[hidden] {
+  display: none !important;
+}
+
 /* Seules les graisses 400 et 600 sont embarquées : le gras utilise la 600
    (sinon le navigateur fabriquerait un faux gras, moins net). */
 strong,

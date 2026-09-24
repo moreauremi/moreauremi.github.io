@@ -1,0 +1,84 @@
+/* ==========================================================================
+   Impression (surtout la vue jury : bouton « Imprimer » ou Ctrl+P)
+   Noir sur blanc, sans boutons ni éléments interactifs, adresses des liens
+   écrites en clair puisqu'on ne peut pas cliquer sur du papier.
+   ========================================================================== */
+
+@media print {
+  @page {
+    margin: 15mm;
+  }
+
+  /* Éléments inutiles sur papier */
+  .system-bar,
+  .boot,
+  .boot-skip,
+  .tui-hints,
+  .jury-actions,
+  .jury-toc,
+  .jury-back,
+  .lightbox,
+  .terminal {
+    display: none !important;
+  }
+
+  html,
+  body,
+  .jury {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .jury {
+    font-size: 11pt;
+  }
+
+  .jury-page {
+    max-width: none;
+    padding: 0;
+  }
+
+  .jury a {
+    color: #000000;
+  }
+
+  /* Adresse des liens externes et des fiches après le texte du lien */
+  .jury a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    overflow-wrap: anywhere;
+  }
+
+  .jury a[data-print-url]::after {
+    content: ' (' attr(data-print-url) ')';
+    font-weight: 400;
+    font-size: 0.8em;
+    overflow-wrap: anywhere;
+  }
+
+  /* Ne pas couper un bloc ou un titre en bas de page */
+  .jury-item,
+  .fiche-meta,
+  .matrix tr,
+  figure {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  /* Le tableau croisé s'imprime en entier, sans barre de défilement */
+  .table-scroll {
+    overflow: visible;
+  }
+
+  /* Les repères [À COMPLÉTER] restent visibles, encadrés */
+  mark.ph {
+    border: 1px dashed #000000;
+    background: none;
+    color: #000000;
+  }
+}
