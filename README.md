@@ -22,10 +22,16 @@ npm run preview  # sert le contenu de dist/ pour vérifier le build avant de le 
 ## Organisation des fichiers
 
 ```
+content/site.config.js  configuration du contenu : identité, contact, PDF, veille, compétences
+content/pages/          présentation et veille (Markdown)
+content/realisations/   une fiche Markdown par réalisation
 index.html              page unique du site : meta, Open Graph, préchargement de la police
 vite.config.js          configuration du build
-public/                 fichiers copiés tels quels dans dist/ (favicon.svg…)
+plugins/                plugin Vite maison qui convertit le Markdown au build
+public/                 fichiers copiés tels quels dans dist/ (favicon, captures, PDF)
 src/main.js             point d'entrée du JavaScript
+src/content.js          accès au contenu (configuration + fiches) pour le reste du code
+src/utils/              petites fonctions partagées (HTML sûr, dates)
 src/styles/index.css    point d'entrée des styles, importe les fichiers ci-dessous
 src/styles/fonts.css    déclaration de la police auto-hébergée
 src/styles/tokens.css   variables de design : toutes les couleurs et tailles du site
@@ -34,11 +40,34 @@ src/assets/fonts/       IBM Plex Mono en woff2 (400 et 600) + licence OFL
 reference/              maquette HTML validée au départ du projet (hors build)
 ```
 
+## Modifier le contenu
+
+Tout le contenu est dans `content/` : aucune ligne de code à toucher.
+
+- **Informations générales** (contact, sujet de veille, compétences, PDF) : `content/site.config.js`, commenté ligne par ligne.
+- **Ajouter une réalisation** : copier une fiche de `content/realisations/`, la renommer (minuscules, chiffres et tirets : `supervision-zabbix.md`), puis remplir le bloc d'en-tête :
+
+  ```yaml
+  titre: "Supervision du réseau avec Zabbix"
+  slug: supervision-zabbix        # identique au nom du fichier
+  type: entreprise                # entreprise, formation ou perso
+  date: 2026-11                   # AAAA, AAAA-MM ou AAAA-MM-JJ
+  statut: terminé
+  resume: "Une phrase qui résume la réalisation."
+  technos: [Zabbix, Debian]
+  competences: [C1, C4]           # codes définis dans site.config.js
+  ```
+- **Captures d'écran** : déposer l'image dans `public/captures/<slug>/`, puis l'insérer dans la fiche avec `![Description](captures/<slug>/image.webp "Légende")`.
+- Les textes `[À COMPLÉTER]` sont surlignés en jaune sur le site pour repérer ce qui reste à rédiger.
+
+Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, image ou PDF introuvable, compétence inexistante…), `npm run dev` et `npm run build` affichent un message qui indique le fichier et la correction à faire.
+
 ## Choix techniques
 
 - **Vite + JavaScript sans framework.** Le site n'a pas besoin de React ou Vue : quelques modules JavaScript suffisent, le code reste court et facile à expliquer, et le navigateur n'a presque rien à télécharger. Vite apporte le serveur de développement (rechargement instantané) et le build optimisé : fichiers minifiés et noms de fichiers « hashés » (`index-3f9a2c.js`), ce qui permet au serveur de demander aux navigateurs de les garder en cache très longtemps.
 - **Chemins relatifs (`base: './'`).** Le site généré fonctionne à la racine d'un domaine comme dans un sous-dossier derrière un reverse proxy, sans reconfiguration.
 - **Aucune dépendance au moment de l'exécution.** Les outils (Vite, et plus tard le lecteur de Markdown) ne servent qu'à fabriquer le site ; ils sont déclarés en `devDependencies` et ne sont pas envoyés aux visiteurs.
+- **Contenu en Markdown, converti au build.** Chaque réalisation est un fichier texte lisible et modifiable sans connaître le code. Un plugin Vite maison (`plugins/vite-plugin-content.js`) lit le bloc d'en-tête avec `gray-matter`, convertit le texte en HTML avec `marked` et vérifie les champs. Ces deux bibliothèques ne tournent qu'au build : le visiteur reçoit du HTML déjà prêt.
 - **Police auto-hébergée.** IBM Plex Mono est servie par le site lui-même, pas par Google Fonts : le site fonctionne sans accès extérieur (utile sur un réseau fermé ou en démonstration hors ligne) et aucune donnée de visite n'est transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 ko au total). La police principale est préchargée pour que le boot s'affiche directement dans la bonne police.
 - **Variables CSS (« tokens »).** Toutes les couleurs de la maquette sont définies une seule fois dans `tokens.css`. Les tailles de texte sont en `rem` : si le visiteur agrandit le texte dans son navigateur, le site suit (accessibilité).
 - **Réduction des animations.** Si le système demande de réduire les animations (réglage d'accessibilité), les transitions CSS sont désactivées.
@@ -47,7 +76,7 @@ reference/              maquette HTML validée au départ du projet (hors build)
 
 - [x] 1. Initialisation du projet (Vite, git, configuration de base)
 - [x] 2. Police auto-hébergée et thème RémiOS
-- [ ] 3. Contenu en Markdown et fiches d'exemple
+- [x] 3. Contenu en Markdown et fiches d'exemple
 - [ ] 4. Menu principal et navigation
 - [ ] 5. Fiches de réalisation et visionneuse d'images
 - [ ] 6. Vue rapide jury imprimable

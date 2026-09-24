@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
+  <!-- Image provisoire : remplacée par les vraies captures d'écran dans chaque fiche -->
+  <rect width="1200" height="675" fill="#e9dfa8"/>
+  <rect x="24" y="24" width="1152" height="627" fill="none" stroke="#5a4a00" stroke-width="4" stroke-dasharray="18 12"/>
+  <text x="600" y="318" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="44" font-weight="600" fill="#5a4a00">[ Capture d'écran à venir ]</text>
+  <text x="600" y="382" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="26" fill="#5a4a00">public/captures/&lt;slug&gt;/nom-du-fichier.webp</text>
+</svg>
