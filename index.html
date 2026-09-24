@@ -6,7 +6,7 @@
          se redimensionne au lieu d'être recouverte : le terminal reste visible -->
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+      content="width=device-width, initial-scale=1, interactive-widget=resizes-content"
     />
     <title>RémiOS — Portfolio BTS SIO de Rémi Moreau</title>
     <meta
@@ -17,13 +17,15 @@
     <!-- Couleur de la barre du navigateur sur mobile : noir, comme l'écran de boot -->
     <meta name="theme-color" content="#000000" />
 
-    <!-- Icône de l'onglet (fichier copié tel quel depuis public/) -->
+    <!-- Icônes : onglet du navigateur, et écran d'accueil sur iPhone/iPad
+         (fichiers copiés tels quels depuis public/) -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <!-- Open Graph : titre et description affichés quand le lien est partagé
          (LinkedIn, Teams, Discord…). L'adresse du site et l'image d'aperçu
-         seront ajoutées plus tard : elles doivent être des URL complètes,
-         donc elles attendent un nom de domaine. -->
+         doivent être des URL complètes : le build les ajoute automatiquement
+         dès que « urlPublique » est renseignée dans content/site.config.js. -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content="RémiOS" />

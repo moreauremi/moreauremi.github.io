@@ -24,5 +24,8 @@ export default defineConfig({
     // Dossier de sortie du build (valeur par défaut, écrite ici pour être explicite).
     // C'est ce dossier, 100 % statique, que nginx servira.
     outDir: 'dist',
+    // Le site n'a qu'un seul fichier JavaScript : le petit code de
+    // préchargement des modules que Vite ajoute par défaut est inutile.
+    modulePreload: { polyfill: false },
   },
 });

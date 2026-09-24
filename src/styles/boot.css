@@ -62,19 +62,23 @@
 
 /* --- Journal ---------------------------------------------------------------- */
 
-/* Les lignes sont calées en bas de l'écran : chaque nouvelle ligne pousse
-   les précédentes vers le haut, où elles sortent de l'écran. C'est le CSS qui
-   fait « défiler » le journal, sans aucun calcul en JavaScript. */
+/* Le journal est une grille fixe de lignes (voir sequence.js) : chaque ligne
+   a une hauteur fixe et ne passe jamais à la ligne ; un texte trop long pour
+   l'écran est simplement coupé, comme dans une vraie console. */
 .boot-log {
   position: absolute;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
   overflow: hidden;
   padding: 12px 14px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  /* Ce qui se passe dans le journal ne peut pas modifier le reste de la page :
+     le navigateur limite ses recalculs à cette zone. */
+  contain: strict;
+}
+
+.boot-row {
+  height: calc(var(--line-height) * 1em);
+  overflow: hidden;
+  white-space: pre;
 }
 
 .boot-ts {
@@ -117,7 +121,7 @@
 .boot-skip {
   position: fixed;
   right: var(--gutter);
-  bottom: calc(var(--gutter) + env(safe-area-inset-bottom, 0px));
+  bottom: var(--gutter);
   z-index: 25;
   min-height: 44px;
   padding: 10px 14px;

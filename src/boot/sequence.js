@@ -15,11 +15,13 @@
 //
 // Performance (60 images par seconde) :
 //   - une seule boucle requestAnimationFrame : le navigateur l'appelle avant
-//     chaque image, et elle affiche d'un coup toutes les lignes dont l'heure
-//     est venue (ajout groupé : un seul recalcul de mise en page par image) ;
-//   - le nombre de lignes présentes dans la page est limité à la hauteur de
-//     l'écran : les plus anciennes sont supprimées ;
-//   - le défilement vient du CSS (lignes calées en bas), sans calcul en JS ;
+//     chaque image, et elle traite d'un coup toutes les lignes dont l'heure
+//     est venue (un seul recalcul de mise en page par image) ;
+//   - l'écran du journal est une grille fixe de lignes (autant que la hauteur
+//     de l'écran en contient), créées une seule fois. Pour faire défiler, on
+//     réécrit seulement leur texte : aucun élément n'est ajouté, supprimé ni
+//     déplacé, donc pas de « décalage de mise en page » (mesure CLS de
+//     Lighthouse) et un nombre de lignes dans la page qui ne grandit jamais ;
 //   - le seul effet animé, le fondu final, n'utilise que `opacity`.
 // =============================================================================
 
@@ -45,8 +47,8 @@ export function createBoot({ overlay, skipButton, content, onFinish, hooks = {} 
   let startTime = 0;
   let frameId = 0;
   let log = null;
-  let command = null;
-  let maxLines = 60;
+  let rows = []; // emplacements de lignes, créés une fois au début du journal
+  let shown = []; // lignes actuellement affichées, de haut en bas
 
   // Réglage système « réduire les animations » (accessibilité) : pas de boot
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -64,14 +66,12 @@ export function createBoot({ overlay, skipButton, content, onFinish, hooks = {} 
     overlay.hidden = false;
     skipButton.hidden = false;
     log = overlay.querySelector('.boot-log');
-    command = null;
+    rows = [];
+    shown = [];
 
     // Le menu reste dans la page mais devient « inerte » : ni focus clavier,
     // ni clic, ni lecteur d'écran tant que le calque est affiché.
     content.inert = true;
-
-    // Assez de lignes pour remplir l'écran, pas davantage
-    maxLines = Math.ceil(window.innerHeight / 16) + 4;
 
     events = buildTimeline();
     next = 0;
@@ -83,22 +83,24 @@ export function createBoot({ overlay, skipButton, content, onFinish, hooks = {} 
   // Appelée par le navigateur avant chaque image affichée
   function frame(now) {
     const elapsed = now - startTime;
-    const batch = document.createDocumentFragment();
     let newLines = 0;
+    let changed = false;
 
     while (next < events.length && events[next].at <= elapsed) {
       const event = events[next++];
       if (event.type === 'line') {
-        batch.append(renderLine(event.line));
+        shown.push(event.line);
         newLines++;
+        changed = true;
       } else if (event.type === 'type') {
-        flush(batch);
-        command.textContent += event.char;
+        shown.at(-1).typed += event.char; // la dernière ligne est l'invite
+        changed = true;
       } else if (event.type === 'countdown') {
         overlay.querySelector('[data-countdown]').textContent = event.value;
       } else if (event.type === 'show-log') {
         overlay.querySelector('.grub').remove();
         log.hidden = false;
+        createRows();
       } else if (event.type === 'leave') {
         overlay.classList.add('is-leaving'); // fondu CSS sur opacity
       } else if (event.type === 'end') {
@@ -107,16 +109,38 @@ export function createBoot({ overlay, skipButton, content, onFinish, hooks = {} 
       }
     }
 
-    flush(batch);
+    if (changed) paintRows();
     if (newLines > 0) hooks.onLines?.(newLines);
     frameId = requestAnimationFrame(frame);
   }
 
-  // Ajoute d'un coup les lignes préparées, puis retire les plus anciennes
-  function flush(batch) {
-    if (!batch.hasChildNodes()) return;
-    log.append(batch);
-    while (log.childElementCount > maxLines) log.firstElementChild.remove();
+  // Crée les emplacements de lignes : autant que l'écran peut en afficher.
+  // La hauteur d'une ligne est lue une seule fois dans le CSS.
+  function createRows() {
+    const style = getComputedStyle(log);
+    // (repli si le navigateur renvoie « normal » : taille du texte × 1,45)
+    const rowHeight = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.45;
+    const available = window.innerHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+    const count = Math.max(5, Math.floor(available / rowHeight));
+    rows = Array.from({ length: count }, () => {
+      const row = document.createElement('div');
+      row.className = 'boot-row';
+      return row;
+    });
+    log.append(...rows);
+  }
+
+  // Affiche les dernières lignes dans les emplacements, de haut en bas. Quand
+  // l'écran est plein, les lignes « remontent » d'un cran : c'est le défilement.
+  // Seuls les emplacements dont le contenu change sont réécrits.
+  function paintRows() {
+    if (shown.length > rows.length) shown.splice(0, shown.length - rows.length);
+    shown.forEach((line, i) => {
+      const row = rows[i];
+      if (row.line === line && line.kind !== 'prompt') return;
+      row.line = line;
+      row.replaceChildren(...renderLine(line));
+    });
   }
 
   // Termine le boot (fin normale ou « Passer ») et révèle le menu
@@ -157,7 +181,7 @@ export function createBoot({ overlay, skipButton, content, onFinish, hooks = {} 
       list.push({ at, type: 'line', line });
       at += 80;
     }
-    list.push({ at: (at += 60), type: 'line', line: { kind: 'prompt' } });
+    list.push({ at: (at += 60), type: 'line', line: { kind: 'prompt', typed: '' } });
     // Frappe de la commande, une lettre toutes les 15 ms
     for (const char of COMMAND) list.push({ at: (at += 15), type: 'type', char });
 
@@ -168,29 +192,27 @@ export function createBoot({ overlay, skipButton, content, onFinish, hooks = {} 
 
   // --- Rendu d'une ligne ------------------------------------------------------------
 
-  // Construit la ligne avec des nœuds texte (textContent) : aucun HTML à
-  // analyser, c'est plus rapide et sans risque d'injection.
+  // Renvoie les morceaux d'une ligne (textes et <span> colorés). Tout passe
+  // par des nœuds texte : aucun HTML à analyser, plus rapide et sans risque
+  // d'injection.
   function renderLine(line) {
-    const row = document.createElement('div');
-
     if (line.kind === 'kernel') {
-      row.append(span('boot-ts', line.ts), ` ${line.text}`);
-    } else if (line.kind === 'unit') {
+      return [span('boot-ts', line.ts), ` ${line.text}`];
+    }
+    if (line.kind === 'unit') {
       const label = line.status === 'ok' ? '  OK  ' : ' WARN ';
-      row.append(
+      return [
         '[',
         span(`boot-status boot-status--${line.status}`, label),
         `] ${line.before}`,
         span('boot-unit', line.unit),
         line.after,
-      );
-    } else if (line.kind === 'prompt') {
-      command = span('boot-command', '');
-      row.append(span('boot-prompt', promptText()), command, span('boot-cursor', '█'));
-    } else {
-      row.textContent = line.text;
+      ];
     }
-    return row;
+    if (line.kind === 'prompt') {
+      return [span('boot-prompt', promptText()), line.typed, span('boot-cursor', '█')];
+    }
+    return [line.text];
   }
 
   return { start, skip: finish, isRunning: () => running };

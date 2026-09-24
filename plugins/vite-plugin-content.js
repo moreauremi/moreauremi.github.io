@@ -48,6 +48,31 @@ export default function contentPlugin() {
       if (errors.length) this.error(formatErrors(CONFIG_FILE, errors));
     },
 
+    // Balises qui exigent l'adresse complète du site (aperçus de lien) : ajoutées
+    // à index.html seulement si urlPublique est renseignée dans la configuration.
+    async transformIndexHtml(html) {
+      const site = await loadSiteConfig(root);
+      const url = site.urlPublique;
+      if (!url) return html;
+      if (!/^https?:\/\//.test(url)) {
+        this.error(formatErrors(CONFIG_FILE, ['« urlPublique » doit commencer par http:// ou https://']));
+      }
+      const base = url.endsWith('/') ? url : `${url}/`;
+      const meta = (attrs) => ({ tag: 'meta', attrs, injectTo: 'head' });
+      return {
+        html,
+        tags: [
+          { tag: 'link', attrs: { rel: 'canonical', href: base }, injectTo: 'head' },
+          meta({ property: 'og:url', content: base }),
+          meta({ property: 'og:image', content: `${base}og-image.png` }),
+          meta({ property: 'og:image:width', content: '1200' }),
+          meta({ property: 'og:image:height', content: '630' }),
+          meta({ property: 'og:image:alt', content: 'Menu principal de RémiOS, le portfolio de Rémi Moreau' }),
+          meta({ name: 'twitter:card', content: 'summary_large_image' }),
+        ],
+      };
+    },
+
     // Appelé par Vite pour chaque fichier importé : on ne traite que les .md de content/
     async transform(source, id) {
       if (!id.endsWith('.md')) return null;

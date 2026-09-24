@@ -54,6 +54,10 @@
 /* Sur petit écran, le tableau défile horizontalement dans son cadre au lieu
    de faire déborder toute la page. tabindex="0" le rend défilable au clavier. */
 .table-scroll {
+  /* position: relative : les textes réservés aux lecteurs d'écran des cellules
+     (« oui »/« non », en position absolue) restent dans ce cadre. Sans cela,
+     ils débordent de la page sur les très petits écrans. */
+  position: relative;
   margin: 1em 0;
   overflow-x: auto;
 }

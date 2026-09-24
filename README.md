@@ -28,7 +28,8 @@ content/realisations/   une fiche Markdown par réalisation
 index.html              page unique du site : meta, Open Graph, préchargement de la police
 vite.config.js          configuration du build
 plugins/                plugin Vite maison qui convertit le Markdown au build
-public/                 fichiers copiés tels quels dans dist/ (favicon, captures, PDF)
+public/                 fichiers copiés tels quels dans dist/ : icônes, image d'aperçu,
+                        robots.txt, captures, PDF
 src/main.js             point d'entrée du JavaScript : assemble les modules
 src/router.js           routage par hash (#/presentation, #/realisations/nas…)
 src/content.js          accès au contenu (configuration + fiches) pour le reste du code
@@ -80,15 +81,33 @@ Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, i
 - **Un contenu, deux habillages.** Les rubriques sont produites par `src/blocks.js` ; l'interface RémiOS et la vue jury l'habillent différemment. Le tableau croisé réalisations × compétences est généré à partir des fiches : il est toujours à jour.
 - **Accessibilité du menu.** Les rubriques sont de vrais liens `<a>` et les actions de vrais `<button>` : souris, tactile, clavier et lecteurs d'écran fonctionnent sans code spécial. À l'ouverture d'une boîte, le focus passe sur son titre et une zone `aria-live` annonce la rubrique ouverte.
 - **Boot en calque, par-dessus le menu.** Le menu est affiché dès le chargement ; le boot est un calque noir posé dessus pendant 5 secondes au maximum. « Passer » (bouton, n'importe quelle touche, clic ou toucher) retire simplement le calque. Le navigateur, les lecteurs d'écran et Lighthouse voient le contenu principal tout de suite. Pendant le boot, le menu est rendu « inerte » (attribut `inert`) pour que la touche Tab ne s'y perde pas.
-- **Boot fluide à 60 images/s.** Une seule boucle `requestAnimationFrame` affiche par paquets les lignes dont l'heure est venue ; le nombre de lignes dans la page est limité à la hauteur de l'écran ; le défilement est fait par le CSS (lignes calées en bas) ; le seul effet, le fondu final, n'anime que l'opacité.
+- **Boot fluide à 60 images/s, sans décalage de mise en page.** Une seule boucle `requestAnimationFrame` traite à chaque image les lignes dont l'heure est venue. L'écran du journal est une grille fixe de lignes, créées une seule fois (autant que l'écran en contient) : pour faire défiler, on réécrit seulement leur texte. Aucun élément n'est ajouté ni déplacé, donc aucun « décalage de mise en page » (mesure CLS de Lighthouse, passée de 0,44 à 0 grâce à ce choix). Le seul effet animé, le fondu final, n'utilise que l'opacité.
 - **Boot seulement à l'accueil.** Un lien direct (`#/jury`, `#/realisations/nas`) affiche la page sans attendre. Si le système demande de réduire les animations, il n'y a pas de boot du tout. Le service `veille-techno.service` passe de `[ WARN ]` à `[  OK  ]` dès qu'un sujet est renseigné dans `site.config.js`.
 - **Terminal caché, entièrement simulé.** Touche `` ` `` (ou `²` sur un clavier AZERTY PC), `Ctrl+Alt+T`, ou le bouton `[tty2]` de la barre du haut (seul moyen sur mobile). Les fiches y sont des fichiers (`cat realisations/perso/nas.md`) : l'arborescence est construite en mémoire à partir du contenu du site. Aucune commande n'est exécutée et rien n'est envoyé à un serveur ; tout ce que tape le visiteur est affiché avec `textContent`, donc jamais interprété comme du HTML (pas d'injection possible). Commandes : `help`, `whoami`, `neofetch`, `ls`, `cd`, `pwd`, `cat`, `open`, `jury`, `history`, `clear`, `reboot`, `exit`… et quelques surprises.
 - **Sons synthétisés, coupés par défaut.** Bip POST, clics de disque pendant le journal et bip de validation sont fabriqués par la Web Audio API (oscillateurs et bruit filtré) : aucun fichier audio. Les navigateurs interdisent le son avant une interaction ; le contexte audio n'est donc créé qu'au premier clic ou à la première touche. Au tout premier chargement, le bip POST ne peut pas sonner : il sonne sur `<Redémarrer>`, ou dès que le son est activé pendant le boot. Le choix est mémorisé dans `localStorage`, dont chaque accès est protégé (navigation privée, stockage bloqué : le site fonctionne quand même).
+- **Aperçus de lien.** L'image d'aperçu (`public/og-image.png`, une capture du menu en 1200×630) et l'adresse du site sont ajoutées automatiquement aux balises Open Graph dès que `urlPublique` est renseignée dans `content/site.config.js` : ces balises exigent des URL complètes, donc un nom de domaine.
 - **Vue rapide jury.** Accessible en un clic depuis n'importe quel écran (bouton jaune en haut à droite, premier élément atteint avec Tab) ou directement par l'URL `#/jury`. Fond clair, police système, aucune animation, tout sur une page. La feuille `@media print` retire les boutons, écrit l'adresse des liens en clair et évite de couper un bloc en bas de page.
 - **Visionneuse d'images native.** Les captures s'agrandissent dans un élément HTML `<dialog>` : le navigateur gère lui-même le piège du focus, la touche Échap et le retour du focus à la fermeture. Sans JavaScript, le lien ouvre simplement l'image.
 - **Police auto-hébergée.** IBM Plex Mono est servie par le site lui-même, pas par Google Fonts : le site fonctionne sans accès extérieur (utile sur un réseau fermé ou en démonstration hors ligne) et aucune donnée de visite n'est transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 ko au total). La police principale est préchargée pour que le boot s'affiche directement dans la bonne police.
 - **Variables CSS (« tokens »).** Toutes les couleurs de la maquette sont définies une seule fois dans `tokens.css`. Les tailles de texte sont en `rem` : si le visiteur agrandit le texte dans son navigateur, le site suit (accessibilité).
 - **Réduction des animations.** Si le système demande de réduire les animations (réglage d'accessibilité), les transitions CSS sont désactivées.
+
+## Qualité mesurée
+
+Audit Lighthouse 13 sur le build (`npm run build` puis `npm run preview`), le 24 septembre 2026 :
+
+| Page | Performance | Accessibilité | Bonnes pratiques | SEO |
+|---|---|---|---|---|
+| Accueil (mobile) | 100 | 100 | 100 | 100 |
+| Accueil (ordinateur) | 100 | 100 | 100 | 100 |
+| Vue jury (mobile) | 100 | 100 | 100 | 100 |
+| Fiche de réalisation (mobile) | 100 | 100 | 100 | 100 |
+
+Accueil mobile : premier affichage 1,1 s, plus grand élément affiché 1,2 s, aucun blocage du navigateur (TBT 0 ms), aucun décalage de mise en page (CLS 0). Poids total de la page : 53 Ko.
+
+Accessibilité vérifiée aussi avec axe-core (règles WCAG 2.2 AA) sur chaque écran : accueil, rubriques, fiche, erreur, vue jury, visionneuse, terminal, boot en cours, mobile. Aucune erreur. Aucune page ne défile horizontalement, même sur un écran de 320 px.
+
+Pour refaire l'audit : ouvrir le site dans Chrome, outils de développement (F12), onglet **Lighthouse**.
 
 ## Avancement
 
@@ -101,6 +120,6 @@ Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, i
 - [x] 7. Séquence de démarrage
 - [x] 8. Terminal caché
 - [x] 9. Sons de démarrage
-- [ ] 10. Responsive, accessibilité, performance
+- [x] 10. Responsive, accessibilité, performance
 - [ ] 11. Déploiement Docker + nginx
 - [ ] 12. Documentation complète
