@@ -33,8 +33,3 @@ export function markPlaceholders(html) {
 export function safe(value) {
   return markPlaceholders(escapeHtml(value));
 }
-
-// Vrai si le texte est (ou contient) un repère [À COMPLÉTER].
-export function isPlaceholder(value) {
-  return typeof value === 'string' && value.includes('[À COMPLÉTER');
-}

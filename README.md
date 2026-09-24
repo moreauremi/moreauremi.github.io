@@ -1,10 +1,24 @@
 # RémiOS — portfolio BTS SIO SISR
 
+![Menu principal de RémiOS](public/og-image.png)
+
 Portfolio de **Rémi Moreau**, étudiant en BTS SIO option SISR à MyDigitalSchool Nantes (promo 2026-2028), en alternance chez 1Life (groupe Visiativ) comme consultant ERP Open-Prod.
 
 Le site se présente comme le démarrage d'un système Linux : écran GRUB, journal du noyau, services systemd, puis un menu façon ncurses qui donne accès aux réalisations, au tableau de synthèse et à la veille technologique. Une **vue rapide jury**, sobre et imprimable, rassemble tout le contenu sur une seule page.
 
-> Projet construit étape par étape : ce README est complété à chaque étape.
+## Sommaire
+
+- [Démarrer en local](#démarrer-en-local)
+- [Ce que fait le site](#ce-que-fait-le-site)
+- [Modifier le contenu](#modifier-le-contenu)
+- [Ce qui reste à compléter](#ce-qui-reste-à-compléter)
+- [Architecture](#architecture)
+- [Choix techniques](#choix-techniques)
+- [Qualité mesurée](#qualité-mesurée)
+- [Déployer sur le homelab (Docker + nginx)](#déployer-sur-le-homelab-docker--nginx)
+- [Préparer l'oral](#préparer-loral)
+- [Étapes de construction](#étapes-de-construction)
+- [Crédits et licences](#crédits-et-licences)
 
 ## Démarrer en local
 
@@ -17,43 +31,49 @@ npm run build    # fabrique la version finale, 100 % statique, dans dist/
 npm run preview  # sert le contenu de dist/ pour vérifier le build avant de le déployer
 ```
 
-`npm run dev` affiche l'adresse à ouvrir dans le navigateur (par défaut http://localhost:5173).
+`npm run dev` affiche l'adresse à ouvrir dans le navigateur (par défaut http://localhost:5173). Toute modification d'une fiche ou du code s'affiche immédiatement.
 
-## Organisation des fichiers
+## Ce que fait le site
 
-```
-content/site.config.js  configuration du contenu : identité, contact, PDF, veille, compétences
-content/pages/          présentation et veille (Markdown)
-content/realisations/   une fiche Markdown par réalisation
-index.html              page unique du site : meta, Open Graph, préchargement de la police
-vite.config.js          configuration du build
-plugins/                plugin Vite maison qui convertit le Markdown au build
-public/                 fichiers copiés tels quels dans dist/ : icônes, image d'aperçu,
-                        robots.txt, captures, PDF
-src/main.js             point d'entrée du JavaScript : assemble les modules
-src/router.js           routage par hash (#/presentation, #/realisations/nas…)
-src/content.js          accès au contenu (configuration + fiches) pour le reste du code
-src/blocks.js           blocs de contenu communs à RémiOS et à la vue jury
-src/tui/                interface façon whiptail : boîte, menu, rubriques, fiches, visionneuse
-src/boot/               séquence de démarrage : GRUB, journal du noyau, systemd, connexion
-src/jury/               vue rapide jury, sobre et imprimable
-src/terminal/           terminal caché : fenêtre, commandes, système de fichiers simulé
-src/audio/              sons générés avec la Web Audio API
-src/ui/                 barre fixe en haut à droite (vue jury, bouton son)
-src/utils/              petites fonctions partagées (HTML sûr, dates, clavier, réglages mémorisés)
-src/styles/index.css    point d'entrée des styles, importe les fichiers ci-dessous
-src/styles/fonts.css    déclaration de la police auto-hébergée
-src/styles/tokens.css   variables de design : toutes les couleurs et tailles du site
-src/styles/base.css     styles communs (police, focus visible, réduction des animations)
-src/assets/fonts/       IBM Plex Mono en woff2 (400 et 600) + licence OFL
-reference/              maquette HTML validée au départ du projet (hors build)
-```
+1. **Démarrage** (à l'arrivée sur l'accueil, 5 secondes au maximum) : GRUB, messages du noyau, services systemd détournés avec mes projets (`jellyfin.service`, `alternance@1life.service`…), connexion automatique, puis `portfolio --menu`. Le bouton « Passer le démarrage », n'importe quelle touche ou un clic l'interrompent. Si le système demande de réduire les animations, le site arrive directement sur le menu.
+2. **Menu façon whiptail** : identité façon neofetch à gauche, 7 rubriques numérotées à droite. Chaque rubrique s'ouvre dans une boîte de dialogue avec `< Retour >`. `<Redémarrer>` rejoue le démarrage.
+3. **Fiches de réalisation** : contexte, objectifs, mise en œuvre, captures (agrandissables), résultats, difficultés, compétences du référentiel. Chaque fiche a sa propre adresse, partageable.
+4. **Vue rapide jury** : bouton jaune en haut à droite, visible en permanence (même pendant le démarrage). Version classique, fond clair, tout sur une page, imprimable.
+5. **Terminal caché** : `remi@remios:~$`, avec historique, autocomplétion et une douzaine de commandes. Les fiches y sont des fichiers. Tout est simulé.
+6. **Sons** (coupés par défaut) : bip POST, clics de disque, bip de validation, générés par le navigateur.
+
+### Raccourcis clavier
+
+| Touche | Effet |
+|---|---|
+| ↑ ↓ | se déplacer dans le menu ou dans une liste de fiches |
+| Entrée | ouvrir l'élément sélectionné |
+| 1 à 7 | ouvrir directement une rubrique (depuis le menu) |
+| Échap ou Retour arrière | revenir à l'écran précédent |
+| n'importe quelle touche (sauf Tab) | passer le démarrage |
+| `` ` `` ou `²` (AZERTY PC), `Ctrl+Alt+T` (`Ctrl+Option+T` sur Mac) | ouvrir le terminal |
+| Tab, ↑ ↓, Ctrl+L, Échap | dans le terminal : compléter, historique, effacer, fermer |
+
+Sur mobile, le terminal s'ouvre avec le bouton `[tty2]` de la barre du haut.
+
+### Adresses
+
+| Adresse | Écran |
+|---|---|
+| `#/` | menu principal (avec le démarrage) |
+| `#/presentation`, `#/entreprise`, `#/formation`, `#/perso`, `#/synthese`, `#/veille`, `#/contact` | une rubrique |
+| `#/realisations/<slug>` | une fiche, style RémiOS (ex. `#/realisations/nas`) |
+| `#/jury` | vue rapide jury : **le lien à donner au jury** |
+| `#/jury/<slug>` | une fiche, style sobre |
+
+Un lien direct vers une rubrique, une fiche ou la vue jury s'affiche sans jouer le démarrage.
 
 ## Modifier le contenu
 
 Tout le contenu est dans `content/` : aucune ligne de code à toucher.
 
-- **Informations générales** (contact, sujet de veille, compétences, PDF) : `content/site.config.js`, commenté ligne par ligne.
+- **Informations générales** (contact, sujet de veille, compétences, PDF, services affichés au démarrage) : `content/site.config.js`, commenté ligne par ligne.
+- **Présentation et veille** : `content/pages/presentation.md` et `content/pages/veille.md`.
 - **Ajouter une réalisation** : copier une fiche de `content/realisations/`, la renommer (minuscules, chiffres et tirets : `supervision-zabbix.md`), puis remplir le bloc d'en-tête :
 
   ```yaml
@@ -66,10 +86,138 @@ Tout le contenu est dans `content/` : aucune ligne de code à toucher.
   technos: [Zabbix, Debian]
   competences: [C1, C4]           # codes définis dans site.config.js
   ```
-- **Captures d'écran** : déposer l'image dans `public/captures/<slug>/`, puis l'insérer dans la fiche avec `![Description](captures/<slug>/image.webp "Légende")`.
-- Les textes `[À COMPLÉTER]` sont surlignés en jaune sur le site pour repérer ce qui reste à rédiger.
 
-Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, image ou PDF introuvable, compétence inexistante…), `npm run dev` et `npm run build` affichent un message qui indique le fichier et la correction à faire.
+  La fiche apparaît automatiquement dans sa rubrique, dans la vue jury, dans le tableau croisé et dans le terminal.
+- **Captures d'écran** : déposer l'image dans `public/captures/<slug>/` (format `.webp` conseillé, plus léger), puis l'insérer dans la fiche avec `![Description de l'image](captures/<slug>/image.webp "Légende affichée")`.
+- **PDF** (CV, tableau de synthèse) : déposer le fichier dans `public/docs/`, puis indiquer son chemin dans `content/site.config.js` (`cv: 'docs/cv.pdf'`).
+
+Les textes `[À COMPLÉTER]` sont surlignés en jaune sur le site. Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, image ou PDF introuvable, compétence inexistante…), `npm run dev` et `npm run build` s'arrêtent avec un message qui indique le fichier et la correction à faire : un site incomplet ne peut pas partir en production par erreur.
+
+## Ce qui reste à compléter
+
+Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER`.
+
+- [ ] **Présentation** : relire le texte (rédigé à partir des informations connues) et ajouter ce qui m'attire dans l'infrastructure et mon projet après le BTS.
+- [ ] **Réalisations 1Life** (3 fiches vides) : titres et contenu, après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
+- [ ] **Homelab Jellyfin, NAS, CAFFEIN, Clapvoice** : dates, statuts, technos, contenu, captures.
+- [ ] **Grille de compétences** : remplacer C1 à C6 dans `site.config.js` par la grille officielle du tableau de synthèse, puis renseigner `competences` dans chaque fiche.
+- [ ] **PDF** : CV et tableau de synthèse.
+- [ ] **Veille** : choisir le sujet (`veille.sujet`, le `[ WARN ]` du démarrage passera en `[  OK  ]`), puis rédiger `content/pages/veille.md`.
+- [ ] **Réalisations en formation** : la rubrique affiche « À venir » tant qu'il n'y en a pas.
+- [ ] **Nom de domaine** : le jour venu, renseigner `urlPublique` (aperçus de lien complets).
+
+## Architecture
+
+### Vue d'ensemble
+
+```
+content/*.md + site.config.js          (le contenu, modifiable sans code)
+        │  au build : plugins/vite-plugin-content.js (gray-matter + marked)
+        ▼
+modules JavaScript { meta, html, raw }  (fiches déjà converties en HTML)
+        │
+        ▼
+src/content.js ──► src/blocks.js ──┬──► src/tui/    interface RémiOS (menu, rubriques, fiches)
+                                   ├──► src/jury/   vue rapide jury
+                                   └──► src/terminal/  (cat lit le texte source des fiches)
+
+src/main.js assemble le tout : routeur, démarrage, interface, vue jury, terminal, sons.
+```
+
+### Ce qui se passe quand on ouvre le site
+
+1. Le navigateur charge `index.html` (2 Ko), la police (préchargée), une feuille CSS et un fichier JavaScript : 53 Ko en tout.
+2. `main.js` construit la page et affiche **tout de suite** l'écran demandé par l'URL.
+3. Si l'URL est l'accueil, le calque du démarrage est posé par-dessus le menu, qui devient « inerte » le temps du boot.
+4. Une boucle `requestAnimationFrame` déroule le planning du boot image par image ; à la fin (ou dès qu'on passe), le calque disparaît et le focus clavier arrive sur le menu.
+5. Chaque clic sur une rubrique change le hash de l'URL (`#/veille`) ; le routeur le détecte et affiche la boîte correspondante, sans recharger la page.
+
+### Organisation des fichiers
+
+```
+content/site.config.js   configuration : identité, contact, PDF, veille, compétences, services du boot
+content/pages/           présentation et veille (Markdown)
+content/realisations/    une fiche Markdown par réalisation
+index.html               page unique : meta, Open Graph, préchargement de la police
+vite.config.js           configuration du build
+plugins/                 plugin Vite maison : Markdown → HTML au build, vérification des fiches
+public/                  copié tel quel dans dist/ : icônes, image d'aperçu, robots.txt, captures, PDF
+src/main.js              point d'entrée : assemble les modules, clavier global
+src/router.js            routage par hash (#/presentation, #/realisations/nas…)
+src/content.js           accès au contenu (configuration + fiches) pour le reste du code
+src/blocks.js            blocs de contenu communs à RémiOS et à la vue jury
+src/tui/                 interface whiptail : boîte, accueil, rubriques, fiches, visionneuse d'images
+src/boot/                démarrage : écran GRUB, contenu du journal, déroulement (sequence.js)
+src/jury/                vue rapide jury
+src/terminal/            terminal : fenêtre, commandes, système de fichiers simulé
+src/audio/               sons générés avec la Web Audio API
+src/ui/                  barre fixe en haut à droite (vue jury, bouton son)
+src/utils/               petites fonctions partagées : HTML sûr, dates, clavier, réglages mémorisés
+src/styles/              un fichier CSS par partie (tokens.css = toutes les couleurs, print.css = impression)
+src/assets/fonts/        IBM Plex Mono en woff2 (400 et 600) + licence OFL
+Dockerfile, docker/      image Docker et configuration nginx
+docker-compose.yml       lancement du conteneur sur le homelab
+reference/               maquette HTML validée au départ du projet (hors build)
+```
+
+## Choix techniques
+
+### Construction et contenu
+
+- **Vite + JavaScript sans framework.** Le site n'a pas besoin de React ou Vue : quelques modules JavaScript suffisent, le code reste court et facile à expliquer, et le navigateur n'a presque rien à télécharger. Vite apporte le serveur de développement (rechargement instantané) et le build optimisé : fichiers minifiés et noms de fichiers « hashés » (`index-3f9a2c.js`).
+- **Aucune dépendance au moment de l'exécution.** Vite, `gray-matter` et `marked` ne servent qu'à fabriquer le site (`devDependencies`) ; le visiteur reçoit uniquement mon code et du HTML déjà prêt.
+- **Contenu en Markdown, converti et vérifié au build.** Chaque réalisation est un fichier texte lisible. Le plugin `plugins/vite-plugin-content.js` lit l'en-tête avec `gray-matter`, convertit le texte en HTML avec `marked`, rend les images cliquables et vérifie chaque champ.
+- **Un contenu, deux habillages.** Les rubriques sont produites par `src/blocks.js` ; l'interface RémiOS et la vue jury les habillent différemment. Le tableau croisé réalisations × compétences est généré à partir des fiches : il est toujours à jour.
+- **Routage par hash.** Tout le site tient dans `index.html` ; la partie après `#` indique l'écran à afficher. Chaque écran a une URL partageable, Précédent/Suivant fonctionnent, et le serveur n'a besoin d'aucune règle de réécriture.
+- **Chemins relatifs (`base: './'`).** Le site fonctionne à la racine d'un domaine comme dans un sous-dossier derrière un reverse proxy, sans reconfiguration.
+
+### Interface
+
+- **Boot en calque, par-dessus le menu.** Le menu est affiché dès le chargement ; le boot est un calque posé dessus pendant 5 secondes au maximum. « Passer » retire simplement le calque. Pendant le boot, le menu est rendu « inerte » (attribut `inert`) pour que la touche Tab ne s'y perde pas.
+- **Boot seulement à l'accueil.** Un lien direct affiche la page sans attendre. Le service `veille-techno.service` passe de `[ WARN ]` à `[  OK  ]` dès qu'un sujet de veille est renseigné.
+- **Terminal entièrement simulé.** L'arborescence (`~/realisations/perso/nas.md`…) est construite en mémoire à partir du contenu. Aucune commande n'est exécutée, rien n'est envoyé à un serveur.
+- **Sons synthétisés.** Bip POST (oscillateur carré à 1 000 Hz), clics de disque (bruit filtré) et bip de validation sont fabriqués par la Web Audio API : aucun fichier audio. Les navigateurs interdisent le son avant une interaction : le contexte audio n'est créé qu'au premier clic ou à la première touche. Au tout premier chargement, le bip POST ne peut donc pas sonner ; il sonne sur `<Redémarrer>`, ou dès que le son est activé pendant le boot.
+- **Réglages mémorisés prudemment.** Le choix du son est gardé dans `localStorage`, dont chaque accès est protégé (`try/catch`) : en navigation privée ou si le stockage est bloqué, le site fonctionne quand même.
+
+### Accessibilité
+
+- **Vrais éléments HTML.** Rubriques et fiches sont des liens `<a>`, les actions des `<button>` : souris, tactile, clavier et lecteurs d'écran fonctionnent sans code spécial.
+- **Focus maîtrisé.** Contour de focus visible (adapté à chaque fond), focus placé sur le titre de chaque boîte ouverte, zone `aria-live` qui annonce la rubrique ouverte et la fin du démarrage.
+- **Vue jury en un clic.** Bouton visible en permanence et premier élément atteint avec Tab, ou adresse directe `#/jury`.
+- **Visionneuse et terminal en `<dialog>` natif.** Le navigateur gère le piège du focus, la touche Échap et le retour du focus à la fermeture.
+- **Réduction des animations respectée.** Pas de boot, pas de transition si le système le demande.
+- **Contrastes AA** (au moins 4,5:1) pour tous les textes, tailles en `rem` (le site suit l'agrandissement du texte du navigateur).
+
+### Performance
+
+- **Boot à 60 images/s, sans décalage de mise en page.** Une seule boucle `requestAnimationFrame` traite à chaque image les lignes dont l'heure est venue. L'écran du journal est une grille fixe de lignes, créées une seule fois : pour faire défiler, on réécrit seulement leur texte. Aucun élément n'est ajouté ni déplacé, donc aucun « décalage de mise en page » (CLS passé de 0,44 à 0 grâce à ce choix). Le seul effet animé, le fondu final, n'utilise que l'opacité.
+- **Police auto-hébergée et préchargée.** IBM Plex Mono est servie par le site lui-même : pas de Google Fonts, donc fonctionnement hors ligne et aucune donnée de visite transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 Ko).
+- **Cache long.** Les fichiers hashés sont gardés un an par le navigateur ; `index.html` n'est jamais mis en cache, donc une nouvelle version est visible immédiatement.
+
+### Sécurité
+
+- **Site 100 % statique** : pas de base de données, pas de code exécuté sur le serveur, pas de formulaire. La surface d'attaque se limite à nginx.
+- **Aucune injection possible.** Ce que tape le visiteur dans le terminal est affiché avec `textContent`, jamais interprété comme du HTML. Les textes de la configuration sont échappés avant affichage.
+- **CSP stricte** (`script-src 'self'`) : le navigateur refuse tout script externe ou injecté. Possible parce que le site n'a aucun script ni style écrit dans le HTML.
+- **Conteneur durci** : image multi-stage (aucun outil de build dans l'image finale), système de fichiers en lecture seule, pas d'élévation de privilèges, version de nginx masquée, en-têtes de sécurité (anti-clickjacking, nosniff, Referrer-Policy, Permissions-Policy).
+- **Liens externes** ouverts avec `rel="noopener noreferrer"` : la page ouverte ne peut pas agir sur le portfolio.
+
+## Qualité mesurée
+
+Audit Lighthouse 13 sur le build (`npm run build` puis `npm run preview`), le 24 septembre 2026 :
+
+| Page | Performance | Accessibilité | Bonnes pratiques | SEO |
+|---|---|---|---|---|
+| Accueil (mobile) | 100 | 100 | 100 | 100 |
+| Accueil (ordinateur) | 100 | 100 | 100 | 100 |
+| Vue jury (mobile) | 100 | 100 | 100 | 100 |
+| Fiche de réalisation (mobile) | 100 | 100 | 100 | 100 |
+
+Accueil mobile : premier affichage 1,1 s, plus grand élément affiché 1,2 s, aucun blocage du navigateur (TBT 0 ms), aucun décalage de mise en page (CLS 0). Poids total de la page : 53 Ko.
+
+Pendant la construction, chaque étape a aussi été testée dans un navigateur piloté par script (navigation au clavier, démarrage, terminal, sons, impression, mobile) et avec axe-core (règles d'accessibilité WCAG 2.2 AA) sur chaque écran : aucune erreur, et aucune page ne défile horizontalement, même sur un écran de 320 px. La politique de sécurité (CSP) a été vérifiée en servant le site avec les mêmes en-têtes que nginx : aucune ressource bloquée.
+
+Pour refaire l'audit : ouvrir le site dans Chrome, outils de développement (F12), onglet **Lighthouse**.
 
 ## Déployer sur le homelab (Docker + nginx)
 
@@ -81,16 +229,14 @@ Navigateur ──► reverse proxy nginx du homelab ──► conteneur « remio
                                                      port 80 du conteneur = port 8080 de la machine
 ```
 
-Le `Dockerfile` construit l'image en deux étapes (*multi-stage*) : une image Node fabrique le site, puis seule le dossier `dist/` est copié dans une image `nginx:alpine`. L'image finale ne contient ni Node, ni le code source : elle est légère et expose le minimum.
-
-Fichiers concernés :
+Le `Dockerfile` construit l'image en deux étapes (*multi-stage*) : une image Node fabrique le site, puis seul le dossier `dist/` est copié dans une image `nginx:alpine`. L'image finale ne contient ni Node, ni le code source : elle est légère et expose le minimum.
 
 | Fichier | Rôle |
 |---|---|
-| `Dockerfile` | construction de l'image (build Node → service nginx) |
+| `Dockerfile` | construction de l'image (build Node → service nginx), vérification de santé |
 | `docker/nginx.conf` | service du site : gzip, cache d'un an sur les fichiers hashés, `index.html` jamais en cache, 404 pour les adresses inconnues |
 | `docker/security-headers.conf` | en-têtes de sécurité (CSP stricte, anti-clickjacking, nosniff…) |
-| `docker-compose.yml` | lancement : port 8080, redémarrage automatique, conteneur en lecture seule, pas d'élévation de privilèges |
+| `docker-compose.yml` | lancement : port 8080, redémarrage automatique, lecture seule, pas d'élévation de privilèges |
 | `.dockerignore` | fichiers non envoyés à Docker (node_modules, dist, .git…) |
 
 ### Étape 1 : copier le projet sur le serveur
@@ -214,56 +360,58 @@ ssh remi@homelab "cd ~/remios-portfolio && docker compose up -d --build && docke
 - **Le conteneur redémarre en boucle** : `docker compose logs`. Si nginx se plaint d'un système de fichiers en lecture seule, mettre en commentaire les lignes `read_only`, `tmpfs` et leurs dossiers dans `docker-compose.yml`, puis relancer.
 - **Seul le reverse proxy doit accéder au conteneur** : remplacer la ligne de port par `"127.0.0.1:${PORTFOLIO_PORT:-8080}:80"` (le site n'est plus joignable directement depuis le réseau).
 
-## Choix techniques
+## Préparer l'oral
 
-- **Vite + JavaScript sans framework.** Le site n'a pas besoin de React ou Vue : quelques modules JavaScript suffisent, le code reste court et facile à expliquer, et le navigateur n'a presque rien à télécharger. Vite apporte le serveur de développement (rechargement instantané) et le build optimisé : fichiers minifiés et noms de fichiers « hashés » (`index-3f9a2c.js`), ce qui permet au serveur de demander aux navigateurs de les garder en cache très longtemps.
-- **Chemins relatifs (`base: './'`).** Le site généré fonctionne à la racine d'un domaine comme dans un sous-dossier derrière un reverse proxy, sans reconfiguration.
-- **Aucune dépendance au moment de l'exécution.** Les outils (Vite, et plus tard le lecteur de Markdown) ne servent qu'à fabriquer le site ; ils sont déclarés en `devDependencies` et ne sont pas envoyés aux visiteurs.
-- **Contenu en Markdown, converti au build.** Chaque réalisation est un fichier texte lisible et modifiable sans connaître le code. Un plugin Vite maison (`plugins/vite-plugin-content.js`) lit le bloc d'en-tête avec `gray-matter`, convertit le texte en HTML avec `marked` et vérifie les champs. Ces deux bibliothèques ne tournent qu'au build : le visiteur reçoit du HTML déjà prêt.
-- **Routage par hash.** Tout le site tient dans `index.html` ; la partie après `#` indique l'écran à afficher (`#/veille`, `#/realisations/nas`). Chaque écran a une URL partageable, les boutons Précédent/Suivant fonctionnent, et le serveur n'a besoin d'aucune règle de réécriture.
-- **Un contenu, deux habillages.** Les rubriques sont produites par `src/blocks.js` ; l'interface RémiOS et la vue jury l'habillent différemment. Le tableau croisé réalisations × compétences est généré à partir des fiches : il est toujours à jour.
-- **Accessibilité du menu.** Les rubriques sont de vrais liens `<a>` et les actions de vrais `<button>` : souris, tactile, clavier et lecteurs d'écran fonctionnent sans code spécial. À l'ouverture d'une boîte, le focus passe sur son titre et une zone `aria-live` annonce la rubrique ouverte.
-- **Boot en calque, par-dessus le menu.** Le menu est affiché dès le chargement ; le boot est un calque noir posé dessus pendant 5 secondes au maximum. « Passer » (bouton, n'importe quelle touche, clic ou toucher) retire simplement le calque. Le navigateur, les lecteurs d'écran et Lighthouse voient le contenu principal tout de suite. Pendant le boot, le menu est rendu « inerte » (attribut `inert`) pour que la touche Tab ne s'y perde pas.
-- **Boot fluide à 60 images/s, sans décalage de mise en page.** Une seule boucle `requestAnimationFrame` traite à chaque image les lignes dont l'heure est venue. L'écran du journal est une grille fixe de lignes, créées une seule fois (autant que l'écran en contient) : pour faire défiler, on réécrit seulement leur texte. Aucun élément n'est ajouté ni déplacé, donc aucun « décalage de mise en page » (mesure CLS de Lighthouse, passée de 0,44 à 0 grâce à ce choix). Le seul effet animé, le fondu final, n'utilise que l'opacité.
-- **Boot seulement à l'accueil.** Un lien direct (`#/jury`, `#/realisations/nas`) affiche la page sans attendre. Si le système demande de réduire les animations, il n'y a pas de boot du tout. Le service `veille-techno.service` passe de `[ WARN ]` à `[  OK  ]` dès qu'un sujet est renseigné dans `site.config.js`.
-- **Terminal caché, entièrement simulé.** Touche `` ` `` (ou `²` sur un clavier AZERTY PC), `Ctrl+Alt+T`, ou le bouton `[tty2]` de la barre du haut (seul moyen sur mobile). Les fiches y sont des fichiers (`cat realisations/perso/nas.md`) : l'arborescence est construite en mémoire à partir du contenu du site. Aucune commande n'est exécutée et rien n'est envoyé à un serveur ; tout ce que tape le visiteur est affiché avec `textContent`, donc jamais interprété comme du HTML (pas d'injection possible). Commandes : `help`, `whoami`, `neofetch`, `ls`, `cd`, `pwd`, `cat`, `open`, `jury`, `history`, `clear`, `reboot`, `exit`… et quelques surprises.
-- **Sons synthétisés, coupés par défaut.** Bip POST, clics de disque pendant le journal et bip de validation sont fabriqués par la Web Audio API (oscillateurs et bruit filtré) : aucun fichier audio. Les navigateurs interdisent le son avant une interaction ; le contexte audio n'est donc créé qu'au premier clic ou à la première touche. Au tout premier chargement, le bip POST ne peut pas sonner : il sonne sur `<Redémarrer>`, ou dès que le son est activé pendant le boot. Le choix est mémorisé dans `localStorage`, dont chaque accès est protégé (navigation privée, stockage bloqué : le site fonctionne quand même).
-- **Déploiement durci.** Image multi-stage (aucun outil de build dans l'image finale), conteneur en lecture seule, pas d'élévation de privilèges, version de nginx masquée, en-têtes de sécurité dont une CSP stricte (`script-src 'self'`) rendue possible parce que le site n'a aucun script ni style écrit dans le HTML. Cache d'un an sur les fichiers hashés, `index.html` jamais en cache : une nouvelle version est visible immédiatement.
-- **Aperçus de lien.** L'image d'aperçu (`public/og-image.png`, une capture du menu en 1200×630) et l'adresse du site sont ajoutées automatiquement aux balises Open Graph dès que `urlPublique` est renseignée dans `content/site.config.js` : ces balises exigent des URL complètes, donc un nom de domaine.
-- **Vue rapide jury.** Accessible en un clic depuis n'importe quel écran (bouton jaune en haut à droite, premier élément atteint avec Tab) ou directement par l'URL `#/jury`. Fond clair, police système, aucune animation, tout sur une page. La feuille `@media print` retire les boutons, écrit l'adresse des liens en clair et évite de couper un bloc en bas de page.
-- **Visionneuse d'images native.** Les captures s'agrandissent dans un élément HTML `<dialog>` : le navigateur gère lui-même le piège du focus, la touche Échap et le retour du focus à la fermeture. Sans JavaScript, le lien ouvre simplement l'image.
-- **Police auto-hébergée.** IBM Plex Mono est servie par le site lui-même, pas par Google Fonts : le site fonctionne sans accès extérieur (utile sur un réseau fermé ou en démonstration hors ligne) et aucune donnée de visite n'est transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 ko au total). La police principale est préchargée pour que le boot s'affiche directement dans la bonne police.
-- **Variables CSS (« tokens »).** Toutes les couleurs de la maquette sont définies une seule fois dans `tokens.css`. Les tailles de texte sont en `rem` : si le visiteur agrandit le texte dans son navigateur, le site suit (accessibilité).
-- **Réduction des animations.** Si le système demande de réduire les animations (réglage d'accessibilité), les transitions CSS sont désactivées.
+Questions probables du jury, et l'essentiel de la réponse.
 
-## Qualité mesurée
+**Pourquoi ne pas avoir utilisé WordPress ou un framework comme React ?**
+Le site est statique : il n'a besoin ni de base de données ni de code côté serveur. Vite et du JavaScript simple suffisent, le code reste court, la page pèse 53 Ko, et il n'y a rien à mettre à jour côté sécurité en dehors de nginx.
 
-Audit Lighthouse 13 sur le build (`npm run build` puis `npm run preview`), le 24 septembre 2026 :
+**Comment une fiche Markdown devient-elle une page ?**
+Au build, un plugin Vite que j'ai ajouté lit chaque fichier `.md` : `gray-matter` sépare l'en-tête (titre, type, compétences…) du texte, `marked` convertit le texte en HTML, et le plugin vérifie les champs. Si une fiche est mal remplie, le build s'arrête avec un message clair.
 
-| Page | Performance | Accessibilité | Bonnes pratiques | SEO |
-|---|---|---|---|---|
-| Accueil (mobile) | 100 | 100 | 100 | 100 |
-| Accueil (ordinateur) | 100 | 100 | 100 | 100 |
-| Vue jury (mobile) | 100 | 100 | 100 | 100 |
-| Fiche de réalisation (mobile) | 100 | 100 | 100 | 100 |
+**Comment fonctionne la navigation sans rechargement ?**
+Par le hash de l'URL (`#/realisations/nas`). Le navigateur ne recharge pas la page quand il change : il émet un événement `hashchange` que mon routeur écoute pour afficher le bon écran. Chaque écran a donc une adresse partageable, sans configuration côté serveur.
 
-Accueil mobile : premier affichage 1,1 s, plus grand élément affiché 1,2 s, aucun blocage du navigateur (TBT 0 ms), aucun décalage de mise en page (CLS 0). Poids total de la page : 53 Ko.
+**Une animation de 5 secondes, ce n'est pas gênant pour le visiteur ou pour l'accessibilité ?**
+Le menu est déjà affiché sous le démarrage, qui n'est qu'un calque : un clic, une touche ou le bouton « Passer » le retirent instantanément. Il ne se joue qu'à l'accueil, jamais sur un lien direct, et pas du tout si le système demande de réduire les animations. La vue jury reste accessible en un clic pendant le boot.
 
-Accessibilité vérifiée aussi avec axe-core (règles WCAG 2.2 AA) sur chaque écran : accueil, rubriques, fiche, erreur, vue jury, visionneuse, terminal, boot en cours, mobile. Aucune erreur. Aucune page ne défile horizontalement, même sur un écran de 320 px.
+**Comment le démarrage reste-t-il fluide ?**
+Une seule boucle `requestAnimationFrame`, synchronisée sur l'affichage de l'écran. Le journal est une grille de lignes fixes dont je réécris seulement le texte : rien ne bouge dans la page, ce qui a fait passer le décalage de mise en page mesuré par Lighthouse de 0,44 à 0.
 
-Pour refaire l'audit : ouvrir le site dans Chrome, outils de développement (F12), onglet **Lighthouse**.
+**Le terminal est-il dangereux ?**
+Non : il est entièrement simulé dans le navigateur, rien n'est exécuté ni envoyé au serveur. La saisie est affichée comme du texte brut (`textContent`) et la politique de sécurité du contenu (CSP) empêche tout script injecté de s'exécuter.
 
-## Avancement
+**Comment le site est-il hébergé ?**
+Dans un conteneur Docker sur mon homelab. L'image est construite en deux étapes : Node fabrique le site, puis seul le résultat est copié dans une image nginx minimale. Le conteneur est en lecture seule, sans élévation de privilèges ; mon reverse proxy nginx existant le publie.
 
-- [x] 1. Initialisation du projet (Vite, git, configuration de base)
-- [x] 2. Police auto-hébergée et thème RémiOS
-- [x] 3. Contenu en Markdown et fiches d'exemple
-- [x] 4. Menu principal et navigation
-- [x] 5. Fiches de réalisation et visionneuse d'images
-- [x] 6. Vue rapide jury imprimable
-- [x] 7. Séquence de démarrage
-- [x] 8. Terminal caché
-- [x] 9. Sons de démarrage
-- [x] 10. Responsive, accessibilité, performance
-- [x] 11. Déploiement Docker + nginx
-- [ ] 12. Documentation complète
+**Quelles mesures de sécurité ?**
+Site statique (pas de base de données, pas de formulaire), en-têtes HTTP de sécurité (CSP stricte, anti-clickjacking, nosniff), version de nginx masquée, conteneur durci, HTTPS géré par le reverse proxy.
+
+**Pourquoi héberger la police soi-même ?**
+Pour que le site marche sans accès extérieur, et pour ne pas transmettre l'adresse IP des visiteurs à Google : en 2022, un tribunal de Munich a condamné un site qui chargeait Google Fonts sans consentement (RGPD).
+
+**Comment ajoutez-vous une réalisation ?**
+Je copie une fiche Markdown, je remplis l'en-tête et le texte, je dépose les captures dans `public/captures/`. Elle apparaît automatiquement dans le menu, la vue jury, le tableau de synthèse et le terminal. Je copie le projet sur le serveur et je relance `docker compose up -d --build`.
+
+## Étapes de construction
+
+Le projet a été construit en 12 étapes, une par commit git (`git log --oneline` pour les voir) :
+
+1. Initialisation du projet (Vite, git, configuration de base)
+2. Police auto-hébergée et thème RémiOS
+3. Contenu en Markdown et fiches d'exemple
+4. Menu principal et navigation
+5. Fiches de réalisation et visionneuse d'images
+6. Vue rapide jury imprimable
+7. Séquence de démarrage
+8. Terminal caché
+9. Sons de démarrage
+10. Responsive, accessibilité, performance
+11. Déploiement Docker + nginx
+12. Documentation complète
+
+## Crédits et licences
+
+- **IBM Plex Mono** : © IBM Corp., licence SIL Open Font License 1.1 (`src/assets/fonts/OFL.txt`).
+- Outils de build (non envoyés aux visiteurs) : [Vite](https://vite.dev), [marked](https://marked.js.org), [gray-matter](https://github.com/jonschlinkert/gray-matter), tous sous licence MIT.

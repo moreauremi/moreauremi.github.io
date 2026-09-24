@@ -15,6 +15,7 @@
 // =============================================================================
 
 import { site } from '../content.js';
+import { escapeHtml } from '../utils/html.js';
 import { navigate } from '../router.js';
 import { COMMANDS, complete } from './commands.js';
 import { buildFilesystem, displayPath, HOME } from './filesystem.js';
@@ -29,7 +30,7 @@ export function createTerminal({ onReboot }) {
   dialog.setAttribute('aria-labelledby', 'terminal-title');
   dialog.innerHTML = `
     <div class="terminal-head">
-      <span id="terminal-title">Terminal — ${utilisateur}@${machine}</span>
+      <span id="terminal-title">Terminal — ${escapeHtml(`${utilisateur}@${machine}`)}</span>
       <span class="terminal-tools">
         <button type="button" data-action="tab" aria-label="Compléter (touche Tab)">Tab</button>
         <button type="button" data-action="close">Fermer</button>
