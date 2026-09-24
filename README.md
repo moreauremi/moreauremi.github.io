@@ -80,7 +80,7 @@ Tout le contenu est dans `content/` : aucune ligne de code à toucher.
   titre: "Supervision du réseau avec Zabbix"
   slug: supervision-zabbix        # identique au nom du fichier
   type: entreprise                # entreprise, formation ou perso
-  date: 2026-11                   # AAAA, AAAA-MM ou AAAA-MM-JJ
+  date: 2026-11                   # AAAA, AAAA-MM, AAAA-MM-JJ ou période 2026-01/2026-08
   statut: terminé
   resume: "Une phrase qui résume la réalisation."
   technos: [Zabbix, Debian]
@@ -274,7 +274,30 @@ Pour vérifier la compression : `curl -sI -H "Accept-Encoding: gzip" http://loca
 
 ### Étape 4 : brancher le reverse proxy nginx
 
-**Sans nom de domaine** (situation actuelle) : publier le site dans un sous-dossier de l'adresse du homelab, par exemple `http://192.168.1.10/portfolio/`. Dans le bloc `server` existant du reverse proxy :
+Le reverse proxy nginx du homelab tourne **dans un conteneur Docker**. Attention : à l'intérieur de ce conteneur, `127.0.0.1` désigne le conteneur nginx lui-même, pas la machine. Il y a deux façons de joindre le portfolio ; choisir l'une des deux, puis utiliser l'adresse obtenue à la place de `<PORTFOLIO>` dans les exemples plus bas.
+
+**Option A, la plus simple : l'adresse IP de la machine.** Le portfolio publie le port 8080 sur la machine, que le conteneur nginx peut joindre par l'adresse IP locale du homelab (`hostname -I` sur le serveur pour la connaître). `<PORTFOLIO>` vaut alors par exemple `192.168.1.10:8080`.
+
+**Option B, plus propre : un réseau Docker commun.** Les deux conteneurs se parlent directement, sans passer par un port de la machine.
+
+1. Trouver le réseau du conteneur nginx (remplacer `nginx` par le nom de son conteneur, visible avec `docker ps`) :
+
+   ```bash
+   docker inspect nginx --format '{{range $nom, $r := .NetworkSettings.Networks}}{{$nom}} {{end}}'
+   ```
+
+2. Ajouter à la fin de `docker-compose.yml` (remplacer `nom-du-reseau` par le résultat de la commande) :
+
+   ```yaml
+   networks:
+     default:
+       name: nom-du-reseau
+       external: true
+   ```
+
+3. Relancer : `docker compose up -d`. `<PORTFOLIO>` vaut alors `remios-portfolio:80` (le nom du conteneur sert d'adresse). La ligne `ports:` peut rester, pour tester directement sur le port 8080.
+
+**Sans nom de domaine** (situation actuelle) : publier le site dans un sous-dossier de l'adresse du homelab, par exemple `http://192.168.1.10/portfolio/`. Dans le bloc `server` existant de la configuration nginx :
 
 ```nginx
 # « /portfolio » sans barre finale → redirection vers « /portfolio/ »
@@ -284,7 +307,7 @@ location = /portfolio {
 
 location /portfolio/ {
     # Le « / » final retire « /portfolio/ » avant de transmettre au conteneur
-    proxy_pass http://127.0.0.1:8080/;
+    proxy_pass http://<PORTFOLIO>/;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -292,7 +315,11 @@ location /portfolio/ {
 }
 ```
 
-Ça fonctionne sans rien changer au site grâce aux chemins relatifs (`base: './'`). Recharger ensuite nginx : `sudo nginx -t && sudo systemctl reload nginx`.
+Ça fonctionne sans rien changer au site grâce aux chemins relatifs (`base: './'`). Vérifier puis recharger la configuration (remplacer `nginx` par le nom du conteneur) :
+
+```bash
+docker exec nginx nginx -t && docker exec nginx nginx -s reload
+```
 
 **Avec un nom de domaine** (plus tard) :
 
@@ -315,7 +342,7 @@ server {
     add_header Strict-Transport-Security "max-age=31536000" always;
 
     location / {
-        proxy_pass http://127.0.0.1:8080;
+        proxy_pass http://<PORTFOLIO>;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -325,23 +352,6 @@ server {
 ```
 
 Puis renseigner `urlPublique: 'https://portfolio.exemple.fr/'` dans `content/site.config.js` et reconstruire (étape 5) : les aperçus de lien (image, adresse) seront alors complets.
-
-**Si le reverse proxy tourne lui-même dans un conteneur**, `127.0.0.1` désigne ce conteneur et non la machine. Il faut mettre les deux conteneurs sur un même réseau Docker :
-
-```bash
-docker network create proxy        # une seule fois (inutile s'il existe déjà)
-```
-
-Ajouter à la fin de `docker-compose.yml` :
-
-```yaml
-networks:
-  default:
-    name: proxy
-    external: true
-```
-
-Brancher aussi le conteneur du reverse proxy sur ce réseau, puis utiliser `proxy_pass http://remios-portfolio:80;` (le nom du conteneur sert d'adresse). La ligne `ports:` devient alors facultative.
 
 ### Étape 5 : mettre à jour le site
 
@@ -359,7 +369,7 @@ ssh remi@homelab "cd ~/remios-portfolio && docker compose up -d --build && docke
 - **Le port 8080 est déjà pris** : `PORTFOLIO_PORT=8090 docker compose up -d` (et adapter `proxy_pass`).
 - **Le build échoue** : lire le message, il indique souvent une fiche mal remplie ; le corriger et relancer. Le même message apparaît en local avec `npm run build`.
 - **Le conteneur redémarre en boucle** : `docker compose logs`. Si nginx se plaint d'un système de fichiers en lecture seule, mettre en commentaire les lignes `read_only`, `tmpfs` et leurs dossiers dans `docker-compose.yml`, puis relancer.
-- **Seul le reverse proxy doit accéder au conteneur** : remplacer la ligne de port par `"127.0.0.1:${PORTFOLIO_PORT:-8080}:80"` (le site n'est plus joignable directement depuis le réseau).
+- **Seul le reverse proxy doit accéder au conteneur** : utiliser l'option B (réseau Docker commun) et supprimer la ligne `ports:` ; le site n'est alors plus joignable directement depuis le réseau.
 
 ## Préparer l'oral
 

@@ -15,8 +15,9 @@ services:
     ports:
       # « port de la machine : port du conteneur ». 8080 par défaut ; pour en
       # changer sans modifier ce fichier : PORTFOLIO_PORT=8090 docker compose up -d
-      # Pour que seul le reverse proxy (sur la même machine) puisse y accéder,
-      # écrire plutôt : "127.0.0.1:${PORTFOLIO_PORT:-8080}:80"
+      # Le reverse proxy nginx tourne dans un conteneur : il joint le portfolio
+      # par l'IP de la machine sur ce port, ou par un réseau Docker commun
+      # (voir « Déployer sur le homelab » dans le README).
       - "${PORTFOLIO_PORT:-8080}:80"
 
     # --- Durcissement ---

@@ -98,7 +98,7 @@ function mainPage() {
 
   return `<div class="jury-page">
     <header class="jury-header">
-      <p class="jury-kicker">Portfolio BTS SIO option SISR · vue rapide jury</p>
+      <p class="jury-kicker">Portfolio BTS SIO option SISR · épreuve E5 · vue rapide jury</p>
       <h1 tabindex="-1">${escapeHtml(site.identite.nom)}</h1>
       <p class="jury-sub">${site.neofetch
         .filter(([key]) => ['Formation', 'École', 'Promo', 'Alternance', 'Poste'].includes(key))

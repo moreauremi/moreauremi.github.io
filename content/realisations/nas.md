@@ -1,5 +1,5 @@
 ---
-titre: "NAS"
+titre: "NAS Homelab"
 slug: nas
 type: perso  # entreprise, formation ou perso
 date: "[À COMPLÉTER]"  # AAAA, AAAA-MM ou AAAA-MM-JJ (ex. 2026-11)

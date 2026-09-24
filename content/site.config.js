@@ -23,7 +23,7 @@ export default {
     ['Utilisateur', 'Rémi Moreau'],
     ['Formation', 'BTS SIO option SISR'],
     ['École', 'MyDigitalSchool Nantes'],
-    ['Alternance', '1Life (groupe Visiativ)'],
+    ['Alternance', '1Life (part of Visiativ)'],
     ['Poste', 'Consultant ERP Open-Prod'],
     ['Promo', '2026 – 2028'],
     ['Base', 'Nantes'],

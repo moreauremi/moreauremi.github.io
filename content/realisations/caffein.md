@@ -1,12 +1,18 @@
 ---
-titre: "CAFFEIN"
+titre: "WebApp — SaaS de facturation"
 slug: caffein
 type: perso  # entreprise, formation ou perso
-date: "[À COMPLÉTER]"  # AAAA, AAAA-MM ou AAAA-MM-JJ (ex. 2026-11)
-statut: "[À COMPLÉTER]"  # ex. en cours, terminé
-resume: "SaaS de facturation pour micro-entrepreneurs et artisans du BTP (projet annexe)."
-technos: []
-competences: []  # ex. [C1, C4]
+date: 2026-01/2026-08  # AAAA, AAAA-MM, AAAA-MM-JJ ou période début/fin (ex. 2026-01/2026-08)
+statut: "en pause"  # ex. en cours, terminé, en pause
+resume: "SaaS de facturation pour micro-entrepreneurs et artisans du BTP, piloté par un assistant IA qui réalise à la place de l'utilisateur les tâches demandées dans le logiciel."
+technos:
+  - "Python"
+  - "HTML"
+  - "API Claude"
+  - "Whisper"
+  - "Claude Code"
+  - "Hostinger"
+competences: []  # codes du référentiel, ex. [C1, C4] (grille officielle à venir)
 ---
 
 <!--
@@ -20,15 +26,24 @@ competences: []  # ex. [C1, C4]
 
 ## Contexte
 
-[À COMPLÉTER : situation de départ, pour qui, avec quels moyens]
+Ce projet annexe, baptisé CAFFEIN, est né de mon intérêt pour les CRM, les ERP et l'intelligence artificielle, et de l'envie de réunir ces trois sujets. L'idée : permettre à des personnes peu à l'aise avec la technologie, ou qui manquent de temps, de réaliser des tâches plus ou moins complexes dans leur logiciel de gestion, simplement en les demandant. Il s'adresse aux micro-entrepreneurs et aux artisans du BTP.
 
 ## Objectifs
 
-[À COMPLÉTER]
+Construire un SaaS complet, centré sur un assistant IA capable de piloter les différents modules du logiciel.
 
 ## Mise en œuvre
 
-[À COMPLÉTER : étapes, architecture, configuration]
+L'application repose sur les briques suivantes :
+
+- **Python** pour le code de l'application ;
+- **HTML** pour l'interface web ;
+- **l'API Claude** pour l'assistant IA, qui comprend les demandes de l'utilisateur et réalise les tâches correspondantes dans le logiciel ;
+- **Whisper** pour la transcription de la voix en texte, afin de pouvoir s'adresser à l'assistant à l'oral ;
+- **Hostinger** pour l'hébergement du serveur, avec un nom de domaine dédié ;
+- **Claude Code** comme assistant de développement pendant l'écriture du code.
+
+[À COMPLÉTER : étapes du développement, modules réalisés (devis, factures, clients…), organisation du code, stockage des données]
 
 ## Captures d'écran
 
@@ -36,8 +51,16 @@ competences: []  # ex. [C1, C4]
 
 ## Résultats et tests
 
-[À COMPLÉTER : ce qui a été vérifié, et comment]
+Le développement s'est déroulé de janvier à août 2026 ; le projet est aujourd'hui en pause.
+
+Les tests se sont révélés complexes : tous les modules fonctionnent ensemble et l'assistant IA agit sur chacun d'eux. Un problème à un endroit peut donc faire dysfonctionner l'ensemble du logiciel.
 
 ## Difficultés rencontrées
 
-[À COMPLÉTER : problèmes rencontrés et solutions trouvées]
+Le coût : l'API Claude, l'API Whisper, le serveur et le nom de domaine sont tous payants. Piste retenue : auto-héberger le maximum de briques pour réduire ces coûts.
+
+## Compétences mises en œuvre
+
+- Développement en Python
+- Mise en place d'un serveur chez Hostinger
+- Configuration d'un nom de domaine
