@@ -1,0 +1,286 @@
+/* ==========================================================================
+   Interface façon ncurses / whiptail : fond bleu, boîte grise en relief
+   ========================================================================== */
+
+/* Fond de page bleu quand l'interface RémiOS est affichée (évite une bande
+   noire si on fait « rebondir » la page sur mobile). */
+html[data-view='tui'] body {
+  background: var(--tui-bg);
+}
+
+.tui {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* navigateurs anciens */
+  min-height: 100dvh; /* hauteur réelle de l'écran, barres du navigateur mobiles comprises */
+  background: var(--tui-bg);
+  color: var(--tui-ink);
+  /* Couleurs des blocs de contenu partagés (voir blocks.css) */
+  --accent: var(--tui-sel);
+  --rule: var(--tui-inner-border);
+}
+
+/* --- Barre du haut ---------------------------------------------------------- */
+
+.tui-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  min-height: 48px;
+  padding: 6px var(--gutter);
+  /* Place laissée libre à droite pour les boutons fixes (son, vue jury) */
+  padding-right: calc(var(--system-bar-width, 0px) + var(--gutter));
+  border-bottom: 1px solid rgb(255 255 255 / 0.25);
+  color: var(--tui-bar-ink);
+}
+
+.tui-bar-title {
+  margin-left: auto;
+}
+
+/* --- Zone centrale ---------------------------------------------------------- */
+
+.tui-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px var(--gutter) 32px;
+}
+
+/* --- Boîte de dialogue ------------------------------------------------------ */
+
+.tui-box {
+  --box-pad: 22px;
+  width: min(900px, 100%);
+  padding: var(--box-pad) 26px 20px;
+  background: var(--tui-box);
+  /* Relief : bords clairs en haut à gauche, sombres en bas à droite */
+  border: 2px solid;
+  border-color: var(--tui-bevel-light) var(--tui-bevel-dark) var(--tui-bevel-dark) var(--tui-bevel-light);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--tui-shadow);
+  /* Sur fond gris, le contour de focus jaune ne se verrait pas : noir ici */
+  --focus-ring: 2px solid var(--tui-ink);
+}
+
+/* Titre posé sur la bordure du haut : remonté de la hauteur du padding, de la
+   moitié de la bordure et d'une demi-ligne, avec un fond gris qui « coupe » la
+   bordure. Il reste dans le flux, donc un titre long passe à la ligne proprement. */
+.tui-box-title {
+  width: fit-content;
+  max-width: 100%;
+  margin: calc(-1 * var(--box-pad) - 1px - 0.725em) auto 12px;
+  padding: 0 10px;
+  background: var(--tui-box);
+  color: var(--tui-title);
+  font-size: inherit;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Le titre reçoit le focus par programme (pour les lecteurs d'écran) : ce
+   n'est pas un élément interactif, inutile de l'encadrer. */
+.tui-box-title:focus {
+  outline: none;
+}
+
+.tui-box-inner {
+  padding: 18px;
+  border: 1px solid var(--tui-inner-border);
+}
+
+/* --- Accueil : identité + menu ---------------------------------------------- */
+
+.home {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 28px;
+}
+
+.home-logo {
+  margin: 0 0 12px;
+  color: var(--tui-sel);
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.home-facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 3px 14px;
+  margin: 0;
+}
+
+.home-facts dt {
+  color: var(--tui-sel);
+  font-weight: 600;
+}
+
+.home-facts dd {
+  margin: 0;
+}
+
+.home-nav-label {
+  margin: 0 0 10px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 32px;
+  padding: 6px 10px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.menu-key {
+  color: var(--tui-title);
+  font-weight: 600;
+}
+
+.menu-item:hover {
+  background: rgb(30 60 140 / 0.12);
+}
+
+/* Rubrique sélectionnée : barre bleue, comme dans whiptail */
+.menu-item.is-selected,
+.menu-item:focus-visible {
+  background: var(--tui-sel);
+  color: var(--tui-sel-ink);
+}
+
+.menu-item.is-selected .menu-key,
+.menu-item:focus-visible .menu-key {
+  color: var(--tui-sel-key);
+}
+
+/* Contour de focus dessiné à l'intérieur de la barre bleue (jaune sur bleu) */
+.menu-item:focus-visible {
+  outline: 2px solid var(--tui-sel-key);
+  outline-offset: -4px;
+}
+
+/* --- Boutons du bas de boîte ------------------------------------------------ */
+
+.tui-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 28px;
+  margin-top: 18px;
+}
+
+.tui-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--tui-ink);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.tui-btn--primary {
+  background: var(--tui-sel);
+  color: var(--tui-sel-ink);
+}
+
+.tui-btn:hover {
+  text-decoration: underline;
+}
+
+/* --- Listes de fiches dans une rubrique ------------------------------------- */
+
+.tui .intro {
+  margin: 0 0 12px;
+}
+
+.tui .empty {
+  margin: 0;
+}
+
+.tui .fiche-link {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 10px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.tui .fiche-link-title {
+  color: var(--tui-sel);
+  font-weight: 600;
+}
+
+.tui .fiche-link:hover,
+.tui .fiche-link:focus-visible {
+  background: var(--tui-sel);
+  color: var(--tui-sel-ink);
+}
+
+.tui .fiche-link:hover .fiche-link-title,
+.tui .fiche-link:focus-visible .fiche-link-title {
+  color: var(--tui-sel-key);
+}
+
+.tui .fiche-link:focus-visible {
+  outline: 2px solid var(--tui-sel-key);
+  outline-offset: -4px;
+}
+
+/* --- Aide clavier ----------------------------------------------------------- */
+
+.tui-hints {
+  margin: 0;
+  padding: 0 var(--gutter) 18px;
+  color: var(--tui-hint);
+  font-size: var(--font-size-small);
+  text-align: center;
+}
+
+/* Appareils sans survol (téléphones, tablettes) : pas de clavier, pas d'aide clavier */
+@media (hover: none) {
+  .tui-hints {
+    display: none;
+  }
+}
+
+/* --- Petits écrans : une seule colonne -------------------------------------- */
+
+@media (max-width: 720px) {
+  .home {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .tui-stage {
+    padding-top: 32px;
+  }
+
+  .tui-box {
+    --box-pad: 18px;
+    padding-inline: 12px;
+  }
+
+  .tui-box-inner {
+    padding: 12px;
+  }
+
+  .home-logo {
+    font-size: 0.6875rem;
+  }
+}

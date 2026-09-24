@@ -1,20 +1,26 @@
-// Point d'entrée de l'application, chargé par index.html.
+// =============================================================================
+// Point d'entrée de l'application, chargé par index.html
+// -----------------------------------------------------------------------------
+// Il construit la page, affiche l'écran demandé par l'URL, puis suit les
+// changements d'URL et les touches du clavier.
+// =============================================================================
 
 // Styles du site : Vite les regroupe en un seul fichier CSS au build.
 import './styles/index.css';
-import { realisations, pages, site } from './content.js';
-import { safe } from './utils/html.js';
-
-// --- Écran provisoire de l'étape 3 -----------------------------------------
-// Il liste le contenu lu depuis content/ pour vérifier la chaîne Markdown.
-// Il sera remplacé par le vrai menu à l'étape 4.
+import { parseRoute, onRouteChange, navigate, link } from './router.js';
+import { createTui } from './tui/tui.js';
 
 const app = document.querySelector('#app');
-app.innerHTML = `
-<div style="padding:var(--gutter);max-width:80ch">
-  <p>RémiOS — étape 3 : contenu (${realisations.length} fiches, ${Object.keys(pages).length} pages)</p>
-  <ul>${realisations.map((r) => `<li>[${r.type}] ${safe(r.titre)} — ${safe(r.resume ?? '')}</li>`).join('')}</ul>
-  <p>Veille : ${site.veille.sujet ? safe(site.veille.sujet) : 'À venir'}</p>
-  <hr>
-  ${pages.presentation.html}
-</div>`;
+app.innerHTML = '<main class="tui" id="tui"></main>';
+document.documentElement.dataset.view = 'tui';
+
+const tui = createTui(document.querySelector('#tui'), {
+  // Provisoire : la séquence de démarrage sera branchée ici à l'étape 7
+  onReboot: () => navigate(link.home()),
+});
+
+// Premier affichage sans déplacer le focus (le visiteur n'a encore rien fait)
+tui.show(parseRoute(), { focus: false });
+onRouteChange((route) => tui.show(route));
+
+document.addEventListener('keydown', (event) => tui.handleKey(event));

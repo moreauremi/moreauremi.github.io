@@ -1,0 +1,135 @@
+/* ==========================================================================
+   Blocs de contenu partagés par RémiOS et la vue jury (voir src/blocks.js)
+   --------------------------------------------------------------------------
+   Les couleurs viennent de deux variables définies par le conteneur :
+     --accent  titres et liens
+     --rule    filets et bordures
+   ========================================================================== */
+
+/* --- Texte issu du Markdown ------------------------------------------------- */
+
+.prose h2 {
+  margin: 1.4em 0 0.5em;
+  color: var(--accent);
+  font-size: 1em;
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose > :last-child {
+  margin-bottom: 0;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin: 0 0 0.8em;
+}
+
+.prose p {
+  max-width: 75ch;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+
+.prose li {
+  margin-bottom: 0.25em;
+}
+
+.prose a,
+.contact a,
+.matrix a {
+  color: var(--accent);
+  font-weight: 600;
+  text-underline-offset: 2px;
+}
+
+/* --- Tableau croisé réalisations × compétences ------------------------------ */
+
+/* Sur petit écran, le tableau défile horizontalement dans son cadre au lieu
+   de faire déborder toute la page. tabindex="0" le rend défilable au clavier. */
+.table-scroll {
+  margin: 1em 0;
+  overflow-x: auto;
+}
+
+.matrix {
+  min-width: 100%;
+  border-collapse: collapse;
+}
+
+.matrix th,
+.matrix td {
+  padding: 4px 8px;
+  border: 1px solid var(--rule);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.matrix thead th {
+  font-weight: 600;
+}
+
+.matrix tbody th {
+  min-width: 16ch;
+  font-weight: 400;
+  text-align: left;
+  white-space: normal;
+}
+
+.matrix abbr {
+  cursor: help;
+  text-decoration: none;
+}
+
+/* Légende des codes de compétences */
+.legend {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 2px 12px;
+  margin: 0;
+  font-size: var(--font-size-small);
+}
+
+.legend dt {
+  font-weight: 600;
+}
+
+.legend dd {
+  margin: 0;
+}
+
+/* --- Contact ---------------------------------------------------------------- */
+
+.contact {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 6px 16px;
+  margin: 0;
+}
+
+.contact dt {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.contact dd {
+  margin: 0;
+  overflow-wrap: anywhere; /* une longue adresse passe à la ligne sur mobile */
+}
+
+/* --- Listes de fiches ------------------------------------------------------- */
+
+.fiche-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
