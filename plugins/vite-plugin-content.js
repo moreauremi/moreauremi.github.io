@@ -22,11 +22,12 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import matter from 'gray-matter';
 import { Marked } from 'marked';
-import { escapeHtml, markPlaceholders } from '../src/utils/html.js';
+import { escapeHtml, markPlaceholders, frenchSpacing } from '../src/utils/html.js';
 
 const TYPES = ['entreprise', 'formation', 'perso'];
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const DATE_PATTERN = /^\d{4}(?:-\d{2}){0,2}$/;
+// Une date (AAAA, AAAA-MM, AAAA-MM-JJ) ou une période « début/fin » (2026-01/2026-08)
+const DATE_PATTERN = /^\d{4}(?:-\d{2}){0,2}(?:\/\d{4}(?:-\d{2}){0,2})?$/;
 const CONFIG_FILE = 'content/site.config.js';
 
 export default function contentPlugin() {
@@ -143,7 +144,7 @@ function checkRealisation(data, file, site, errors) {
 
   meta.date = normalizeDate(data.date);
   if (meta.date === null) {
-    errors.push('« date » doit être au format AAAA, AAAA-MM ou AAAA-MM-JJ, ou valoir "[À COMPLÉTER]".');
+    errors.push('« date » doit être au format AAAA, AAAA-MM ou AAAA-MM-JJ, une période début/fin (ex. 2026-01/2026-08), ou valoir "[À COMPLÉTER]".');
   }
 
   if (!isFilled(data.statut)) errors.push('« statut » est obligatoire (ex. : en cours, terminé).');
@@ -228,7 +229,7 @@ function renderMarkdown(markdown) {
     },
   });
 
-  return { html: markPlaceholders(marked.parse(markdown)), images };
+  return { html: frenchSpacing(markPlaceholders(marked.parse(markdown))), images };
 }
 
 // --- Utilitaires -------------------------------------------------------------

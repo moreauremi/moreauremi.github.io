@@ -30,13 +30,15 @@ export const TYPES = {
 
 // Toutes les réalisations, les plus récentes d'abord.
 // Les dates sont au format AAAA, AAAA-MM ou AAAA-MM-JJ : l'ordre alphabétique
-// correspond donc à l'ordre chronologique. Sans date connue : en fin de liste.
+// correspond donc à l'ordre chronologique. Pour une période (début/fin), c'est
+// la date de fin qui compte. Sans date connue : en fin de liste.
 export const realisations = Object.values(ficheModules)
   .map(({ meta, html, raw }) => ({ ...meta, html, raw }))
   .sort((a, b) => {
     const dated = Number(hasDate(b)) - Number(hasDate(a));
     if (dated !== 0) return dated;
-    if (hasDate(a) && a.date !== b.date) return a.date < b.date ? 1 : -1;
+    const [endA, endB] = [endDate(a), endDate(b)];
+    if (hasDate(a) && endA !== endB) return endA < endB ? 1 : -1;
     return a.titre.localeCompare(b.titre, 'fr');
   });
 
@@ -63,4 +65,9 @@ export function competenceLabel(code) {
 
 function hasDate(realisation) {
   return /^\d{4}/.test(realisation.date);
+}
+
+// « 2026-01/2026-08 » → « 2026-08 » ; une date simple reste telle quelle
+function endDate(realisation) {
+  return realisation.date.split('/').pop();
 }
