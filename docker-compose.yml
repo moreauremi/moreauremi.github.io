@@ -1,0 +1,33 @@
+# =============================================================================
+# Lancement du portfolio sur le homelab :   docker compose up -d --build
+# -----------------------------------------------------------------------------
+# Le conteneur sert le site en HTTP sur un port de la machine. Le reverse proxy
+# nginx existant le publie à l'extérieur (et gère le HTTPS).
+# =============================================================================
+
+services:
+  portfolio:
+    build: .
+    image: remios-portfolio:latest
+    container_name: remios-portfolio
+    restart: unless-stopped # redémarre avec la machine, sauf arrêt volontaire
+
+    ports:
+      # « port de la machine : port du conteneur ». 8080 par défaut ; pour en
+      # changer sans modifier ce fichier : PORTFOLIO_PORT=8090 docker compose up -d
+      # Pour que seul le reverse proxy (sur la même machine) puisse y accéder,
+      # écrire plutôt : "127.0.0.1:${PORTFOLIO_PORT:-8080}:80"
+      - "${PORTFOLIO_PORT:-8080}:80"
+
+    # --- Durcissement ---
+    # Système de fichiers en lecture seule : le site ne change jamais une fois
+    # construit. Seuls les dossiers temporaires de nginx restent inscriptibles,
+    # en mémoire (tmpfs).
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+      - /tmp
+    # Aucun processus du conteneur ne peut gagner de privilèges supplémentaires
+    security_opt:
+      - no-new-privileges:true

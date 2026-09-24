@@ -1,0 +1,8 @@
+# Fichiers exclus du contexte envoyé à Docker pendant le build :
+# inutiles dans l'image, ou recréés à l'intérieur (node_modules, dist).
+node_modules
+dist
+.git
+reference
+*.log
+.DS_Store
