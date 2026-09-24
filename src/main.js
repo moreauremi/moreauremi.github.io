@@ -18,6 +18,8 @@ import { createLightbox } from './tui/lightbox.js';
 import { createJuryView } from './jury/jury-view.js';
 import { createSystemBar } from './ui/system-bar.js';
 import { createBoot } from './boot/sequence.js';
+import { createTerminal, isTerminalShortcut } from './terminal/terminal.js';
+import { isTypingTarget } from './utils/keyboard.js';
 
 // --- Construction de la page ---------------------------------------------------
 
@@ -36,7 +38,8 @@ const bootOverlay = app.querySelector('.boot');
 createSystemBar(app.querySelector('.system-bar'));
 createLightbox();
 
-const tui = createTui(tuiRoot, { onReboot: reboot });
+const terminal = createTerminal({ onReboot: reboot });
+const tui = createTui(tuiRoot, { onReboot: reboot, onOpenTerminal: () => terminal.open() });
 const jury = createJuryView(juryRoot);
 
 const boot = createBoot({
@@ -103,6 +106,18 @@ document.addEventListener('keydown', (event) => {
   // « Passer le démarrage ». La touche continue ensuite son chemin : une
   // flèche ou un chiffre agit directement sur le menu.
   if (boot.isRunning() && !['Tab', 'Shift'].includes(event.key)) boot.skip();
+
+  // Terminal caché : ` ou ², ou Ctrl+Alt+T (depuis l'interface RémiOS)
+  if (
+    isTerminalShortcut(event) &&
+    !terminal.isOpen() &&
+    !isTypingTarget(event.target) &&
+    !isJuryRoute(parseRoute())
+  ) {
+    event.preventDefault(); // le caractère ` ne doit pas s'écrire dans le terminal
+    terminal.open();
+    return;
+  }
 
   // Touche pressée dans une fenêtre ouverte par-dessus la page (visionneuse…) :
   // c'est elle qui la gère (Échap la ferme sans revenir en arrière dans le menu).

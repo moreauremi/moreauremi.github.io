@@ -70,5 +70,6 @@
   :root {
     --font-size: 0.8125rem;
     --shadow-offset: 8px;
+    --system-bar-width: 160px;
   }
 }

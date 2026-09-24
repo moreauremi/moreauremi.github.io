@@ -5,6 +5,9 @@
 import { link } from '../router.js';
 
 export function createSystemBar(root) {
-  root.innerHTML = `<a class="system-bar-jury" href="${link.jury()}">Vue rapide jury</a>`;
+  // Sur petit écran, le libellé se réduit à « Vue jury » (voir system-bar.css).
+  // Le libellé est enveloppé dans un <span> : dans un conteneur flex, les
+  // espaces en bord de texte disparaîtraient (« Vuerapidejury »).
+  root.innerHTML = `<a class="system-bar-jury" href="${link.jury()}"><span>Vue <span class="system-bar-long">rapide </span>jury</span></a>`;
   return { root };
 }

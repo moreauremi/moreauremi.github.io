@@ -39,6 +39,21 @@ html[data-view='tui'] body {
   margin-left: auto;
 }
 
+/* Entrée discrète vers le terminal : un simple texte cliquable */
+.tui-bar-tty2 {
+  min-height: 32px;
+  padding: 2px 4px;
+  border: 0;
+  background: transparent;
+  color: var(--tui-hint);
+  cursor: pointer;
+}
+
+.tui-bar-tty2:hover {
+  color: var(--tui-bar-ink);
+  text-decoration: underline;
+}
+
 /* --- Zone centrale ---------------------------------------------------------- */
 
 .tui-stage {

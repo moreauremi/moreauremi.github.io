@@ -40,6 +40,12 @@
   outline-offset: 2px;
 }
 
+@media (max-width: 720px) {
+  .system-bar-long {
+    display: none;
+  }
+}
+
 /* Dans la vue jury, la page a ses propres boutons : la barre est inutile */
 html[data-view='jury'] .system-bar {
   display: none;

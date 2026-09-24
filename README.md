@@ -36,6 +36,7 @@ src/blocks.js           blocs de contenu communs à RémiOS et à la vue jury
 src/tui/                interface façon whiptail : boîte, menu, rubriques, fiches, visionneuse
 src/boot/               séquence de démarrage : GRUB, journal du noyau, systemd, connexion
 src/jury/               vue rapide jury, sobre et imprimable
+src/terminal/           terminal caché : fenêtre, commandes, système de fichiers simulé
 src/ui/                 barre fixe en haut à droite (vue jury)
 src/utils/              petites fonctions partagées (HTML sûr, dates)
 src/styles/index.css    point d'entrée des styles, importe les fichiers ci-dessous
@@ -80,6 +81,7 @@ Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, i
 - **Boot en calque, par-dessus le menu.** Le menu est affiché dès le chargement ; le boot est un calque noir posé dessus pendant 5 secondes au maximum. « Passer » (bouton, n'importe quelle touche, clic ou toucher) retire simplement le calque. Le navigateur, les lecteurs d'écran et Lighthouse voient le contenu principal tout de suite. Pendant le boot, le menu est rendu « inerte » (attribut `inert`) pour que la touche Tab ne s'y perde pas.
 - **Boot fluide à 60 images/s.** Une seule boucle `requestAnimationFrame` affiche par paquets les lignes dont l'heure est venue ; le nombre de lignes dans la page est limité à la hauteur de l'écran ; le défilement est fait par le CSS (lignes calées en bas) ; le seul effet, le fondu final, n'anime que l'opacité.
 - **Boot seulement à l'accueil.** Un lien direct (`#/jury`, `#/realisations/nas`) affiche la page sans attendre. Si le système demande de réduire les animations, il n'y a pas de boot du tout. Le service `veille-techno.service` passe de `[ WARN ]` à `[  OK  ]` dès qu'un sujet est renseigné dans `site.config.js`.
+- **Terminal caché, entièrement simulé.** Touche `` ` `` (ou `²` sur un clavier AZERTY PC), `Ctrl+Alt+T`, ou le bouton `[tty2]` de la barre du haut (seul moyen sur mobile). Les fiches y sont des fichiers (`cat realisations/perso/nas.md`) : l'arborescence est construite en mémoire à partir du contenu du site. Aucune commande n'est exécutée et rien n'est envoyé à un serveur ; tout ce que tape le visiteur est affiché avec `textContent`, donc jamais interprété comme du HTML (pas d'injection possible). Commandes : `help`, `whoami`, `neofetch`, `ls`, `cd`, `pwd`, `cat`, `open`, `jury`, `history`, `clear`, `reboot`, `exit`… et quelques surprises.
 - **Vue rapide jury.** Accessible en un clic depuis n'importe quel écran (bouton jaune en haut à droite, premier élément atteint avec Tab) ou directement par l'URL `#/jury`. Fond clair, police système, aucune animation, tout sur une page. La feuille `@media print` retire les boutons, écrit l'adresse des liens en clair et évite de couper un bloc en bas de page.
 - **Visionneuse d'images native.** Les captures s'agrandissent dans un élément HTML `<dialog>` : le navigateur gère lui-même le piège du focus, la touche Échap et le retour du focus à la fermeture. Sans JavaScript, le lien ouvre simplement l'image.
 - **Police auto-hébergée.** IBM Plex Mono est servie par le site lui-même, pas par Google Fonts : le site fonctionne sans accès extérieur (utile sur un réseau fermé ou en démonstration hors ligne) et aucune donnée de visite n'est transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 ko au total). La police principale est préchargée pour que le boot s'affiche directement dans la bonne police.
@@ -95,7 +97,7 @@ Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, i
 - [x] 5. Fiches de réalisation et visionneuse d'images
 - [x] 6. Vue rapide jury imprimable
 - [x] 7. Séquence de démarrage
-- [ ] 8. Terminal caché
+- [x] 8. Terminal caché
 - [ ] 9. Sons de démarrage
 - [ ] 10. Responsive, accessibilité, performance
 - [ ] 11. Déploiement Docker + nginx

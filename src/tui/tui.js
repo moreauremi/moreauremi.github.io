@@ -24,10 +24,11 @@ import { SECTIONS, findSection } from './sections.js';
 
 const DEFAULT_TITLE = 'RémiOS — Portfolio BTS SIO de Rémi Moreau';
 
-export function createTui(root, { onReboot }) {
+export function createTui(root, { onReboot, onOpenTerminal }) {
   root.innerHTML = `
     <header class="tui-bar">
       <span class="tui-bar-tty">RémiOS 1.0 <span class="tui-bar-extra">(tty1)</span></span>
+      <button type="button" class="tui-bar-tty2" data-action="terminal" aria-label="Ouvrir le terminal">[tty2]</button>
       <span class="tui-bar-title">Portfolio BTS SIO SISR</span>
     </header>
     <div class="tui-stage"></div>
@@ -128,6 +129,9 @@ export function createTui(root, { onReboot }) {
     const item = event.target.closest('.menu-item');
     if (item) select(Number(item.dataset.index), false);
   });
+
+  // Entrée discrète vers le terminal caché, dans la barre du haut
+  root.querySelector('[data-action="terminal"]').addEventListener('click', onOpenTerminal);
 
   // Boutons « < Ouvrir > » et « <Redémarrer> »
   stage.addEventListener('click', (event) => {
