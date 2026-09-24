@@ -22,6 +22,7 @@ import {
 import { escapeHtml, safe } from '../utils/html.js';
 import { formatDate } from '../utils/dates.js';
 import { hasModifier } from '../utils/keyboard.js';
+import { setPlainTitle } from '../ui/tab-title.js';
 
 // Date du build, injectée par Vite (voir vite.config.js)
 const BUILD_DATE = formatDate(__BUILD_DATE__);
@@ -50,13 +51,13 @@ export function createJuryView(root) {
 
     if (route.name === 'jury-fiche' && fiche) {
       root.innerHTML = fichePage(fiche);
-      document.title = `${fiche.titre} — Vue jury`;
+      setPlainTitle(`${fiche.titre} — Vue jury`);
     } else if (route.name === 'jury-fiche') {
       root.innerHTML = missingPage();
-      document.title = 'Fiche introuvable — Vue jury';
+      setPlainTitle('Fiche introuvable — Vue jury');
     } else {
       root.innerHTML = mainPage();
-      document.title = `${site.identite.nom} — Portfolio BTS SIO (vue jury)`;
+      setPlainTitle(`${site.identite.nom} — Portfolio BTS SIO (vue jury)`);
     }
 
     window.scrollTo(0, 0);

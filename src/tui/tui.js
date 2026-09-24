@@ -18,11 +18,10 @@ import { getRealisation, TYPES } from '../content.js';
 import { ficheBlock } from '../blocks.js';
 import { safe } from '../utils/html.js';
 import { hasModifier, isTypingTarget } from '../utils/keyboard.js';
+import { setPromptTitle } from '../ui/tab-title.js';
 import { box, backButton } from './box.js';
 import { homeBox } from './home.js';
 import { SECTIONS, findSection } from './sections.js';
-
-const DEFAULT_TITLE = 'RémiOS — Portfolio BTS SIO de Rémi Moreau';
 
 export function createTui(root, { onReboot, onOpenTerminal }) {
   root.innerHTML = `
@@ -48,7 +47,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
   function show(route, { focus = true } = {}) {
     view = resolve(route);
     stage.innerHTML = view.html;
-    document.title = view.title ? `${view.title} — RémiOS` : DEFAULT_TITLE;
+    setPromptTitle(view.title); // « RémiOS_ » ou « Présentation — RémiOS_ », curseur clignotant
     window.scrollTo(0, 0);
 
     if (view.kind === 'home') {

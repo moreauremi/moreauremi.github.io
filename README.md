@@ -151,7 +151,7 @@ src/boot/                démarrage : écran GRUB, contenu du journal, déroulem
 src/jury/                vue rapide jury
 src/terminal/            terminal : fenêtre, commandes, système de fichiers simulé
 src/audio/               sons générés avec la Web Audio API
-src/ui/                  barre fixe en haut à droite (vue jury, bouton son)
+src/ui/                  barre fixe en haut à droite (vue jury, bouton son), titre de l'onglet
 src/utils/               petites fonctions partagées : HTML sûr, dates, clavier, réglages mémorisés
 src/styles/              un fichier CSS par partie (tokens.css = toutes les couleurs, print.css = impression)
 src/assets/fonts/        IBM Plex Mono en woff2 (400 et 600) + licence OFL
@@ -177,6 +177,7 @@ reference/               maquette HTML validée au départ du projet (hors build
 - **Boot seulement à l'accueil.** Un lien direct affiche la page sans attendre. Le service `veille-techno.service` passe de `[ WARN ]` à `[  OK  ]` dès qu'un sujet de veille est renseigné.
 - **Terminal entièrement simulé.** L'arborescence (`~/realisations/perso/nas.md`…) est construite en mémoire à partir du contenu. Aucune commande n'est exécutée, rien n'est envoyé à un serveur.
 - **Sons synthétisés.** Bip POST (oscillateur carré à 1 000 Hz), clics de disque (bruit filtré) et bip de validation sont fabriqués par la Web Audio API : aucun fichier audio. Les navigateurs interdisent le son avant une interaction : le contexte audio n'est créé qu'au premier clic ou à la première touche. Au tout premier chargement, le bip POST ne peut donc pas sonner ; il sonne sur `<Redémarrer>`, ou dès que le son est activé pendant le boot.
+- **Titre d'onglet façon invite de commande.** L'onglet affiche « RémiOS_ », et le « _ » clignote comme un curseur de terminal (toutes les 530 ms). Sur une rubrique ou une fiche, le nom de la page reste devant (« Présentation — RémiOS_ ») pour l'historique, les favoris et les lecteurs d'écran. La vue jury garde un titre fixe, et le curseur ne clignote pas si le système demande de réduire les animations.
 - **Réglages mémorisés prudemment.** Le choix du son est gardé dans `localStorage`, dont chaque accès est protégé (`try/catch`) : en navigation privée ou si le stockage est bloqué, le site fonctionne quand même.
 
 ### Accessibilité
