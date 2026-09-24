@@ -1,0 +1,132 @@
+/* ==========================================================================
+   Séquence de démarrage : GRUB puis journal, sur fond noir
+   Le calque couvre tout l'écran, au-dessus du menu (mais sous la barre fixe
+   « Vue rapide jury », qui reste utilisable pendant le boot).
+   ========================================================================== */
+
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+  background: var(--screen);
+  color: var(--text);
+  /* Fondu final : seule l'opacité change, animée par la carte graphique */
+  transition: opacity 200ms ease-out;
+}
+
+.boot.is-leaving {
+  opacity: 0;
+}
+
+/* --- GRUB ------------------------------------------------------------------- */
+
+.grub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  height: 100%;
+  padding: var(--gutter);
+}
+
+.grub p {
+  margin: 0;
+}
+
+.grub-menu {
+  width: min(640px, 100%);
+  min-height: 180px;
+  padding: 10px 0;
+  border: 1px solid var(--text);
+}
+
+.grub-entry {
+  padding: 2px 14px;
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.grub-entry.is-selected {
+  background: var(--text);
+  color: var(--screen);
+}
+
+.grub-help {
+  width: min(640px, 100%);
+  color: var(--dim);
+  font-size: var(--font-size-small);
+}
+
+/* --- Journal ---------------------------------------------------------------- */
+
+/* Les lignes sont calées en bas de l'écran : chaque nouvelle ligne pousse
+   les précédentes vers le haut, où elles sortent de l'écran. C'est le CSS qui
+   fait « défiler » le journal, sans aucun calcul en JavaScript. */
+.boot-log {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  padding: 12px 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.boot-ts {
+  color: var(--dim);
+}
+
+.boot-status {
+  font-weight: 600;
+}
+
+.boot-status--ok {
+  color: var(--ok);
+}
+
+.boot-status--warn {
+  color: var(--warn);
+}
+
+.boot-unit {
+  color: var(--text-bright);
+}
+
+.boot-prompt {
+  color: var(--ok);
+}
+
+/* Curseur clignotant (animation d'opacité uniquement) */
+.boot-cursor {
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* --- Bouton « Passer le démarrage » ------------------------------------------ */
+
+.boot-skip {
+  position: fixed;
+  right: var(--gutter);
+  bottom: calc(var(--gutter) + env(safe-area-inset-bottom, 0px));
+  z-index: 25;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  background: var(--screen);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.boot-skip:hover {
+  border-color: var(--dim);
+}

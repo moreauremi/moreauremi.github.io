@@ -34,6 +34,7 @@ src/router.js           routage par hash (#/presentation, #/realisations/nas…)
 src/content.js          accès au contenu (configuration + fiches) pour le reste du code
 src/blocks.js           blocs de contenu communs à RémiOS et à la vue jury
 src/tui/                interface façon whiptail : boîte, menu, rubriques, fiches, visionneuse
+src/boot/               séquence de démarrage : GRUB, journal du noyau, systemd, connexion
 src/jury/               vue rapide jury, sobre et imprimable
 src/ui/                 barre fixe en haut à droite (vue jury)
 src/utils/              petites fonctions partagées (HTML sûr, dates)
@@ -76,6 +77,9 @@ Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, i
 - **Routage par hash.** Tout le site tient dans `index.html` ; la partie après `#` indique l'écran à afficher (`#/veille`, `#/realisations/nas`). Chaque écran a une URL partageable, les boutons Précédent/Suivant fonctionnent, et le serveur n'a besoin d'aucune règle de réécriture.
 - **Un contenu, deux habillages.** Les rubriques sont produites par `src/blocks.js` ; l'interface RémiOS et la vue jury l'habillent différemment. Le tableau croisé réalisations × compétences est généré à partir des fiches : il est toujours à jour.
 - **Accessibilité du menu.** Les rubriques sont de vrais liens `<a>` et les actions de vrais `<button>` : souris, tactile, clavier et lecteurs d'écran fonctionnent sans code spécial. À l'ouverture d'une boîte, le focus passe sur son titre et une zone `aria-live` annonce la rubrique ouverte.
+- **Boot en calque, par-dessus le menu.** Le menu est affiché dès le chargement ; le boot est un calque noir posé dessus pendant 5 secondes au maximum. « Passer » (bouton, n'importe quelle touche, clic ou toucher) retire simplement le calque. Le navigateur, les lecteurs d'écran et Lighthouse voient le contenu principal tout de suite. Pendant le boot, le menu est rendu « inerte » (attribut `inert`) pour que la touche Tab ne s'y perde pas.
+- **Boot fluide à 60 images/s.** Une seule boucle `requestAnimationFrame` affiche par paquets les lignes dont l'heure est venue ; le nombre de lignes dans la page est limité à la hauteur de l'écran ; le défilement est fait par le CSS (lignes calées en bas) ; le seul effet, le fondu final, n'anime que l'opacité.
+- **Boot seulement à l'accueil.** Un lien direct (`#/jury`, `#/realisations/nas`) affiche la page sans attendre. Si le système demande de réduire les animations, il n'y a pas de boot du tout. Le service `veille-techno.service` passe de `[ WARN ]` à `[  OK  ]` dès qu'un sujet est renseigné dans `site.config.js`.
 - **Vue rapide jury.** Accessible en un clic depuis n'importe quel écran (bouton jaune en haut à droite, premier élément atteint avec Tab) ou directement par l'URL `#/jury`. Fond clair, police système, aucune animation, tout sur une page. La feuille `@media print` retire les boutons, écrit l'adresse des liens en clair et évite de couper un bloc en bas de page.
 - **Visionneuse d'images native.** Les captures s'agrandissent dans un élément HTML `<dialog>` : le navigateur gère lui-même le piège du focus, la touche Échap et le retour du focus à la fermeture. Sans JavaScript, le lien ouvre simplement l'image.
 - **Police auto-hébergée.** IBM Plex Mono est servie par le site lui-même, pas par Google Fonts : le site fonctionne sans accès extérieur (utile sur un réseau fermé ou en démonstration hors ligne) et aucune donnée de visite n'est transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 ko au total). La police principale est préchargée pour que le boot s'affiche directement dans la bonne police.
@@ -90,7 +94,7 @@ Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, i
 - [x] 4. Menu principal et navigation
 - [x] 5. Fiches de réalisation et visionneuse d'images
 - [x] 6. Vue rapide jury imprimable
-- [ ] 7. Séquence de démarrage
+- [x] 7. Séquence de démarrage
 - [ ] 8. Terminal caché
 - [ ] 9. Sons de démarrage
 - [ ] 10. Responsive, accessibilité, performance

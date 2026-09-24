@@ -1,12 +1,13 @@
 // =============================================================================
 // Point d'entrée de l'application, chargé par index.html
 // -----------------------------------------------------------------------------
-// Il construit la page, affiche l'écran demandé par l'URL, puis suit les
-// changements d'URL et les touches du clavier.
+// Il construit la page, affiche l'écran demandé par l'URL, lance la séquence
+// de démarrage, puis suit les changements d'URL et les touches du clavier.
 //
 // La page contient deux « vues », une seule visible à la fois :
 //   - l'interface RémiOS (menu whiptail, fiches) ;
 //   - la vue rapide jury (#/jury), sobre et imprimable.
+// Le boot est un calque posé par-dessus, le temps du démarrage.
 // =============================================================================
 
 // Styles du site : Vite les regroupe en un seul fichier CSS au build.
@@ -16,6 +17,7 @@ import { createTui } from './tui/tui.js';
 import { createLightbox } from './tui/lightbox.js';
 import { createJuryView } from './jury/jury-view.js';
 import { createSystemBar } from './ui/system-bar.js';
+import { createBoot } from './boot/sequence.js';
 
 // --- Construction de la page ---------------------------------------------------
 
@@ -23,19 +25,33 @@ const app = document.querySelector('#app');
 app.innerHTML = `
   <div class="system-bar" role="region" aria-label="Accès rapides"></div>
   <main class="tui" id="tui"></main>
-  <main class="jury" id="jury" hidden></main>`;
+  <main class="jury" id="jury" hidden></main>
+  <div class="boot" hidden aria-hidden="true"></div>
+  <button type="button" class="boot-skip" hidden>Passer le démarrage</button>`;
 
 const tuiRoot = app.querySelector('#tui');
 const juryRoot = app.querySelector('#jury');
+const bootOverlay = app.querySelector('.boot');
 
 createSystemBar(app.querySelector('.system-bar'));
 createLightbox();
 
-const tui = createTui(tuiRoot, {
-  // Provisoire : la séquence de démarrage sera branchée ici à l'étape 7
-  onReboot: () => navigate(link.home()),
-});
+const tui = createTui(tuiRoot, { onReboot: reboot });
 const jury = createJuryView(juryRoot);
+
+const boot = createBoot({
+  overlay: bootOverlay,
+  skipButton: app.querySelector('.boot-skip'),
+  content: tuiRoot,
+  onFinish: ({ reducedMotion }) => {
+    // Sans boot (animations réduites), rien ne change à l'écran : on ne
+    // déplace pas le focus, la touche Tab mène d'abord à « Vue rapide jury ».
+    if (reducedMotion) return;
+    // Après le boot, le focus clavier se place sur le menu, prêt à naviguer
+    if (!isJuryRoute(parseRoute())) tui.focusMenu();
+    tui.announce('Démarrage terminé. Menu principal.');
+  },
+});
 
 // --- Affichage de l'écran demandé -----------------------------------------------
 
@@ -44,6 +60,10 @@ function isJuryRoute(route) {
 }
 
 function render(route, options) {
+  // Un changement d'écran pendant le boot (clic sur « Vue rapide jury »,
+  // bouton Précédent…) interrompt le démarrage.
+  if (boot.isRunning() && route.name !== 'home') boot.skip();
+
   const juryMode = isJuryRoute(route);
   // L'attribut data-view sur <html> permet au CSS d'adapter le fond de page
   document.documentElement.dataset.view = juryMode ? 'jury' : 'tui';
@@ -53,13 +73,37 @@ function render(route, options) {
   else tui.show(route, options);
 }
 
-// Premier affichage sans déplacer le focus (le visiteur n'a encore rien fait)
-render(parseRoute(), { focus: false });
+// « <Redémarrer> » : retour au menu principal et nouveau démarrage
+function reboot() {
+  boot.start();
+  navigate(link.home());
+}
+
+// Premier affichage : l'écran demandé est rendu tout de suite (sous le boot),
+// sans déplacer le focus. Le boot ne se joue qu'à l'arrivée sur l'accueil :
+// un lien direct (#/jury, #/realisations/nas…) affiche la page sans attendre.
+const firstRoute = parseRoute();
+render(firstRoute, { focus: false });
+if (firstRoute.name === 'home') boot.start();
+
 onRouteChange((route) => render(route));
+
+// --- Passer le démarrage -----------------------------------------------------------
+
+app.querySelector('.boot-skip').addEventListener('click', () => boot.skip());
+
+// Un clic (ou un appui tactile) n'importe où sur l'écran de boot le passe
+bootOverlay.addEventListener('pointerdown', () => boot.skip());
 
 // --- Clavier ---------------------------------------------------------------------
 
 document.addEventListener('keydown', (event) => {
+  // Pendant le boot, n'importe quelle touche le passe. Exceptions : Tab et
+  // Maj, pour pouvoir atteindre au clavier les boutons « Vue rapide jury » et
+  // « Passer le démarrage ». La touche continue ensuite son chemin : une
+  // flèche ou un chiffre agit directement sur le menu.
+  if (boot.isRunning() && !['Tab', 'Shift'].includes(event.key)) boot.skip();
+
   // Touche pressée dans une fenêtre ouverte par-dessus la page (visionneuse…) :
   // c'est elle qui la gère (Échap la ferme sans revenir en arrière dans le menu).
   if (event.target.closest?.('dialog')) return;
