@@ -14,6 +14,8 @@
 // =============================================================================
 
 import { link, navigate } from '../router.js';
+import { getRealisation, TYPES } from '../content.js';
+import { ficheBlock } from '../blocks.js';
 import { safe } from '../utils/html.js';
 import { hasModifier, isTypingTarget } from '../utils/keyboard.js';
 import { box, backButton } from './box.js';
@@ -74,6 +76,21 @@ export function createTui(root, { onReboot }) {
           title: section.label,
           html: box({ title: section.label, body: section.render(), actions: backButton(link.home()) }),
           parent: link.home(),
+        };
+      }
+    }
+
+    if (route.name === 'fiche') {
+      const fiche = getRealisation(route.slug);
+      if (fiche) {
+        // Parent de la fiche : la rubrique qui liste son type (entreprise, perso…)
+        const section = findSection(TYPES[fiche.type].section);
+        selected = SECTIONS.indexOf(section);
+        return {
+          kind: 'fiche',
+          title: fiche.titre,
+          html: box({ title: safe(fiche.titre), body: ficheBlock(fiche), actions: backButton(link.section(section.id)) }),
+          parent: link.section(section.id),
         };
       }
     }

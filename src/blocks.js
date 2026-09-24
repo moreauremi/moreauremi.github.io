@@ -9,8 +9,9 @@
 // dans RémiOS, #/jury/<slug> dans la vue jury.
 // =============================================================================
 
-import { site, pages, realisations, realisationsOfType } from './content.js';
+import { site, pages, realisations, realisationsOfType, competenceLabel, TYPES } from './content.js';
 import { escapeHtml, safe } from './utils/html.js';
+import { formatDate } from './utils/dates.js';
 
 // Attributs d'un lien qui s'ouvre dans un nouvel onglet
 const NEW_TAB = 'target="_blank" rel="noopener noreferrer"';
@@ -36,6 +37,41 @@ export function realisationList(type, hrefFor) {
     )
     .join('')}
   </ul>`;
+}
+
+// Caractéristiques d'une fiche : type, date, statut, technologies
+export function ficheMeta(r) {
+  const technos = r.technos.length
+    ? `<ul class="tags">${r.technos.map((t) => `<li>${safe(t)}</li>`).join('')}</ul>`
+    : '<mark class="ph">[À COMPLÉTER]</mark>';
+
+  return `<dl class="fiche-meta">
+    <dt>Type</dt><dd>${TYPES[r.type].label}</dd>
+    <dt>Date</dt><dd>${safe(formatDate(r.date))}</dd>
+    <dt>Statut</dt><dd>${safe(r.statut)}</dd>
+    <dt>Technos</dt><dd>${technos}</dd>
+  </dl>`;
+}
+
+// Compétences du référentiel mobilisées par une fiche
+export function ficheCompetences(r) {
+  const list = r.competences.length
+    ? `<ul>${r.competences.map((code) => `<li><strong>${escapeHtml(code)}</strong> — ${safe(competenceLabel(code))}</li>`).join('')}</ul>`
+    : '<p><mark class="ph">[À COMPLÉTER : compétences mobilisées]</mark></p>';
+
+  return `<section class="fiche-competences" aria-labelledby="competences-${r.slug}">
+    <h2 id="competences-${r.slug}">Compétences du référentiel mobilisées</h2>
+    ${list}
+  </section>`;
+}
+
+// Fiche complète : caractéristiques, texte de la fiche, compétences
+export function ficheBlock(r) {
+  return `<article class="fiche">
+    ${ficheMeta(r)}
+    <div class="prose">${r.html}</div>
+    <div class="prose">${ficheCompetences(r)}</div>
+  </article>`;
 }
 
 // Tableau de synthèse : lien vers le PDF officiel + tableau croisé généré

@@ -33,7 +33,7 @@ src/main.js             point d'entrée du JavaScript : assemble les modules
 src/router.js           routage par hash (#/presentation, #/realisations/nas…)
 src/content.js          accès au contenu (configuration + fiches) pour le reste du code
 src/blocks.js           blocs de contenu communs à RémiOS et à la vue jury
-src/tui/                interface façon whiptail : boîte, menu, rubriques, clavier
+src/tui/                interface façon whiptail : boîte, menu, rubriques, fiches, visionneuse
 src/utils/              petites fonctions partagées (HTML sûr, dates)
 src/styles/index.css    point d'entrée des styles, importe les fichiers ci-dessous
 src/styles/fonts.css    déclaration de la police auto-hébergée
@@ -74,6 +74,7 @@ Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, i
 - **Routage par hash.** Tout le site tient dans `index.html` ; la partie après `#` indique l'écran à afficher (`#/veille`, `#/realisations/nas`). Chaque écran a une URL partageable, les boutons Précédent/Suivant fonctionnent, et le serveur n'a besoin d'aucune règle de réécriture.
 - **Un contenu, deux habillages.** Les rubriques sont produites par `src/blocks.js` ; l'interface RémiOS et la vue jury l'habillent différemment. Le tableau croisé réalisations × compétences est généré à partir des fiches : il est toujours à jour.
 - **Accessibilité du menu.** Les rubriques sont de vrais liens `<a>` et les actions de vrais `<button>` : souris, tactile, clavier et lecteurs d'écran fonctionnent sans code spécial. À l'ouverture d'une boîte, le focus passe sur son titre et une zone `aria-live` annonce la rubrique ouverte.
+- **Visionneuse d'images native.** Les captures s'agrandissent dans un élément HTML `<dialog>` : le navigateur gère lui-même le piège du focus, la touche Échap et le retour du focus à la fermeture. Sans JavaScript, le lien ouvre simplement l'image.
 - **Police auto-hébergée.** IBM Plex Mono est servie par le site lui-même, pas par Google Fonts : le site fonctionne sans accès extérieur (utile sur un réseau fermé ou en démonstration hors ligne) et aucune donnée de visite n'est transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 ko au total). La police principale est préchargée pour que le boot s'affiche directement dans la bonne police.
 - **Variables CSS (« tokens »).** Toutes les couleurs de la maquette sont définies une seule fois dans `tokens.css`. Les tailles de texte sont en `rem` : si le visiteur agrandit le texte dans son navigateur, le site suit (accessibilité).
 - **Réduction des animations.** Si le système demande de réduire les animations (réglage d'accessibilité), les transitions CSS sont désactivées.
@@ -84,7 +85,7 @@ Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, i
 - [x] 2. Police auto-hébergée et thème RémiOS
 - [x] 3. Contenu en Markdown et fiches d'exemple
 - [x] 4. Menu principal et navigation
-- [ ] 5. Fiches de réalisation et visionneuse d'images
+- [x] 5. Fiches de réalisation et visionneuse d'images
 - [ ] 6. Vue rapide jury imprimable
 - [ ] 7. Séquence de démarrage
 - [ ] 8. Terminal caché
