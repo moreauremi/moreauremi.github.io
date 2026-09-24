@@ -22,10 +22,16 @@ npm run preview  # sert le contenu de dist/ pour vérifier le build avant de le 
 ## Organisation des fichiers
 
 ```
-index.html          page unique du site (Vite y injecte le JavaScript et le CSS)
-vite.config.js      configuration du build
-src/main.js         point d'entrée du JavaScript
-reference/          maquette HTML validée au départ du projet (hors build)
+index.html              page unique du site : meta, Open Graph, préchargement de la police
+vite.config.js          configuration du build
+public/                 fichiers copiés tels quels dans dist/ (favicon.svg…)
+src/main.js             point d'entrée du JavaScript
+src/styles/index.css    point d'entrée des styles, importe les fichiers ci-dessous
+src/styles/fonts.css    déclaration de la police auto-hébergée
+src/styles/tokens.css   variables de design : toutes les couleurs et tailles du site
+src/styles/base.css     styles communs (police, focus visible, réduction des animations)
+src/assets/fonts/       IBM Plex Mono en woff2 (400 et 600) + licence OFL
+reference/              maquette HTML validée au départ du projet (hors build)
 ```
 
 ## Choix techniques
@@ -33,11 +39,14 @@ reference/          maquette HTML validée au départ du projet (hors build)
 - **Vite + JavaScript sans framework.** Le site n'a pas besoin de React ou Vue : quelques modules JavaScript suffisent, le code reste court et facile à expliquer, et le navigateur n'a presque rien à télécharger. Vite apporte le serveur de développement (rechargement instantané) et le build optimisé : fichiers minifiés et noms de fichiers « hashés » (`index-3f9a2c.js`), ce qui permet au serveur de demander aux navigateurs de les garder en cache très longtemps.
 - **Chemins relatifs (`base: './'`).** Le site généré fonctionne à la racine d'un domaine comme dans un sous-dossier derrière un reverse proxy, sans reconfiguration.
 - **Aucune dépendance au moment de l'exécution.** Les outils (Vite, et plus tard le lecteur de Markdown) ne servent qu'à fabriquer le site ; ils sont déclarés en `devDependencies` et ne sont pas envoyés aux visiteurs.
+- **Police auto-hébergée.** IBM Plex Mono est servie par le site lui-même, pas par Google Fonts : le site fonctionne sans accès extérieur (utile sur un réseau fermé ou en démonstration hors ligne) et aucune donnée de visite n'est transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 ko au total). La police principale est préchargée pour que le boot s'affiche directement dans la bonne police.
+- **Variables CSS (« tokens »).** Toutes les couleurs de la maquette sont définies une seule fois dans `tokens.css`. Les tailles de texte sont en `rem` : si le visiteur agrandit le texte dans son navigateur, le site suit (accessibilité).
+- **Réduction des animations.** Si le système demande de réduire les animations (réglage d'accessibilité), les transitions CSS sont désactivées.
 
 ## Avancement
 
 - [x] 1. Initialisation du projet (Vite, git, configuration de base)
-- [ ] 2. Police auto-hébergée et thème RémiOS
+- [x] 2. Police auto-hébergée et thème RémiOS
 - [ ] 3. Contenu en Markdown et fiches d'exemple
 - [ ] 4. Menu principal et navigation
 - [ ] 5. Fiches de réalisation et visionneuse d'images

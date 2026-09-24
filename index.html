@@ -8,6 +8,36 @@
       name="description"
       content="Portfolio BTS SIO option SISR de Rémi Moreau : réalisations, tableau de synthèse et veille technologique."
     />
+    <meta name="author" content="Rémi Moreau" />
+    <!-- Couleur de la barre du navigateur sur mobile : noir, comme l'écran de boot -->
+    <meta name="theme-color" content="#000000" />
+
+    <!-- Icône de l'onglet (fichier copié tel quel depuis public/) -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Open Graph : titre et description affichés quand le lien est partagé
+         (LinkedIn, Teams, Discord…). L'adresse du site et l'image d'aperçu
+         seront ajoutées plus tard : elles doivent être des URL complètes,
+         donc elles attendent un nom de domaine. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="RémiOS" />
+    <meta property="og:title" content="RémiOS — Portfolio BTS SIO de Rémi Moreau" />
+    <meta
+      property="og:description"
+      content="Portfolio BTS SIO option SISR de Rémi Moreau : réalisations, tableau de synthèse et veille technologique."
+    />
+
+    <!-- Préchargement de la police principale : le navigateur la télécharge dès
+         la lecture de cette page, sans attendre le CSS. Le boot s'affiche ainsi
+         directement dans la bonne police. -->
+    <link
+      rel="preload"
+      href="/src/assets/fonts/ibm-plex-mono-400.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
   </head>
   <body>
     <!-- Conteneur dans lequel le JavaScript construit l'interface -->

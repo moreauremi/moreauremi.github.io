@@ -1,0 +1,63 @@
+/* ==========================================================================
+   Variables de design (« tokens »)
+   --------------------------------------------------------------------------
+   Toutes les couleurs, tailles et espacements du site sont définis ici, une
+   seule fois. Les autres fichiers CSS les utilisent avec var(--nom) : pour
+   changer une couleur partout, il suffit de la modifier à cet endroit.
+
+   Palette reprise de la maquette validée (reference/maquette.html).
+   Les contrastes texte/fond respectent le niveau AA des règles d'accessibilité
+   (rapport d'au moins 4,5:1).
+   ========================================================================== */
+
+:root {
+  /* --- Console : GRUB, journal de démarrage, terminal --- */
+  --screen: #000000;          /* fond noir */
+  --text: #c9ced6;            /* texte principal, gris clair */
+  --text-bright: #ffffff;     /* noms de services mis en évidence */
+  --dim: #7a828c;             /* horodatages, textes secondaires */
+  --ok: #4fd16b;              /* [  OK  ] */
+  --warn: #f2c14e;            /* [ WARN ], et contour de focus */
+  --info: #6cb8ff;            /* messages d'information */
+  --line: #333333;            /* bordures discrètes sur fond noir */
+
+  /* --- Interface façon ncurses / whiptail --- */
+  --tui-bg: #1e3c8c;          /* fond bleu de l'écran */
+  --tui-box: #cfcfcf;         /* boîte grise */
+  --tui-ink: #101010;         /* texte dans la boîte */
+  --tui-sel: #1e3c8c;         /* fond de l'élément sélectionné */
+  --tui-sel-ink: #ffffff;     /* texte de l'élément sélectionné */
+  --tui-sel-key: #ffd76a;     /* numéro de l'élément sélectionné */
+  --tui-title: #8a1c1c;       /* titre des boîtes et numéros de rubriques */
+  --tui-bar-ink: #e8ecf5;     /* texte de la barre du haut */
+  --tui-hint: #c9d3ec;        /* aide clavier en bas d'écran */
+  --tui-bevel-light: #ffffff; /* relief de la boîte : bords haut et gauche */
+  --tui-bevel-dark: #5a5a5a;  /* relief de la boîte : bords bas et droit */
+  --tui-inner-border: #6a6a6a;/* cadre intérieur */
+  --tui-shadow: #000000;      /* ombre portée */
+
+  /* --- Repères de contenu à compléter : [À COMPLÉTER] --- */
+  --placeholder-ink: #5a4a00;
+  --placeholder-bg: #e9dfa8;
+
+  /* --- Typographie ---
+     Tailles en rem (relatives au réglage du navigateur, 1rem = 16px par
+     défaut) : si un visiteur agrandit la taille du texte, le site suit. */
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'DejaVu Sans Mono', Menlo, Consolas, monospace;
+  --font-size: 0.875rem;       /* 14px */
+  --font-size-small: 0.8125rem;/* 13px */
+  --line-height: 1.45;
+
+  /* --- Espacements et effets --- */
+  --gutter: 16px;             /* marge latérale minimale (mobile) */
+  --shadow-offset: 14px;      /* décalage de l'ombre portée des boîtes */
+  --focus-ring: 2px solid var(--warn);
+}
+
+/* Petits écrans : texte et ombre un peu plus petits (comme dans la maquette) */
+@media (max-width: 720px) {
+  :root {
+    --font-size: 0.8125rem;
+    --shadow-offset: 8px;
+  }
+}

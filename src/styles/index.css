@@ -1,0 +1,11 @@
+/* ==========================================================================
+   Point d'entrée des styles
+   --------------------------------------------------------------------------
+   Vite rassemble tous ces fichiers en un seul CSS minifié au build.
+   L'ordre compte : la police et les variables d'abord, puis les styles qui
+   les utilisent. Les feuilles des étapes suivantes s'ajouteront à la suite.
+   ========================================================================== */
+
+@import './fonts.css';
+@import './tokens.css';
+@import './base.css';

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Icône de l'onglet : invite de commande « >_ » sur le bleu du menu RémiOS -->
+  <rect width="32" height="32" rx="4" fill="#1e3c8c"/>
+  <path d="M8 9.5 14.5 16 8 22.5" fill="none" stroke="#ffffff" stroke-width="3"/>
+  <rect x="16" y="20" width="9" height="3" fill="#ffd76a"/>
+</svg>
