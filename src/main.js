@@ -19,6 +19,7 @@ import { createJuryView } from './jury/jury-view.js';
 import { createSystemBar } from './ui/system-bar.js';
 import { createBoot } from './boot/sequence.js';
 import { createTerminal, isTerminalShortcut } from './terminal/terminal.js';
+import { createSounds } from './audio/sounds.js';
 import { isTypingTarget } from './utils/keyboard.js';
 
 // --- Construction de la page ---------------------------------------------------
@@ -35,7 +36,8 @@ const tuiRoot = app.querySelector('#tui');
 const juryRoot = app.querySelector('#jury');
 const bootOverlay = app.querySelector('.boot');
 
-createSystemBar(app.querySelector('.system-bar'));
+const sounds = createSounds();
+createSystemBar(app.querySelector('.system-bar'), { sounds });
 createLightbox();
 
 const terminal = createTerminal({ onReboot: reboot });
@@ -46,6 +48,8 @@ const boot = createBoot({
   overlay: bootOverlay,
   skipButton: app.querySelector('.boot-skip'),
   content: tuiRoot,
+  // Sons : bip POST au démarrage, clics de disque quand des lignes s'affichent
+  hooks: { onStart: sounds.post, onLines: sounds.disk },
   onFinish: ({ reducedMotion }) => {
     // Sans boot (animations réduites), rien ne change à l'écran : on ne
     // déplace pas le focus, la touche Tab mène d'abord à « Vue rapide jury ».
@@ -66,6 +70,10 @@ function render(route, options) {
   // Un changement d'écran pendant le boot (clic sur « Vue rapide jury »,
   // bouton Précédent…) interrompt le démarrage.
   if (boot.isRunning() && route.name !== 'home') boot.skip();
+
+  // Bip de validation à l'ouverture d'une rubrique ou d'une fiche
+  // (pas au premier affichage : le visiteur n'a encore rien choisi)
+  if (options?.focus !== false && (route.name === 'section' || route.name === 'fiche')) sounds.select();
 
   const juryMode = isJuryRoute(route);
   // L'attribut data-view sur <html> permet au CSS d'adapter le fond de page
@@ -97,6 +105,14 @@ app.querySelector('.boot-skip').addEventListener('click', () => boot.skip());
 
 // Un clic (ou un appui tactile) n'importe où sur l'écran de boot le passe
 bootOverlay.addEventListener('pointerdown', () => boot.skip());
+
+// --- Son : autorisation du navigateur -------------------------------------------------
+
+// Les navigateurs n'autorisent le son qu'après un clic ou une touche : à chaque
+// interaction, on prépare le son (s'il est activé). « capture » : avant tout
+// autre traitement, pour que le bip d'une rubrique ouverte au clavier sonne.
+document.addEventListener('pointerdown', sounds.unlock, { capture: true });
+document.addEventListener('keydown', sounds.unlock, { capture: true });
 
 // --- Clavier ---------------------------------------------------------------------
 

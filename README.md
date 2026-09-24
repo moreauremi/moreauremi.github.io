@@ -37,8 +37,9 @@ src/tui/                interface façon whiptail : boîte, menu, rubriques, fic
 src/boot/               séquence de démarrage : GRUB, journal du noyau, systemd, connexion
 src/jury/               vue rapide jury, sobre et imprimable
 src/terminal/           terminal caché : fenêtre, commandes, système de fichiers simulé
-src/ui/                 barre fixe en haut à droite (vue jury)
-src/utils/              petites fonctions partagées (HTML sûr, dates)
+src/audio/              sons générés avec la Web Audio API
+src/ui/                 barre fixe en haut à droite (vue jury, bouton son)
+src/utils/              petites fonctions partagées (HTML sûr, dates, clavier, réglages mémorisés)
 src/styles/index.css    point d'entrée des styles, importe les fichiers ci-dessous
 src/styles/fonts.css    déclaration de la police auto-hébergée
 src/styles/tokens.css   variables de design : toutes les couleurs et tailles du site
@@ -82,6 +83,7 @@ Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, i
 - **Boot fluide à 60 images/s.** Une seule boucle `requestAnimationFrame` affiche par paquets les lignes dont l'heure est venue ; le nombre de lignes dans la page est limité à la hauteur de l'écran ; le défilement est fait par le CSS (lignes calées en bas) ; le seul effet, le fondu final, n'anime que l'opacité.
 - **Boot seulement à l'accueil.** Un lien direct (`#/jury`, `#/realisations/nas`) affiche la page sans attendre. Si le système demande de réduire les animations, il n'y a pas de boot du tout. Le service `veille-techno.service` passe de `[ WARN ]` à `[  OK  ]` dès qu'un sujet est renseigné dans `site.config.js`.
 - **Terminal caché, entièrement simulé.** Touche `` ` `` (ou `²` sur un clavier AZERTY PC), `Ctrl+Alt+T`, ou le bouton `[tty2]` de la barre du haut (seul moyen sur mobile). Les fiches y sont des fichiers (`cat realisations/perso/nas.md`) : l'arborescence est construite en mémoire à partir du contenu du site. Aucune commande n'est exécutée et rien n'est envoyé à un serveur ; tout ce que tape le visiteur est affiché avec `textContent`, donc jamais interprété comme du HTML (pas d'injection possible). Commandes : `help`, `whoami`, `neofetch`, `ls`, `cd`, `pwd`, `cat`, `open`, `jury`, `history`, `clear`, `reboot`, `exit`… et quelques surprises.
+- **Sons synthétisés, coupés par défaut.** Bip POST, clics de disque pendant le journal et bip de validation sont fabriqués par la Web Audio API (oscillateurs et bruit filtré) : aucun fichier audio. Les navigateurs interdisent le son avant une interaction ; le contexte audio n'est donc créé qu'au premier clic ou à la première touche. Au tout premier chargement, le bip POST ne peut pas sonner : il sonne sur `<Redémarrer>`, ou dès que le son est activé pendant le boot. Le choix est mémorisé dans `localStorage`, dont chaque accès est protégé (navigation privée, stockage bloqué : le site fonctionne quand même).
 - **Vue rapide jury.** Accessible en un clic depuis n'importe quel écran (bouton jaune en haut à droite, premier élément atteint avec Tab) ou directement par l'URL `#/jury`. Fond clair, police système, aucune animation, tout sur une page. La feuille `@media print` retire les boutons, écrit l'adresse des liens en clair et évite de couper un bloc en bas de page.
 - **Visionneuse d'images native.** Les captures s'agrandissent dans un élément HTML `<dialog>` : le navigateur gère lui-même le piège du focus, la touche Échap et le retour du focus à la fermeture. Sans JavaScript, le lien ouvre simplement l'image.
 - **Police auto-hébergée.** IBM Plex Mono est servie par le site lui-même, pas par Google Fonts : le site fonctionne sans accès extérieur (utile sur un réseau fermé ou en démonstration hors ligne) et aucune donnée de visite n'est transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 ko au total). La police principale est préchargée pour que le boot s'affiche directement dans la bonne police.
@@ -98,7 +100,7 @@ Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, i
 - [x] 6. Vue rapide jury imprimable
 - [x] 7. Séquence de démarrage
 - [x] 8. Terminal caché
-- [ ] 9. Sons de démarrage
+- [x] 9. Sons de démarrage
 - [ ] 10. Responsive, accessibilité, performance
 - [ ] 11. Déploiement Docker + nginx
 - [ ] 12. Documentation complète
