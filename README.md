@@ -190,7 +190,7 @@ reference/               maquette HTML validée au départ du projet (hors build
 
 ### Performance
 
-- **Boot à 60 images/s, sans décalage de mise en page.** Une seule boucle `requestAnimationFrame` traite à chaque image les lignes dont l'heure est venue. L'écran du journal est une grille fixe de lignes, créées une seule fois : pour faire défiler, on réécrit seulement leur texte. Aucun élément n'est ajouté ni déplacé, donc aucun « décalage de mise en page » (CLS passé de 0,44 à 0 grâce à ce choix). Le seul effet animé, le fondu final, n'utilise que l'opacité.
+- **Boot à 60 images/s, sans décalage de mise en page.** Une seule boucle `requestAnimationFrame` traite à chaque image les lignes dont l'heure est venue. L'écran du journal est une grille fixe de lignes, créées une seule fois : pour faire défiler, on réécrit seulement leur texte. Aucun élément n'est ajouté ni déplacé, donc aucun « décalage de mise en page » (CLS passé de 0,44 à 0 grâce à ce choix). Le seul effet animé, le curseur clignotant, n'utilise que l'opacité. À la fin, pas de fondu : l'écran bascule d'un coup sur le menu, comme un vrai système.
 - **Police auto-hébergée et préchargée.** IBM Plex Mono est servie par le site lui-même : pas de Google Fonts, donc fonctionnement hors ligne et aucune donnée de visite transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 Ko).
 - **Cache long.** Les fichiers hashés sont gardés un an par le navigateur ; `index.html` n'est jamais mis en cache, donc une nouvelle version est visible immédiatement.
 

@@ -11,12 +11,8 @@
   overflow: hidden;
   background: var(--screen);
   color: var(--text);
-  /* Fondu final : seule l'opacité change, animée par la carte graphique */
-  transition: opacity 200ms ease-out;
-}
-
-.boot.is-leaving {
-  opacity: 0;
+  /* Pas de fondu à la fin : le calque est retiré d'un coup (attribut hidden),
+     comme l'écran d'un vrai système qui bascule sur le programme lancé. */
 }
 
 /* --- GRUB ------------------------------------------------------------------- */

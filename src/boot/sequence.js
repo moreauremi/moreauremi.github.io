@@ -10,8 +10,9 @@
 //   0 → 1,5 s     écran GRUB et compte à rebours
 //   1,5 → 2,6 s   messages du noyau, très rapides
 //   2,65 → 4 s    services systemd [  OK  ]
-//   4,05 → 4,8 s  connexion automatique, frappe de « portfolio --menu »
-//   4,8 → 5 s     fondu vers le menu
+//   4,05 → 4,75 s connexion automatique, frappe de « portfolio --menu »
+//   5 s           coupure nette vers le menu, sans transition, comme un vrai
+//                 système qui efface l'écran pour lancer un programme
 //
 // Performance (60 images par seconde) :
 //   - une seule boucle requestAnimationFrame : le navigateur l'appelle avant
@@ -22,7 +23,7 @@
 //     réécrit seulement leur texte : aucun élément n'est ajouté, supprimé ni
 //     déplacé, donc pas de « décalage de mise en page » (mesure CLS de
 //     Lighthouse) et un nombre de lignes dans la page qui ne grandit jamais ;
-//   - le seul effet animé, le fondu final, n'utilise que `opacity`.
+//   - le seul effet animé, le curseur clignotant, n'utilise que `opacity`.
 // =============================================================================
 
 import { grubScreen } from './grub.js';
@@ -33,7 +34,6 @@ const KERNEL_END = 2600;
 const UNITS_START = 2650;
 const UNITS_END = 4000;
 const LOGIN_START = 4050;
-const LEAVE_AT = 4800;
 const END_AT = 5000;
 
 // `overlay` : calque du boot ; `skipButton` : bouton « Passer le démarrage » ;
@@ -61,7 +61,6 @@ export function createBoot({ overlay, skipButton, content, onFinish, hooks = {} 
     }
 
     running = true;
-    overlay.classList.remove('is-leaving');
     overlay.innerHTML = `${grubScreen(2)}<div class="boot-log" hidden></div>`;
     overlay.hidden = false;
     skipButton.hidden = false;
@@ -101,8 +100,6 @@ export function createBoot({ overlay, skipButton, content, onFinish, hooks = {} 
         overlay.querySelector('.grub').remove();
         log.hidden = false;
         createRows();
-      } else if (event.type === 'leave') {
-        overlay.classList.add('is-leaving'); // fondu CSS sur opacity
       } else if (event.type === 'end') {
         finish();
         return;
@@ -185,7 +182,7 @@ export function createBoot({ overlay, skipButton, content, onFinish, hooks = {} 
     // Frappe de la commande, une lettre toutes les 15 ms
     for (const char of COMMAND) list.push({ at: (at += 15), type: 'type', char });
 
-    list.push({ at: LEAVE_AT, type: 'leave' });
+    // Fin : le calque disparaît d'un coup, le menu apparaît aussitôt
     list.push({ at: END_AT, type: 'end' });
     return list.sort((a, b) => a.at - b.at);
   }
