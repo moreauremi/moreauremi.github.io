@@ -1,0 +1,9 @@
+# Dépendances installées par npm (recréées avec `npm install`)
+node_modules/
+
+# Site généré par `npm run build` (recréé à chaque build)
+dist/
+
+# Fichiers système et journaux
+.DS_Store
+*.log
