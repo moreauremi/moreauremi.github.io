@@ -47,7 +47,7 @@ export default {
   // 2. Indiquer son chemin ici, sans « public/ » : cv: 'docs/cv.pdf'
   // Vide = le site affiche « [À COMPLÉTER] ». Le build vérifie que le fichier existe.
   documents: {
-    cv: '',
+    cv: 'docs/cv-remi-moreau.pdf',
     synthese: '',
   },
 
