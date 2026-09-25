@@ -83,6 +83,5 @@ export default {
     { action: 'Started', unite: 'jellyfin.service', description: 'serveur multimédia' },
     { action: 'Started', unite: 'arr-stack.target', description: 'automatisation médias' },
     { action: 'Started', unite: 'caffein.service', description: 'SaaS de facturation' },
-    { action: 'Started', unite: 'clapvoice.service', description: 'écoute des claquements' },
   ],
 };

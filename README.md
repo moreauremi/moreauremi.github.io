@@ -99,7 +99,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 
 - [ ] **Présentation** : relire le texte (rédigé à partir des informations connues) et ajouter ce qui m'attire dans l'infrastructure et mon projet après le BTS.
 - [ ] **Réalisations 1Life** (3 fiches vides) : titres et contenu, après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
-- [ ] **Homelab Jellyfin, NAS, CAFFEIN, Clapvoice** : dates, statuts, technos, contenu, captures.
+- [ ] **Homelab Jellyfin, NAS, CAFFEIN, Dashboard Crypto** : détails techniques balisés `[À COMPLÉTER]`, captures.
 - [ ] **Grille de compétences** : remplacer C1 à C6 dans `site.config.js` par la grille officielle du tableau de synthèse, puis renseigner `competences` dans chaque fiche.
 - [ ] **PDF** : CV et tableau de synthèse.
 - [ ] **Veille** : choisir le sujet (`veille.sujet`, le `[ WARN ]` du démarrage passera en `[  OK  ]`), puis rédiger `content/pages/veille.md`.

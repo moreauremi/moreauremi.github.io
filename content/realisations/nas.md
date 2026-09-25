@@ -3,7 +3,7 @@ titre: "NAS Homelab"
 slug: nas
 type: perso  # entreprise, formation ou perso
 date: 2026  # AAAA, AAAA-MM, AAAA-MM-JJ ou période début/fin (ex. 2026-01/2026-08)
-statut: "[À COMPLÉTER]"  # ex. en cours, terminé, en pause
+statut: "en cours"  # ex. en cours, terminé, en pause
 resume: "Stockage réseau auto-hébergé sur mon homelab Proxmox, accessible à distance par VPN avec Tailscale, en alternative aux services de stockage en ligne payants."
 technos:
   - "Proxmox"

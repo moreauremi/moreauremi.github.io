@@ -35,7 +35,7 @@ J'ai toujours aimé interconnecter des machines. J'aime aussi être le plus auto
 
 Mon homelab en est la mise en pratique : un hyperviseur Proxmox, avec des conteneurs Docker et des machines virtuelles, qui héberge un serveur multimédia Jellyfin (avec Sonarr, Radarr et Prowlarr) et un NAS, accessibles à distance par VPN avec Tailscale. C'est aussi lui qui publie ce portfolio, derrière un reverse proxy nginx.
 
-Je mène aussi des projets de développement : CAFFEIN, un SaaS de facturation piloté par un assistant IA qui rend les outils CRM et ERP accessibles aux micro-entrepreneurs et aux artisans du BTP ; Clapvoice, un assistant vocal déclenché par un claquement de mains ; et un tableau de bord de suivi des cryptomonnaies, avec données en temps réel et prévisions probabilistes.
+Je mène aussi deux projets de développement : CAFFEIN, un SaaS de facturation piloté par un assistant IA qui rend les outils CRM et ERP accessibles aux micro-entrepreneurs et aux artisans du BTP, et un tableau de bord qui suit en temps réel le cours des cryptomonnaies, avec des alertes de prix.
 
 ## Ce portfolio
 
