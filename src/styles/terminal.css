@@ -122,7 +122,8 @@
 }
 
 /* --- Easter egg : générique façon Star Wars (voir src/terminal/movie.js) ------
-   Toutes les animations ne modifient que transform et opacity. */
+   Le générique est dessiné dans un canvas en basse résolution, agrandi sans
+   lissage : c'est ce qui donne l'aspect pixelisé. */
 
 .terminal-movie {
   position: absolute;
@@ -130,133 +131,63 @@
   z-index: 1;
   overflow: hidden;
   background: #000000;
-  --movie-blue: #4bd5ee;
-  --movie-yellow: #ffe81f;
 }
 
-/* Ciel étoilé : quelques points blancs répétés en motif (aucune image) */
-.movie-scene {
+.movie-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  /* Agrandissement « au plus proche voisin » : chaque pixel du petit canvas
+     devient un bloc net de plusieurs pixels d'écran (crisp-edges : Firefox) */
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  /* Filtre de couleur : un peu plus de contraste et de saturation, comme un
+     vieux moniteur. Calculé par la carte graphique, sans coût notable. */
+  filter: contrast(1.15) saturate(1.3) brightness(1.05);
+}
+
+/* --- Effet d'écran cathodique (CRT), posé par-dessus tout le générique -------- */
+
+.movie-crt {
   position: absolute;
   inset: 0;
-  background-image:
-    radial-gradient(1px 1px at 23px 41px, #ffffff 50%, transparent 51%),
-    radial-gradient(1px 1px at 87px 152px, #ffffff 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 141px 67px, #ffffff 50%, transparent 51%),
-    radial-gradient(1px 1px at 201px 199px, #cfd8ff 50%, transparent 51%),
-    radial-gradient(1px 1px at 52px 223px, #ffffff 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 176px 12px, #fff4d6 50%, transparent 51%),
-    radial-gradient(1px 1px at 113px 108px, #ffffff 50%, transparent 51%);
-  background-size: 240px 240px;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none; /* laisse passer les clics */
+  /* Lignes de balayage horizontales + coins assombris (vignettage) */
+  background:
+    repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.4) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 0.75) 100%);
+  /* Écran légèrement bombé : bords arrondis et ombre intérieure */
+  border-radius: 24px / 32px;
+  box-shadow: inset 0 0 70px rgb(0 0 0 / 0.9);
+  /* Scintillement très discret (moins de 6 % de variation) */
+  animation: crt-flicker 0.2s steps(2) infinite;
 }
 
-/* « Il y a bien longtemps… » : apparaît puis s'efface (0 → 4 s) */
-.movie-intro {
+/* Bande lumineuse qui balaie l'écran de haut en bas */
+.movie-crt::after {
+  content: '';
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  padding: 0 10%;
-  color: var(--movie-blue);
-  font-size: clamp(1rem, 2.6vw, 1.5rem);
-  text-align: center;
-  opacity: 0;
-  animation: movie-intro 4s ease-in-out forwards;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 18%;
+  background: linear-gradient(to bottom, transparent, rgb(255 255 255 / 0.05), transparent);
+  transform: translateY(-100%);
+  animation: crt-roll 5s linear infinite;
 }
 
-@keyframes movie-intro {
-  15%,
-  80% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
+@keyframes crt-flicker {
+  50% {
+    opacity: 0.94;
   }
 }
 
-/* Titre RÉMIOS : immense, puis s'éloigne dans les étoiles (4,5 → 10,5 s) */
-.movie-logo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: 0;
-  color: var(--movie-yellow);
-  font-size: clamp(3rem, 14vw, 8rem);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(1.6);
-  animation: movie-logo 6s ease-in 4.5s forwards;
-}
-
-/* Lettres en contour, si le navigateur sait le faire */
-@supports (-webkit-text-stroke: 2px black) {
-  .movie-logo {
-    color: transparent;
-    -webkit-text-stroke: 2px var(--movie-yellow);
-  }
-}
-
-@keyframes movie-logo {
-  0% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.6);
-  }
-  85% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.1);
-  }
-}
-
-/* Texte déroulant : posé sur un plan incliné qui s'enfonce vers l'horizon.
-   Il pivote autour de son bord bas (calé en bas de l'écran) : tout ce qui est
-   au-dessus s'éloigne et rapetisse. Il part caché sous le bord (translateY
-   de 100 %) puis glisse le long du plan ; la distance (--crawl-travel) est
-   calculée en JS selon l'écran. Il s'estompe en haut grâce au masque. */
-.movie-perspective {
-  position: absolute;
-  inset: 0;
-  perspective: 400px;
-  perspective-origin: 50% 25%;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 5%, #000000 45%);
-  mask-image: linear-gradient(to bottom, transparent 5%, #000000 45%);
-}
-
-.movie-crawl {
-  position: absolute;
-  bottom: 0;
-  left: 5%;
-  right: 5%;
-  max-width: 40rem;
-  margin: 0 auto;
-  color: var(--movie-yellow);
-  font-size: clamp(1.1rem, 3.4vw, 1.9rem);
-  font-weight: 600;
-  line-height: 1.4;
-  /* Centré plutôt que justifié : avec la police à chasse fixe du site, la
-     justification creuserait de grands trous entre les mots */
-  text-align: center;
-  transform-origin: 50% 100%;
-  transform: rotateX(25deg) translateY(100%);
-  animation: movie-crawl 23s linear 7s forwards;
-}
-
-.movie-crawl p {
-  margin: 0 0 1em;
-}
-
-.movie-title {
-  font-size: 1.35em;
-}
-
-@keyframes movie-crawl {
+@keyframes crt-roll {
   to {
-    transform: rotateX(25deg) translateY(var(--crawl-travel));
+    transform: translateY(560%);
   }
 }
 
