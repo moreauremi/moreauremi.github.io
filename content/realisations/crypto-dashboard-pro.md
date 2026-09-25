@@ -1,15 +1,16 @@
 ---
-titre: "Dashboard Crypto"
-slug: dashboard-crypto
+titre: "Crypto Dashboard Pro"
+slug: crypto-dashboard-pro
 type: perso  # entreprise, formation ou perso
-date: 2025  # AAAA, AAAA-MM, AAAA-MM-JJ ou période début/fin (ex. 2026-01/2026-08)
+date: 2026-01  # AAAA, AAAA-MM, AAAA-MM-JJ ou période début/fin (ex. 2026-01/2026-08)
 statut: "terminé"  # ex. en cours, terminé, en pause
-resume: "Tableau de bord web en Python qui suit en temps réel le cours de six cryptomonnaies grâce à l'API CoinGecko, avec indicateurs clés, graphique interactif et alerte de prix personnalisable."
+resume: "Tableau de bord interactif en temps réel pour suivre le cours de six cryptomonnaies, avec système d'alertes personnalisé : Python, Streamlit et API CoinGecko."
 technos:
   - "Python"
   - "Streamlit"
   - "Pandas"
   - "Plotly"
+  - "Requests"
   - "API CoinGecko"
 competences: []  # codes du référentiel, ex. [C1, C4] (grille officielle à venir)
 ---
@@ -17,11 +18,12 @@ competences: []  # codes du référentiel, ex. [C1, C4] (grille officielle à ve
 <!--
   Guide de rédaction
   - Remplacer chaque [À COMPLÉTER] par le vrai contenu (ou supprimer la ligne).
-  - Captures : déposer l'image dans public/captures/dashboard-crypto/, puis écrire
-      ![Description de l'image](captures/dashboard-crypto/nom-du-fichier.webp "Légende affichée")
+  - Captures : déposer l'image dans public/captures/crypto-dashboard-pro/, puis écrire
+      ![Description de l'image](captures/crypto-dashboard-pro/nom-du-fichier.webp "Légende affichée")
     et supprimer l'image « a-venir.svg » ci-dessous.
   - competences : codes définis dans content/site.config.js, ex. [C1, C4]
-  - Contenu technique rédigé d'après le code publié sur GitHub (app.py).
+  - Contenu rédigé d'après le dépôt GitHub (README, app.py, requirements.txt,
+    historique des commits) : c'est la référence, le CV sera aligné dessus.
 -->
 
 ## Contexte
@@ -53,7 +55,7 @@ Code source (licence MIT) : [github.com/moreauremi/crypto-dashboard-pro](https:/
 
 ## Résultats et tests
 
-Le projet est terminé et son code est publié sur GitHub.
+Le projet est terminé ; son code a été publié sur GitHub en janvier 2026.
 
 [À COMPLÉTER : ce qui a été vérifié (actualisation, alertes, comportement sans réseau…), et comment]
 
