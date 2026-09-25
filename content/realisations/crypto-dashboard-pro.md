@@ -20,7 +20,6 @@ competences: []  # codes du référentiel, ex. [C1, C4] (grille officielle à ve
   - Remplacer chaque [À COMPLÉTER] par le vrai contenu (ou supprimer la ligne).
   - Captures : déposer l'image dans public/captures/crypto-dashboard-pro/, puis écrire
       ![Description de l'image](captures/crypto-dashboard-pro/nom-du-fichier.webp "Légende affichée")
-    et supprimer l'image « a-venir.svg » ci-dessous.
   - competences : codes définis dans content/site.config.js, ex. [C1, C4]
   - Contenu rédigé d'après le dépôt GitHub (README, app.py, requirements.txt,
     historique des commits) : c'est la référence, le CV sera aligné dessus.
@@ -51,7 +50,13 @@ Code source (licence MIT) : [github.com/moreauremi/crypto-dashboard-pro](https:/
 
 ## Captures d'écran
 
-![Emplacement réservé : capture d'écran à venir](captures/a-venir.svg "[À COMPLÉTER : légende de la capture]")
+Captures réalisées le 25 septembre 2026, avec de vraies données CoinGecko : huit relevés du cours du Bitcoin en quatre minutes environ.
+
+![Tableau de bord Bitcoin : message « prix stable », quatre indicateurs et courbe de huit relevés sous la ligne pointillée du seuil](captures/crypto-dashboard-pro/tableau-de-bord.webp "Prix sous le seuil d'alerte : indicateurs de la session et courbe du cours, avec le seuil en pointillés rouges")
+
+![Seuil d'alerte abaissé sous le cours : bandeau rouge « signal de vente » et notification en haut à droite](captures/crypto-dashboard-pro/alerte-seuil.webp "Seuil dépassé : message « signal de vente » et notification d'alerte")
+
+![Tableau de l'historique détaillé : heure et prix de chaque relevé, du plus récent au plus ancien](captures/crypto-dashboard-pro/historique.webp "Historique détaillé des relevés de la session")
 
 ## Résultats et tests
 
