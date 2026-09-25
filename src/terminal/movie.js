@@ -16,7 +16,7 @@
 // `opacity` : la carte graphique s'en charge, l'affichage reste fluide.
 // =============================================================================
 
-import { escapeHtml } from '../utils/html.js';
+import { escapeHtml, frenchSpacing } from '../utils/html.js';
 
 export const DURATION = 30000; // durée totale, en millisecondes
 const FANFARE_AT = 4500; // la fanfare accompagne l'apparition du titre
@@ -30,7 +30,8 @@ export const CRAWL = {
   title: 'UN NOUVEL ALTERNANT',
   paragraphs: [
     "Le homelab est en paix. Depuis un vieux PC récupéré, un jeune alternant a libéré ses films et ses fichiers de l'emprise des abonnements payants.",
-    "Le jour, il paramètre l'ERP Open-Prod pour les usines de la République industrielle. La nuit, il dompte Proxmox, Docker et Tailscale.",
+    // \u2011 : trait d'union insécable, « Open-Prod » n'est jamais coupé en fin de ligne
+    "Le jour, il paramètre l'ERP Open\u2011Prod pour les usines de la République industrielle. La nuit, il dompte Proxmox, Docker et Tailscale.",
     "Mais une nouvelle épreuve l'attend : présenter son portfolio devant le Conseil du BTS SIO. Armé de ses réalisations et de son tableau de synthèse, Rémi se prépare à affronter les questions du jury…",
   ],
 };
@@ -54,7 +55,7 @@ export function playCrawl(host, { sounds, onEnd }) {
         <div class="movie-crawl">
           <p class="movie-episode">${escapeHtml(CRAWL.episode)}</p>
           <p class="movie-title">${escapeHtml(CRAWL.title)}</p>
-          ${CRAWL.paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join('')}
+          ${CRAWL.paragraphs.map((p) => `<p>${frenchSpacing(escapeHtml(p))}</p>`).join('')}
         </div>
       </div>
     </div>
