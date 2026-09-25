@@ -7,6 +7,9 @@ statut: "terminé"  # ex. en cours, terminé, en pause
 resume: "Serveur multimédia auto-hébergé sous Proxmox : Jellyfin, Sonarr, Radarr et Prowlarr pour regarder films et séries depuis n'importe où, sans abonnement de streaming."
 technos:
   - "Proxmox"
+  - "Docker"
+  - "Linux"
+  - "Tailscale"
   - "Jellyfin"
   - "Sonarr"
   - "Radarr"
@@ -37,7 +40,7 @@ Construire un « Netflix fait maison » : un serveur multimédia qui récupère 
 
 ## Mise en œuvre
 
-J'ai d'abord découpé le projet en étapes clés, puis choisi l'architecture. Le serveur tourne sous **Proxmox**, un hyperviseur qui permet de faire fonctionner plusieurs services isolés sur une même machine.
+J'ai d'abord découpé le projet en étapes clés, puis choisi l'architecture. Le serveur tourne sous **Proxmox**, un hyperviseur qui permet de faire fonctionner plusieurs services isolés sur une même machine : les services du homelab y sont répartis entre des **conteneurs Docker** et des **machines virtuelles**. L'accès à distance passe par un VPN, **Tailscale**, qui relie mes appareils au homelab par un réseau privé chiffré.
 
 Rôle de chaque brique :
 
@@ -46,7 +49,7 @@ Rôle de chaque brique :
 - **Real-Debrid** fournit les fichiers depuis ses propres serveurs, à haute vitesse, au lieu de les télécharger en local (voir « Difficultés rencontrées ») ;
 - **Jellyfin** organise la bibliothèque et diffuse les films et séries, dans le navigateur ou avec l'application **Swiftfin**.
 
-[À COMPLÉTER : comment les services sont installés sur Proxmox (machines virtuelles, conteneurs), comment Real-Debrid est relié à Jellyfin, comment le serveur est accessible et sécurisé depuis l'extérieur]
+[À COMPLÉTER : quels services tournent en conteneurs Docker et lesquels en machines virtuelles, comment Real-Debrid est relié à Jellyfin]
 
 ## Captures d'écran
 
@@ -69,4 +72,6 @@ Solution : passer par Real-Debrid. Au lieu de télécharger les torrents moi-mê
 ## Compétences mises en œuvre
 
 - Mise en place d'un serveur, virtualisé avec Proxmox
+- Conteneurisation des services avec Docker
+- Accès distant sécurisé par VPN (Tailscale)
 - Configuration et sécurisation du réseau

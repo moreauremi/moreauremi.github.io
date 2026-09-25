@@ -4,14 +4,18 @@ slug: caffein
 type: perso  # entreprise, formation ou perso
 date: 2026-01/2026-08  # AAAA, AAAA-MM, AAAA-MM-JJ ou période début/fin (ex. 2026-01/2026-08)
 statut: "en pause"  # ex. en cours, terminé, en pause
-resume: "SaaS de facturation pour micro-entrepreneurs et artisans du BTP, piloté par un assistant IA qui réalise à la place de l'utilisateur les tâches demandées dans le logiciel."
+resume: "SaaS de facturation pour micro-entrepreneurs et artisans du BTP, piloté par un assistant IA qui rend les outils CRM et ERP accessibles : il réalise à la place de l'utilisateur les tâches demandées dans le logiciel."
 technos:
   - "Python"
   - "HTML"
   - "API Claude"
   - "Whisper"
+  - "n8n"
   - "Claude Code"
   - "Hostinger"
+  - "Linux"
+  - "Nginx"
+  - "DNS"
 competences: []  # codes du référentiel, ex. [C1, C4] (grille officielle à venir)
 ---
 
@@ -40,10 +44,11 @@ L'application repose sur les briques suivantes :
 - **HTML** pour l'interface web ;
 - **l'API Claude** pour l'assistant IA, qui comprend les demandes de l'utilisateur et réalise les tâches correspondantes dans le logiciel ;
 - **Whisper** pour la transcription de la voix en texte, afin de pouvoir s'adresser à l'assistant à l'oral ;
-- **Hostinger** pour l'hébergement du serveur, avec un nom de domaine dédié ;
+- **n8n**, un outil d'automatisation de workflows ;
+- un **serveur Linux** hébergé chez **Hostinger**, avec **Nginx**, et un nom de domaine dédié configuré dans les **DNS** ;
 - **Claude Code** comme assistant de développement pendant l'écriture du code.
 
-[À COMPLÉTER : étapes du développement, modules réalisés (devis, factures, clients…), organisation du code, stockage des données]
+[À COMPLÉTER : rôle précis de n8n et de Nginx, étapes du développement, modules réalisés (devis, factures, clients…), organisation du code, stockage des données]
 
 ## Captures d'écran
 
@@ -62,5 +67,7 @@ Le coût : l'API Claude, l'API Whisper, le serveur et le nom de domaine sont tou
 ## Compétences mises en œuvre
 
 - Développement en Python
-- Mise en place d'un serveur chez Hostinger
-- Configuration d'un nom de domaine
+- Mise en place et administration d'un serveur Linux chez Hostinger, avec Nginx
+- Configuration d'un nom de domaine (DNS)
+- Automatisation avec n8n
+- Intégration d'API d'intelligence artificielle (Claude, Whisper)

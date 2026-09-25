@@ -4,20 +4,28 @@ titre: Présentation
 
 <!--
   Texte de la rubrique « Présentation » (et du haut de la vue jury).
-  Rédigé à partir des informations fournies par Rémi.
+  Rédigé à partir des informations fournies par Rémi et de son CV.
 -->
 
 ## Qui je suis
 
-Je m'appelle Rémi Moreau. Je prépare un BTS SIO (Services informatiques aux organisations), option SISR (Solutions d'infrastructure, systèmes et réseaux), à MyDigitalSchool Nantes, dans la promotion 2026-2028.
+Je m'appelle Rémi Moreau. Je prépare un BTS SIO (Services informatiques aux organisations), option SISR (Solutions d'infrastructure, systèmes et réseaux), à MyDigitalSchool Nantes, dans la promotion 2026-2028, en alternance comme consultant ERP.
+
+Du paramétrage de solutions pour des PME industrielles à l'administration d'une infrastructure auto-hébergée, je fais le lien entre les besoins des utilisateurs et les outils techniques qui y répondent.
 
 ## Mon parcours
 
-Avant le BTS SIO, j'ai fait deux ans en commerce. J'y ai appris beaucoup, et j'y ai surtout découvert ce qui me plaisait : le contact client, bien plus que la vente.
+Après un bac général obtenu en 2024 au lycée Grand Air de La Baule, j'ai fait deux ans en commerce : une première année de BBA Management à Audencia, puis une première année de BTS NDRC à La Joliverie, à Nantes.
+
+J'ai également été alternant au Château des Tourelles, à Pornichet, où je suis passé de runner à chef de rang, puis alternant commercial : vente, prospection de nouveaux clients, gestion de la base clients, événements commerciaux. J'ai aussi travaillé en grande distribution, chez Carrefour puis chez Super U.
+
+Ces expériences m'ont beaucoup appris, et surtout ce qui me plaisait : le contact client, bien plus que la vente.
 
 ## Mon alternance
 
-Le poste de consultant ERP chez 1Life, intégrateur de l'ERP Open-Prod au sein du groupe Visiativ, réunit exactement ces deux envies : la relation client et ma passion pour l'informatique. 1Life accompagne les entreprises de l'industrie, un secteur très diversifié où chaque client est différent. Pour quelqu'un de curieux comme moi, c'est l'assurance d'apprendre quelque chose de nouveau en permanence.
+Le poste de consultant ERP chez 1Life, intégrateur de l'ERP Open-Prod au sein du groupe Visiativ, réunit exactement ces deux envies : la relation client et ma passion pour l'informatique. Depuis septembre 2026, j'y paramètre Open-Prod pour les flux de vente et de production, avec des requêtes SQL et des notions de comptabilité.
+
+1Life accompagne les entreprises de l'industrie, un secteur très diversifié où chaque client est différent. Pour quelqu'un de curieux comme moi, c'est l'assurance d'apprendre quelque chose de nouveau en permanence.
 
 ## Ce qui m'attire dans l'infrastructure
 
@@ -25,7 +33,9 @@ J'ai toujours aimé interconnecter des machines. J'aime aussi être le plus auto
 
 ## En dehors des cours
 
-Mon homelab en est la mise en pratique : un serveur Proxmox qui fait tourner Jellyfin avec Sonarr, Radarr et Prowlarr, un NAS, et le reverse proxy nginx qui publie ce portfolio. Je mène aussi deux projets annexes : un SaaS de facturation piloté par un assistant IA, pour les micro-entrepreneurs et les artisans du BTP, et Clapvoice, un assistant vocal déclenché par un claquement de mains.
+Mon homelab en est la mise en pratique : un hyperviseur Proxmox, avec des conteneurs Docker et des machines virtuelles, qui héberge un serveur multimédia Jellyfin (avec Sonarr, Radarr et Prowlarr) et un NAS, accessibles à distance par VPN avec Tailscale. C'est aussi lui qui publie ce portfolio, derrière un reverse proxy nginx.
+
+Je mène aussi des projets de développement : CAFFEIN, un SaaS de facturation piloté par un assistant IA qui rend les outils CRM et ERP accessibles aux micro-entrepreneurs et aux artisans du BTP ; Clapvoice, un assistant vocal déclenché par un claquement de mains ; et un tableau de bord de suivi des cryptomonnaies, avec données en temps réel et prévisions probabilistes.
 
 ## Ce portfolio
 

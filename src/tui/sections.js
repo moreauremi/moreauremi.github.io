@@ -21,7 +21,7 @@ export const SECTIONS = [
     id: 'entreprise',
     label: 'Réalisations en entreprise',
     render: () =>
-      `<p class="intro">Missions réalisées en alternance chez 1Life (part of Visiativ). Chaque réalisation ouvre sa fiche détaillée.</p>
+      `<p class="intro">Missions réalisées en alternance chez 1Life (part of Visiativ) depuis septembre 2026 : paramétrage de l'ERP Open-Prod (flux de vente et de production), requêtes SQL, notions comptables. Chaque réalisation ouvre sa fiche détaillée.</p>
       ${realisationList('entreprise', link.fiche)}`,
   },
   {
