@@ -40,7 +40,7 @@ const sounds = createSounds();
 createSystemBar(app.querySelector('.system-bar'), { sounds });
 createLightbox();
 
-const terminal = createTerminal({ onReboot: reboot });
+const terminal = createTerminal({ onReboot: reboot, sounds });
 const tui = createTui(tuiRoot, { onReboot: reboot, onOpenTerminal: () => terminal.open() });
 const jury = createJuryView(juryRoot);
 

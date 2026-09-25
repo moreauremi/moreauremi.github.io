@@ -5,7 +5,8 @@
 //   - bip POST : le bip unique du BIOS quand l'ordinateur démarre bien
 //     (oscillateur carré à 1 000 Hz) ;
 //   - clics de disque dur pendant le journal (bruit très court, filtré) ;
-//   - bip de validation à l'ouverture d'une rubrique.
+//   - bip de validation à l'ouverture d'une rubrique ;
+//   - petite fanfare (composition originale) pour l'easter egg du terminal.
 //
 // Règles :
 //   - sons COUPÉS par défaut ; le choix du visiteur est mémorisé (localStorage) ;
@@ -49,8 +50,9 @@ export function createSounds() {
 
   // Note simple : oscillateur + enveloppe de volume. Le volume descend en
   // courbe jusqu'à presque zéro, ce qui évite un « clac » à la coupure.
-  function tone(frequency, duration, type, volume) {
-    const start = context.currentTime;
+  // `delay` : décalage en secondes, pour enchaîner plusieurs notes.
+  function tone(frequency, duration, type, volume, delay = 0) {
+    const start = context.currentTime + delay;
     const oscillator = context.createOscillator();
     const gain = context.createGain();
     oscillator.type = type;
@@ -98,6 +100,25 @@ export function createSounds() {
     if (canPlay()) tone(880, 0.06, 'triangle', 0.08);
   }
 
+  // Fanfare de l'easter egg « starwars » : simple arpège de do majeur
+  // (sol, do, mi, puis accord tenu). Composition originale, sans rapport avec
+  // la musique des films, qui est protégée par le droit d'auteur.
+  function fanfare() {
+    if (!canPlay()) return;
+    const notes = [
+      // [fréquence en Hz, départ en s, durée en s]
+      [196, 0, 0.22], // sol
+      [262, 0.25, 0.22], // do
+      [330, 0.5, 0.22], // mi
+      [392, 0.75, 1.6], // sol aigu, tenu…
+      [262, 0.75, 1.6], // … avec do et mi : accord de do majeur
+      [330, 0.75, 1.6],
+    ];
+    for (const [frequency, start, duration] of notes) {
+      tone(frequency, duration, 'triangle', 0.06, start);
+    }
+  }
+
   // Bouton haut-parleur : active ou coupe, et mémorise le choix
   function toggle() {
     enabled = !enabled;
@@ -113,6 +134,7 @@ export function createSounds() {
     post,
     disk,
     select,
+    fanfare,
     toggle,
     unlock,
     isEnabled: () => enabled,

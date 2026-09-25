@@ -19,10 +19,11 @@ import { escapeHtml } from '../utils/html.js';
 import { navigate } from '../router.js';
 import { COMMANDS, complete } from './commands.js';
 import { buildFilesystem, displayPath, HOME } from './filesystem.js';
+import { playCrawl, crawlTranscript } from './movie.js';
 
 const MAX_OUTPUT_LINES = 500; // au-delà, les plus anciennes lignes sont retirées
 
-export function createTerminal({ onReboot }) {
+export function createTerminal({ onReboot, sounds }) {
   const { utilisateur, machine } = site.identite;
 
   const dialog = document.createElement('dialog');
@@ -73,7 +74,40 @@ export function createTerminal({ onReboot }) {
       close();
       onReboot();
     },
+    playMovie,
   };
+
+  // --- Easter egg : générique façon Star Wars (commande `starwars`) ------------
+
+  let movie = null; // générique en cours de lecture
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function playMovie() {
+    if (movie) return;
+    if (reducedMotion.matches) {
+      // Animations réduites : le générique est simplement affiché en texte
+      for (const line of crawlTranscript()) print([line, 'term-warn']);
+      return;
+    }
+    print(['Transmission entrante… (Échap pour arrêter)', 'term-dim']);
+    // L'animation est cachée aux lecteurs d'écran : ils reçoivent son texte ici
+    print([crawlTranscript().join(' '), 'visually-hidden']);
+    movie = playCrawl(dialog, {
+      sounds,
+      onEnd() {
+        movie = null;
+        print(['Fin de la transmission.', 'term-dim']);
+        input.focus();
+      },
+    });
+  }
+
+  // Échap pendant le générique : l'arrête, sans fermer le terminal
+  dialog.addEventListener('cancel', (event) => {
+    if (!movie) return;
+    event.preventDefault();
+    movie.stop();
+  });
 
   // --- Ouverture / fermeture -------------------------------------------------
 
@@ -91,6 +125,7 @@ export function createTerminal({ onReboot }) {
   }
 
   function close() {
+    movie?.stop();
     if (dialog.open) dialog.close();
   }
 
@@ -145,6 +180,13 @@ export function createTerminal({ onReboot }) {
   // --- Clavier dans le champ de saisie --------------------------------------------
 
   input.addEventListener('keydown', (event) => {
+    if (movie) {
+      // Pendant le générique : Échap, q ou Ctrl+C l'arrêtent, le reste est ignoré
+      event.preventDefault();
+      const key = event.key.toLowerCase();
+      if (key === 'escape' || key === 'q' || (event.ctrlKey && key === 'c')) movie.stop();
+      return;
+    }
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       event.preventDefault();
       browseHistory(event.key === 'ArrowUp' ? -1 : 1);

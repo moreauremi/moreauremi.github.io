@@ -14,6 +14,7 @@
 //   ctx.close()       ferme le terminal
 //   ctx.go(hash)      ferme le terminal et affiche un écran du site
 //   ctx.reboot()      ferme le terminal et rejoue le démarrage
+//   ctx.playMovie()   lance le générique façon Star Wars (easter egg)
 //   ctx.history       commandes déjà tapées
 // =============================================================================
 
@@ -47,6 +48,7 @@ export const COMMANDS = {
       ctx.print(['  ' + usage.padEnd(16), 'term-key'], description);
     }
     ctx.print(['Tab complète les commandes et les chemins, ↑ ↓ parcourent l\'historique.', 'term-dim']);
+    ctx.print(['Quelques commandes cachées attendent aussi les curieux… Que la force soit avec vous.', 'term-dim']);
   },
 
   whoami(args, ctx) {
@@ -143,6 +145,17 @@ export const COMMANDS = {
   },
 
   // --- Commandes cachées (absentes de help) ---------------------------------------
+
+  // Générique façon Star Wars, 30 secondes (voir movie.js)
+  starwars(args, ctx) {
+    ctx.playMovie();
+  },
+
+  // Clin d'œil au célèbre Star Wars en ASCII, accessible par `telnet towel.blinkenlights.nl`
+  telnet(args, ctx) {
+    if (args[0] === 'towel.blinkenlights.nl') return ctx.playMovie();
+    ctx.print([`telnet: impossible de joindre ${args[0] ?? 'l\'hôte'} : ce terminal est simulé, il n'a pas accès au réseau.`, 'term-err']);
+  },
 
   sudo(args, ctx) {
     ctx.print(`[sudo] Mot de passe de ${site.identite.utilisateur} : ********`);
