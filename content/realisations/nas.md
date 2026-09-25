@@ -2,11 +2,15 @@
 titre: "NAS Homelab"
 slug: nas
 type: perso  # entreprise, formation ou perso
-date: "[À COMPLÉTER]"  # AAAA, AAAA-MM ou AAAA-MM-JJ (ex. 2026-11)
-statut: "[À COMPLÉTER]"  # ex. en cours, terminé
-resume: "[À COMPLÉTER : ce qui a été mis en place]"
-technos: []
-competences: []  # ex. [C1, C4]
+date: 2026  # AAAA, AAAA-MM, AAAA-MM-JJ ou période début/fin (ex. 2026-01/2026-08)
+statut: "[À COMPLÉTER]"  # ex. en cours, terminé, en pause
+resume: "Stockage réseau auto-hébergé sur mon homelab Proxmox, accessible à distance par VPN avec Tailscale, en alternative aux services de stockage en ligne payants."
+technos:
+  - "Proxmox"
+  - "Linux"
+  - "Tailscale"
+  - "[À COMPLÉTER : logiciel du NAS]"
+competences: []  # codes du référentiel, ex. [C1, C4] (grille officielle à venir)
 ---
 
 <!--
@@ -20,15 +24,20 @@ competences: []  # ex. [C1, C4]
 
 ## Contexte
 
-[À COMPLÉTER : situation de départ, pour qui, avec quels moyens]
+Plutôt que de payer un service de stockage en ligne, je voulais héberger moi-même mes fichiers. Le NAS fait partie de mon homelab auto-hébergé : il tourne sur le même hyperviseur Proxmox que mon serveur multimédia Jellyfin.
+
+[À COMPLÉTER : matériel et disques utilisés, budget]
 
 ## Objectifs
 
-[À COMPLÉTER]
+Disposer d'un espace de stockage centralisé, hébergé chez moi, et accessible depuis n'importe où.
 
 ## Mise en œuvre
 
-[À COMPLÉTER : étapes, architecture, configuration]
+- **Hébergement** : le NAS est hébergé sur l'hyperviseur **Proxmox** du homelab, qui fait tourner à la fois des conteneurs Docker et des machines virtuelles ;
+- **Accès à distance** : par VPN, avec **Tailscale**. Tailscale crée un réseau privé chiffré entre mes appareils et le homelab : le NAS est accessible à distance comme s'il se trouvait sur le réseau local.
+
+[À COMPLÉTER : logiciel ou service utilisé pour le NAS, organisation des disques (RAID, sauvegardes), partages et droits d'accès]
 
 ## Captures d'écran
 
@@ -36,8 +45,13 @@ competences: []  # ex. [C1, C4]
 
 ## Résultats et tests
 
-[À COMPLÉTER : ce qui a été vérifié, et comment]
+[À COMPLÉTER : ce qui a été vérifié (accès depuis l'extérieur, débits, droits d'accès…), et avec quel résultat]
 
 ## Difficultés rencontrées
 
 [À COMPLÉTER : problèmes rencontrés et solutions trouvées]
+
+## Compétences mises en œuvre
+
+- Virtualisation avec Proxmox
+- Mise en place d'un accès distant sécurisé par VPN (Tailscale)
