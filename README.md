@@ -4,6 +4,8 @@
 
 Portfolio de **Rémi Moreau**, étudiant en BTS SIO option SISR à MyDigitalSchool Nantes (promo 2026-2028), en alternance chez 1Life (groupe Visiativ) comme consultant ERP Open-Prod.
 
+**En ligne : https://remim.me** · vue rapide jury : https://remim.me/#/jury
+
 Le site se présente comme le démarrage d'un système Linux : écran GRUB, journal du noyau, services systemd, puis un menu façon ncurses qui donne accès aux réalisations, au tableau de synthèse et à la veille technologique. Une **vue rapide jury**, sobre et imprimable, rassemble tout le contenu sur une seule page.
 
 ## Sommaire
@@ -216,6 +218,8 @@ Audit Lighthouse 13 sur le build (`npm run build` puis `npm run preview`), le 24
 | Accueil (ordinateur) | 100 | 100 | 100 | 100 |
 | Vue jury (mobile) | 100 | 100 | 100 | 100 |
 | Fiche de réalisation (mobile) | 100 | 100 | 100 | 100 |
+
+Même audit sur le site en ligne, **https://remim.me** (GitHub Pages), le 26 septembre 2026 : **100 / 100 / 100 / 100** sur mobile et sur ordinateur (plus grand élément affiché en 1,2 s sur mobile, 0,4 s sur ordinateur, aucun décalage de mise en page).
 
 Accueil mobile : premier affichage 1,1 s, plus grand élément affiché 1,2 s, aucun blocage du navigateur (TBT 0 ms), aucun décalage de mise en page (CLS 0). Poids total de la page : 53 Ko.
 
