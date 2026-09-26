@@ -35,6 +35,33 @@ export default {
   // de lien (Open Graph) : image et adresse doivent y être des URL complètes.
   urlPublique: 'https://remim.me/',
 
+  // --- Référencement (Google, Bing…) -----------------------------------------
+  // Titre et description affichés dans les résultats de recherche, et
+  // informations lues par les moteurs pour comprendre qui est derrière le site
+  // (« données structurées » schema.org). Tout doit rester exact.
+  referencement: {
+    // Titre de la page (onglet et résultats de recherche) : « RémiOS — <titre> »
+    titre: 'Rémi Moreau · Portfolio BTS SIO SISR',
+    // Description sous le titre dans les résultats (idéalement moins de 160 caractères)
+    description:
+      "Portfolio de Rémi Moreau, étudiant en BTS SIO option SISR à MyDigitalSchool Nantes et consultant ERP en alternance chez 1Life : réalisations, homelab, veille.",
+    poste: 'Consultant ERP en alternance',
+    entreprise: '1Life',
+    groupe: 'Visiativ',
+    ecole: 'MyDigitalSchool Nantes',
+    ville: 'Nantes',
+    // Domaines de compétence (repris du CV)
+    domaines: [
+      'Administration des systèmes et des réseaux',
+      'ERP Open-Prod',
+      'Proxmox',
+      'Docker',
+      'Linux',
+      'Python',
+      'DNS, VPN et reverse proxy',
+    ],
+  },
+
   // --- Contact ----------------------------------------------------------------
   contact: {
     email: 'remimoreau2006@gmail.com',

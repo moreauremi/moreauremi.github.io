@@ -59,6 +59,20 @@ b {
   outline-offset: 2px;
 }
 
+/* Version sans JavaScript (générée au build dans index.html) */
+.noscript {
+  max-width: 40rem;
+  padding: var(--gutter);
+}
+
+.noscript h1 {
+  font-size: 1.25rem;
+}
+
+.noscript a {
+  color: var(--info);
+}
+
 /* Repères [À COMPLÉTER] : surlignés en jaune pour repérer d'un coup d'œil
    ce qu'il reste à rédiger (contraste texte/fond : 6,5:1). */
 mark.ph {

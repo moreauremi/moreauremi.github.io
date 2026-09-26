@@ -14,7 +14,7 @@
 // =============================================================================
 
 import { link, navigate } from '../router.js';
-import { getRealisation, TYPES } from '../content.js';
+import { site, getRealisation, TYPES } from '../content.js';
 import { ficheBlock } from '../blocks.js';
 import { safe } from '../utils/html.js';
 import { hasModifier, isTypingTarget } from '../utils/keyboard.js';
@@ -28,7 +28,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
     <header class="tui-bar">
       <span class="tui-bar-tty">RémiOS 1.0 <span class="tui-bar-extra">(tty1)</span></span>
       <button type="button" class="tui-bar-tty2" data-action="terminal" aria-label="Ouvrir le terminal">[tty2]</button>
-      <span class="tui-bar-title">Portfolio BTS SIO SISR</span>
+      <span class="tui-bar-title">${site.identite.nom} · Portfolio BTS SIO SISR</span>
     </header>
     <div class="tui-stage"></div>
     <p class="tui-hints">↑ ↓ naviguer · Entrée ouvrir · Échap revenir · 1 à ${SECTIONS.length} accès direct</p>
