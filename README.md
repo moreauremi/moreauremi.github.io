@@ -248,6 +248,8 @@ Code sur GitHub ──push──► GitHub Actions ──► GitHub Pages ──
 3. Dans **Custom domain**, vérifier que `remim.me` est indiqué (sinon le saisir, puis **Save**).
 4. Cocher **Enforce HTTPS**. La case devient cliquable une fois le certificat délivré : de quelques minutes à 24 h après la configuration du domaine.
 
+État au 26 septembre 2026 : source GitHub Actions, domaine `remim.me` et **HTTPS forcé** (`http://remim.me` redirige vers `https://remim.me`).
+
 ### DNS chez Namecheap (déjà en place)
 
 **Domain List → remim.me → Manage → Advanced DNS** :
@@ -258,9 +260,11 @@ Code sur GitHub ──push──► GitHub Actions ──► GitHub Pages ──
 | A Record | `@` | `185.199.109.153` |
 | A Record | `@` | `185.199.110.153` |
 | A Record | `@` | `185.199.111.153` |
-| CNAME Record | `www` | `moreauremi.github.io.` (conseillé par GitHub ; `remim.me.` fonctionne aussi) |
+| CNAME Record | `www` | `moreauremi.github.io.` |
 
 Ces adresses sont celles des serveurs de GitHub Pages. Vérification depuis un terminal : `dig +short remim.me` doit afficher les quatre adresses.
+
+**Important pour `www`** : l'enregistrement CNAME `www` doit pointer vers `moreauremi.github.io.`, pas vers `remim.me.`. Sinon, GitHub ne met que `remim.me` dans le certificat HTTPS, et `https://www.remim.me` affiche une alerte « connexion non sécurisée ». Après correction, GitHub ajoute `www.remim.me` au certificat, de quelques minutes à quelques heures plus tard. Si rien ne change au bout de 24 h, retirer puis ressaisir `remim.me` dans **Settings → Pages → Custom domain** relance la demande de certificat. Vérification : `curl -I https://www.remim.me` doit répondre `301` vers `https://remim.me/`.
 
 ### Première mise en ligne
 
