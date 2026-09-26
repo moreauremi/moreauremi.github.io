@@ -199,6 +199,13 @@ reference/               maquette HTML validée au départ du projet (hors build
 - **Police auto-hébergée et préchargée.** IBM Plex Mono est servie par le site lui-même : pas de Google Fonts, donc fonctionnement hors ligne et aucune donnée de visite transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 Ko).
 - **Cache long.** Les fichiers hashés sont gardés un an par le navigateur ; `index.html` n'est jamais mis en cache, donc une nouvelle version est visible immédiatement.
 
+### Référencement
+
+- **Tout vient de la configuration.** Le titre et la description de la page, les données structurées, le plan du site (`sitemap.xml`), le `robots.txt` et la version sans JavaScript sont générés au build à partir de la rubrique `referencement` de `content/site.config.js`.
+- **Données structurées schema.org** (JSON-LD) : une fiche « personne » lue par les moteurs de recherche, avec le nom, le poste, l'entreprise, l'école, la ville, et les liens GitHub et LinkedIn. C'est ce qui aide Google à associer « Rémi Moreau » à ce site.
+- **Titre de l'onglet** : « RémiOS_ — Rémi Moreau · Portfolio BTS SIO SISR ». L'onglet affiche « RémiOS_ » avec son curseur clignotant, et les moteurs lisent le nom et les mots-clés qui suivent.
+- **Le CV n'est pas proposé aux moteurs** (`Disallow: /docs/` dans `robots.txt`), pour éviter que le numéro de téléphone apparaisse dans les résultats de recherche. Il reste téléchargeable depuis le site.
+
 ### Sécurité
 
 - **Site 100 % statique** : pas de base de données, pas de code exécuté sur le serveur, pas de formulaire. La surface d'attaque se limite à nginx.
