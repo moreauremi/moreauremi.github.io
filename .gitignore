@@ -7,3 +7,6 @@ dist/
 # Fichiers système et journaux
 .DS_Store
 *.log
+
+# Documents de travail personnels (réponses, CV d'origine) : jamais publiés
+a-integrer/

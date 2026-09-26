@@ -30,6 +30,21 @@ const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE_PATTERN = /^\d{4}(?:-\d{2}){0,2}(?:\/\d{4}(?:-\d{2}){0,2})?$/;
 const CONFIG_FILE = 'content/site.config.js';
 
+// Politique de sécurité du contenu : scripts, styles, polices et images ne
+// peuvent venir que du site lui-même. Même règle que docker/security-headers.conf
+// (sauf frame-ancestors, qui n'est pas autorisé dans une balise meta).
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self'",
+  "img-src 'self' data:",
+  "font-src 'self'",
+  "connect-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join('; ');
+
 export default function contentPlugin() {
   let root = process.cwd();
 
@@ -51,18 +66,30 @@ export default function contentPlugin() {
 
     // Balises qui exigent l'adresse complète du site (aperçus de lien) : ajoutées
     // à index.html seulement si urlPublique est renseignée dans la configuration.
-    async transformIndexHtml(html) {
+    // Ajoute aussi, au build seulement, la politique de sécurité du contenu.
+    async transformIndexHtml(html, context) {
+      const tags = [];
+
+      // Politique de sécurité (CSP) en balise meta : GitHub Pages ne permet pas
+      // d'envoyer des en-têtes HTTP (la version Docker les envoie via nginx).
+      // Seulement au build : en développement, Vite insère des styles à la volée,
+      // qu'une politique aussi stricte bloquerait.
+      if (!context.server) {
+        tags.push(
+          { tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: CSP }, injectTo: 'head-prepend' },
+          { tag: 'meta', attrs: { name: 'referrer', content: 'strict-origin-when-cross-origin' }, injectTo: 'head' },
+        );
+      }
+
       const site = await loadSiteConfig(root);
       const url = site.urlPublique;
-      if (!url) return html;
-      if (!/^https?:\/\//.test(url)) {
-        this.error(formatErrors(CONFIG_FILE, ['« urlPublique » doit commencer par http:// ou https://']));
-      }
-      const base = url.endsWith('/') ? url : `${url}/`;
-      const meta = (attrs) => ({ tag: 'meta', attrs, injectTo: 'head' });
-      return {
-        html,
-        tags: [
+      if (url) {
+        if (!/^https?:\/\//.test(url)) {
+          this.error(formatErrors(CONFIG_FILE, ['« urlPublique » doit commencer par http:// ou https://']));
+        }
+        const base = url.endsWith('/') ? url : `${url}/`;
+        const meta = (attrs) => ({ tag: 'meta', attrs, injectTo: 'head' });
+        tags.push(
           { tag: 'link', attrs: { rel: 'canonical', href: base }, injectTo: 'head' },
           meta({ property: 'og:url', content: base }),
           meta({ property: 'og:image', content: `${base}og-image.png` }),
@@ -70,8 +97,9 @@ export default function contentPlugin() {
           meta({ property: 'og:image:height', content: '630' }),
           meta({ property: 'og:image:alt', content: 'Menu principal de RémiOS, le portfolio de Rémi Moreau' }),
           meta({ name: 'twitter:card', content: 'summary_large_image' }),
-        ],
-      };
+        );
+      }
+      return { html, tags };
     },
 
     // Appelé par Vite pour chaque fichier importé : on ne traite que les .md de content/

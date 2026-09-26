@@ -15,7 +15,8 @@ Le site se présente comme le démarrage d'un système Linux : écran GRUB, jour
 - [Architecture](#architecture)
 - [Choix techniques](#choix-techniques)
 - [Qualité mesurée](#qualité-mesurée)
-- [Déployer sur le homelab (Docker + nginx)](#déployer-sur-le-homelab-docker--nginx)
+- [Mettre en ligne sur remim.me (GitHub Pages)](#mettre-en-ligne-sur-remimme-github-pages)
+- [Autre option : héberger sur le homelab (Docker + nginx)](#autre-option--héberger-sur-le-homelab-docker--nginx)
 - [Préparer l'oral](#préparer-loral)
 - [Étapes de construction](#étapes-de-construction)
 - [Crédits et licences](#crédits-et-licences)
@@ -104,7 +105,6 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [ ] **PDF** : CV et tableau de synthèse.
 - [ ] **Veille** : choisir le sujet (`veille.sujet`, le `[ WARN ]` du démarrage passera en `[  OK  ]`), puis rédiger `content/pages/veille.md`.
 - [ ] **Réalisations en formation** : la rubrique affiche « À venir » tant qu'il n'y en a pas.
-- [ ] **Nom de domaine** : le jour venu, renseigner `urlPublique` (aperçus de lien complets).
 
 ## Architecture
 
@@ -155,7 +155,8 @@ src/ui/                  barre fixe en haut à droite (vue jury, bouton son), ti
 src/utils/               petites fonctions partagées : HTML sûr, dates, clavier, réglages mémorisés
 src/styles/              un fichier CSS par partie (tokens.css = toutes les couleurs, print.css = impression)
 src/assets/fonts/        IBM Plex Mono en woff2 (400 et 600) + licence OFL
-Dockerfile, docker/      image Docker et configuration nginx
+.github/workflows/       publication automatique sur GitHub Pages (remim.me)
+Dockerfile, docker/      image Docker et configuration nginx (hébergement sur le homelab)
 docker-compose.yml       lancement du conteneur sur le homelab
 reference/               maquette HTML validée au départ du projet (hors build)
 ```
@@ -200,7 +201,8 @@ reference/               maquette HTML validée au départ du projet (hors build
 
 - **Site 100 % statique** : pas de base de données, pas de code exécuté sur le serveur, pas de formulaire. La surface d'attaque se limite à nginx.
 - **Aucune injection possible.** Ce que tape le visiteur dans le terminal est affiché avec `textContent`, jamais interprété comme du HTML. Les textes de la configuration sont échappés avant affichage.
-- **CSP stricte** (`script-src 'self'`) : le navigateur refuse tout script externe ou injecté. Possible parce que le site n'a aucun script ni style écrit dans le HTML.
+- **CSP stricte** (`script-src 'self'`) : le navigateur refuse tout script externe ou injecté. Possible parce que le site n'a aucun script ni style écrit dans le HTML. Sur GitHub Pages, qui ne permet pas d'envoyer des en-têtes HTTP, elle est ajoutée au build dans une balise `<meta>` ; la version Docker l'envoie en plus dans les en-têtes nginx.
+- **HTTPS** : certificat fourni et renouvelé automatiquement par GitHub Pages.
 - **Conteneur durci** : image multi-stage (aucun outil de build dans l'image finale), système de fichiers en lecture seule, pas d'élévation de privilèges, version de nginx masquée, en-têtes de sécurité (anti-clickjacking, nosniff, Referrer-Policy, Permissions-Policy).
 - **Liens externes** ouverts avec `rel="noopener noreferrer"` : la page ouverte ne peut pas agir sur le portfolio.
 
@@ -221,7 +223,59 @@ Pendant la construction, chaque étape a aussi été testée dans un navigateur 
 
 Pour refaire l'audit : ouvrir le site dans Chrome, outils de développement (F12), onglet **Lighthouse**.
 
-## Déployer sur le homelab (Docker + nginx)
+## Mettre en ligne sur remim.me (GitHub Pages)
+
+### Principe
+
+```
+Code sur GitHub ──push──► GitHub Actions ──► GitHub Pages ──► https://remim.me
+(moreauremi.github.io)    fabrique et          héberge le site,
+                          vérifie le site      fournit le HTTPS
+```
+
+- Le code est dans le dépôt GitHub `moreauremi/moreauremi.github.io`.
+- À chaque envoi (`push`) sur la branche `main`, le workflow `.github/workflows/deploy.yml` installe les outils, fabrique le site (ce qui vérifie aussi les fiches) et publie le dossier `dist/`. Si une fiche est mal remplie, la publication s'arrête et le site en ligne reste intact.
+- Le domaine `remim.me`, obtenu gratuitement chez Namecheap grâce au GitHub Student Pack, pointe vers les serveurs de GitHub Pages.
+
+### Réglages à faire une seule fois (sur github.com)
+
+1. Ouvrir le dépôt `moreauremi.github.io`, puis **Settings → Pages**.
+2. Dans **Build and deployment → Source**, choisir **GitHub Actions** (et non « Deploy from a branch »).
+3. Dans **Custom domain**, vérifier que `remim.me` est indiqué (sinon le saisir, puis **Save**).
+4. Cocher **Enforce HTTPS**. La case devient cliquable une fois le certificat délivré : de quelques minutes à 24 h après la configuration du domaine.
+
+### DNS chez Namecheap (déjà en place)
+
+**Domain List → remim.me → Manage → Advanced DNS** :
+
+| Type | Host | Value |
+|---|---|---|
+| A Record | `@` | `185.199.108.153` |
+| A Record | `@` | `185.199.109.153` |
+| A Record | `@` | `185.199.110.153` |
+| A Record | `@` | `185.199.111.153` |
+| CNAME Record | `www` | `moreauremi.github.io.` (conseillé par GitHub ; `remim.me.` fonctionne aussi) |
+
+Ces adresses sont celles des serveurs de GitHub Pages. Vérification depuis un terminal : `dig +short remim.me` doit afficher les quatre adresses.
+
+### Première mise en ligne
+
+Le projet est déjà relié au dépôt GitHub (`git remote -v` affiche `origin`). Une fois le réglage « Source : GitHub Actions » fait, il suffit d'envoyer le code :
+
+- **dans VS Code** : onglet **Contrôle de code source** (icône des branches), bouton **Synchroniser les modifications** ou **Publier la branche** ; VS Code demande de se connecter à GitHub la première fois ;
+- **ou dans un terminal** : `git push -u origin main`.
+
+Suivre la publication dans l'onglet **Actions** du dépôt (1 à 2 minutes), puis ouvrir https://remim.me. Le lien à donner au jury : **https://remim.me/#/jury**.
+
+Le dépôt est public : le code, le README et le CV sont visibles sur GitHub, comme ils le sont déjà sur le site. Le dossier `a-integrer/` (documents de travail) est exclu de git et n'est jamais publié.
+
+### Mettre à jour le site
+
+Modifier une fiche ou la configuration, vérifier en local avec `npm run dev`, faire un commit, puis envoyer (Synchroniser dans VS Code, ou `git push`). Le site est à jour une à deux minutes plus tard.
+
+## Autre option : héberger sur le homelab (Docker + nginx)
+
+Le projet contient aussi tout le nécessaire pour héberger le site sur le homelab, avec des en-têtes de sécurité complets envoyés par nginx. Utile pour une démonstration technique à l'oral ; le site public, lui, est sur GitHub Pages.
 
 ### Principe
 
@@ -395,10 +449,10 @@ Une seule boucle `requestAnimationFrame`, synchronisée sur l'affichage de l'éc
 Non : il est entièrement simulé dans le navigateur, rien n'est exécuté ni envoyé au serveur. La saisie est affichée comme du texte brut (`textContent`) et la politique de sécurité du contenu (CSP) empêche tout script injecté de s'exécuter.
 
 **Comment le site est-il hébergé ?**
-Dans un conteneur Docker sur mon homelab. L'image est construite en deux étapes : Node fabrique le site, puis seul le résultat est copié dans une image nginx minimale. Le conteneur est en lecture seule, sans élévation de privilèges ; mon reverse proxy nginx existant le publie.
+Sur GitHub Pages, à l'adresse remim.me. Le domaine, obtenu gratuitement chez Namecheap grâce au GitHub Student Pack, pointe vers les serveurs de GitHub par quatre enregistrements DNS de type A (et un CNAME pour www) ; GitHub fournit le certificat HTTPS. À chaque push, un workflow GitHub Actions reconstruit le site, vérifie les fiches et le remet en ligne. Le projet contient aussi une image Docker durcie (build Node, puis nginx en lecture seule) pour l'héberger sur mon homelab.
 
 **Quelles mesures de sécurité ?**
-Site statique (pas de base de données, pas de formulaire), en-têtes HTTP de sécurité (CSP stricte, anti-clickjacking, nosniff), version de nginx masquée, conteneur durci, HTTPS géré par le reverse proxy.
+Site statique (pas de base de données, pas de formulaire), HTTPS, politique de sécurité du contenu (CSP) stricte qui bloque tout script externe ou injecté. Sur GitHub Pages, la CSP est dans une balise meta ; la version Docker ajoute les en-têtes HTTP complets (anti-clickjacking, nosniff…), masque la version de nginx et tourne dans un conteneur en lecture seule.
 
 **Pourquoi héberger la police soi-même ?**
 Pour que le site marche sans accès extérieur, et pour ne pas transmettre l'adresse IP des visiteurs à Google : en 2022, un tribunal de Munich a condamné un site qui chargeait Google Fonts sans consentement (RGPD).

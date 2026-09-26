@@ -33,7 +33,7 @@ export default {
   // URL complète, terminée par « / » (ex. 'https://portfolio.exemple.fr/').
   // Laisser vide tant qu'il n'y a pas de nom de domaine. Elle sert aux aperçus
   // de lien (Open Graph) : image et adresse doivent y être des URL complètes.
-  urlPublique: '',
+  urlPublique: 'https://remim.me/',
 
   // --- Contact ----------------------------------------------------------------
   contact: {

@@ -33,10 +33,10 @@ J'ai toujours aimé interconnecter des machines. J'aime aussi être le plus auto
 
 ## En dehors des cours
 
-Mon homelab en est la mise en pratique : un hyperviseur Proxmox, avec des conteneurs Docker et des machines virtuelles, qui héberge un serveur multimédia Jellyfin (avec Sonarr, Radarr et Prowlarr) et un NAS, accessibles à distance par VPN avec Tailscale. C'est aussi lui qui publie ce portfolio, derrière un reverse proxy nginx.
+Mon homelab en est la mise en pratique : un hyperviseur Proxmox, avec des conteneurs Docker et des machines virtuelles, qui héberge un serveur multimédia Jellyfin (avec Sonarr, Radarr et Prowlarr) et un NAS, accessibles à distance par VPN avec Tailscale.
 
 Je mène aussi deux projets de développement : CAFFEIN, un SaaS de facturation piloté par un assistant IA qui rend les outils CRM et ERP accessibles aux micro-entrepreneurs et aux artisans du BTP, et Crypto Dashboard Pro, un tableau de bord interactif qui suit en temps réel le cours des cryptomonnaies, avec un système d'alertes personnalisé.
 
 ## Ce portfolio
 
-Il rassemble mes réalisations en entreprise, en formation et personnelles, mon tableau de synthèse et ma veille technologique. C'est aussi un projet en soi : un site statique construit avec Vite, sans framework, servi par nginx dans un conteneur Docker sur mon homelab.
+Il rassemble mes réalisations en entreprise, en formation et personnelles, mon tableau de synthèse et ma veille technologique. C'est aussi un projet en soi : un site statique construit avec Vite, sans framework, publié sur GitHub Pages à l'adresse remim.me. À chaque modification, GitHub Actions le reconstruit, vérifie son contenu et le remet en ligne automatiquement. Une image Docker (nginx) est aussi prête pour l'héberger sur mon homelab.
