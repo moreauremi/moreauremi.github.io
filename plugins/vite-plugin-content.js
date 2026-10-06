@@ -21,6 +21,7 @@
 // qui indique le fichier et ce qu'il faut corriger.
 // =============================================================================
 
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -46,12 +47,13 @@ const CERTIFICATION_STATUSES = ['obtenue', 'en cours'];
 // (sauf frame-ancestors, qui n'est pas autorisé dans une balise meta).
 // Seule exception : si le formulaire de contact est activé, il peut être
 // envoyé au service qui transmet les messages.
-function contentSecurityPolicy(site) {
+// `styleHashes` : empreintes des styles écrits dans la page (voir inlineStyleHashes).
+function contentSecurityPolicy(site, styleHashes = []) {
   const formAction = site.formulaire?.cle ? `'self' ${new URL(FORM_ACTION).origin}` : "'self'";
   return [
     "default-src 'self'",
     "script-src 'self'",
-    "style-src 'self'",
+    ["style-src 'self'", ...styleHashes].join(' '),
     "img-src 'self' data:",
     "font-src 'self'",
     "connect-src 'self'",
@@ -59,6 +61,16 @@ function contentSecurityPolicy(site) {
     "base-uri 'self'",
     `form-action ${formAction}`,
   ].join('; ');
+}
+
+// Empreintes SHA-256 des blocs <style> écrits dans la page (seule 503.html en a,
+// car elle ne peut charger aucun fichier) : la CSP autorise exactement ces
+// styles-là, et aucun autre, au lieu de tous les autoriser avec 'unsafe-inline'.
+// Calculées sur le HTML final : Vite a déjà minifié le contenu des <style>.
+function inlineStyleHashes(html) {
+  return [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map(
+    ([, css]) => `'sha256-${crypto.createHash('sha256').update(css).digest('base64')}'`,
+  );
 }
 
 export default function contentPlugin() {
@@ -88,21 +100,28 @@ export default function contentPlugin() {
     // Ajoute aussi, au build seulement, la politique de sécurité du contenu.
     // Référencement : titre, description et version sans JavaScript viennent
     // de la rubrique « referencement » de la configuration.
+    // Appelé pour chaque page : index.html et les pages d'erreur (404.html…).
     async transformIndexHtml(html, context) {
       const tags = [];
       const site = await loadSiteConfig(root);
-      html = applySeo(html, site);
+      // Le référencement ne concerne que la page du site : les pages d'erreur
+      // gardent leur propre titre et ne sont pas proposées aux moteurs.
+      const isMainPage = path.basename(context.filename) === 'index.html';
+      if (isMainPage) html = applySeo(html, site);
 
       // Politique de sécurité (CSP) en balise meta : GitHub Pages ne permet pas
       // d'envoyer des en-têtes HTTP (la version Docker les envoie via nginx).
       // Seulement au build : en développement, Vite insère des styles à la volée,
       // qu'une politique aussi stricte bloquerait.
       if (!context.server) {
+        const csp = contentSecurityPolicy(site, inlineStyleHashes(html));
         tags.push(
-          { tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: contentSecurityPolicy(site) }, injectTo: 'head-prepend' },
+          { tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: csp }, injectTo: 'head-prepend' },
           { tag: 'meta', attrs: { name: 'referrer', content: 'strict-origin-when-cross-origin' }, injectTo: 'head' },
         );
       }
+
+      if (!isMainPage) return { html, tags };
 
       const url = site.urlPublique;
       if (url) {

@@ -27,5 +27,15 @@ export default defineConfig({
     // Le site n'a qu'un seul fichier JavaScript : le petit code de
     // préchargement des modules que Vite ajoute par défaut est inutile.
     modulePreload: { polyfill: false },
+    // Pages fabriquées : le site, et les pages d'erreur servies par le serveur
+    // (404 et 403 : GitHub Pages et nginx ; 503 : le reverse proxy du homelab).
+    rolldownOptions: {
+      input: {
+        index: 'index.html',
+        404: '404.html',
+        403: '403.html',
+        503: '503.html',
+      },
+    },
   },
 });

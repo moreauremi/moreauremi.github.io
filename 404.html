@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr" data-view="tui">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Page affichée par le serveur pour toute adresse inconnue, quelle que
+         soit sa profondeur (/a/b/c) : <base> fait partir ses liens et ses
+         fichiers (CSS, police) de la racine du site. -->
+    <base href="/" />
+    <title>Page introuvable (erreur 404) — RémiOS</title>
+    <!-- Page d'erreur : à ne pas proposer dans les résultats de recherche -->
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#1e3c8c" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles/errors.css" />
+    <script type="module" src="/src/errors.js"></script>
+  </head>
+  <body>
+    <div class="tui">
+      <header class="tui-bar">
+        <span class="tui-bar-tty">RémiOS 1.0 <span class="tui-bar-extra">(tty1)</span></span>
+        <span class="tui-bar-title">Rémi Moreau · Portfolio BTS SIO SISR</span>
+      </header>
+
+      <main class="tui-stage">
+        <section class="tui-box error-box" aria-labelledby="error-title">
+          <h1 class="tui-box-title" id="error-title"><span aria-hidden="true">[ </span>Erreur 404<span aria-hidden="true"> ]</span></h1>
+          <div class="tui-box-inner">
+            <pre class="error-code" aria-hidden="true">
+ _  _      ___    _  _
+| || |    / _ \  | || |
+| || |_  | | | | | || |_
+|__   _| | |_| | |__   _|
+   |_|    \___/     |_|</pre>
+            <pre class="error-shell"><span class="error-prompt">visiteur@remios:~$</span> cd <span data-path>/page-demandée</span>
+bash: cd: <span data-path>/page-demandée</span>&nbsp;: aucun fichier ou dossier de ce nom</pre>
+            <p>Cette page n'existe pas, ou plus. Vérifiez l'adresse, ou repartez du menu principal&nbsp;: toutes les rubriques et les réalisations s'y trouvent.</p>
+          </div>
+          <div class="tui-actions">
+            <a class="tui-btn tui-btn--primary" href="/">&lt; Menu principal &gt;</a>
+            <a class="tui-btn" href="/#/jury">&lt; Vue rapide jury &gt;</a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="tui-footer"><a href="/#/mentions-legales">Mentions légales</a></footer>
+    </div>
+  </body>
+</html>

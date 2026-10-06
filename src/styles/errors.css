@@ -1,0 +1,72 @@
+/* ==========================================================================
+   Pages d'erreur 404 et 403 (404.html, 403.html)
+   --------------------------------------------------------------------------
+   Pages servies par le serveur, en dehors de l'application : elles reprennent
+   la police, les variables et la boîte whiptail du site en important ses
+   feuilles, puis ajoutent les quelques styles qui leur sont propres.
+   La page 503 a ses styles dans son propre fichier (voir 503.html).
+   ========================================================================== */
+
+@import './fonts.css';
+@import './tokens.css';
+@import './base.css';
+@import './tui.css';
+
+/* Pas de boutons fixes (son, vue jury) sur ces pages : la barre du haut n'a
+   pas à leur réserver de place à droite. */
+.tui-bar {
+  padding-right: var(--gutter);
+}
+
+/* Boîte plus étroite que celle des rubriques : le contenu est court */
+.error-box {
+  width: min(640px, 100%);
+}
+
+.error-box p {
+  margin: 0 0 10px;
+}
+
+.error-box p:last-child {
+  margin-bottom: 0;
+}
+
+/* Les <pre> prennent la police du site (le navigateur leur en impose une autre) */
+.error-code,
+.error-shell {
+  font-family: inherit;
+}
+
+/* Code d'erreur en grands caractères ASCII, centré comme un bloc (les lignes
+   restent alignées entre elles) */
+.error-code {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 16px;
+  color: var(--tui-title);
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+/* Ligne de commande simulée : un petit écran noir dans la boîte. Une adresse
+   très longue passe à la ligne au lieu de déborder. */
+.error-shell {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  background: var(--screen);
+  color: var(--text);
+  font-size: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.error-prompt {
+  color: var(--ok);
+}
+
+@media (max-width: 720px) {
+  .error-code {
+    font-size: 0.6875rem;
+  }
+}

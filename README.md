@@ -158,6 +158,8 @@ content/site.config.js   configuration : identité, contact, formulaire, PDF, ve
 content/pages/           présentation, alternance et veille (Markdown)
 content/realisations/    une fiche Markdown par réalisation
 index.html               page unique : meta, Open Graph, préchargement de la police
+404.html, 403.html       pages d'erreur du serveur : adresse inconnue, accès refusé
+503.html                 page de maintenance affichée par le reverse proxy (fichier autonome)
 vite.config.js           configuration du build
 plugins/                 plugin Vite maison : Markdown → HTML au build, vérification des fiches
 public/                  copié tel quel dans dist/ : icônes, image d'aperçu, robots.txt, captures, PDF
@@ -165,6 +167,7 @@ src/main.js              point d'entrée : assemble les modules, clavier global
 src/router.js            routage par hash (#/presentation, #/realisations/nas…)
 src/content.js           accès au contenu (configuration + fiches) pour le reste du code
 src/blocks.js            blocs de contenu communs à RémiOS et à la vue jury
+src/errors.js            pages d'erreur 404 et 403 : affiche l'adresse demandée
 src/tui/                 interface whiptail : boîte, accueil, rubriques, fiches, visionneuse d'images
 src/boot/                démarrage : écran GRUB, contenu du journal, déroulement (sequence.js)
 src/jury/                vue rapide jury
@@ -203,6 +206,16 @@ reference/               maquette HTML validée au départ du projet (hors build
 - **Titre d'onglet façon invite de commande.** L'onglet affiche « RémiOS_ », et le « _ » clignote comme un curseur de terminal (toutes les 530 ms). Sur une rubrique ou une fiche, le nom de la page reste devant (« Présentation — RémiOS_ ») pour l'historique, les favoris et les lecteurs d'écran. La vue jury garde un titre fixe, et le curseur ne clignote pas si le système demande de réduire les animations.
 - **Réglages mémorisés prudemment.** Le choix du son est gardé dans `localStorage`, dont chaque accès est protégé (`try/catch`) : en navigation privée ou si le stockage est bloqué, le site fonctionne quand même.
 
+### Pages d'erreur
+
+- **Trois pages hors de l'application**, dans le style du site : `404.html` (adresse inconnue), `403.html` (accès refusé, par exemple un dossier sans `index.html` comme `/captures/`) et `503.html` (maintenance). Une erreur *dans* le site (`#/rubrique-inconnue`) reste affichée par l'application elle-même ; ces pages couvrent les adresses que le serveur ne connaît pas, par exemple `remim.me/jury` tapé sans le `#`.
+- **404 et 403 : la boîte whiptail du menu.** Elles importent les feuilles de style du site (police, couleurs, boîte) et suivent donc toute modification du thème. La ligne de commande simulée reprend l'adresse demandée (`bash: cd: /adresse : aucun fichier ou dossier de ce nom`) ; elle est insérée avec `textContent`, une adresse piégée ne peut donc rien injecter. Les boutons mènent au menu et à la vue jury.
+- **Valables à n'importe quelle profondeur.** Le serveur renvoie la même page pour `/a` comme pour `/a/b/c` : une balise `<base href="/">` fait partir ses liens et ses fichiers de la racine du site. Contrepartie : dans un sous-dossier (`http://192.168.1.10/portfolio/`), ces deux pages s'affichent sans mise en forme, car leurs fichiers sont cherchés à la racine du serveur. Elles retrouvent leur style dès que le site a son propre nom de domaine.
+- **503 : la console noire du démarrage, dans un fichier autonome.** Le reverse proxy l'affiche quand le conteneur est arrêté : elle ne peut alors rien télécharger depuis le site. Ses styles sont donc écrits dans la page, son icône est intégrée à son adresse (`data:`), et elle utilise la police à chasse fixe du système. Pour ne pas affaiblir la CSP avec `'unsafe-inline'`, le build calcule l'empreinte SHA-256 de ce style et l'ajoute à la CSP de la page : ce style précis est autorisé, aucun autre.
+- **Qui les affiche.** GitHub Pages sert de lui-même `404.html` pour toute adresse inconnue (il ne permet pas de personnaliser les autres erreurs). Dans le conteneur, nginx sert la 403 et la 404 (`error_page`), sans cache, et jamais en accès direct (`internal`). La 503 se branche sur le reverse proxy (voir « Page de maintenance » dans la partie homelab).
+- **Aperçu** : `npm run dev`, puis http://localhost:5173/404.html (ou `403.html`, `503.html`).
+- **Vérifié** (site construit, servi comme par GitHub Pages et avec les en-têtes de nginx, dans un navigateur piloté par script) : bon code HTTP pour chaque page, aucune ressource bloquée par la CSP, police chargée même à une adresse profonde, aucun défilement horizontal à 320 px. Les fichiers du site principal (`index-*.js`, `index-*.css`) sont identiques à l'octet près : il n'est pas modifié.
+
 ### Accessibilité
 
 - **Vrais éléments HTML.** Rubriques et fiches sont des liens `<a>`, les actions des `<button>` : souris, tactile, clavier et lecteurs d'écran fonctionnent sans code spécial.
@@ -231,7 +244,7 @@ reference/               maquette HTML validée au départ du projet (hors build
 - **Formulaire de contact sans serveur** : un formulaire HTML classique, envoyé directement au service Web3Forms qui transfère le message par e-mail sans le conserver. Le site ne reçoit ni ne stocke aucune donnée. La CSP n'autorise l'envoi de formulaires que vers le site lui-même et ce service (`form-action`), et seulement quand le formulaire est activé. Les mentions légales détaillent alors le traitement des données (RGPD).
 - **Mentions légales** (`#/mentions-legales`) : éditeur, hébergeur, propriété intellectuelle, crédits, données personnelles. Le site ne dépose aucun cookie : pas de bandeau de consentement nécessaire.
 - **Aucune injection possible.** Ce que tape le visiteur dans le terminal est affiché avec `textContent`, jamais interprété comme du HTML. Les textes de la configuration sont échappés avant affichage.
-- **CSP stricte** (`script-src 'self'`) : le navigateur refuse tout script externe ou injecté. Possible parce que le site n'a aucun script ni style écrit dans le HTML. Sur GitHub Pages, qui ne permet pas d'envoyer des en-têtes HTTP, elle est ajoutée au build dans une balise `<meta>` ; la version Docker l'envoie en plus dans les en-têtes nginx.
+- **CSP stricte** (`script-src 'self'`) : le navigateur refuse tout script externe ou injecté. Possible parce que le site n'a aucun script ni style écrit dans le HTML. Seule exception, la page de maintenance (503), qui doit tenir dans un seul fichier : son style est autorisé par son empreinte SHA-256, pas par `'unsafe-inline'`. Sur GitHub Pages, qui ne permet pas d'envoyer des en-têtes HTTP, elle est ajoutée au build dans une balise `<meta>` ; la version Docker l'envoie en plus dans les en-têtes nginx.
 - **HTTPS** : certificat fourni et renouvelé automatiquement par GitHub Pages.
 - **Conteneur durci** : image multi-stage (aucun outil de build dans l'image finale), système de fichiers en lecture seule, pas d'élévation de privilèges, version de nginx masquée, en-têtes de sécurité (anti-clickjacking, nosniff, Referrer-Policy, Permissions-Policy).
 - **Liens externes** ouverts avec `rel="noopener noreferrer"` : la page ouverte ne peut pas agir sur le portfolio.
@@ -334,7 +347,7 @@ Le `Dockerfile` construit l'image en deux étapes (*multi-stage*) : une image No
 | Fichier | Rôle |
 |---|---|
 | `Dockerfile` | construction de l'image (build Node → service nginx), vérification de santé |
-| `docker/nginx.conf` | service du site : gzip, cache d'un an sur les fichiers hashés, `index.html` jamais en cache, 404 pour les adresses inconnues |
+| `docker/nginx.conf` | service du site : gzip, cache d'un an sur les fichiers hashés, `index.html` jamais en cache, pages d'erreur 403 et 404 du site à la place de celles de nginx |
 | `docker/security-headers.conf` | en-têtes de sécurité (CSP stricte, anti-clickjacking, nosniff…) |
 | `docker-compose.yml` | lancement : port 8080, redémarrage automatique, lecture seule, pas d'élévation de privilèges |
 | `.dockerignore` | fichiers non envoyés à Docker (node_modules, dist, .git…) |
@@ -452,6 +465,32 @@ server {
 
 Puis renseigner `urlPublique: 'https://portfolio.exemple.fr/'` dans `content/site.config.js` et reconstruire (étape 5) : les aperçus de lien (image, adresse) seront alors complets.
 
+**Page de maintenance (503)** : quand le conteneur est arrêté (mise à jour, redémarrage), le reverse proxy ne peut plus le joindre et affiche sa propre page « 502 Bad Gateway ». Pour afficher à la place la page de maintenance du site :
+
+1. Copier la page dans un dossier de la machine que le conteneur du reverse proxy peut lire (un dossier monté en volume, ici `~/nginx/pages`, visible sous `/usr/share/nginx/pages` dans ce conteneur). La page est autonome : un seul fichier suffit. À refaire si la page change.
+
+   ```bash
+   docker cp remios-portfolio:/usr/share/nginx/html/503.html ~/nginx/pages/portfolio-503.html
+   ```
+
+2. Dans le bloc `location` qui contient `proxy_pass` (sous-dossier ou nom de domaine), ajouter :
+
+   ```nginx
+   # Conteneur arrêté ou injoignable : page de maintenance du site, avec le code 503
+   error_page 502 503 504 =503 /portfolio-503.html;
+   ```
+
+   et, à côté de ce bloc :
+
+   ```nginx
+   location = /portfolio-503.html {
+       root /usr/share/nginx/pages;   # dossier monté dans le conteneur du reverse proxy
+       internal;                      # jamais servie en accès direct
+   }
+   ```
+
+3. Recharger la configuration (commande ci-dessus), puis tester : `docker stop remios-portfolio`, ouvrir le site (page de maintenance, code 503), puis `docker start remios-portfolio`.
+
 ### Étape 5 : mettre à jour le site
 
 Après une modification (nouvelle fiche, captures…), depuis le Mac :
@@ -495,6 +534,9 @@ Non : il est entièrement simulé dans le navigateur, rien n'est exécuté ni en
 **Comment le site est-il hébergé ?**
 Sur GitHub Pages, à l'adresse remim.me. Le domaine, obtenu gratuitement chez Namecheap grâce au GitHub Student Pack, pointe vers les serveurs de GitHub par quatre enregistrements DNS de type A (et un CNAME pour www) ; GitHub fournit le certificat HTTPS. À chaque push, un workflow GitHub Actions reconstruit le site, vérifie les fiches et le remet en ligne. Le projet contient aussi une image Docker durcie (build Node, puis nginx en lecture seule) pour l'héberger sur mon homelab.
 
+**Que voit-on si l'adresse est fausse, ou si le serveur est arrêté ?**
+Une page d'erreur dans le style du site, avec le bon code HTTP : 404 pour une adresse inconnue (GitHub Pages la sert de lui-même), 403 pour un accès refusé, 503 pendant une maintenance. La 503 est affichée par le reverse proxy quand le conteneur est arrêté : elle ne peut rien charger depuis le site, donc elle tient en un seul fichier, et sa CSP autorise son style par son empreinte SHA-256 plutôt que d'accepter tous les styles écrits dans la page.
+
 **Quelles mesures de sécurité ?**
 Site statique (pas de base de données, aucun code exécuté sur le serveur), HTTPS, politique de sécurité du contenu (CSP) stricte qui bloque tout script externe ou injecté. Le formulaire de contact est envoyé à un service tiers (Web3Forms), seule destination autorisée par la CSP ; le site ne stocke aucune donnée. Sur GitHub Pages, la CSP est dans une balise meta ; la version Docker ajoute les en-têtes HTTP complets (anti-clickjacking, nosniff…), masque la version de nginx et tourne dans un conteneur en lecture seule.
 
@@ -528,6 +570,7 @@ Puis, après la construction :
 
 13. Publication sur GitHub Pages à l'adresse remim.me, puis référencement (données structurées, sitemap)
 14. Rubriques attendues pour l'épreuve E5 (consignes du professeur) : alternance et parcours, compétences techniques, certifications, mentions légales, formulaire de contact, mode brouillon, licence MIT
+15. Pages d'erreur 404, 403 et 503 dans le style du site
 
 ## Crédits et licences
 
