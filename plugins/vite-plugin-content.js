@@ -47,12 +47,13 @@ const CERTIFICATION_STATUSES = ['obtenue', 'en cours'];
 // (sauf frame-ancestors, qui n'est pas autorisé dans une balise meta).
 // Seule exception : si le formulaire de contact est activé, il peut être
 // envoyé au service qui transmet les messages.
-// `styleHashes` : empreintes des styles écrits dans la page (voir inlineStyleHashes).
-function contentSecurityPolicy(site, styleHashes = []) {
+// `scriptHashes`, `styleHashes` : empreintes des blocs écrits dans la page
+// (données structurées, style de 503.html), autorisés un par un.
+function contentSecurityPolicy(site, { scriptHashes = [], styleHashes = [] } = {}) {
   const formAction = site.formulaire?.cle ? `'self' ${new URL(FORM_ACTION).origin}` : "'self'";
   return [
     "default-src 'self'",
-    "script-src 'self'",
+    ["script-src 'self'", ...scriptHashes].join(' '),
     ["style-src 'self'", ...styleHashes].join(' '),
     "img-src 'self' data:",
     "font-src 'self'",
@@ -63,14 +64,18 @@ function contentSecurityPolicy(site, styleHashes = []) {
   ].join('; ');
 }
 
-// Empreintes SHA-256 des blocs <style> écrits dans la page (seule 503.html en a,
-// car elle ne peut charger aucun fichier) : la CSP autorise exactement ces
-// styles-là, et aucun autre, au lieu de tous les autoriser avec 'unsafe-inline'.
-// Calculées sur le HTML final : Vite a déjà minifié le contenu des <style>.
+// Empreinte SHA-256 d'un bloc écrit dans la page, au format attendu par la CSP.
+// La CSP autorise exactement ce contenu-là, et aucun autre, au lieu de tout
+// autoriser avec 'unsafe-inline'.
+function cspHash(text) {
+  return `'sha256-${crypto.createHash('sha256').update(text).digest('base64')}'`;
+}
+
+// Empreintes des blocs <style> écrits dans la page (seule 503.html en a, car
+// elle ne peut charger aucun fichier). Calculées sur le HTML final : Vite a
+// déjà minifié le contenu des <style>.
 function inlineStyleHashes(html) {
-  return [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map(
-    ([, css]) => `'sha256-${crypto.createHash('sha256').update(css).digest('base64')}'`,
-  );
+  return [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map(([, css]) => cspHash(css));
 }
 
 export default function contentPlugin() {
@@ -109,27 +114,16 @@ export default function contentPlugin() {
       const isMainPage = path.basename(context.filename) === 'index.html';
       if (isMainPage) html = applySeo(html, site);
 
-      // Politique de sécurité (CSP) en balise meta : GitHub Pages ne permet pas
-      // d'envoyer des en-têtes HTTP (la version Docker les envoie via nginx).
-      // Seulement au build : en développement, Vite insère des styles à la volée,
-      // qu'une politique aussi stricte bloquerait.
-      if (!context.server) {
-        const csp = contentSecurityPolicy(site, inlineStyleHashes(html));
-        tags.push(
-          { tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: csp }, injectTo: 'head-prepend' },
-          { tag: 'meta', attrs: { name: 'referrer', content: 'strict-origin-when-cross-origin' }, injectTo: 'head' },
-        );
-      }
-
-      if (!isMainPage) return { html, tags };
-
+      // Aperçus de lien et données structurées : page du site seulement
       const url = site.urlPublique;
-      if (url) {
+      let jsonLd = '';
+      if (isMainPage && url) {
         if (!/^https?:\/\//.test(url)) {
           this.error(formatErrors(CONFIG_FILE, ['« urlPublique » doit commencer par http:// ou https://']));
         }
         const base = url.endsWith('/') ? url : `${url}/`;
         const meta = (attrs) => ({ tag: 'meta', attrs, injectTo: 'head' });
+        jsonLd = structuredData(site, base);
         tags.push(
           { tag: 'link', attrs: { rel: 'canonical', href: base }, injectTo: 'head' },
           meta({ property: 'og:url', content: base }),
@@ -139,9 +133,28 @@ export default function contentPlugin() {
           meta({ property: 'og:image:alt', content: 'Menu principal de RémiOS, le portfolio de Rémi Moreau' }),
           meta({ name: 'twitter:card', content: 'summary_large_image' }),
           // Données structurées : fiche « personne » lue par les moteurs de recherche
-          { tag: 'script', attrs: { type: 'application/ld+json' }, children: structuredData(site, base), injectTo: 'head' },
+          { tag: 'script', attrs: { type: 'application/ld+json' }, children: jsonLd, injectTo: 'head' },
         );
       }
+
+      // Politique de sécurité (CSP) en balise meta : GitHub Pages ne permet pas
+      // d'envoyer des en-têtes HTTP (la version Docker les envoie via nginx).
+      // Seulement au build : en développement, Vite insère des styles à la volée,
+      // qu'une politique aussi stricte bloquerait.
+      // Les données structurées sont un bloc <script> écrit dans la page : le
+      // navigateur ne l'exécute pas, mais la CSP l'autorise quand même
+      // explicitement, par son empreinte (le validateur du W3C le demande).
+      if (!context.server) {
+        const csp = contentSecurityPolicy(site, {
+          scriptHashes: jsonLd ? [cspHash(jsonLd)] : [],
+          styleHashes: inlineStyleHashes(html),
+        });
+        tags.push(
+          { tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: csp }, injectTo: 'head-prepend' },
+          { tag: 'meta', attrs: { name: 'referrer', content: 'strict-origin-when-cross-origin' }, injectTo: 'head' },
+        );
+      }
+
       return { html, tags };
     },
 

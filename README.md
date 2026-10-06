@@ -245,7 +245,7 @@ reference/               maquette HTML validée au départ du projet (hors build
 - **Formulaire de contact sans serveur** : un formulaire HTML classique, envoyé directement au service Web3Forms qui transfère le message par e-mail sans le conserver. Le site ne reçoit ni ne stocke aucune donnée. La CSP n'autorise l'envoi de formulaires que vers le site lui-même et ce service (`form-action`), et seulement quand le formulaire est activé. Les mentions légales détaillent alors le traitement des données (RGPD).
 - **Mentions légales** (`#/mentions-legales`) : éditeur, hébergeur, propriété intellectuelle, crédits, données personnelles. Le site ne dépose aucun cookie : pas de bandeau de consentement nécessaire.
 - **Aucune injection possible.** Ce que tape le visiteur dans le terminal est affiché avec `textContent`, jamais interprété comme du HTML. Les textes de la configuration sont échappés avant affichage.
-- **CSP stricte** (`script-src 'self'`) : le navigateur refuse tout script externe ou injecté. Possible parce que le site n'a aucun script ni style écrit dans le HTML. Seule exception, la page de maintenance (503), qui doit tenir dans un seul fichier : son style est autorisé par son empreinte SHA-256, pas par `'unsafe-inline'`. Sur GitHub Pages, qui ne permet pas d'envoyer des en-têtes HTTP, elle est ajoutée au build dans une balise `<meta>` ; la version Docker l'envoie en plus dans les en-têtes nginx.
+- **CSP stricte** (`script-src 'self'`) : le navigateur refuse tout script externe ou injecté. Possible parce que le site n'a aucun script ni style écrit dans le HTML. Deux exceptions, autorisées chacune par son empreinte SHA-256 calculée au build, et non par `'unsafe-inline'` : les données structurées (un bloc JSON que le navigateur n'exécute pas, mais que le validateur du W3C demande d'autoriser) et le style de la page de maintenance (503), qui doit tenir dans un seul fichier. Sur GitHub Pages, qui ne permet pas d'envoyer des en-têtes HTTP, elle est ajoutée au build dans une balise `<meta>` ; la version Docker l'envoie en plus dans les en-têtes nginx.
 - **HTTPS** : certificat fourni et renouvelé automatiquement par GitHub Pages.
 - **Conteneur durci** : image multi-stage (aucun outil de build dans l'image finale), système de fichiers en lecture seule, pas d'élévation de privilèges, version de nginx masquée, en-têtes de sécurité (anti-clickjacking, nosniff, Referrer-Policy, Permissions-Policy).
 - **Liens externes** ouverts avec `rel="noopener noreferrer"` : la page ouverte ne peut pas agir sur le portfolio.
@@ -276,6 +276,8 @@ Pendant la construction, chaque étape a aussi été testée dans un navigateur 
 - **Lighthouse** : audit à refaire après la mise en ligne.
 
 Pour refaire l'audit : ouvrir le site dans Chrome, outils de développement (F12), onglet **Lighthouse**.
+
+**Validation HTML (W3C)** : les pages construites (`index.html`, `404.html`, `403.html`, `503.html`) passent le [Nu Html Checker](https://validator.w3.org/nu/) sans erreur ni avertissement (6 octobre 2026). Pour vérifier le site en ligne : https://validator.w3.org/nu/?doc=https://remim.me/
 
 ## Mettre en ligne sur remim.me (GitHub Pages)
 
