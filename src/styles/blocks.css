@@ -1,9 +1,10 @@
 /* ==========================================================================
    Blocs de contenu partagés par RémiOS et la vue jury (voir src/blocks.js)
    --------------------------------------------------------------------------
-   Les couleurs viennent de deux variables définies par le conteneur :
-     --accent  titres et liens
-     --rule    filets et bordures
+   Les couleurs viennent de variables définies par le conteneur :
+     --accent        titres et liens
+     --rule          filets et bordures
+     --field-bg, --field-ink, --field-border   champs du formulaire
    ========================================================================== */
 
 /* --- Texte issu du Markdown ------------------------------------------------- */
@@ -43,10 +44,187 @@
 
 .prose a,
 .contact a,
-.matrix a {
+.matrix a,
+.skills a,
+.profile-links a,
+.certif-links a,
+.field-check a {
   color: var(--accent);
   font-weight: 600;
   text-underline-offset: 2px;
+}
+
+/* --- Présentation : photo et liens vers les profils ------------------------- */
+
+.profile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin: 0 0 1.2em;
+}
+
+.portrait {
+  width: 128px;
+  height: 128px;
+  margin: 0;
+  border: 1px solid var(--rule);
+  object-fit: cover;
+}
+
+/* Emplacement de la photo tant qu'elle n'est pas fournie */
+.portrait--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-style: dashed;
+  font-size: var(--font-size-small);
+  text-align: center;
+}
+
+.profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* --- Repère « brouillon » (visible seulement avec npm run dev) ---------------- */
+
+.draft-badge {
+  display: inline-block;
+  margin-left: 0.4em;
+  padding: 0 0.4em;
+  border: 1px dashed currentColor;
+  font-size: var(--font-size-small);
+  font-weight: 400;
+}
+
+/* --- Compétences techniques -------------------------------------------------- */
+
+/* Largeurs de colonnes fixes : tous les tableaux (un par domaine) sont
+   alignés. Sur petit écran, le tableau défile dans son cadre (.table-scroll). */
+.skills {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.skills thead th:nth-child(1) {
+  width: 32%;
+}
+
+.skills thead th:nth-child(2) {
+  width: 13.5em;
+}
+
+.skills th,
+.skills td {
+  padding: 4px 8px;
+  border: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.skills thead th {
+  font-weight: 600;
+}
+
+.skills tbody th {
+  min-width: 14ch;
+  font-weight: 400;
+}
+
+.skills-level,
+.levels dt {
+  white-space: nowrap;
+}
+
+/* Petits écrans : une fiche par compétence plutôt qu'un tableau à faire
+   défiler. L'en-tête du tableau reste lu par les lecteurs d'écran. */
+@media (max-width: 600px) {
+  .skills {
+    min-width: 0;
+    table-layout: auto;
+  }
+
+  .skills thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .skills tbody,
+  .skills tr,
+  .skills th,
+  .skills td {
+    display: block;
+  }
+
+  .skills tr {
+    margin-bottom: 8px;
+    border: 1px solid var(--rule);
+  }
+
+  .skills tbody th,
+  .skills td {
+    border: 0;
+  }
+
+  .skills tbody th {
+    font-weight: 600;
+  }
+
+  /* Intitulé de la colonne devant la valeur. Le texte après « / » (vide) est
+     ce que lisent les lecteurs d'écran, qui ont déjà l'en-tête du tableau ;
+     la première ligne sert aux navigateurs qui ne connaissent pas cette syntaxe. */
+  .skills td::before {
+    content: attr(data-label) ' : ';
+    content: attr(data-label) ' : ' / '';
+    color: var(--accent);
+    font-weight: 600;
+  }
+}
+
+/* Barre de niveau [####----] : toujours en police à chasse fixe, pour que
+   les barres soient alignées, y compris dans la vue jury */
+.level-bar {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  white-space: pre;
+}
+
+.legend.levels {
+  margin: 1em 0 0.5em;
+}
+
+/* --- Certifications ----------------------------------------------------------- */
+
+.certifs {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.certifs li {
+  display: flex;
+  flex-direction: column;
+}
+
+.certif-title {
+  font-weight: 600;
+}
+
+.certif-meta {
+  font-size: var(--font-size-small);
 }
 
 /* --- Tableau croisé réalisations × compétences ------------------------------ */
@@ -125,6 +303,87 @@
 .contact dd {
   margin: 0;
   overflow-wrap: anywhere; /* une longue adresse passe à la ligne sur mobile */
+}
+
+/* --- Formulaire de contact ---------------------------------------------------- */
+
+.contact-form {
+  display: grid;
+  gap: 12px;
+  max-width: 40rem;
+  margin-top: 1.6em;
+  /* Champs et case à cocher dessinés en version claire (fond gris ou blanc) */
+  color-scheme: light;
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+}
+
+.field > span {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--field-border);
+  border-radius: 0;
+  background: var(--field-bg);
+  color: var(--field-ink);
+  font: inherit;
+}
+
+.field textarea {
+  min-height: 8em;
+  resize: vertical;
+}
+
+.field-check {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.field-check label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.field-check input {
+  flex: none;
+  width: 1.1em;
+  height: 1.1em;
+  margin: 0.2em 0 0;
+  accent-color: var(--accent);
+}
+
+.field-check a {
+  font-size: var(--font-size-small);
+}
+
+.form-submit {
+  justify-self: start;
+  min-height: 44px;
+  padding: 6px 20px;
+  border: 0;
+  background: var(--accent);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form-submit:hover {
+  text-decoration: underline;
+}
+
+.form-note {
+  margin: 1.2em 0 0;
 }
 
 /* --- Listes de fiches ------------------------------------------------------- */

@@ -4,20 +4,25 @@
 // Une version classique du portfolio : fond clair, police lisible, aucune
 // animation, tout le contenu sur une seule page, imprimable.
 //
-//   #/jury          page unique : présentation, réalisations, synthèse, veille, contact
-//   #/jury/<slug>   une fiche de réalisation dans le même style sobre
+//   #/jury                    page unique : toutes les rubriques du menu
+//   #/jury/<slug>             une fiche de réalisation dans le même style sobre
+//   #/jury/mentions-legales   les mentions légales, dans le même style
 //
 // Le contenu vient des mêmes blocs que l'interface RémiOS (src/blocks.js).
 // =============================================================================
 
-import { site, realisationsOfType, getRealisation } from '../content.js';
+import { site, realisationsOfType, getRealisation, TYPES } from '../content.js';
 import { link } from '../router.js';
 import {
   presentationBlock,
+  alternanceBlock,
   ficheBlock,
+  competencesBlock,
   syntheseBlock,
   veilleBlock,
+  certificationsBlock,
   contactBlock,
+  mentionsLegalesBlock,
 } from '../blocks.js';
 import { escapeHtml, safe } from '../utils/html.js';
 import { formatDate } from '../utils/dates.js';
@@ -27,19 +32,17 @@ import { setPlainTitle } from '../ui/tab-title.js';
 // Date du build, injectée par Vite (voir vite.config.js)
 const BUILD_DATE = formatDate(__BUILD_DATE__);
 
-// Sommaire de la page jury : identifiant de section et titre
+// Parties de la page jury, dans l'ordre du sommaire : identifiant, titre et
+// contenu. Les titres des textes descendent d'un niveau (voir demoteHeadings).
 const PARTS = [
-  ['presentation', 'Présentation'],
-  ['realisations', 'Réalisations'],
-  ['synthese', 'Tableau de synthèse'],
-  ['veille', 'Veille technologique'],
-  ['contact', 'CV et contact'],
-];
-
-const GROUPS = [
-  ['entreprise', 'En entreprise (1Life)'],
-  ['formation', 'En formation'],
-  ['perso', 'Projets personnels'],
+  ['presentation', 'Présentation', () => demoteHeadings(presentationBlock())],
+  ['alternance', 'Alternance et parcours', () => demoteHeadings(alternanceBlock())],
+  ['realisations', 'Réalisations', () => Object.entries(TYPES).map(([type, { group: label }]) => group(type, label)).join('')],
+  ['competences', 'Compétences', () => demoteHeadings(competencesBlock(link.juryFiche))],
+  ['synthese', 'Tableau de synthèse E5', () => syntheseBlock(link.juryFiche)],
+  ['veille', 'Veille technologique', () => demoteHeadings(veilleBlock())],
+  ['certifications', 'Certifications', () => demoteHeadings(certificationsBlock())],
+  ['contact', 'CV et contact', () => demoteHeadings(contactBlock({ legalHref: link.juryLegal() }))],
 ];
 
 export function createJuryView(root) {
@@ -49,7 +52,10 @@ export function createJuryView(root) {
     current = route;
     const fiche = route.name === 'jury-fiche' ? getRealisation(route.slug) : null;
 
-    if (route.name === 'jury-fiche' && fiche) {
+    if (route.name === 'jury-fiche' && route.slug === 'mentions-legales') {
+      root.innerHTML = legalPage();
+      setPlainTitle('Mentions légales — Vue jury');
+    } else if (route.name === 'jury-fiche' && fiche) {
       root.innerHTML = fichePage(fiche);
       setPlainTitle(`${fiche.titre} — Vue jury`);
     } else if (route.name === 'jury-fiche') {
@@ -95,6 +101,7 @@ function mainPage() {
   const toc = PARTS.map(
     ([id, label]) => `<li><a href="${link.jury()}" data-scroll-to="jury-${id}">${label}</a></li>`,
   ).join('');
+  const parts = PARTS.map(([id, label, body]) => part(id, label, body())).join('');
 
   return `<div class="jury-page">
     <header class="jury-header">
@@ -113,14 +120,10 @@ function mainPage() {
       </nav>
     </header>
 
-    ${part('presentation', 'Présentation', demoteHeadings(presentationBlock()))}
-    ${part('realisations', 'Réalisations', GROUPS.map(([type, label]) => group(type, label)).join(''))}
-    ${part('synthese', 'Tableau de synthèse', syntheseBlock(link.juryFiche))}
-    ${part('veille', 'Veille technologique', demoteHeadings(veilleBlock()))}
-    ${part('contact', 'CV et contact', contactBlock())}
+    ${parts}
 
     <footer class="jury-footer">
-      <p>Page générée le ${BUILD_DATE}. Version interactive : <a href="${link.home()}">RémiOS</a>.</p>
+      <p>Page générée le ${BUILD_DATE}. Version interactive : <a href="${link.home()}">RémiOS</a>. <a href="${link.juryLegal()}">Mentions légales</a>.</p>
     </footer>
   </div>`;
 }
@@ -171,6 +174,19 @@ function fichePage(r) {
     ${ficheBlock(r)}
     <footer class="jury-footer">
       <p><a href="${link.jury()}">← Retour à la vue jury</a> · <a href="${link.fiche(r.slug)}">Voir cette fiche dans RémiOS</a></p>
+    </footer>
+  </div>`;
+}
+
+function legalPage() {
+  return `<div class="jury-page">
+    <nav class="jury-back" aria-label="Navigation">
+      <a href="${link.jury()}">← Retour à la vue jury</a>
+    </nav>
+    <h1 tabindex="-1">Mentions légales</h1>
+    ${mentionsLegalesBlock()}
+    <footer class="jury-footer">
+      <p><a href="${link.jury()}">← Retour à la vue jury</a></p>
     </footer>
   </div>`;
 }

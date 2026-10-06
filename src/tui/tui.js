@@ -6,7 +6,7 @@
 //
 //   ↑ ↓        se déplacer dans le menu ou dans une liste
 //   Entrée     ouvrir l'élément sélectionné
-//   1 à 7      ouvrir directement une rubrique (depuis le menu)
+//   1 à 8      ouvrir directement une rubrique (depuis le menu)
 //   Échap      revenir à l'écran précédent
 //
 // La souris et le tactile fonctionnent aussi : tous les éléments cliquables
@@ -14,7 +14,7 @@
 // =============================================================================
 
 import { link, navigate } from '../router.js';
-import { site, getRealisation, TYPES } from '../content.js';
+import { site, getRealisation } from '../content.js';
 import { ficheBlock } from '../blocks.js';
 import { safe } from '../utils/html.js';
 import { hasModifier, isTypingTarget } from '../utils/keyboard.js';
@@ -32,6 +32,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
     </header>
     <div class="tui-stage"></div>
     <p class="tui-hints">↑ ↓ naviguer · Entrée ouvrir · Échap revenir · 1 à ${SECTIONS.length} accès direct</p>
+    <footer class="tui-footer"><a href="${link.legal()}">Mentions légales</a></footer>
     <p class="visually-hidden" aria-live="polite" data-announcer></p>`;
 
   const stage = root.querySelector('.tui-stage');
@@ -70,7 +71,8 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
     if (route.name === 'section') {
       const section = findSection(route.id);
       if (section) {
-        selected = SECTIONS.indexOf(section); // retour au menu : rubrique resélectionnée
+        // Retour au menu : rubrique resélectionnée (sauf pages hors menu)
+        if (SECTIONS.includes(section)) selected = SECTIONS.indexOf(section);
         return {
           kind: 'section',
           title: section.label,
@@ -83,8 +85,8 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
     if (route.name === 'fiche') {
       const fiche = getRealisation(route.slug);
       if (fiche) {
-        // Parent de la fiche : la rubrique qui liste son type (entreprise, perso…)
-        const section = findSection(TYPES[fiche.type].section);
+        // Parent de la fiche : la rubrique « Réalisations »
+        const section = findSection('realisations');
         selected = SECTIONS.indexOf(section);
         return {
           kind: 'fiche',

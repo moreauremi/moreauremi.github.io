@@ -21,7 +21,7 @@
 import { site, realisations } from '../content.js';
 import { link } from '../router.js';
 import { LOGO } from '../tui/home.js';
-import { SECTIONS } from '../tui/sections.js';
+import { SECTIONS, findSection } from '../tui/sections.js';
 import { resolvePath, getNode } from './filesystem.js';
 
 // Commandes affichées par `help`, avec leur syntaxe et leur description
@@ -179,19 +179,19 @@ export const COMMANDS = {
 // --- Aides pour « open » ---------------------------------------------------------
 
 // Ce que `open` accepte : un chemin (nas.md, realisations/perso), le slug d'une
-// fiche (nas) ou l'identifiant d'une rubrique (veille, contact…).
+// fiche (nas) ou l'identifiant d'une rubrique (veille, contact, mentions-legales…).
 function findRoute(name, ctx) {
   const node = getNode(ctx.fs, resolvePath(ctx.cwd, name));
   if (node?.route) return node.route;
-  const slug = name.replace(/\.md$/, '');
+  const slug = name.replace(/\.(md|txt)$/, '');
   if (realisations.some((r) => r.slug === slug)) return link.fiche(slug);
-  if (SECTIONS.some((s) => s.id === slug)) return link.section(slug);
+  if (findSection(slug)) return link.section(slug);
   if (slug === 'jury') return link.jury();
   return null;
 }
 
 function openTargets() {
-  return [...realisations.map((r) => r.slug), ...SECTIONS.map((s) => s.id)];
+  return [...realisations.map((r) => r.slug), ...SECTIONS.map((s) => s.id), 'mentions-legales'];
 }
 
 // --- Autocomplétion (touche Tab) ----------------------------------------------------

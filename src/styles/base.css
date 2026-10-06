@@ -33,7 +33,8 @@ body {
 /* Par défaut, boutons et champs utilisent la police du système :
    on leur fait reprendre celle du site. */
 button,
-input {
+input,
+textarea {
   font: inherit;
   color: inherit;
 }

@@ -20,6 +20,9 @@ html[data-view='jury'] body {
   /* Couleurs des blocs de contenu partagés (voir blocks.css) */
   --accent: var(--jury-accent);
   --rule: var(--jury-rule);
+  --field-bg: var(--jury-bg);
+  --field-ink: var(--jury-ink);
+  --field-border: var(--jury-muted); /* contraste 8:1 : bord des champs bien visible */
   --focus-ring: 2px solid var(--jury-accent);
 }
 
@@ -161,8 +164,13 @@ html[data-view='jury'] body {
 
 .jury .fiche-meta,
 .jury .matrix,
+.jury .skills,
 .jury .legend {
   font-size: 0.9375rem;
+}
+
+.jury .form-submit {
+  border-radius: 4px;
 }
 
 .jury .tags li {

@@ -9,6 +9,10 @@
 //   - html : le corps du fichier converti en HTML ;
 //   - raw  : le texte source sans commentaires, affiché par `cat` dans le terminal.
 //
+// Une fiche marquée « brouillon: true » est visible avec `npm run dev`, mais
+// absente du site publié : au build, son module est vide (null), et son texte
+// n'apparaît nulle part dans les fichiers envoyés aux visiteurs.
+//
 // gray-matter (lecture du frontmatter) et marked (Markdown → HTML) ne tournent
 // que sur la machine qui fabrique le site : le navigateur reçoit du HTML déjà
 // prêt et n'a aucune bibliothèque à télécharger.
@@ -23,44 +27,59 @@ import { pathToFileURL } from 'node:url';
 import matter from 'gray-matter';
 import { Marked } from 'marked';
 import { escapeHtml, markPlaceholders, frenchSpacing } from '../src/utils/html.js';
+import { FORM_ACTION } from '../src/utils/contact-form.js';
 
 const TYPES = ['entreprise', 'formation', 'perso'];
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 // Une date (AAAA, AAAA-MM, AAAA-MM-JJ) ou une période « début/fin » (2026-01/2026-08)
 const DATE_PATTERN = /^\d{4}(?:-\d{2}){0,2}(?:\/\d{4}(?:-\d{2}){0,2})?$/;
+const SINGLE_DATE_PATTERN = /^\d{4}(?:-\d{2}){0,2}$/;
 const CONFIG_FILE = 'content/site.config.js';
+// Adresses réservées à des pages de la vue jury (#/jury/mentions-legales) :
+// une fiche ne peut pas porter ces noms.
+const RESERVED_SLUGS = ['mentions-legales'];
+const CERTIFICATION_CATEGORIES = ['certification', 'langue', 'formation', 'badge'];
+const CERTIFICATION_STATUSES = ['obtenue', 'en cours'];
 
 // Politique de sécurité du contenu : scripts, styles, polices et images ne
 // peuvent venir que du site lui-même. Même règle que docker/security-headers.conf
 // (sauf frame-ancestors, qui n'est pas autorisé dans une balise meta).
-const CSP = [
-  "default-src 'self'",
-  "script-src 'self'",
-  "style-src 'self'",
-  "img-src 'self' data:",
-  "font-src 'self'",
-  "connect-src 'self'",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-].join('; ');
+// Seule exception : si le formulaire de contact est activé, il peut être
+// envoyé au service qui transmet les messages.
+function contentSecurityPolicy(site) {
+  const formAction = site.formulaire?.cle ? `'self' ${new URL(FORM_ACTION).origin}` : "'self'";
+  return [
+    "default-src 'self'",
+    "script-src 'self'",
+    "style-src 'self'",
+    "img-src 'self' data:",
+    "font-src 'self'",
+    "connect-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    `form-action ${formAction}`,
+  ].join('; ');
+}
 
 export default function contentPlugin() {
   let root = process.cwd();
+  let isDev = false;
 
   return {
     name: 'remios-content',
 
-    // Dossier racine du projet, fourni par Vite
+    // Dossier racine du projet et mode (développement ou build), fournis par Vite
     configResolved(config) {
       root = config.root;
+      isDev = config.command === 'serve';
     },
 
-    // Au démarrage (en dev comme au build) : les documents PDF déclarés dans
-    // la configuration doivent exister dans public/.
+    // Au démarrage (en dev comme au build) : les fichiers déclarés dans la
+    // configuration (PDF, photo, justificatifs) doivent exister dans public/,
+    // et les compétences ne peuvent renvoyer qu'à des fiches existantes.
     async buildStart() {
       const site = await loadSiteConfig(root);
-      const errors = checkDocuments(site, root);
+      const errors = [...checkDocuments(site, root), ...checkConfig(site, root)];
       if (errors.length) this.error(formatErrors(CONFIG_FILE, errors));
     },
 
@@ -80,7 +99,7 @@ export default function contentPlugin() {
       // qu'une politique aussi stricte bloquerait.
       if (!context.server) {
         tags.push(
-          { tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: CSP }, injectTo: 'head-prepend' },
+          { tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: contentSecurityPolicy(site) }, injectTo: 'head-prepend' },
           { tag: 'meta', attrs: { name: 'referrer', content: 'strict-origin-when-cross-origin' }, injectTo: 'head' },
         );
       }
@@ -155,6 +174,9 @@ export default function contentPlugin() {
       for (const src of images) checkImage(src, root, errors);
 
       if (errors.length) this.error(formatErrors(file, errors));
+
+      // Brouillon : publié seulement en développement
+      if (meta.brouillon && !isDev) return { code: 'export default null;', map: null };
 
       const module = { meta, html, raw: stripComments(source) };
       return { code: `export default ${JSON.stringify(module)};`, map: null };
@@ -251,6 +273,61 @@ function checkDocuments(site, root) {
   return errors;
 }
 
+// Photo, savoir-faire et certifications
+function checkConfig(site, root) {
+  const errors = [];
+  const inPublic = (file) => fs.existsSync(path.join(root, 'public', file));
+
+  const photo = site.identite?.photo;
+  if (photo && !inPublic(photo)) errors.push(`« identite.photo » pointe vers public/${photo}, qui n'existe pas.`);
+
+  // Slugs des fiches existantes : nom des fichiers de content/realisations/
+  const slugs = fs
+    .readdirSync(path.join(root, 'content/realisations'))
+    .filter((name) => name.endsWith('.md'))
+    .map((name) => name.slice(0, -3));
+
+  const { niveaux = [], domaines = [] } = site.savoirFaire ?? {};
+  for (const domaine of domaines) {
+    for (const item of domaine.items ?? []) {
+      const label = `savoir-faire « ${item.nom} »`;
+      if (item.niveau !== null && !(Number.isInteger(item.niveau) && item.niveau >= 1 && item.niveau <= niveaux.length)) {
+        errors.push(`${label} : « niveau » doit être un nombre de 1 à ${niveaux.length}, ou null.`);
+      }
+      if (!isTextList(item.preuves ?? [])) {
+        errors.push(`${label} : « preuves » doit être une liste de slugs de fiches (ex. ['nas']).`);
+        continue;
+      }
+      for (const slug of item.preuves ?? []) {
+        if (!slugs.includes(slug)) errors.push(`${label} : la fiche « ${slug} » n'existe pas dans content/realisations/.`);
+      }
+    }
+  }
+
+  for (const [index, certif] of (site.certifications ?? []).entries()) {
+    const label = `certification n° ${index + 1}${isFilled(certif.titre) ? ` (« ${certif.titre} »)` : ''}`;
+    if (!isFilled(certif.titre)) errors.push(`${label} : « titre » est obligatoire.`);
+    if (!isFilled(certif.organisme)) errors.push(`${label} : « organisme » est obligatoire.`);
+    if (!CERTIFICATION_CATEGORIES.includes(certif.categorie)) {
+      errors.push(`${label} : « categorie » doit valoir ${CERTIFICATION_CATEGORIES.join(', ')}.`);
+    }
+    if (!CERTIFICATION_STATUSES.includes(certif.statut)) {
+      errors.push(`${label} : « statut » doit valoir ${CERTIFICATION_STATUSES.join(' ou ')}.`);
+    }
+    if (!SINGLE_DATE_PATTERN.test(String(certif.date ?? ''))) {
+      errors.push(`${label} : « date » doit être au format AAAA, AAAA-MM ou AAAA-MM-JJ, entre guillemets.`);
+    }
+    if (certif.justificatif && !inPublic(certif.justificatif)) {
+      errors.push(`${label} : le justificatif public/${certif.justificatif} n'existe pas.`);
+    }
+    if (certif.lien && !/^https?:\/\//.test(certif.lien)) {
+      errors.push(`${label} : « lien » doit commencer par http:// ou https://.`);
+    }
+  }
+
+  return errors;
+}
+
 // --- Vérification d'une fiche de réalisation --------------------------------
 
 function checkRealisation(data, file, site, errors) {
@@ -261,8 +338,14 @@ function checkRealisation(data, file, site, errors) {
 
   if (!SLUG_PATTERN.test(fileSlug)) {
     errors.push('le nom du fichier ne doit contenir que des minuscules sans accent, des chiffres et des tirets.');
+  } else if (RESERVED_SLUGS.includes(fileSlug)) {
+    errors.push(`le nom « ${fileSlug} » est réservé à une page du site : choisis-en un autre.`);
   } else if (data.slug !== fileSlug) {
     errors.push(`« slug » doit être identique au nom du fichier : slug: ${fileSlug}`);
+  }
+
+  if (data.brouillon !== undefined && typeof data.brouillon !== 'boolean') {
+    errors.push('« brouillon » doit valoir true ou false.');
   }
 
   if (!TYPES.includes(data.type)) {

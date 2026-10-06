@@ -6,9 +6,11 @@
 //
 //   #/                           menu principal
 //   #/presentation … #/contact   une rubrique du menu
+//   #/mentions-legales           page hors menu (lien en bas d'écran)
 //   #/realisations/<slug>        une fiche de réalisation (style RémiOS)
 //   #/jury                       vue rapide jury (style sobre)
 //   #/jury/<slug>                une fiche en style sobre
+//   #/jury/mentions-legales      mentions légales en style sobre
 //
 // Quand le hash change, le navigateur ne recharge pas la page : il émet un
 // événement « hashchange », écouté ici. Chaque écran a donc une URL
@@ -23,6 +25,8 @@ export const link = {
   fiche: (slug) => `#/realisations/${slug}`,
   jury: () => '#/jury',
   juryFiche: (slug) => `#/jury/${slug}`,
+  legal: () => '#/mentions-legales',
+  juryLegal: () => '#/jury/mentions-legales',
 };
 
 // Traduit le hash de l'URL en description de l'écran à afficher

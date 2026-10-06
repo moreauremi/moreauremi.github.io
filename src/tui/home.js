@@ -17,7 +17,7 @@ export const LOGO = String.raw` ____  __  __
 export function homeBox() {
   const facts = site.neofetch.map(([key, value]) => `<dt>${safe(key)}</dt><dd>${safe(value)}</dd>`).join('');
 
-  // aria-keyshortcuts : indique aux lecteurs d'écran le raccourci (1 à 7)
+  // aria-keyshortcuts : indique aux lecteurs d'écran le raccourci (1 à 8)
   const items = SECTIONS.map(
     (s, index) => `<li>
       <a class="menu-item" href="${link.section(s.id)}" data-index="${index}" aria-keyshortcuts="${s.key}">

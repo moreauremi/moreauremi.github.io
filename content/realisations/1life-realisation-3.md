@@ -7,6 +7,7 @@ statut: "[À COMPLÉTER]"  # ex. en cours, terminé
 resume: "[À COMPLÉTER : résumé en une phrase]"
 technos: []
 competences: []  # ex. [C1, C4]
+brouillon: true  # fiche vide : visible avec npm run dev, absente du site publié (retirer la ligne une fois remplie)
 ---
 
 <!--

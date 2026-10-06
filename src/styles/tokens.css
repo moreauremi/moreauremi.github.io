@@ -35,6 +35,8 @@
   --tui-bevel-dark: #5a5a5a;  /* relief de la boîte : bords bas et droit */
   --tui-inner-border: #6a6a6a;/* cadre intérieur */
   --tui-shadow: #000000;      /* ombre portée */
+  --tui-field-bg: #ffffff;    /* champs du formulaire */
+  --tui-field-border: #5a5a5a;/* bord des champs (contraste 4,6:1 sur la boîte) */
 
   /* --- Repères de contenu à compléter : [À COMPLÉTER] --- */
   --placeholder-ink: #5a4a00;

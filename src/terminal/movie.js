@@ -35,7 +35,7 @@ export const CRAWL = {
   episode: 'Épisode E5',
   title: 'UN NOUVEL ALTERNANT',
   paragraphs: [
-    "Le homelab est en paix. Depuis un vieux PC récupéré, un jeune alternant a libéré ses films et ses fichiers de l'emprise des abonnements payants.",
+    "Le homelab est en paix. Depuis un vieux PC récupéré, un jeune alternant a libéré ses vidéos et ses fichiers de l'emprise des services en ligne.",
     "Le jour, il paramètre l'ERP Open-Prod pour les usines de la République industrielle. La nuit, il dompte Proxmox, Docker et Tailscale.",
     "Mais une nouvelle épreuve l'attend : présenter son portfolio devant le Conseil du BTS SIO. Armé de ses réalisations et de son tableau de synthèse, Rémi se prépare à affronter les questions du jury…",
   ],

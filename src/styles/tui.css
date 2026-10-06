@@ -18,6 +18,9 @@ html[data-view='tui'] body {
   /* Couleurs des blocs de contenu partagés (voir blocks.css) */
   --accent: var(--tui-sel);
   --rule: var(--tui-inner-border);
+  --field-bg: var(--tui-field-bg);
+  --field-ink: var(--tui-ink);
+  --field-border: var(--tui-field-border);
 }
 
 /* --- Barre du haut ---------------------------------------------------------- */
@@ -228,6 +231,22 @@ html[data-view='tui'] body {
   margin: 0;
 }
 
+/* Titres de groupes dans une rubrique (réalisations, compétences…) : même
+   style que les titres des textes Markdown */
+.tui .block-title {
+  margin: 1.4em 0 0.5em;
+  color: var(--accent);
+  font-size: 1em;
+}
+
+.tui .fiche-group > .block-title {
+  margin-top: 0;
+}
+
+.tui .fiche-group {
+  margin-top: 1.4em;
+}
+
 .tui .fiche-link {
   display: flex;
   flex-direction: column;
@@ -261,10 +280,26 @@ html[data-view='tui'] body {
 
 .tui-hints {
   margin: 0;
-  padding: 0 var(--gutter) 18px;
+  padding: 0 var(--gutter) 8px;
   color: var(--tui-hint);
   font-size: var(--font-size-small);
   text-align: center;
+}
+
+/* Lien vers les mentions légales, sous l'aide clavier */
+.tui-footer {
+  padding: 0 var(--gutter) 18px;
+  font-size: var(--font-size-small);
+  text-align: center;
+}
+
+.tui-footer a {
+  color: var(--tui-hint);
+  text-underline-offset: 2px;
+}
+
+.tui-footer a:hover {
+  color: var(--tui-bar-ink);
 }
 
 /* Appareils sans survol (téléphones, tablettes) : pas de clavier, pas d'aide clavier */

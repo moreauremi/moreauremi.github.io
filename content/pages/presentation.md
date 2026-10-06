@@ -29,11 +29,21 @@ Le poste de consultant ERP chez 1Life, intégrateur de l'ERP Open-Prod au sein d
 
 ## Ce qui m'attire dans l'infrastructure
 
-J'ai toujours aimé interconnecter des machines. J'aime aussi être le plus autonome possible sur le plan technologique : plutôt que de payer des services en ligne, je construis mes propres alternatives, comme un NAS à la place d'un stockage en ligne ou un serveur multimédia à la place d'un abonnement de streaming.
+J'ai toujours aimé interconnecter des machines. J'aime aussi être le plus autonome possible sur le plan technologique : plutôt que de payer des services en ligne, je construis mes propres alternatives, comme un NAS à la place d'un stockage en ligne ou un serveur multimédia pour mes propres vidéos.
+
+## Mon projet professionnel
+
+<!--
+  Rubrique attendue par les consignes de l'épreuve E5 (« énoncé de votre
+  projet professionnel ») : deux ou trois phrases sincères suffisent, par
+  exemple le type de poste ou le domaine qui t'attire après le BTS.
+-->
+
+[À COMPLÉTER : projet professionnel après le BTS]
 
 ## En dehors des cours
 
-Mon homelab en est la mise en pratique : un hyperviseur Proxmox, avec des conteneurs Docker et des machines virtuelles, qui héberge un serveur multimédia Jellyfin (avec Sonarr, Radarr et Prowlarr) et un NAS, accessibles à distance par VPN avec Tailscale.
+Mon homelab en est la mise en pratique : un hyperviseur Proxmox, avec des conteneurs Docker et des machines virtuelles, qui héberge un serveur multimédia Jellyfin pour mes vidéos personnelles et un NAS, accessibles à distance par VPN avec Tailscale.
 
 Je mène aussi deux projets de développement : CAFFEIN, un SaaS de facturation piloté par un assistant IA qui rend les outils CRM et ERP accessibles aux micro-entrepreneurs et aux artisans du BTP, et Crypto Dashboard Pro, un tableau de bord interactif qui suit en temps réel le cours des cryptomonnaies, avec un système d'alertes personnalisé.
 

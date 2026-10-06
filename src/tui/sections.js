@@ -1,14 +1,19 @@
-// Les sept rubriques du menu principal : numéro, libellé, identifiant d'URL
+// Les huit rubriques du menu principal : numéro, libellé, identifiant d'URL
 // (#/presentation…) et contenu. Pour réordonner le menu, il suffit de
-// réordonner cette liste.
+// réordonner cette liste (les touches 1 à 9 suivent l'ordre).
 
 import { link } from '../router.js';
 import {
   presentationBlock,
-  realisationList,
+  alternanceBlock,
+  realisationsBlock,
+  competencesBlock,
   syntheseBlock,
   veilleBlock,
+  certificationsBlock,
   contactBlock,
+  mentionsLegalesBlock,
+  messageSentBlock,
 } from '../blocks.js';
 
 export const SECTIONS = [
@@ -18,29 +23,23 @@ export const SECTIONS = [
     render: presentationBlock,
   },
   {
-    id: 'entreprise',
-    label: 'Réalisations en entreprise',
-    render: () =>
-      `<p class="intro">Missions réalisées en alternance chez 1Life (part of Visiativ) depuis septembre 2026 : paramétrage de l'ERP Open-Prod (flux de vente et de production), requêtes SQL, notions comptables. Chaque réalisation ouvre sa fiche détaillée.</p>
-      ${realisationList('entreprise', link.fiche)}`,
+    id: 'alternance',
+    label: 'Alternance et parcours',
+    render: () => alternanceBlock(link.fiche),
   },
   {
-    id: 'formation',
-    label: 'Réalisations en formation',
-    render: () =>
-      `<p class="intro">Réalisations menées en cours, à MyDigitalSchool Nantes.</p>
-      ${realisationList('formation', link.fiche)}`,
+    id: 'realisations',
+    label: 'Réalisations',
+    render: () => realisationsBlock(link.fiche),
   },
   {
-    id: 'perso',
-    label: 'Projets personnels',
-    render: () =>
-      `<p class="intro">Projets menés en dehors des cours et de l'entreprise. Chaque projet ouvre sa fiche détaillée.</p>
-      ${realisationList('perso', link.fiche)}`,
+    id: 'competences',
+    label: 'Compétences',
+    render: () => competencesBlock(link.fiche),
   },
   {
     id: 'synthese',
-    label: 'Tableau de synthèse',
+    label: 'Tableau de synthèse E5',
     render: () => syntheseBlock(link.fiche),
   },
   {
@@ -49,12 +48,41 @@ export const SECTIONS = [
     render: veilleBlock,
   },
   {
+    id: 'certifications',
+    label: 'Certifications',
+    render: certificationsBlock,
+  },
+  {
     id: 'contact',
     label: 'CV et contact',
-    render: contactBlock,
+    render: () => contactBlock(),
   },
 ].map((section, index) => ({ ...section, key: String(index + 1) }));
 
+// Pages qui ne figurent pas dans le menu : elles s'ouvrent par un lien
+// (bas d'écran, formulaire de contact, terminal).
+export const EXTRA_PAGES = [
+  {
+    id: 'mentions-legales',
+    label: 'Mentions légales',
+    render: mentionsLegalesBlock,
+  },
+  {
+    id: 'message-envoye',
+    label: 'Message envoyé',
+    render: messageSentBlock,
+  },
+];
+
+// Anciennes adresses des rubriques de réalisations (avant leur regroupement) :
+// les liens déjà partagés (#/perso…) mènent à la rubrique « Réalisations ».
+const ALIASES = {
+  entreprise: 'realisations',
+  formation: 'realisations',
+  perso: 'realisations',
+};
+
 export function findSection(id) {
-  return SECTIONS.find((s) => s.id === id) ?? null;
+  const target = ALIASES[id] ?? id;
+  return [...SECTIONS, ...EXTRA_PAGES].find((s) => s.id === target) ?? null;
 }
