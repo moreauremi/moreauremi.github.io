@@ -37,6 +37,8 @@ Disposer d'un espace de stockage centralisé, hébergé chez moi, et accessible 
 - **Hébergement** : le NAS est hébergé sur l'hyperviseur **Proxmox** du homelab, qui fait tourner à la fois des conteneurs Docker et des machines virtuelles ;
 - **Accès à distance** : par VPN, avec **Tailscale**. Tailscale crée un réseau privé chiffré entre mes appareils et le homelab : le NAS est accessible à distance comme s'il se trouvait sur le réseau local.
 
+![Schéma d'architecture du homelab : mes appareils (navigateur web, application Swiftfin), chez moi comme à distance, rejoignent le homelab par le VPN Tailscale, un réseau privé chiffré, sans que le serveur soit exposé sur Internet. Le homelab est un vieux PC récupéré sous Proxmox VE, qui fait tourner Jellyfin (bibliothèque de vidéos) et le NAS (stockage de fichiers), répartis entre conteneurs Docker et machines virtuelles.](schemas/homelab-architecture.svg "Architecture du homelab, dont le NAS fait partie")
+
 [À COMPLÉTER : logiciel ou service utilisé pour le NAS, organisation des disques (RAID, sauvegardes), partages et droits d'accès]
 
 ## Captures d'écran

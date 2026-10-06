@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 512" width="800" height="512" role="img" aria-labelledby="t d" font-family="'IBM Plex Mono', ui-monospace, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace">
+  <title id="t">Homelab — architecture</title>
+  <desc id="d">Mes appareils (navigateur web, application Swiftfin), chez moi comme à distance, rejoignent le homelab par le VPN Tailscale, un réseau privé chiffré : le serveur n'est pas exposé sur Internet. Le homelab est un vieux PC récupéré qui fait tourner l'hyperviseur Proxmox VE, avec Jellyfin (bibliothèque de vidéos) et le NAS (stockage de fichiers), répartis entre conteneurs Docker et machines virtuelles.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1a1d23"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="512" fill="#ffffff"/>
+
+  <!-- Titre -->
+  <text x="32" y="44" font-size="20" font-weight="600" fill="#1a1d23">Homelab — architecture</text>
+  <text x="32" y="68" font-size="13" fill="#4a5260">Un vieux PC récupéré, virtualisé avec Proxmox, joignable à distance par VPN</text>
+  <line x1="32" y1="84" x2="768" y2="84" stroke="#1a1d23" stroke-width="1"/>
+
+  <!-- Mes appareils -->
+  <rect x="32" y="196" width="200" height="160" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="48" y="222" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">MES APPAREILS</text>
+  <text x="48" y="252" font-size="13" font-weight="600" fill="#1a1d23">Navigateur web</text>
+  <text x="48" y="276" font-size="13" font-weight="600" fill="#1a1d23">Application Swiftfin</text>
+  <line x1="48" y1="296" x2="216" y2="296" stroke="#d5d9e0" stroke-width="1"/>
+  <text x="48" y="320" font-size="12" fill="#4a5260">chez moi comme</text>
+  <text x="48" y="338" font-size="12" fill="#4a5260">à distance</text>
+
+  <!-- Tailscale -->
+  <rect x="268" y="176" width="136" height="200" rx="8" fill="#eef2fa" stroke="#1e3c8c" stroke-width="1.5"/>
+  <text x="284" y="202" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">TAILSCALE</text>
+  <text x="284" y="230" font-size="16" font-weight="600" fill="#1a1d23">VPN</text>
+  <text x="284" y="256" font-size="12" fill="#1a1d23">réseau privé</text>
+  <text x="284" y="274" font-size="12" fill="#1a1d23">chiffré</text>
+  <text x="284" y="330" font-size="12" fill="#4a5260">non exposé</text>
+  <text x="284" y="348" font-size="12" fill="#4a5260">sur Internet</text>
+
+  <!-- Vieux PC : Proxmox, Jellyfin, NAS -->
+  <rect x="442" y="112" width="326" height="340" rx="8" fill="#f5f6f8" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="458" y="136" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">VIEUX PC RÉCUPÉRÉ</text>
+
+  <rect x="458" y="150" width="294" height="286" rx="6" fill="#ffffff" stroke="#4a5260" stroke-width="1.5"/>
+  <text x="474" y="174" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">PROXMOX VE</text>
+  <text x="474" y="192" font-size="12" fill="#4a5260">hyperviseur</text>
+
+  <rect x="474" y="208" width="262" height="72" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="490" y="238" font-size="15" font-weight="600" fill="#1a1d23">Jellyfin</text>
+  <text x="490" y="260" font-size="12" fill="#4a5260">bibliothèque de vidéos</text>
+
+  <rect x="474" y="296" width="262" height="72" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="490" y="326" font-size="15" font-weight="600" fill="#1a1d23">NAS</text>
+  <text x="490" y="348" font-size="12" fill="#4a5260">stockage de fichiers</text>
+
+  <text x="474" y="398" font-size="11.5" fill="#4a5260">services répartis entre conteneurs</text>
+  <text x="474" y="416" font-size="11.5" fill="#4a5260">Docker et machines virtuelles</text>
+
+  <!-- Flèches : appareils → Tailscale → services -->
+  <g fill="none" stroke="#1a1d23" stroke-width="1.5" marker-end="url(#a)">
+    <path d="M232 276 H267"/>
+    <path d="M404 244 H473"/>
+    <path d="M404 332 H473"/>
+  </g>
+
+  <!-- Pied -->
+  <line x1="32" y1="476" x2="768" y2="476" stroke="#d5d9e0" stroke-width="1"/>
+  <text x="32" y="498" font-size="11.5" fill="#4a5260">Réalisations : Homelab Jellyfin · NAS Homelab</text>
+  <text x="768" y="498" font-size="11.5" fill="#4a5260" text-anchor="end">Rémi Moreau · remim.me</text>
+</svg>

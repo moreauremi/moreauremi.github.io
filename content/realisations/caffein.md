@@ -48,6 +48,8 @@ L'application repose sur les briques suivantes :
 - un **serveur Linux** hébergé chez **Hostinger**, avec **Nginx**, et un nom de domaine dédié configuré dans les **DNS** ;
 - **Claude Code** comme assistant de développement pendant l'écriture du code.
 
+![Schéma d'architecture de CAFFEIN : l'utilisateur, artisan du BTP ou micro-entrepreneur, écrit ou parle à l'assistant depuis son navigateur. Le nom de domaine mène au serveur Linux hébergé chez Hostinger, où Nginx sert l'application Python : interface web en HTML, assistant IA et modules facturation, CRM et ERP. À l'oral, l'API Whisper transcrit la voix en texte ; l'API Claude comprend la demande, puis l'assistant réalise la tâche dans le logiciel. n8n automatise des workflows.](schemas/caffein-architecture.svg "Architecture de CAFFEIN : parcours d'une demande, de l'utilisateur au logiciel")
+
 [À COMPLÉTER : rôle précis de n8n et de Nginx, étapes du développement, modules réalisés (devis, factures, clients…), organisation du code, stockage des données]
 
 ## Captures d'écran

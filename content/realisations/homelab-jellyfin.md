@@ -43,6 +43,8 @@ J'ai d'abord découpé le projet en étapes clés, puis choisi l'architecture. L
 - **Jellyfin**, serveur multimédia libre, organise la bibliothèque de vidéos et les diffuse dans le navigateur ou avec l'application **Swiftfin** ;
 - **Tailscale**, un VPN, relie mes appareils au homelab par un réseau privé chiffré : le serveur est accessible à distance sans être exposé sur Internet.
 
+![Schéma d'architecture du homelab : mes appareils (navigateur web, application Swiftfin), chez moi comme à distance, rejoignent le homelab par le VPN Tailscale, un réseau privé chiffré, sans que le serveur soit exposé sur Internet. Le homelab est un vieux PC récupéré sous Proxmox VE, qui fait tourner Jellyfin (bibliothèque de vidéos) et le NAS (stockage de fichiers), répartis entre conteneurs Docker et machines virtuelles.](schemas/homelab-architecture.svg "Architecture du homelab")
+
 [À COMPLÉTER : quels services tournent en conteneurs Docker et lesquels en machines virtuelles, où sont stockées les vidéos (sur le NAS ?), comment elles sont ajoutées à la bibliothèque]
 
 ## Captures d'écran
