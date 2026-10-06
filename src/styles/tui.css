@@ -147,18 +147,22 @@ html[data-view='tui'] body {
 .menu {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* Fin cadre autour de chaque rubrique (même gris que le cadre intérieur de
+   la boîte) : on voit qu'elle est cliquable sans la survoler, ce qui compte
+   surtout sur téléphone, où le survol n'existe pas. */
 .menu-item {
   display: flex;
   align-items: center;
   gap: 14px;
   min-height: 32px;
   padding: 6px 10px;
+  border: 1px solid var(--tui-inner-border);
   color: inherit;
   text-decoration: none;
 }
@@ -175,6 +179,7 @@ html[data-view='tui'] body {
 /* Rubrique sélectionnée : barre bleue, comme dans whiptail */
 .menu-item.is-selected,
 .menu-item:focus-visible {
+  border-color: var(--tui-sel);
   background: var(--tui-sel);
   color: var(--tui-sel-ink);
 }
@@ -200,12 +205,14 @@ html[data-view='tui'] body {
   margin-top: 18px;
 }
 
+/* Boutons secondaires (<Redémarrer>…) : même fin cadre que les rubriques,
+   pour qu'on les reconnaisse sans les survoler */
 .tui-btn {
   display: inline-flex;
   align-items: center;
   min-height: 32px;
   padding: 6px 14px;
-  border: 0;
+  border: 1px solid var(--tui-inner-border);
   background: transparent;
   color: var(--tui-ink);
   cursor: pointer;
@@ -213,6 +220,7 @@ html[data-view='tui'] body {
 }
 
 .tui-btn--primary {
+  border-color: var(--tui-sel);
   background: var(--tui-sel);
   color: var(--tui-sel-ink);
 }
@@ -247,10 +255,13 @@ html[data-view='tui'] body {
   margin-top: 1.4em;
 }
 
+/* Même fin cadre que les rubriques : sans lui, le titre bleu d'une fiche se
+   confondrait avec les titres de groupes, qui ne sont pas cliquables. */
 .tui .fiche-link {
   display: flex;
   flex-direction: column;
   padding: 6px 10px;
+  border: 1px solid var(--tui-inner-border);
   color: inherit;
   text-decoration: none;
 }
@@ -262,6 +273,7 @@ html[data-view='tui'] body {
 
 .tui .fiche-link:hover,
 .tui .fiche-link:focus-visible {
+  border-color: var(--tui-sel);
   background: var(--tui-sel);
   color: var(--tui-sel-ink);
 }
