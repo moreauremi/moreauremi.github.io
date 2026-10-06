@@ -67,6 +67,57 @@
   font-size: var(--font-size-small);
 }
 
+/* Barre de titre des images : seulement dans l'interface RémiOS.
+   La vue jury et l'impression gardent les images sans habillage. */
+.shot-bar {
+  display: none;
+}
+
+/* Dans RémiOS, chaque image (capture ou schéma) est une fenêtre : barre de
+   titre bleue avec le nom du fichier, cadre, et ombre portée franche comme
+   celle des boîtes. « [agrandir] » rappelle qu'un clic l'ouvre en grand. */
+.tui .shot--window {
+  border: 1px solid var(--tui-ink);
+  box-shadow: 6px 6px 0 var(--tui-shadow);
+  text-decoration: none;
+}
+
+.tui .shot--window img {
+  border: 0;
+}
+
+.tui .shot-bar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 10px;
+  background: var(--tui-sel);
+  color: var(--tui-sel-ink);
+  font-size: var(--font-size-small);
+}
+
+/* Nom de fichier trop long pour l'écran : coupé avec « … » */
+.tui .shot-bar-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tui .shot-bar-zoom {
+  flex-shrink: 0;
+  color: var(--tui-sel-key);
+}
+
+.tui .shot--window:hover .shot-bar-zoom {
+  text-decoration: underline;
+}
+
+/* Légende un peu plus bas, pour ne pas toucher l'ombre de la fenêtre */
+.tui .shot--window + figcaption {
+  margin-top: 12px;
+}
+
 /* --- Visionneuse ------------------------------------------------------------- */
 
 /* La fenêtre occupe tout l'écran, fond presque noir */

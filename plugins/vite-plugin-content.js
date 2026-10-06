@@ -429,10 +429,15 @@ function renderMarkdown(markdown) {
     renderer: {
       // Image cliquable : le lien ouvre l'image en grand (la visionneuse du
       // site l'intercepte ; sans JavaScript, l'image s'ouvre seule).
+      // Dans RémiOS, l'image (capture d'écran ou schéma) est présentée dans une
+      // fenêtre, avec une barre de titre : nom du fichier et « [agrandir] ».
+      // La barre est décorative (aria-hidden) : le lien garde pour nom la
+      // description de l'image.
       image({ href, text }) {
         images.push(href);
         const src = escapeHtml(href);
-        return `<a class="shot" href="${src}"><img src="${src}" alt="${escapeHtml(text)}" loading="lazy" decoding="async"></a>`;
+        const bar = `<span class="shot-bar" aria-hidden="true"><span class="shot-bar-name">${escapeHtml(path.posix.basename(href))}</span><span class="shot-bar-zoom">[agrandir]</span></span>`;
+        return `<a class="shot shot--window" href="${src}">${bar}<img src="${src}" alt="${escapeHtml(text)}" loading="lazy" decoding="async"></a>`;
       },
 
       // Paragraphe qui ne contient qu'une image : devient une figure, avec le

@@ -104,7 +104,8 @@ Tout le contenu est dans `content/` : aucune ligne de code à toucher.
 
   La fiche apparaît automatiquement dans sa rubrique, dans la vue jury, dans le tableau croisé et dans le terminal.
 - **Fiche en cours de rédaction** : avec `brouillon: true`, elle est visible avec `npm run dev` (marquée « brouillon, non publié ») mais absente du site en ligne : son texte n'est même pas dans les fichiers publiés. Retirer la ligne quand la fiche est prête.
-- **Captures d'écran** : déposer l'image dans `public/captures/<slug>/` (format `.webp` conseillé, plus léger), puis l'insérer dans la fiche avec `![Description de l'image](captures/<slug>/image.webp "Légende affichée")`.
+- **Captures d'écran** : déposer l'image dans `public/captures/<slug>/` (format `.webp` conseillé, plus léger), puis l'insérer dans la fiche avec `![Description de l'image](captures/<slug>/image.webp "Légende affichée")`. Dans RémiOS, chaque image s'affiche dans une fenêtre (barre de titre bleue avec le nom du fichier et « [agrandir] », ombre portée) ; la vue jury la montre sans habillage.
+- **Schémas** (architecture…) : déposer le fichier dans `public/schemas/` et l'insérer de la même façon (`![Description](schemas/schema.svg "Légende")`). Ils s'affichent dans la même fenêtre que les captures.
 - **PDF** (CV, tableau de synthèse) : déposer le fichier dans `public/docs/`, puis indiquer son chemin dans `content/site.config.js` (`cv: 'docs/cv.pdf'`).
 
 Les textes `[À COMPLÉTER]` sont surlignés en jaune sur le site. Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, image ou PDF introuvable, compétence inexistante…), `npm run dev` et `npm run build` s'arrêtent avec un message qui indique le fichier et la correction à faire : un site incomplet ne peut pas partir en production par erreur.
