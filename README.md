@@ -25,9 +25,13 @@ Le site se présente comme le démarrage d'un système Linux : écran GRUB, jour
 
 ## Démarrer en local
 
-Prérequis : **Node.js 22.12 ou plus récent** (version conseillée : 24 LTS, indiquée dans `.nvmrc`).
+Prérequis : **Node.js 22.12 ou plus récent** (version conseillée : 24 LTS, indiquée dans `.nvmrc`) et **Git**. Sous Windows : `winget install OpenJS.NodeJS.LTS Git.Git`, puis rouvrir le terminal.
+
+**Garder le projet hors d'un dossier synchronisé** (iCloud Drive, OneDrive…) : la synchronisation bloque `npm install`, et les outils installés sur un PC (propres à Windows ou à macOS) écraseraient ceux de l'autre machine. Sur chaque ordinateur, on clone le dépôt dans un dossier local, puis on se synchronise avec `git pull` et `git push` :
 
 ```bash
+git clone https://github.com/moreauremi/moreauremi.github.io.git portfolio-v2
+cd portfolio-v2
 npm install      # installe les outils du projet (à faire une fois)
 npm run dev      # lance le site en local, avec rechargement automatique à chaque modification
 npm run build    # fabrique la version finale, 100 % statique, dans dist/
@@ -39,7 +43,7 @@ npm run preview  # sert le contenu de dist/ pour vérifier le build avant de le 
 ## Ce que fait le site
 
 1. **Démarrage** (à l'arrivée sur l'accueil, 5 secondes au maximum) : GRUB, messages du noyau, services systemd détournés avec mes projets (`jellyfin.service`, `alternance@1life.service`…), connexion automatique, puis `portfolio --menu`. Le bouton « Passer le démarrage », n'importe quelle touche ou un clic l'interrompent. Si le système demande de réduire les animations, le site arrive directement sur le menu.
-2. **Menu façon whiptail** : identité façon neofetch à gauche, 7 rubriques numérotées à droite. Chaque rubrique s'ouvre dans une boîte de dialogue avec `< Retour >`. `<Redémarrer>` rejoue le démarrage.
+2. **Menu façon whiptail** : identité façon neofetch à gauche, 8 rubriques numérotées à droite (présentation, alternance et parcours, réalisations, compétences, tableau de synthèse E5, veille, certifications, CV et contact). Chaque rubrique s'ouvre dans une boîte de dialogue avec `< Retour >`. `<Redémarrer>` rejoue le démarrage. Les mentions légales sont accessibles par un lien en bas d'écran.
 3. **Fiches de réalisation** : contexte, objectifs, mise en œuvre, captures (agrandissables), résultats, difficultés, compétences du référentiel. Chaque fiche a sa propre adresse, partageable.
 4. **Vue rapide jury** : bouton jaune en haut à droite, visible en permanence (même pendant le démarrage). Version classique, fond clair, tout sur une page, imprimable.
 5. **Terminal caché** : `remi@remios:~$`, avec historique, autocomplétion et une douzaine de commandes. Les fiches y sont des fichiers. Tout est simulé.
@@ -51,7 +55,7 @@ npm run preview  # sert le contenu de dist/ pour vérifier le build avant de le 
 |---|---|
 | ↑ ↓ | se déplacer dans le menu ou dans une liste de fiches |
 | Entrée | ouvrir l'élément sélectionné |
-| 1 à 7 | ouvrir directement une rubrique (depuis le menu) |
+| 1 à 8 | ouvrir directement une rubrique (depuis le menu) |
 | Échap ou Retour arrière | revenir à l'écran précédent |
 | n'importe quelle touche (sauf Tab) | passer le démarrage |
 | `` ` `` ou `²` (AZERTY PC), `Ctrl+Alt+T` (`Ctrl+Option+T` sur Mac) | ouvrir le terminal |
@@ -64,19 +68,26 @@ Sur mobile, le terminal s'ouvre avec le bouton `[tty2]` de la barre du haut.
 | Adresse | Écran |
 |---|---|
 | `#/` | menu principal (avec le démarrage) |
-| `#/presentation`, `#/entreprise`, `#/formation`, `#/perso`, `#/synthese`, `#/veille`, `#/contact` | une rubrique |
+| `#/presentation`, `#/alternance`, `#/realisations`, `#/competences`, `#/synthese`, `#/veille`, `#/certifications`, `#/contact` | une rubrique |
+| `#/mentions-legales` | mentions légales |
 | `#/realisations/<slug>` | une fiche, style RémiOS (ex. `#/realisations/nas`) |
 | `#/jury` | vue rapide jury : **le lien à donner au jury** |
 | `#/jury/<slug>` | une fiche, style sobre |
+| `#/jury/mentions-legales` | mentions légales, style sobre |
+| `#/message-envoye` | confirmation après l'envoi du formulaire de contact |
 
-Un lien direct vers une rubrique, une fiche ou la vue jury s'affiche sans jouer le démarrage.
+Un lien direct vers une rubrique, une fiche ou la vue jury s'affiche sans jouer le démarrage. Les anciennes adresses `#/entreprise`, `#/formation` et `#/perso` mènent à la rubrique « Réalisations ».
 
 ## Modifier le contenu
 
 Tout le contenu est dans `content/` : aucune ligne de code à toucher.
 
-- **Informations générales** (contact, sujet de veille, compétences, PDF, services affichés au démarrage) : `content/site.config.js`, commenté ligne par ligne.
-- **Présentation et veille** : `content/pages/presentation.md` et `content/pages/veille.md`.
+- **Informations générales** (contact, sujet de veille, compétences du référentiel, PDF, mentions légales, services affichés au démarrage) : `content/site.config.js`, commenté ligne par ligne.
+- **Présentation, alternance et veille** : `content/pages/presentation.md`, `content/pages/alternance.md` et `content/pages/veille.md`.
+- **Photo** : déposer le portrait dans `public/photo/` (`.webp` carré, environ 400 × 400 px), puis indiquer son chemin dans `identite.photo` (`photo: 'photo/remi-moreau.webp'`).
+- **Compétences techniques** (rubrique « Compétences ») : `savoirFaire` dans `content/site.config.js`. Pour chaque compétence, un niveau de 1 à 4 (Notions, Guidé, Autonome, Maîtrise) et les fiches qui la prouvent (`preuves: ['nas']`).
+- **Certifications** (certifications, langues, formations, badges) : `certifications` dans `content/site.config.js`, un exemple commenté y montre tous les champs. Le justificatif se dépose dans `public/docs/certifications/`.
+- **Formulaire de contact** : la clé Web3Forms est dans `formulaire.cle` ; les messages arrivent à l'adresse associée à cette clé. Pour changer d'adresse, créer une nouvelle clé gratuite sur [web3forms.com](https://web3forms.com) et la remplacer. Clé vide = pas de formulaire, seul le lien e-mail est affiché. La politique de sécurité (CSP) et les mentions légales s'adaptent toutes seules.
 - **Ajouter une réalisation** : copier une fiche de `content/realisations/`, la renommer (minuscules, chiffres et tirets : `supervision-zabbix.md`), puis remplir le bloc d'en-tête :
 
   ```yaml
@@ -88,9 +99,11 @@ Tout le contenu est dans `content/` : aucune ligne de code à toucher.
   resume: "Une phrase qui résume la réalisation."
   technos: [Zabbix, Debian]
   competences: [C1, C4]           # codes définis dans site.config.js
+  brouillon: true                 # facultatif : fiche non publiée (voir ci-dessous)
   ```
 
   La fiche apparaît automatiquement dans sa rubrique, dans la vue jury, dans le tableau croisé et dans le terminal.
+- **Fiche en cours de rédaction** : avec `brouillon: true`, elle est visible avec `npm run dev` (marquée « brouillon, non publié ») mais absente du site en ligne : son texte n'est même pas dans les fichiers publiés. Retirer la ligne quand la fiche est prête.
 - **Captures d'écran** : déposer l'image dans `public/captures/<slug>/` (format `.webp` conseillé, plus léger), puis l'insérer dans la fiche avec `![Description de l'image](captures/<slug>/image.webp "Légende affichée")`.
 - **PDF** (CV, tableau de synthèse) : déposer le fichier dans `public/docs/`, puis indiquer son chemin dans `content/site.config.js` (`cv: 'docs/cv.pdf'`).
 
@@ -100,13 +113,16 @@ Les textes `[À COMPLÉTER]` sont surlignés en jaune sur le site. Si une fiche 
 
 Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER`.
 
-- [ ] **Présentation** : relire le texte (rédigé à partir des informations connues) et ajouter ce qui m'attire dans l'infrastructure et mon projet après le BTS.
-- [ ] **Réalisations 1Life** (3 fiches vides) : titres et contenu, après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
+- [ ] **Présentation** : photo professionnelle, projet professionnel (attendu par les consignes de l'épreuve E5).
+- [ ] **Alternance** : présentation de 1Life, missions, outils, bilan personnel, recommandation du tuteur, dates des expériences précédentes.
+- [ ] **Réalisations 1Life** (3 fiches en brouillon) : titres et contenu, après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
 - [ ] **Homelab Jellyfin, NAS, CAFFEIN, Crypto Dashboard Pro** : détails techniques balisés `[À COMPLÉTER]`, captures.
+- [ ] **Compétences techniques** : niveau de chaque compétence (`savoirFaire` dans `site.config.js`).
 - [ ] **Grille de compétences** : remplacer C1 à C6 dans `site.config.js` par la grille officielle du tableau de synthèse, puis renseigner `competences` dans chaque fiche.
-- [ ] **PDF** : CV et tableau de synthèse.
+- [ ] **PDF** : tableau de synthèse.
 - [ ] **Veille** : choisir le sujet (`veille.sujet`, le `[ WARN ]` du démarrage passera en `[  OK  ]`), puis rédiger `content/pages/veille.md`.
-- [ ] **Réalisations en formation** : la rubrique affiche « À venir » tant qu'il n'y en a pas.
+- [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif.
+- [ ] **Réalisations en formation** : le groupe affiche « À venir » tant qu'il n'y en a pas.
 
 ## Architecture
 
@@ -128,7 +144,7 @@ src/main.js assemble le tout : routeur, démarrage, interface, vue jury, termina
 
 ### Ce qui se passe quand on ouvre le site
 
-1. Le navigateur charge `index.html` (2 Ko), la police (préchargée), une feuille CSS et un fichier JavaScript : 53 Ko en tout.
+1. Le navigateur charge `index.html` (2 Ko), la police (préchargée), une feuille CSS et un fichier JavaScript : 66 Ko en tout une fois compressés (voir « Qualité mesurée »).
 2. `main.js` construit la page et affiche **tout de suite** l'écran demandé par l'URL.
 3. Si l'URL est l'accueil, le calque du démarrage est posé par-dessus le menu, qui devient « inerte » le temps du boot.
 4. Une boucle `requestAnimationFrame` déroule le planning du boot image par image ; à la fin (ou dès qu'on passe), le calque disparaît et le focus clavier arrive sur le menu.
@@ -137,8 +153,9 @@ src/main.js assemble le tout : routeur, démarrage, interface, vue jury, termina
 ### Organisation des fichiers
 
 ```
-content/site.config.js   configuration : identité, contact, PDF, veille, compétences, services du boot
-content/pages/           présentation et veille (Markdown)
+content/site.config.js   configuration : identité, contact, formulaire, PDF, veille, compétences,
+                         certifications, mentions légales, services du boot
+content/pages/           présentation, alternance et veille (Markdown)
 content/realisations/    une fiche Markdown par réalisation
 index.html               page unique : meta, Open Graph, préchargement de la police
 vite.config.js           configuration du build
@@ -154,12 +171,14 @@ src/jury/                vue rapide jury
 src/terminal/            terminal : fenêtre, commandes, système de fichiers simulé
 src/audio/               sons générés avec la Web Audio API
 src/ui/                  barre fixe en haut à droite (vue jury, bouton son), titre de l'onglet
-src/utils/               petites fonctions partagées : HTML sûr, dates, clavier, réglages mémorisés
+src/utils/               petites fonctions partagées : HTML sûr, dates, clavier, réglages mémorisés,
+                         adresse du service du formulaire de contact
 src/styles/              un fichier CSS par partie (tokens.css = toutes les couleurs, print.css = impression)
 src/assets/fonts/        IBM Plex Mono en woff2 (400 et 600) + licence OFL
 .github/workflows/       publication automatique sur GitHub Pages (remim.me)
 Dockerfile, docker/      image Docker et configuration nginx (hébergement sur le homelab)
 docker-compose.yml       lancement du conteneur sur le homelab
+LICENSE                  licence MIT du code
 reference/               maquette HTML validée au départ du projet (hors build)
 ```
 
@@ -208,7 +227,9 @@ reference/               maquette HTML validée au départ du projet (hors build
 
 ### Sécurité
 
-- **Site 100 % statique** : pas de base de données, pas de code exécuté sur le serveur, pas de formulaire. La surface d'attaque se limite à nginx.
+- **Site 100 % statique** : pas de base de données, pas de code exécuté sur le serveur. La surface d'attaque se limite à nginx.
+- **Formulaire de contact sans serveur** : un formulaire HTML classique, envoyé directement au service Web3Forms qui transfère le message par e-mail sans le conserver. Le site ne reçoit ni ne stocke aucune donnée. La CSP n'autorise l'envoi de formulaires que vers le site lui-même et ce service (`form-action`), et seulement quand le formulaire est activé. Les mentions légales détaillent alors le traitement des données (RGPD).
+- **Mentions légales** (`#/mentions-legales`) : éditeur, hébergeur, propriété intellectuelle, crédits, données personnelles. Le site ne dépose aucun cookie : pas de bandeau de consentement nécessaire.
 - **Aucune injection possible.** Ce que tape le visiteur dans le terminal est affiché avec `textContent`, jamais interprété comme du HTML. Les textes de la configuration sont échappés avant affichage.
 - **CSP stricte** (`script-src 'self'`) : le navigateur refuse tout script externe ou injecté. Possible parce que le site n'a aucun script ni style écrit dans le HTML. Sur GitHub Pages, qui ne permet pas d'envoyer des en-têtes HTTP, elle est ajoutée au build dans une balise `<meta>` ; la version Docker l'envoie en plus dans les en-têtes nginx.
 - **HTTPS** : certificat fourni et renouvelé automatiquement par GitHub Pages.
@@ -231,6 +252,14 @@ Même audit sur le site en ligne, **https://remim.me** (GitHub Pages), le 26 sep
 Accueil mobile : premier affichage 1,1 s, plus grand élément affiché 1,2 s, aucun blocage du navigateur (TBT 0 ms), aucun décalage de mise en page (CLS 0). Poids total de la page : 53 Ko.
 
 Pendant la construction, chaque étape a aussi été testée dans un navigateur piloté par script (navigation au clavier, démarrage, terminal, sons, impression, mobile) et avec axe-core (règles d'accessibilité WCAG 2.2 AA) sur chaque écran : aucune erreur, et aucune page ne défile horizontalement, même sur un écran de 320 px. La politique de sécurité (CSP) a été vérifiée en servant le site avec les mêmes en-têtes que nginx : aucune ressource bloquée.
+
+**Mise à jour du 6 octobre 2026** (rubriques attendues pour l'épreuve E5) :
+
+- **Poids** : la page d'accueil passe de 61,2 à 65,9 Ko, mesurés de la même façon avant et après (fichiers réellement chargés, compressés en gzip comme les sert GitHub Pages). Le JavaScript gagne 4 Ko, le CSS 0,7 Ko. Le chiffre de 53 Ko ci-dessus vient de Lighthouse, qui compte autrement : les deux mesures ne se comparent pas entre elles.
+- **Mobile** : 16 écrans (toutes les rubriques, mentions légales, fiches, vue jury) testés à 320 et 390 px de large dans un navigateur piloté par script : aucun défilement horizontal. Sur petit écran, le tableau des compétences devient une liste de fiches.
+- **Clavier et terminal** : touches 1 à 8, Échap, nouvelles commandes (`cat competences.txt`, `open mentions-legales`) vérifiés.
+- **Sécurité** : site construit testé avec sa CSP, aucune erreur JavaScript ni ressource bloquée. Formulaire de contact testé de bout en bout : le message arrive bien par e-mail.
+- **Lighthouse** : audit à refaire après la mise en ligne.
 
 Pour refaire l'audit : ouvrir le site dans Chrome, outils de développement (F12), onglet **Lighthouse**.
 
@@ -446,7 +475,7 @@ ssh remi@homelab "cd ~/remios-portfolio && docker compose up -d --build && docke
 Questions probables du jury, et l'essentiel de la réponse.
 
 **Pourquoi ne pas avoir utilisé WordPress ou un framework comme React ?**
-Le site est statique : il n'a besoin ni de base de données ni de code côté serveur. Vite et du JavaScript simple suffisent, le code reste court, la page pèse 53 Ko, et il n'y a rien à mettre à jour côté sécurité en dehors de nginx.
+Le site est statique : il n'a besoin ni de base de données ni de code côté serveur. Vite et du JavaScript simple suffisent, le code reste court, la page d'accueil pèse 66 Ko une fois compressée, et il n'y a rien à mettre à jour côté sécurité en dehors de nginx.
 
 **Comment une fiche Markdown devient-elle une page ?**
 Au build, un plugin Vite que j'ai ajouté lit chaque fichier `.md` : `gray-matter` sépare l'en-tête (titre, type, compétences…) du texte, `marked` convertit le texte en HTML, et le plugin vérifie les champs. Si une fiche est mal remplie, le build s'arrête avec un message clair.
@@ -467,13 +496,16 @@ Non : il est entièrement simulé dans le navigateur, rien n'est exécuté ni en
 Sur GitHub Pages, à l'adresse remim.me. Le domaine, obtenu gratuitement chez Namecheap grâce au GitHub Student Pack, pointe vers les serveurs de GitHub par quatre enregistrements DNS de type A (et un CNAME pour www) ; GitHub fournit le certificat HTTPS. À chaque push, un workflow GitHub Actions reconstruit le site, vérifie les fiches et le remet en ligne. Le projet contient aussi une image Docker durcie (build Node, puis nginx en lecture seule) pour l'héberger sur mon homelab.
 
 **Quelles mesures de sécurité ?**
-Site statique (pas de base de données, pas de formulaire), HTTPS, politique de sécurité du contenu (CSP) stricte qui bloque tout script externe ou injecté. Sur GitHub Pages, la CSP est dans une balise meta ; la version Docker ajoute les en-têtes HTTP complets (anti-clickjacking, nosniff…), masque la version de nginx et tourne dans un conteneur en lecture seule.
+Site statique (pas de base de données, aucun code exécuté sur le serveur), HTTPS, politique de sécurité du contenu (CSP) stricte qui bloque tout script externe ou injecté. Le formulaire de contact est envoyé à un service tiers (Web3Forms), seule destination autorisée par la CSP ; le site ne stocke aucune donnée. Sur GitHub Pages, la CSP est dans une balise meta ; la version Docker ajoute les en-têtes HTTP complets (anti-clickjacking, nosniff…), masque la version de nginx et tourne dans un conteneur en lecture seule.
+
+**Et le RGPD ?**
+Aucun cookie, aucune mesure d'audience, aucune ressource extérieure : rien à consentir. Le seul traitement de données personnelles est le formulaire de contact. Les mentions légales disent à quoi servent les données (répondre au message), par qui elles passent (Web3Forms), combien de temps elles sont gardées et comment exercer ses droits.
 
 **Pourquoi héberger la police soi-même ?**
 Pour que le site marche sans accès extérieur, et pour ne pas transmettre l'adresse IP des visiteurs à Google : en 2022, un tribunal de Munich a condamné un site qui chargeait Google Fonts sans consentement (RGPD).
 
 **Comment ajoutez-vous une réalisation ?**
-Je copie une fiche Markdown, je remplis l'en-tête et le texte, je dépose les captures dans `public/captures/`. Elle apparaît automatiquement dans le menu, la vue jury, le tableau de synthèse et le terminal. Je copie le projet sur le serveur et je relance `docker compose up -d --build`.
+Je copie une fiche Markdown, je remplis l'en-tête et le texte, je dépose les captures dans `public/captures/`. Tant qu'elle n'est pas prête, `brouillon: true` la garde hors du site publié. Elle apparaît ensuite automatiquement dans la rubrique « Réalisations », la vue jury, le tableau de synthèse, les compétences qui la citent et le terminal. Un `git push` suffit : GitHub Actions vérifie la fiche, reconstruit le site et le met en ligne (sur le homelab : `docker compose up -d --build`).
 
 ## Étapes de construction
 
@@ -492,7 +524,14 @@ Le projet a été construit en 12 étapes, une par commit git (`git log --onelin
 11. Déploiement Docker + nginx
 12. Documentation complète
 
+Puis, après la construction :
+
+13. Publication sur GitHub Pages à l'adresse remim.me, puis référencement (données structurées, sitemap)
+14. Rubriques attendues pour l'épreuve E5 (consignes du professeur) : alternance et parcours, compétences techniques, certifications, mentions légales, formulaire de contact, mode brouillon, licence MIT
+
 ## Crédits et licences
 
+- **Code du site** : licence MIT (fichier `LICENSE`), réutilisation libre.
+- **Contenu** (textes de `content/`, CV, photos, captures d'écran) : © Rémi Moreau, tous droits réservés. La licence MIT ne s'y applique pas.
 - **IBM Plex Mono** : © IBM Corp., licence SIL Open Font License 1.1 (`src/assets/fonts/OFL.txt`).
 - Outils de build (non envoyés aux visiteurs) : [Vite](https://vite.dev), [marked](https://marked.js.org), [gray-matter](https://github.com/jonschlinkert/gray-matter), tous sous licence MIT.
