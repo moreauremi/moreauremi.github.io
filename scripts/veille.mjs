@@ -326,8 +326,14 @@ function toEntry(article, summary, vocabulary) {
 // Consignes + données → objet JSON renvoyé par l'IA
 async function askAi(system, user) {
   const content = config.ia.fournisseur === 'api' ? await askApi(system, user) : await askCopilot(system, user);
-  // Réponse attendue : un objet JSON, parfois entouré de texte ou de ```json
-  const json = content.slice(content.indexOf('{'), content.lastIndexOf('}') + 1);
+  // Réponse attendue : un objet JSON, parfois entouré de texte ou de ```json.
+  // Copilot CLI coupe ses lignes à la largeur d'un terminal en remplaçant une
+  // espace par un retour à la ligne, y compris au milieu d'un texte du JSON,
+  // qui devient illisible : chaque retour à la ligne redevient une espace
+  // (hors des textes, une espace ne change rien au JSON).
+  const json = content
+    .slice(content.indexOf('{'), content.lastIndexOf('}') + 1)
+    .replace(/[ \t]*\r?\n[ \t]*/g, ' ');
   try {
     return JSON.parse(json);
   } catch {
