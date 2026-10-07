@@ -16,34 +16,22 @@
     <script type="module" src="/src/errors.js"></script>
   </head>
   <body>
-    <div class="tui">
-      <header class="tui-bar">
-        <span class="tui-bar-tty">RémiOS 1.0 <span class="tui-bar-extra">(tty1)</span></span>
-        <span class="tui-bar-title">Rémi Moreau · Portfolio BTS SIO SISR</span>
-      </header>
-
-      <main class="tui-stage">
-        <section class="tui-box error-box" aria-labelledby="error-title">
-          <h1 class="tui-box-title" id="error-title"><span aria-hidden="true">[ </span>Erreur 404<span aria-hidden="true"> ]</span></h1>
-          <div class="tui-box-inner">
-            <pre class="error-code" aria-hidden="true">
+    <!-- Cadre commun aux pages d'erreur (barre du haut, boîte, boutons, pied
+         de page) : src/error-layout.html. Le contenu propre à cette page,
+         ci-dessous, y est inséré par plugins/vite-plugin-inline.js. -->
+    <template data-layout="/src/error-layout.html">
+      <h1 class="tui-box-title" id="error-title"><span aria-hidden="true">[ </span>Erreur 404<span aria-hidden="true"> ]</span></h1>
+      <div class="tui-box-inner">
+        <pre class="error-code" aria-hidden="true">
  _  _      ___    _  _
 | || |    / _ \  | || |
 | || |_  | | | | | || |_
 |__   _| | |_| | |__   _|
    |_|    \___/     |_|</pre>
-            <pre class="error-shell"><span class="error-prompt">visiteur@remios:~$</span> cd <span data-path>/page-demandée</span>
+        <pre class="error-shell"><span class="error-prompt">visiteur@remios:~$</span> cd <span data-path>/page-demandée</span>
 bash: cd: <span data-path>/page-demandée</span>&nbsp;: aucun fichier ou dossier de ce nom</pre>
-            <p>Cette page n'existe pas, ou plus. Vérifiez l'adresse, ou repartez du menu principal&nbsp;: toutes les rubriques et les réalisations s'y trouvent.</p>
-          </div>
-          <div class="tui-actions">
-            <a class="tui-btn tui-btn--primary" href="/">&lt; Menu principal &gt;</a>
-            <a class="tui-btn" href="/#/jury">&lt; Vue rapide jury &gt;</a>
-          </div>
-        </section>
-      </main>
-
-      <footer class="tui-footer"><a href="/#/mentions-legales">Mentions légales</a></footer>
-    </div>
+        <p>Cette page n'existe pas, ou plus. Vérifiez l'adresse, ou repartez du menu principal&nbsp;: toutes les rubriques et les réalisations s'y trouvent.</p>
+      </div>
+    </template>
   </body>
 </html>

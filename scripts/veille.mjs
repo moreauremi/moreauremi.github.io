@@ -28,7 +28,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { tagSlug } from '../src/utils/tags.js';
+import { tagSlug, withoutAccents } from '../src/utils/tags.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_FILE = path.join(ROOT, 'content/veille/actualites.json');
@@ -458,7 +458,7 @@ function normalizeUrl(url) {
 
 // Texte comparable : minuscules, sans accents
 function fold(text) {
-  return text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  return withoutAccents(text).toLowerCase();
 }
 
 // Mot-clé → expression qui le trouve comme mot entier (« OT » ne doit pas
@@ -489,7 +489,7 @@ const NAMED_ENTITIES = {
   bull: '•', oelig: 'œ', OElig: 'Œ', aelig: 'æ', AElig: 'Æ', szlig: 'ß',
 };
 // Lettres accentuées : &eacute; &Agrave; &ccedil;…
-const MARKS = { grave: '̀', acute: '́', circ: '̂', tilde: '̃', uml: '̈', ring: '̊', cedil: '̧' };
+const MARKS = { grave: '\u0300', acute: '\u0301', circ: '\u0302', tilde: '\u0303', uml: '\u0308', ring: '\u030a', cedil: '\u0327' };
 for (const [letter, marks] of Object.entries({ a: 'grave acute circ tilde uml ring', e: 'grave acute circ uml', i: 'grave acute circ uml', o: 'grave acute circ tilde uml', u: 'grave acute circ uml', y: 'acute uml', c: 'cedil', n: 'tilde' })) {
   for (const mark of marks.split(' ')) {
     NAMED_ENTITIES[letter + mark] = (letter + MARKS[mark]).normalize('NFC');

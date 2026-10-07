@@ -5,10 +5,15 @@
 // Ce module sert à la fois au script de veille (Node) et dans le navigateur.
 
 export function tagSlug(tag) {
-  return String(tag)
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '') // accents retirés : é → e
+  return withoutAccents(String(tag))
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
+}
+
+// « Sécurité » → « Securite ». La décomposition NFD sépare chaque lettre de
+// son accent (é → e + accent aigu seul) ; les accents seuls, entre U+0300 et
+// U+036F, sont ensuite retirés.
+export function withoutAccents(text) {
+  return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }

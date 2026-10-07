@@ -4,6 +4,10 @@
 //
 // textContent : l'adresse est affichée comme du texte, jamais interprétée
 // comme du HTML (une adresse piégée ne peut rien injecter dans la page).
+//
+// Ce fichier n'importe rien, volontairement : s'il partageait un module avec
+// le site (src/utils/url.js), Vite en ferait un fichier JavaScript commun, à
+// télécharger en plus par chaque page.
 
 const path = readablePath(window.location.pathname);
 

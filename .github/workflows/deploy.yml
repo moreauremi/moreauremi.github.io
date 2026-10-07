@@ -3,10 +3,14 @@
 # -----------------------------------------------------------------------------
 # À chaque envoi (push) sur la branche main, GitHub :
 #   1. récupère le code et installe les outils (npm ci) ;
-#   2. fabrique le site (npm run build) : c'est aussi là que les fiches
+#   2. vérifie le code (npm run lint : ESLint, Stylelint) ;
+#   3. fabrique le site (npm run build) : c'est aussi là que les fiches
 #      Markdown sont vérifiées ; une fiche mal remplie fait échouer la
 #      publication, et le site en ligne reste intact ;
-#   3. publie le dossier dist/ sur GitHub Pages.
+#   4. teste le site construit (npm test : HTML valide, CSP, chaque écran,
+#      terminal) ;
+#   5. publie le dossier dist/ sur GitHub Pages.
+# Une erreur à n'importe quelle étape arrête tout : rien n'est publié.
 # Le suivi se fait dans l'onglet « Actions » du dépôt.
 # =============================================================================
 
@@ -46,8 +50,14 @@ jobs:
       - name: Installer les outils
         run: npm ci
 
+      - name: Vérifier le code (ESLint, Stylelint)
+        run: npm run lint
+
       - name: Fabriquer le site
         run: npm run build
+
+      - name: Tester le site construit
+        run: npm test
 
       - name: Préparer GitHub Pages
         uses: actions/configure-pages@v6

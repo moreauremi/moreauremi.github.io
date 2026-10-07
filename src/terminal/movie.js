@@ -25,6 +25,9 @@
 // déjà chargée par la page.
 // =============================================================================
 
+import { htmlToElement } from '../utils/template.js';
+import movieHtml from './movie.html?raw';
+
 export const DURATION = 30000; // durée totale, en millisecondes
 
 // Texte du générique : parodie originale, construite sur des faits réels
@@ -50,8 +53,6 @@ export function crawlTranscript() {
 // --- Réglages -------------------------------------------------------------------
 
 const FONT = '"IBM Plex Mono", ui-monospace, monospace';
-const BLUE = '#4bd5ee';
-const YELLOW = '#ffe81f';
 const RETRO_WIDTH = 300; // largeur visée du canvas, en « pixels rétro »
 
 // Moments clés, en secondes
@@ -64,13 +65,21 @@ const FADE_OUT = 1.2; // fondu au noir final, en secondes
 // Lance le générique par-dessus `host` (la fenêtre du terminal).
 // `onEnd` est appelé à la fin, ou dès qu'il est arrêté. Renvoie { stop }.
 export function playCrawl(host, { sounds, onEnd }) {
-  const movie = document.createElement('div');
-  movie.className = 'terminal-movie';
-  movie.innerHTML = `
-    <canvas class="movie-canvas" aria-hidden="true"></canvas>
-    <div class="movie-crt" aria-hidden="true"></div>
-    <button type="button" class="movie-stop">Arrêter <span aria-hidden="true">[Échap]</span></button>`;
+  // Canvas, couche d'écran cathodique et bouton « Arrêter » : movie.html
+  const movie = htmlToElement(movieHtml);
   host.append(movie);
+
+  // Couleurs du générique : variables --movie-… et --screen de
+  // src/styles/tokens.css (le canvas ne lit pas le CSS de lui-même)
+  const css = getComputedStyle(movie);
+  const color = (name) => css.getPropertyValue(name).trim();
+  const colors = {
+    black: color('--screen'),
+    blue: color('--movie-blue'),
+    yellow: color('--movie-yellow'),
+    fringeRed: color('--movie-fringe-red'),
+    fringeBlue: color('--movie-fringe-blue'),
+  };
 
   const canvas = movie.querySelector('canvas');
   const ctx = canvas.getContext('2d');
@@ -147,7 +156,7 @@ export function playCrawl(host, { sounds, onEnd }) {
   // --- Dessin d'une image --------------------------------------------------------
 
   function draw(t) {
-    ctx.fillStyle = '#000000';
+    ctx.fillStyle = colors.black;
     ctx.fillRect(0, 0, W, H);
     for (const star of stars) {
       ctx.fillStyle = `rgb(255 255 255 / ${star.alpha})`;
@@ -160,7 +169,7 @@ export function playCrawl(host, { sounds, onEnd }) {
       const size = cssSize(16, 2.6, 24);
       const introLines = wrap(CRAWL.intro, size, W * 0.8);
       const top = H / 2 - ((introLines.length - 1) * size * 1.5) / 2;
-      introLines.forEach((text, i) => glowText(text, W / 2, top + i * size * 1.5, size, BLUE, alpha));
+      introLines.forEach((text, i) => glowText(text, W / 2, top + i * size * 1.5, size, colors.blue, alpha));
     }
 
     // 2. Titre RÉMIOS qui s'éloigne (lent au début puis de plus en plus vite)
@@ -168,7 +177,7 @@ export function playCrawl(host, { sounds, onEnd }) {
       const p = (t - LOGO.start) / (LOGO.end - LOGO.start);
       const scale = 1.6 - 1.5 * p ** 1.8;
       const alpha = p < 0.85 ? 1 : 1 - (p - 0.85) / 0.15;
-      glowText(CRAWL.logo, W / 2, H / 2, cssSize(48, 14, 128) * scale, YELLOW, alpha, true);
+      glowText(CRAWL.logo, W / 2, H / 2, cssSize(48, 14, 128) * scale, colors.yellow, alpha, true);
     }
 
     // 3. Texte déroulant, en perspective : chaque ligne est posée sur un plan
@@ -186,7 +195,7 @@ export function playCrawl(host, { sounds, onEnd }) {
         const alpha = Math.min(1, Math.max(0, (scale - 0.12) / 0.25));
         if (alpha <= 0) continue; // trop loin : invisible
         const y = horizon + (H - horizon) * scale;
-        glowText(line.text, W / 2, y, line.size * scale, YELLOW, alpha, false, scale);
+        glowText(line.text, W / 2, y, line.size * scale, colors.yellow, alpha, false, scale);
       }
     }
 
@@ -222,8 +231,8 @@ export function playCrawl(host, { sounds, onEnd }) {
         ctx.fillText(text, dx, 0);
       }
     };
-    paint(-1, '#ff285a', alpha * 0.45, 0); // frange rouge à gauche
-    paint(1, '#2878ff', alpha * 0.45, 0); // frange bleue à droite
+    paint(-1, colors.fringeRed, alpha * 0.45, 0); // frange rouge à gauche
+    paint(1, colors.fringeBlue, alpha * 0.45, 0); // frange bleue à droite
     paint(0, color, alpha, 3); // texte principal, avec lueur
     ctx.restore(); // annule translation, aplatissement, opacité et lueur
   }

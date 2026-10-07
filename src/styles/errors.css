@@ -4,7 +4,7 @@
    Pages servies par le serveur, en dehors de l'application : elles reprennent
    la police, les variables et la boîte whiptail du site en important ses
    feuilles, puis ajoutent les quelques styles qui leur sont propres.
-   La page 503 a ses styles dans son propre fichier (voir 503.html).
+   La page 503 a ses propres styles (maintenance.css), recopiés dans la page.
    ========================================================================== */
 
 @import './fonts.css';

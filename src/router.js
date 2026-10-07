@@ -20,6 +20,8 @@
 // n'a besoin d'aucune configuration particulière (il ne sert qu'index.html).
 // =============================================================================
 
+import { decodePath } from './utils/url.js';
+
 // Construction des liens, pour ne jamais écrire les URL à la main ailleurs
 export const link = {
   home: () => '#/',
@@ -33,9 +35,10 @@ export const link = {
   juryLegal: () => '#/jury/mentions-legales',
 };
 
-// Traduit le hash de l'URL en description de l'écran à afficher
+// Traduit le hash de l'URL en description de l'écran à afficher.
+// Un hash mal encodé (#/%E9) mène à l'écran d'erreur, sans bloquer le site.
 export function parseRoute(hash = window.location.hash) {
-  const path = decodeURIComponent(hash.replace(/^#\/?/, '')).replace(/\/+$/, '');
+  const path = decodePath(hash.replace(/^#\/?/, '')).replace(/\/+$/, '');
   const parts = path ? path.split('/') : [];
 
   if (parts.length === 0) return { name: 'home' };

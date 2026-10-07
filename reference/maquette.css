@@ -1,0 +1,79 @@
+/* Styles de la maquette validée au départ du projet (reference/maquette.html).
+   Fichier de référence, hors build : le site utilise src/styles/. */
+
+:root{
+  --screen:#000000; --text:#C9CED6; --dim:#7A828C; --ok:#4FD16B; --warn:#F2C14E; --info:#6CB8FF;
+  --tui-bg:#1E3C8C; --tui-box:#CFCFCF; --tui-ink:#101010; --tui-sel:#1E3C8C; --tui-sel-ink:#FFFFFF; --tui-title:#8A1C1C;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  background:var(--screen);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --screen:#000000; } }
+:root[data-theme="dark"]{ --screen:#000000; }
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;background:var(--screen);color:var(--text);font-family:"IBM Plex Mono",ui-monospace,"DejaVu Sans Mono",Menlo,Consolas,monospace;font-size:14px;line-height:1.45;overflow:hidden}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--warn);outline-offset:2px}
+
+/* ---------- GRUB ---------- */
+#grub{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px}
+#grub .ver{color:var(--text)}
+#grub .box{width:min(640px,100%);border:1px solid var(--text);padding:10px 0;min-height:180px}
+#grub .entry{padding:2px 14px;white-space:pre}
+#grub .entry.sel{background:var(--text);color:#000}
+#grub .foot{width:min(640px,100%);color:var(--dim);font-size:13px}
+
+/* ---------- Boot log ---------- */
+#boot{position:absolute;inset:0;overflow:hidden;padding:12px 14px;display:none;white-space:pre-wrap;word-break:break-word}
+#boot .k{color:var(--text)}
+#boot .k .ts{color:var(--dim)}
+#boot .st{font-weight:600}
+#boot .ok{color:var(--ok)}
+#boot .warn{color:var(--warn)}
+#boot .hl{color:#FFFFFF}
+#skip{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:transparent;color:var(--dim);border:1px solid #333;padding:10px 14px;cursor:pointer;min-height:44px;z-index:5}
+#skip:hover{color:var(--text);border-color:var(--dim)}
+
+/* ---------- TUI ---------- */
+#tui{position:absolute;inset:0;display:none;background:var(--tui-bg);color:var(--tui-ink);overflow:auto}
+#tui .topbar{color:#E8ECF5;padding:10px 18px;border-bottom:1px solid rgba(255,255,255,.25);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#tui .wrap{min-height:calc(100% - 90px);display:flex;align-items:center;justify-content:center;padding:28px 18px}
+.box{position:relative;background:var(--tui-box);width:min(900px,100%);border:2px solid;border-color:#FFFFFF #5A5A5A #5A5A5A #FFFFFF;box-shadow:14px 14px 0 #000;padding:22px 26px 20px}
+.box > .title{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--tui-box);padding:0 10px;color:var(--tui-title);font-weight:600;white-space:nowrap}
+.inner{border:1px solid #6A6A6A;padding:18px}
+.cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px}
+.logo{color:var(--tui-sel);font-weight:600;margin:0 0 12px;line-height:1.15;font-size:13px}
+.facts{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:3px 14px;margin:0}
+.facts dt{color:var(--tui-sel);font-weight:600}
+.facts dd{margin:0}
+.menu{display:flex;flex-direction:column;gap:2px}
+.menu-label{margin:0 0 10px}
+.menu button{all:unset;display:flex;gap:14px;padding:6px 10px;min-height:32px;align-items:center;cursor:pointer}
+.menu button .key{color:var(--tui-title);font-weight:600}
+.menu button.sel,.menu button:focus-visible{background:var(--tui-sel);color:var(--tui-sel-ink)}
+.menu button.sel .key,.menu button:focus-visible .key{color:#FFD76A}
+.actions{display:flex;justify-content:center;gap:28px;margin-top:18px}
+.btn{all:unset;cursor:pointer;padding:6px 14px;min-height:32px;display:inline-flex;align-items:center}
+.btn.primary{background:var(--tui-sel);color:#fff}
+.btn:focus-visible{outline:2px solid #000;outline-offset:2px}
+#tui .hints{color:#C9D3EC;text-align:center;padding:0 18px 18px;font-size:13px}
+
+/* Detail dialog */
+#detail{display:none}
+#detail h2{margin:0 0 12px;font-size:16px;color:var(--tui-sel)}
+#detail p{margin:0 0 10px;max-width:70ch}
+#detail ul{margin:0 0 10px;padding-left:20px}
+#detail li{margin-bottom:4px}
+#detail .ph{color:#5A4A00;background:#E9DFA8;padding:0 4px}
+#detail a{color:var(--tui-sel);font-weight:600}
+
+@media (max-width:720px){
+  body{font-size:13px}
+  .cols{grid-template-columns:minmax(0,1fr)}
+  .box{padding:18px 14px;box-shadow:8px 8px 0 #000}
+  .inner{padding:12px}
+  .logo{font-size:11px}
+}
+@media (prefers-reduced-motion: reduce){ #skip{display:none} }

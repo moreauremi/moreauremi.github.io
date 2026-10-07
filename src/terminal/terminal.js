@@ -15,34 +15,23 @@
 // =============================================================================
 
 import { site } from '../content.js';
-import { escapeHtml } from '../utils/html.js';
 import { navigate } from '../router.js';
+import { reducedMotion } from '../utils/motion.js';
+import { htmlToElement } from '../utils/template.js';
 import { COMMANDS, complete } from './commands.js';
 import { buildFilesystem, displayPath, HOME } from './filesystem.js';
 import { playCrawl, crawlTranscript } from './movie.js';
+import terminalHtml from './terminal.html?raw';
 
 const MAX_OUTPUT_LINES = 500; // au-delà, les plus anciennes lignes sont retirées
 
 export function createTerminal({ onReboot, sounds }) {
   const { utilisateur, machine } = site.identite;
 
-  const dialog = document.createElement('dialog');
-  dialog.className = 'terminal';
-  dialog.setAttribute('aria-labelledby', 'terminal-title');
-  dialog.innerHTML = `
-    <div class="terminal-head">
-      <span id="terminal-title">Terminal — ${escapeHtml(`${utilisateur}@${machine}`)}</span>
-      <span class="terminal-tools">
-        <button type="button" data-action="tab" aria-label="Compléter (touche Tab)">Tab</button>
-        <button type="button" data-action="close">Fermer</button>
-      </span>
-    </div>
-    <div class="terminal-output" role="log" aria-live="polite"></div>
-    <form class="terminal-form">
-      <label class="terminal-prompt" for="terminal-input"></label>
-      <input id="terminal-input" class="terminal-input" type="text" autocomplete="off"
-        autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="send">
-    </form>`;
+  // Fenêtre du terminal (terminal.html) : barre de titre, zone de texte,
+  // ligne de saisie. Le titre se termine par « remi@remios ».
+  const dialog = htmlToElement(terminalHtml);
+  dialog.querySelector('[data-slot="hote"]').textContent = `${utilisateur}@${machine}`;
   document.body.append(dialog);
 
   const output = dialog.querySelector('.terminal-output');
@@ -80,7 +69,6 @@ export function createTerminal({ onReboot, sounds }) {
   // --- Easter egg : générique façon Star Wars (commande `starwars`) ------------
 
   let movie = null; // générique en cours de lecture
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   function playMovie() {
     if (movie) return;
@@ -237,13 +225,4 @@ export function createTerminal({ onReboot, sounds }) {
   });
 
   return { open, close, isOpen: () => dialog.open };
-}
-
-// Raccourcis d'ouverture : ` (touche morte sur AZERTY, peu fiable), ², la
-// touche physique située sous Échap (code « Backquote », quelle que soit la
-// disposition du clavier), ou Ctrl+Alt+T comme sous Ubuntu.
-export function isTerminalShortcut(event) {
-  if (event.ctrlKey && event.altKey && event.code === 'KeyT') return true;
-  if (event.ctrlKey || event.altKey || event.metaKey) return false;
-  return event.key === '`' || event.key === '²' || event.code === 'Backquote';
 }

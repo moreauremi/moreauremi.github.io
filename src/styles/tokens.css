@@ -4,6 +4,10 @@
    Toutes les couleurs, tailles et espacements du site sont définis ici, une
    seule fois. Les autres fichiers CSS les utilisent avec var(--nom) : pour
    changer une couleur partout, il suffit de la modifier à cet endroit.
+   Exceptions volontaires : les ombres et voiles noirs semi-transparents
+   (effets visuels, écrits là où ils servent), le noir et blanc de
+   l'impression (print.css) et la page de maintenance (maintenance.css,
+   qui doit fonctionner seule).
 
    Palette reprise de la maquette validée (reference/maquette.html).
    Les contrastes texte/fond respectent le niveau AA des règles d'accessibilité
@@ -20,6 +24,7 @@
   --warn: #f2c14e;            /* [ WARN ], et contour de focus */
   --info: #6cb8ff;            /* messages d'information */
   --line: #333333;            /* bordures discrètes sur fond noir */
+  --err: #ff8a80;             /* erreurs du terminal, rouge clair (contraste 8:1) */
 
   /* --- Interface façon ncurses / whiptail --- */
   --tui-bg: #1e3c8c;          /* fond bleu de l'écran */
@@ -28,8 +33,11 @@
   --tui-sel: #1e3c8c;         /* fond de l'élément sélectionné */
   --tui-sel-ink: #ffffff;     /* texte de l'élément sélectionné */
   --tui-sel-key: #ffd76a;     /* numéro de l'élément sélectionné */
+  --tui-hover: rgb(30 60 140 / 0.12); /* survol d'une rubrique : bleu de sélection, très léger */
   --tui-title: #8a1c1c;       /* titre des boîtes et numéros de rubriques */
   --tui-bar-ink: #e8ecf5;     /* texte de la barre du haut */
+  --tui-bar-rule: rgb(255 255 255 / 0.25); /* filet sous la barre du haut */
+  --system-bar-border: rgb(255 255 255 / 0.45); /* contour du bouton son */
   --tui-hint: #c9d3ec;        /* aide clavier en bas d'écran */
   --tui-bevel-light: #ffffff; /* relief de la boîte : bords haut et gauche */
   --tui-bevel-dark: #5a5a5a;  /* relief de la boîte : bords bas et droit */
@@ -48,6 +56,17 @@
   --jury-muted: #4a5260;       /* textes secondaires (contraste 8:1) */
   --jury-accent: #1e3c8c;      /* titres et liens : le bleu de RémiOS */
   --jury-rule: #d5d9e0;        /* filets et bordures */
+
+  /* --- Texte posé sur la couleur d'accent (onglet actif, page courante,
+     bouton « Envoyer », bouton principal de la vue jury) --- */
+  --on-accent: #ffffff;
+
+  /* --- Générique de l'easter egg du terminal (dessiné dans un canvas,
+     couleurs lues par src/terminal/movie.js) --- */
+  --movie-blue: #4bd5ee;       /* « Il y a bien longtemps… » */
+  --movie-yellow: #ffe81f;     /* titre et texte déroulant */
+  --movie-fringe-red: #ff285a; /* franges colorées d'écran cathodique */
+  --movie-fringe-blue: #2878ff;
 
   /* --- Typographie ---
      Tailles en rem (relatives au réglage du navigateur, 1rem = 16px par

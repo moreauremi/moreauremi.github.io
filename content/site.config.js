@@ -227,7 +227,8 @@ export default {
 
   // --- Savoir-faire technique (rubrique « Compétences ») ---------------------
   // Pour chaque compétence :
-  //   niveau   de 1 à 4 (voir « niveaux »), ou null tant qu'il n'est pas évalué
+  //   niveau   de 1 à 4 (voir « niveaux »), demi-niveaux permis (3.5 = entre
+  //            Autonome et Maîtrise), ou null tant qu'il n'est pas évalué
   //            (le site affiche alors « [À COMPLÉTER] ») ;
   //   preuves  slugs des fiches où elle a été mise en pratique (le build vérifie
   //            que chaque fiche existe ; une fiche en brouillon n'est pas affichée).
@@ -243,41 +244,41 @@ export default {
       {
         nom: 'Systèmes et virtualisation',
         items: [
-          { nom: 'Linux', niveau: null, preuves: ['homelab-jellyfin', 'nas', 'caffein'] },
-          { nom: 'Proxmox VE', niveau: null, preuves: ['homelab-jellyfin', 'nas'] },
-          { nom: 'Docker', niveau: null, preuves: ['homelab-jellyfin'] },
+          { nom: 'Linux', niveau: 3, preuves: ['homelab-jellyfin', 'nas', 'caffein'] },
+          { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab-jellyfin', 'nas'] },
+          { nom: 'Docker', niveau: 2, preuves: ['homelab-jellyfin'] },
         ],
       },
       {
         nom: 'Réseaux et sécurité',
         items: [
-          { nom: 'VPN (Tailscale)', niveau: null, preuves: ['homelab-jellyfin', 'nas'] },
-          { nom: 'DNS et nom de domaine', niveau: null, preuves: ['caffein'] },
-          { nom: 'Serveur web, reverse proxy (Nginx)', niveau: null, preuves: ['caffein'] },
+          { nom: 'VPN (Tailscale)', niveau: 3, preuves: ['homelab-jellyfin', 'nas'] },
+          { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['caffein'] },
+          { nom: 'Serveur web, reverse proxy (Nginx)', niveau: 2, preuves: ['caffein'] },
         ],
       },
       {
         nom: 'Langages de programmation',
         items: [
-          { nom: 'Python', niveau: null, preuves: ['crypto-dashboard-pro', 'caffein'] },
-          { nom: 'HTML', niveau: null, preuves: ['caffein'] },
+          { nom: 'Python', niveau: 3.5, preuves: ['crypto-dashboard-pro', 'caffein'] },
+          { nom: 'HTML', niveau: 2, preuves: ['caffein'] },
         ],
       },
       {
         nom: 'Bases de données',
-        items: [{ nom: 'SQL (requêtes sur l\'ERP Open-Prod)', niveau: null, preuves: [] }],
+        items: [{ nom: 'SQL (requêtes sur l\'ERP Open-Prod)', niveau: 2, preuves: [] }],
       },
       {
         nom: 'Outils et frameworks',
         items: [
-          { nom: 'Git et GitHub', niveau: null, preuves: ['crypto-dashboard-pro'] },
-          { nom: 'Streamlit, Pandas, Plotly', niveau: null, preuves: ['crypto-dashboard-pro'] },
-          { nom: 'n8n (automatisation)', niveau: null, preuves: ['caffein'] },
+          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro'] },
+          { nom: 'Streamlit, Pandas, Plotly', niveau: 3, preuves: ['crypto-dashboard-pro'] },
+          { nom: 'n8n (automatisation)', niveau: 2, preuves: ['caffein'] },
         ],
       },
       {
         nom: 'Logiciels métier',
-        items: [{ nom: 'ERP Open-Prod', niveau: null, preuves: [] }],
+        items: [{ nom: 'ERP Open-Prod', niveau: 2, preuves: [] }],
       },
     ],
   },

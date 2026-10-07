@@ -1,0 +1,15 @@
+<dialog class="terminal" aria-labelledby="terminal-title">
+  <div class="terminal-head">
+    <span id="terminal-title">Terminal — <span data-slot="hote"></span></span>
+    <span class="terminal-tools">
+      <button type="button" data-action="tab" aria-label="Compléter (touche Tab)">Tab</button>
+      <button type="button" data-action="close">Fermer</button>
+    </span>
+  </div>
+  <div class="terminal-output" role="log" aria-live="polite"></div>
+  <form class="terminal-form">
+    <label class="terminal-prompt" for="terminal-input"></label>
+    <input id="terminal-input" class="terminal-input" type="text" autocomplete="off"
+      autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="send">
+  </form>
+</dialog>

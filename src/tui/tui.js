@@ -15,25 +15,23 @@
 
 import { link, navigate } from '../router.js';
 import { site, getRealisation, getVeilleTag } from '../content.js';
-import { ficheBlock, veilleTagBlock } from '../blocks.js';
+import { ficheBlock, veilleTagBlock } from '../blocks/index.js';
 import { safe } from '../utils/html.js';
 import { hasModifier, isTypingTarget } from '../utils/keyboard.js';
 import { setPromptTitle } from '../ui/tab-title.js';
 import { box, backButton } from './box.js';
 import { homeBox } from './home.js';
 import { SECTIONS, findSection } from './sections.js';
+import tuiHtml from './tui.html?raw';
 
 export function createTui(root, { onReboot, onOpenTerminal }) {
-  root.innerHTML = `
-    <header class="tui-bar">
-      <span class="tui-bar-tty">RémiOS 1.0 <span class="tui-bar-extra">(tty1)</span></span>
-      <button type="button" class="tui-bar-tty2" data-action="terminal" aria-label="Ouvrir le terminal">[tty2]</button>
-      <span class="tui-bar-title">${site.identite.nom} · Portfolio BTS SIO SISR</span>
-    </header>
-    <div class="tui-stage"></div>
-    <p class="tui-hints">↑ ↓ naviguer · Entrée ouvrir · Échap revenir · 1 à ${SECTIONS.length} accès direct</p>
-    <footer class="tui-footer"><a href="${link.legal()}">Mentions légales</a></footer>
-    <p class="visually-hidden" aria-live="polite" data-announcer></p>`;
+  // Cadre de l'interface (tui.html) : barre du haut, zone centrale, aide
+  // clavier, pied de page. Seuls le nom, le nombre de rubriques et le lien
+  // des mentions légales dépendent du contenu.
+  root.innerHTML = tuiHtml;
+  root.querySelector('[data-slot="nom"]').textContent = site.identite.nom;
+  root.querySelector('[data-slot="sections"]').textContent = SECTIONS.length;
+  root.querySelector('[data-slot="mentions-legales"]').href = link.legal();
 
   const stage = root.querySelector('.tui-stage');
   const announcer = root.querySelector('[data-announcer]');

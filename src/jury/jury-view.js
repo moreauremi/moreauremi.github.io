@@ -9,7 +9,7 @@
 //   #/jury/veille/<tag>       les actualités de la veille qui portent ce tag
 //   #/jury/mentions-legales   les mentions légales, dans le même style
 //
-// Le contenu vient des mêmes blocs que l'interface RémiOS (src/blocks.js).
+// Le contenu vient des mêmes blocs que l'interface RémiOS (src/blocks/).
 // =============================================================================
 
 import { site, realisationsOfType, getRealisation, getVeilleTag, TYPES } from '../content.js';
@@ -25,7 +25,7 @@ import {
   certificationsBlock,
   contactBlock,
   mentionsLegalesBlock,
-} from '../blocks.js';
+} from '../blocks/index.js';
 import { escapeHtml, safe } from '../utils/html.js';
 import { formatDate } from '../utils/dates.js';
 import { hasModifier } from '../utils/keyboard.js';
@@ -173,46 +173,43 @@ function item(r) {
   </li>`;
 }
 
-// --- Fiche en style sobre ---------------------------------------------------
+// --- Pages secondaires en style sobre (fiche, tag, mentions légales) ----------
 
-function fichePage(r) {
+// Squelette commun : lien de retour, titre, contenu, pied de page.
+// `remios` : lien facultatif vers le même écran dans RémiOS.
+function subPage({ title, body, remios = '' }) {
+  const back = `<a href="${link.jury()}">← Retour à la vue jury</a>`;
   return `<div class="jury-page">
     <nav class="jury-back" aria-label="Navigation">
-      <a href="${link.jury()}">← Retour à la vue jury</a>
+      ${back}
     </nav>
-    <h1 tabindex="-1">${safe(r.titre)}</h1>
-    ${ficheBlock(r)}
+    <h1 tabindex="-1">${title}</h1>
+    ${body}
     <footer class="jury-footer">
-      <p><a href="${link.jury()}">← Retour à la vue jury</a> · <a href="${link.fiche(r.slug)}">Voir cette fiche dans RémiOS</a></p>
+      <p>${back}${remios ? ` · ${remios}` : ''}</p>
     </footer>
   </div>`;
 }
 
-// Page d'un tag de la veille, dans le même style sobre
+function fichePage(r) {
+  return subPage({
+    title: safe(r.titre),
+    body: ficheBlock(r),
+    remios: `<a href="${link.fiche(r.slug)}">Voir cette fiche dans RémiOS</a>`,
+  });
+}
+
+// Page d'un tag de la veille
 function tagPage(slug, tag) {
-  return `<div class="jury-page">
-    <nav class="jury-back" aria-label="Navigation">
-      <a href="${link.jury()}">← Retour à la vue jury</a>
-    </nav>
-    <h1 tabindex="-1">Veille : ${escapeHtml(tag.nom)}</h1>
-    ${veilleTagBlock(slug, link.juryVeilleTag)}
-    <footer class="jury-footer">
-      <p><a href="${link.jury()}">← Retour à la vue jury</a> · <a href="${link.veilleTag(slug)}">Voir ce tag dans RémiOS</a></p>
-    </footer>
-  </div>`;
+  return subPage({
+    title: `Veille : ${escapeHtml(tag.nom)}`,
+    body: veilleTagBlock(slug, link.juryVeilleTag),
+    remios: `<a href="${link.veilleTag(slug)}">Voir ce tag dans RémiOS</a>`,
+  });
 }
 
 function legalPage() {
-  return `<div class="jury-page">
-    <nav class="jury-back" aria-label="Navigation">
-      <a href="${link.jury()}">← Retour à la vue jury</a>
-    </nav>
-    <h1 tabindex="-1">Mentions légales</h1>
-    ${mentionsLegalesBlock()}
-    <footer class="jury-footer">
-      <p><a href="${link.jury()}">← Retour à la vue jury</a></p>
-    </footer>
-  </div>`;
+  return subPage({ title: 'Mentions légales', body: mentionsLegalesBlock() });
 }
 
 function missingPage(title = 'Fiche introuvable', text = "Cette réalisation n'existe pas, ou plus.") {

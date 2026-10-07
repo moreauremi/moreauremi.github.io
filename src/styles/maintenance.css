@@ -1,0 +1,139 @@
+/* ==========================================================================
+   Page de maintenance (503.html)
+   --------------------------------------------------------------------------
+   Cette page est affichée par le reverse proxy quand le portfolio est
+   arrêté : elle ne peut alors rien télécharger depuis le site. Ce fichier
+   est donc recopié DANS la page au build (plugins/vite-plugin-inline.js),
+   et n'importe aucune autre feuille. Pas de police téléchargée : la police
+   à chasse fixe du système remplace IBM Plex Mono.
+   ========================================================================== */
+
+/* Couleurs de la console du site (voir src/styles/tokens.css) */
+:root {
+  color-scheme: dark;
+  --screen: #000000;
+  --text: #c9ced6;
+  --text-bright: #ffffff;
+  --dim: #7a828c;
+  --ok: #4fd16b;
+  --warn: #f2c14e;
+  --line: #333333;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--screen);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', ui-monospace, 'DejaVu Sans Mono', Menlo, Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.console {
+  max-width: 60rem;
+  padding: 24px 16px;
+}
+
+h1,
+p,
+pre {
+  margin: 0 0 1.2em;
+}
+
+pre {
+  font: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  color: var(--text-bright);
+  font-size: 1em;
+  font-weight: 600;
+}
+
+/* Code d'erreur en grands caractères ASCII : jaune, comme [ WARN ] */
+.code {
+  color: var(--warn);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.15;
+  white-space: pre;
+}
+
+/* Lignes façon journal de démarrage */
+.ok,
+.warn {
+  font-weight: 600;
+}
+
+.ok {
+  color: var(--ok);
+}
+
+.warn {
+  color: var(--warn);
+}
+
+.unit {
+  color: var(--text-bright);
+}
+
+.prompt {
+  color: var(--ok);
+}
+
+/* Curseur clignotant, comme à la fin du démarrage */
+.cursor {
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Bouton bordé, comme « Passer le démarrage » */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.btn:hover {
+  border-color: var(--dim);
+  text-decoration: underline;
+}
+
+:focus-visible {
+  outline: 2px solid var(--warn);
+  outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  body {
+    font-size: 0.8125rem;
+  }
+
+  .code {
+    font-size: 0.6875rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}

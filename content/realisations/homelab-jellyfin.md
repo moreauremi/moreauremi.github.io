@@ -14,7 +14,7 @@ technos:
   - "Swiftfin"
   - "VS Code"
   - "Claude Code"
-competences: []  # codes du référentiel, ex. [B1.1, B1.4]
+competences: [B1.1, B1.4, B1.5, B1.6]  # codes du référentiel, ex. [B1.1, B1.4]
 ---
 
 <!--

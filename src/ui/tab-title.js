@@ -16,6 +16,7 @@
 // =============================================================================
 
 import { site } from '../content.js';
+import { reducedMotion } from '../utils/motion.js';
 
 const BLINK_MS = 530;
 const CURSOR = '_';
@@ -24,8 +25,6 @@ const CURSOR = '_';
 const BLANK = String.fromCharCode(0x2002);
 // Fin du titre de l'accueil, après le curseur (site.config.js, « referencement »)
 const HOME_SUFFIX = ` — ${site.referencement?.titre ?? site.identite.nom}`;
-
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 let prefix = ''; // texte avant le curseur
 let suffix = ''; // texte après le curseur (accueil uniquement)

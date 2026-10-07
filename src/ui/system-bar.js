@@ -4,23 +4,19 @@
 //   - bouton haut-parleur pour activer ou couper les sons.
 
 import { link } from '../router.js';
-
-// Icônes dessinées en SVG (aucun fichier à charger), couleur du texte
-const SPEAKER = '<path d="M3 8h3l4-4v12l-4-4H3z" fill="currentColor"/>';
-const ICON_ON = `<svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">${SPEAKER}
-  <path d="M13 7.5a3.5 3.5 0 0 1 0 5M15.5 5a7 7 0 0 1 0 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
-const ICON_OFF = `<svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">${SPEAKER}
-  <path d="M13 7.5l5 5M18 7.5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+import barHtml from './system-bar.html?raw';
+// Icônes SVG intégrées à la page (aucun fichier à charger) : elles prennent
+// la couleur du texte (currentColor)
+import ICON_ON from '../assets/icons/sound-on.svg?raw';
+import ICON_OFF from '../assets/icons/sound-off.svg?raw';
 
 export function createSystemBar(root, { sounds }) {
+  // Structure de la barre : system-bar.html.
   // Sur petit écran, le libellé se réduit à « Vue jury » (voir system-bar.css).
   // Le libellé est enveloppé dans un <span> : dans un conteneur flex, les
   // espaces en bord de texte disparaîtraient (« Vuerapidejury »).
-  root.innerHTML = `
-    <a class="system-bar-jury" href="${link.jury()}"><span>Vue <span class="system-bar-long">rapide </span>jury</span></a>
-    <button type="button" class="system-bar-sound" aria-pressed="false">
-      <span class="visually-hidden">Sons</span><span data-icon></span>
-    </button>`;
+  root.innerHTML = barHtml;
+  root.querySelector('[data-slot="jury"]').href = link.jury();
 
   const button = root.querySelector('.system-bar-sound');
   const icon = button.querySelector('[data-icon]');

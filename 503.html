@@ -9,149 +9,18 @@
     <meta name="theme-color" content="#000000">
     <!-- Page affichée par le reverse proxy du homelab quand le portfolio est
          arrêté (maintenance, mise à jour, panne) : elle ne peut alors rien
-         télécharger depuis le site. Tout tient donc dans ce fichier : les
-         styles ci-dessous, l'icône intégrée à son adresse (data:), aucune
-         police ni aucun script. La police du site est remplacée par celle,
+         télécharger depuis le site. La page publiée doit donc tout contenir,
+         sans police ni script : la police du site est remplacée par celle,
          à chasse fixe, du système.
+         L'icône et le style restent dans leurs propres fichiers. Les deux
+         balises marquées data-inline sont remplacées par leur contenu
+         (plugins/vite-plugin-inline.js) : le style est écrit dans la page,
+         l'icône intégrée à son adresse (data:).
          Ce style écrit dans la page est autorisé par la politique de
          sécurité (CSP) grâce à son empreinte SHA-256, calculée au build
          par plugins/vite-plugin-content.js. -->
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='4'%20fill='%231e3c8c'/%3E%3Cpath%20d='M8%209.5%2014.5%2016%208%2022.5'%20fill='none'%20stroke='%23fff'%20stroke-width='3'/%3E%3Crect%20x='16'%20y='20'%20width='9'%20height='3'%20fill='%23ffd76a'/%3E%3C/svg%3E"
-    >
-    <style>
-      /* Couleurs de la console du site (voir src/styles/tokens.css) */
-      :root {
-        color-scheme: dark;
-        --screen: #000000;
-        --text: #c9ced6;
-        --text-bright: #ffffff;
-        --dim: #7a828c;
-        --ok: #4fd16b;
-        --warn: #f2c14e;
-        --line: #333333;
-      }
-
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-      }
-
-      body {
-        min-height: 100vh;
-        margin: 0;
-        background: var(--screen);
-        color: var(--text);
-        font-family: 'IBM Plex Mono', ui-monospace, 'DejaVu Sans Mono', Menlo, Consolas, monospace;
-        font-size: 0.875rem;
-        line-height: 1.45;
-      }
-
-      .console {
-        max-width: 60rem;
-        padding: 24px 16px;
-      }
-
-      h1,
-      p,
-      pre {
-        margin: 0 0 1.2em;
-      }
-
-      pre {
-        font: inherit;
-        white-space: pre-wrap;
-        overflow-wrap: anywhere;
-      }
-
-      h1 {
-        color: var(--text-bright);
-        font-size: 1em;
-        font-weight: 600;
-      }
-
-      /* Code d'erreur en grands caractères ASCII : jaune, comme [ WARN ] */
-      .code {
-        color: var(--warn);
-        font-size: 0.8125rem;
-        font-weight: 600;
-        line-height: 1.15;
-        white-space: pre;
-      }
-
-      /* Lignes façon journal de démarrage */
-      .ok,
-      .warn {
-        font-weight: 600;
-      }
-
-      .ok {
-        color: var(--ok);
-      }
-
-      .warn {
-        color: var(--warn);
-      }
-
-      .unit {
-        color: var(--text-bright);
-      }
-
-      .prompt {
-        color: var(--ok);
-      }
-
-      /* Curseur clignotant, comme à la fin du démarrage */
-      .cursor {
-        animation: blink 1s steps(1) infinite;
-      }
-
-      @keyframes blink {
-        50% {
-          opacity: 0;
-        }
-      }
-
-      /* Bouton bordé, comme « Passer le démarrage » */
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        min-height: 44px;
-        padding: 10px 14px;
-        border: 1px solid var(--line);
-        color: var(--text);
-        text-decoration: none;
-      }
-
-      .btn:hover {
-        border-color: var(--dim);
-        text-decoration: underline;
-      }
-
-      :focus-visible {
-        outline: 2px solid var(--warn);
-        outline-offset: 2px;
-      }
-
-      @media (max-width: 720px) {
-        body {
-          font-size: 0.8125rem;
-        }
-
-        .code {
-          font-size: 0.6875rem;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .cursor {
-          animation: none;
-        }
-      }
-    </style>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" data-inline>
+    <link rel="stylesheet" href="/src/styles/maintenance.css" data-inline>
   </head>
   <body>
     <main class="console">

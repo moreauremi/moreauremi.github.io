@@ -11,16 +11,12 @@
 // Sans JavaScript, le lien ouvre simplement l'image.
 // =============================================================================
 
+import { htmlToElement } from '../utils/template.js';
+import lightboxHtml from './lightbox.html?raw';
+
 export function createLightbox() {
-  const dialog = document.createElement('dialog');
-  dialog.className = 'lightbox';
-  dialog.setAttribute('aria-label', 'Image agrandie');
-  dialog.innerHTML = `
-    <button type="button" class="lightbox-close">Fermer <span aria-hidden="true">[Échap]</span></button>
-    <figure class="lightbox-figure">
-      <img class="lightbox-img" alt="">
-      <figcaption class="lightbox-caption"></figcaption>
-    </figure>`;
+  // Fenêtre, bouton « Fermer », image et légende : lightbox.html
+  const dialog = htmlToElement(lightboxHtml);
   document.body.append(dialog);
 
   const img = dialog.querySelector('.lightbox-img');

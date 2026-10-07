@@ -26,8 +26,12 @@
 //   - le seul effet animé, le curseur clignotant, n'utilise que `opacity`.
 // =============================================================================
 
-import { grubScreen } from './grub.js';
+import { reducedMotion } from '../utils/motion.js';
 import { kernelLines, unitLines, loginLines, promptText, COMMAND } from './journal.js';
+// Écran du chargeur de démarrage GRUB (l'entrée « RémiOS GNU/Linux » est
+// sélectionnée, un compte à rebours annonce le démarrage automatique) et
+// zone du journal, masquée jusqu'à la fin de GRUB
+import bootHtml from './boot.html?raw';
 
 const GRUB_END = 1500;
 const KERNEL_END = 2600;
@@ -50,18 +54,17 @@ export function createBoot({ overlay, skipButton, content, onFinish, hooks = {} 
   let rows = []; // emplacements de lignes, créés une fois au début du journal
   let shown = []; // lignes actuellement affichées, de haut en bas
 
-  // Réglage système « réduire les animations » (accessibilité) : pas de boot
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
   function start() {
     if (running) finish();
+    // Réglage système « réduire les animations » (accessibilité) : pas de boot
     if (reducedMotion.matches) {
       onFinish({ reducedMotion: true });
       return;
     }
 
     running = true;
-    overlay.innerHTML = `${grubScreen(2)}<div class="boot-log" hidden></div>`;
+    overlay.innerHTML = bootHtml;
+    overlay.querySelector('[data-countdown]').textContent = 2; // secondes avant le démarrage
     overlay.hidden = false;
     skipButton.hidden = false;
     log = overlay.querySelector('.boot-log');

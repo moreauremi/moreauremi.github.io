@@ -34,7 +34,7 @@ html[data-view='tui'] body {
   padding: 6px var(--gutter);
   /* Place laissée libre à droite pour les boutons fixes (son, vue jury) */
   padding-right: calc(var(--system-bar-width, 0px) + var(--gutter));
-  border-bottom: 1px solid rgb(255 255 255 / 0.25);
+  border-bottom: 1px solid var(--tui-bar-rule);
   color: var(--tui-bar-ink);
 }
 
@@ -173,7 +173,7 @@ html[data-view='tui'] body {
 }
 
 .menu-item:hover {
-  background: rgb(30 60 140 / 0.12);
+  background: var(--tui-hover);
 }
 
 /* Rubrique sélectionnée : barre bleue, comme dans whiptail */

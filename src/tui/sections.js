@@ -14,7 +14,7 @@ import {
   contactBlock,
   mentionsLegalesBlock,
   messageSentBlock,
-} from '../blocks.js';
+} from '../blocks/index.js';
 
 export const SECTIONS = [
   {

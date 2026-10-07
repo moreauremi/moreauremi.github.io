@@ -26,7 +26,7 @@ Le site se présente comme le démarrage d'un système Linux : écran GRUB, jour
 
 ## Démarrer en local
 
-Prérequis : **Node.js 22.12 ou plus récent** (version conseillée : 24 LTS, indiquée dans `.nvmrc`) et **Git**. Sous Windows : `winget install OpenJS.NodeJS.LTS Git.Git`, puis rouvrir le terminal.
+Prérequis : **Node.js 22.22.2 ou 24.15 au minimum** (version conseillée : 24 LTS, indiquée dans `.nvmrc`) et **Git**. Sous Windows : `winget install OpenJS.NodeJS.LTS Git.Git`, puis rouvrir le terminal.
 
 **Garder le projet hors d'un dossier synchronisé** (iCloud Drive, OneDrive…) : la synchronisation bloque `npm install`, et les outils installés sur un PC (propres à Windows ou à macOS) écraseraient ceux de l'autre machine. Sur chaque ordinateur, on clone le dépôt dans un dossier local, puis on se synchronise avec `git pull` et `git push` :
 
@@ -37,6 +37,9 @@ npm install      # installe les outils du projet (à faire une fois)
 npm run dev      # lance le site en local, avec rechargement automatique à chaque modification
 npm run build    # fabrique la version finale, 100 % statique, dans dist/
 npm run preview  # sert le contenu de dist/ pour vérifier le build avant de le déployer
+npm run lint     # vérifie le code : JavaScript (ESLint) et CSS (Stylelint)
+npm test         # teste le site construit (dist/) : HTML valide, CSP, chaque écran, terminal
+npm run check    # les trois à la suite : lint, build, test (comme avant chaque publication)
 ```
 
 `npm run dev` affiche l'adresse à ouvrir dans le navigateur (par défaut http://localhost:5173). Toute modification d'une fiche ou du code s'affiche immédiatement.
@@ -88,7 +91,7 @@ Tout le contenu est dans `content/` : aucune ligne de code à toucher.
 - **Informations générales** (contact, sujet de veille, compétences du référentiel, PDF, mentions légales, services affichés au démarrage) : `content/site.config.js`, commenté ligne par ligne.
 - **Présentation, alternance et veille** : `content/pages/presentation.md`, `content/pages/alternance.md`, `content/pages/veille.md` et `content/pages/syntheses.md` (synthèses de veille).
 - **Photo** : déposer le portrait dans `public/photo/` (`.webp` carré, environ 400 × 400 px), puis indiquer son chemin dans `identite.photo` (`photo: 'photo/remi-moreau.webp'`).
-- **Compétences techniques** (rubrique « Compétences ») : `savoirFaire` dans `content/site.config.js`. Pour chaque compétence, un niveau de 1 à 4 (Notions, Guidé, Autonome, Maîtrise) et les fiches qui la prouvent (`preuves: ['nas']`).
+- **Compétences techniques** (rubrique « Compétences ») : `savoirFaire` dans `content/site.config.js`. Pour chaque compétence, un niveau de 1 à 4 (Notions, Guidé, Autonome, Maîtrise), demi-niveaux permis (`3.5` s'affiche « Entre autonome et maîtrise ») et les fiches qui la prouvent (`preuves: ['nas']`).
 - **Certifications** (certifications, langues, formations, badges) : `certifications` dans `content/site.config.js`, un exemple commenté y montre tous les champs. Le justificatif se dépose dans `public/docs/certifications/`.
 - **Formulaire de contact** : la clé Web3Forms est dans `formulaire.cle` ; les messages arrivent à l'adresse associée à cette clé. Pour changer d'adresse, créer une nouvelle clé gratuite sur [web3forms.com](https://web3forms.com) et la remplacer. Clé vide = pas de formulaire, seul le lien e-mail est affiché. La politique de sécurité (CSP) et les mentions légales s'adaptent toutes seules.
 - **Ajouter une réalisation** : copier une fiche de `content/realisations/`, la renommer (minuscules, chiffres et tirets : `supervision-zabbix.md`), puis remplir le bloc d'en-tête :
@@ -121,9 +124,9 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [ ] **Alternance** : présentation de 1Life, missions, outils, bilan personnel, recommandation du tuteur, dates des expériences précédentes.
 - [ ] **Réalisations 1Life** (3 fiches en brouillon) : titres et contenu, après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
 - [ ] **Homelab Jellyfin, NAS, CAFFEIN, Crypto Dashboard Pro** : détails techniques balisés `[À COMPLÉTER]`, captures.
-- [ ] **Compétences techniques** : niveau de chaque compétence (`savoirFaire` dans `site.config.js`).
+- [x] **Compétences techniques** : niveaux renseignés (octobre 2026). À remonter en cours d'année (Open-Prod, SQL, Docker…), et à relier aux fiches 1Life quand elles seront publiées (SQL et Open-Prod n'ont pas encore de preuve).
 - [x] **Grille de compétences** : les six compétences du tableau de synthèse officiel (B1.1 à B1.6) sont dans `site.config.js`.
-- [ ] **Compétences des fiches** : renseigner `competences` dans chaque fiche (ex. `[B1.1, B1.5]`).
+- [ ] **Compétences des fiches** : renseignées pour les 4 projets personnels ; à faire pour les fiches 1Life et de formation quand elles seront remplies (ex. `[B1.1, B1.5]`). Aucune fiche ne couvre encore B1.2 ni B1.3.
 - [ ] **PDF** : tableau de synthèse.
 - [x] **Veille** : sujet choisi (« La cybersécurité des PME industrielles ») et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
 - [ ] **Jeton Copilot** : créer le jeton GitHub « Copilot Requests » et l'ajouter aux secrets du dépôt (voir [Mise en route](#mise-en-route-une-seule-fois)), sinon la collecte du lundi échoue.
@@ -139,19 +142,20 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 content/*.md + site.config.js          (le contenu, modifiable sans code)
         │  au build : plugins/vite-plugin-content.js (gray-matter + marked)
         ▼
-modules JavaScript { meta, html, raw }  (fiches déjà converties en HTML)
-        │
+modules JavaScript { meta, html }     (fiches déjà converties en HTML)
+        │                              + texte source (?source), pour le terminal seulement
         ▼
-src/content.js ──► src/blocks.js ──┬──► src/tui/    interface RémiOS (menu, rubriques, fiches)
-                                   ├──► src/jury/   vue rapide jury
-                                   └──► src/terminal/  (cat lit le texte source des fiches)
+src/content.js ──► src/blocks/ ──┬──► src/tui/    interface RémiOS (menu, rubriques, fiches)
+                                 ├──► src/jury/   vue rapide jury
+                                 └──► src/terminal/  (téléchargé à la première ouverture ;
+                                                      cat lit le texte source des fiches)
 
 src/main.js assemble le tout : routeur, démarrage, interface, vue jury, terminal, sons.
 ```
 
 ### Ce qui se passe quand on ouvre le site
 
-1. Le navigateur charge `index.html` (2 Ko), la police (préchargée), une feuille CSS et un fichier JavaScript : 66 Ko en tout une fois compressés (voir « Qualité mesurée »).
+1. Le navigateur charge `index.html` (2 Ko), la police (préchargée), une feuille CSS et un fichier JavaScript. Le terminal caché (commandes, générique, textes sources des fiches) est un second fichier JavaScript, téléchargé seulement à sa première ouverture.
 2. `main.js` construit la page et affiche **tout de suite** l'écran demandé par l'URL.
 3. Si l'URL est l'accueil, le calque du démarrage est posé par-dessus le menu, qui devient « inerte » le temps du boot.
 4. Une boucle `requestAnimationFrame` déroule le planning du boot image par image ; à la fin (ou dès qu'on passe), le calque disparaît et le focus clavier arrive sur le menu.
@@ -170,29 +174,47 @@ index.html               page unique : meta, Open Graph, préchargement de la po
 404.html, 403.html       pages d'erreur du serveur : adresse inconnue, accès refusé
 503.html                 page de maintenance affichée par le reverse proxy (fichier autonome)
 vite.config.js           configuration du build
-plugins/                 plugin Vite maison : Markdown → HTML au build, vérification des fiches
+plugins/                 plugins Vite maison : Markdown → HTML au build, vérification des fiches
+                         (vite-plugin-content.js, qui s'appuie sur plugins/content/ : configuration,
+                         fiche, Markdown, référencement, CSP) ; style, icône et cadre commun recopiés
+                         dans les pages d'erreur (vite-plugin-inline.js)
 public/                  copié tel quel dans dist/ : icônes, image d'aperçu, robots.txt, captures, PDF
 src/main.js              point d'entrée : assemble les modules, clavier global
+src/app.html             structure de la page : barre fixe, interface RémiOS, vue jury, calque du boot
 src/router.js            routage par hash (#/presentation, #/realisations/nas…)
 src/content.js           accès au contenu (configuration + fiches) pour le reste du code
-src/blocks.js            blocs de contenu communs à RémiOS et à la vue jury
+src/blocks/              blocs de contenu communs à RémiOS et à la vue jury, un fichier par rubrique
+                         (index.js les rassemble)
 src/errors.js            pages d'erreur 404 et 403 : affiche l'adresse demandée
+src/error-layout.html    cadre commun des pages 404 et 403 (barre, boîte, boutons, pied de page)
 src/tui/                 interface whiptail : boîte, accueil, rubriques, fiches, visionneuse d'images
-src/boot/                démarrage : écran GRUB, contenu du journal, déroulement (sequence.js)
+                         (cadre de l'écran : tui.html ; visionneuse : lightbox.html)
+src/boot/                démarrage : écran GRUB (boot.html), contenu du journal, déroulement (sequence.js)
 src/jury/                vue rapide jury
-src/terminal/            terminal : fenêtre, commandes, système de fichiers simulé
+src/terminal/            terminal : fenêtre (terminal.html), commandes, système de fichiers simulé,
+                         générique de l'easter egg (movie.js, movie.html) ; seul shortcut.js (raccourcis
+                         d'ouverture) est chargé avec la page, le reste à la première ouverture
 src/audio/               sons générés avec la Web Audio API
-src/ui/                  barre fixe en haut à droite (vue jury, bouton son), titre de l'onglet, pagination « < 1 2 3 > », onglets
-src/utils/               petites fonctions partagées : HTML sûr, dates, clavier, réglages mémorisés,
-                         adresse du service du formulaire de contact
-src/styles/              un fichier CSS par partie (tokens.css = toutes les couleurs, print.css = impression)
+src/ui/                  barre fixe en haut à droite (vue jury, bouton son : system-bar.html), titre de l'onglet,
+                         pagination « < 1 2 3 > », onglets
+src/utils/               petites fonctions partagées : HTML sûr, gabarits HTML, adresses, dates, clavier,
+                         animations réduites, réglages mémorisés, adresse du service du formulaire
+src/styles/              un fichier CSS par partie (tokens.css = toutes les couleurs, print.css = impression,
+                         maintenance.css = page 503)
 src/assets/fonts/        IBM Plex Mono en woff2 (400 et 600) + licence OFL
-.github/workflows/       publication automatique sur GitHub Pages (remim.me)
+src/assets/icons/        icônes SVG du bouton son (affichées dans la page, couleur du texte)
+test/                    tests du site construit (npm test), dans un navigateur simulé (jsdom)
+eslint.config.js,        règles de vérification du code (npm run lint) et du HTML construit (npm test)
+  stylelint.config.js,
+  .htmlvalidate.json
+.github/workflows/       publication automatique sur GitHub Pages (remim.me), veille hebdomadaire
 Dockerfile, docker/      image Docker et configuration nginx (hébergement sur le homelab)
 docker-compose.yml       lancement du conteneur sur le homelab
 LICENSE                  licence MIT du code
-reference/               maquette HTML validée au départ du projet (hors build)
+reference/               maquette validée au départ du projet (hors build) : maquette.html, .css, .js
 ```
+
+**Un langage par fichier.** La structure HTML est dans des fichiers `.html`, les styles dans des `.css`, les icônes dans des `.svg`, le comportement dans des `.js`. Aucune page ne contient de style ni de script écrit dans le HTML. Les parties fixes de l'interface (cadre de l'écran, barre du haut, fenêtres du terminal et de la visionneuse, écran GRUB) ont chacune leur fichier `.html` à côté de leur module, importé avec le suffixe `?raw` de Vite ; les rares données qu'elles affichent (nom, adresse d'un lien) remplissent des emplacements `data-slot`, avec `textContent`. Seul le contenu produit à partir des données (rubriques, fiches, listes) reste fabriqué par des fonctions JavaScript (`src/blocks/`…), qui jouent le rôle d'un moteur de gabarits.
 
 ## Choix techniques
 
@@ -201,7 +223,7 @@ reference/               maquette HTML validée au départ du projet (hors build
 - **Vite + JavaScript sans framework.** Le site n'a pas besoin de React ou Vue : quelques modules JavaScript suffisent, le code reste court et facile à expliquer, et le navigateur n'a presque rien à télécharger. Vite apporte le serveur de développement (rechargement instantané) et le build optimisé : fichiers minifiés et noms de fichiers « hashés » (`index-3f9a2c.js`).
 - **Aucune dépendance au moment de l'exécution.** Vite, `gray-matter` et `marked` ne servent qu'à fabriquer le site (`devDependencies`) ; le visiteur reçoit uniquement mon code et du HTML déjà prêt.
 - **Contenu en Markdown, converti et vérifié au build.** Chaque réalisation est un fichier texte lisible. Le plugin `plugins/vite-plugin-content.js` lit l'en-tête avec `gray-matter`, convertit le texte en HTML avec `marked`, rend les images cliquables et vérifie chaque champ.
-- **Un contenu, deux habillages.** Les rubriques sont produites par `src/blocks.js` ; l'interface RémiOS et la vue jury les habillent différemment. Le tableau croisé réalisations × compétences est généré à partir des fiches : il est toujours à jour.
+- **Un contenu, deux habillages.** Les rubriques sont produites par `src/blocks/` (un fichier par rubrique) ; l'interface RémiOS et la vue jury les habillent différemment. Le tableau croisé réalisations × compétences est généré à partir des fiches : il est toujours à jour.
 - **Routage par hash.** Tout le site tient dans `index.html` ; la partie après `#` indique l'écran à afficher. Chaque écran a une URL partageable, Précédent/Suivant fonctionnent, et le serveur n'a besoin d'aucune règle de réécriture.
 - **Chemins relatifs (`base: './'`).** Le site fonctionne à la racine d'un domaine comme dans un sous-dossier derrière un reverse proxy, sans reconfiguration.
 
@@ -218,9 +240,9 @@ reference/               maquette HTML validée au départ du projet (hors build
 ### Pages d'erreur
 
 - **Trois pages hors de l'application**, dans le style du site : `404.html` (adresse inconnue), `403.html` (accès refusé, par exemple un dossier sans `index.html` comme `/captures/`) et `503.html` (maintenance). Une erreur *dans* le site (`#/rubrique-inconnue`) reste affichée par l'application elle-même ; ces pages couvrent les adresses que le serveur ne connaît pas, par exemple `remim.me/jury` tapé sans le `#`.
-- **404 et 403 : la boîte whiptail du menu.** Elles importent les feuilles de style du site (police, couleurs, boîte) et suivent donc toute modification du thème. La ligne de commande simulée reprend l'adresse demandée (`bash: cd: /adresse : aucun fichier ou dossier de ce nom`) ; elle est insérée avec `textContent`, une adresse piégée ne peut donc rien injecter. Les boutons mènent au menu et à la vue jury.
+- **404 et 403 : la boîte whiptail du menu.** Elles importent les feuilles de style du site (police, couleurs, boîte) et suivent donc toute modification du thème. Leur cadre commun (barre du haut, boîte, boutons, pied de page) est écrit une seule fois, dans `src/error-layout.html` : chaque page ne contient que son propre texte, inséré dans ce cadre au build par `plugins/vite-plugin-inline.js`. La ligne de commande simulée reprend l'adresse demandée (`bash: cd: /adresse : aucun fichier ou dossier de ce nom`) ; elle est insérée avec `textContent`, une adresse piégée ne peut donc rien injecter. Les boutons mènent au menu et à la vue jury.
 - **Valables à n'importe quelle profondeur.** Le serveur renvoie la même page pour `/a` comme pour `/a/b/c` : une balise `<base href="/">` fait partir ses liens et ses fichiers de la racine du site. Contrepartie : dans un sous-dossier (`http://192.168.1.10/portfolio/`), ces deux pages s'affichent sans mise en forme, car leurs fichiers sont cherchés à la racine du serveur. Elles retrouvent leur style dès que le site a son propre nom de domaine.
-- **503 : la console noire du démarrage, dans un fichier autonome.** Le reverse proxy l'affiche quand le conteneur est arrêté : elle ne peut alors rien télécharger depuis le site. Ses styles sont donc écrits dans la page, son icône est intégrée à son adresse (`data:`), et elle utilise la police à chasse fixe du système. Pour ne pas affaiblir la CSP avec `'unsafe-inline'`, le build calcule l'empreinte SHA-256 de ce style et l'ajoute à la CSP de la page : ce style précis est autorisé, aucun autre.
+- **503 : la console noire du démarrage, dans un fichier autonome.** Le reverse proxy l'affiche quand le conteneur est arrêté : elle ne peut alors rien télécharger depuis le site. Son style (`src/styles/maintenance.css`) et son icône (`public/favicon.svg`) restent dans leurs propres fichiers ; le plugin `plugins/vite-plugin-inline.js` les recopie dans la page publiée (style écrit dans la page, icône intégrée à son adresse `data:`), en développement comme au build. Elle utilise la police à chasse fixe du système. Pour ne pas affaiblir la CSP avec `'unsafe-inline'`, le build calcule l'empreinte SHA-256 de ce style et l'ajoute à la CSP de la page : ce style précis est autorisé, aucun autre.
 - **Qui les affiche.** GitHub Pages sert de lui-même `404.html` pour toute adresse inconnue (il ne permet pas de personnaliser les autres erreurs). Dans le conteneur, nginx sert la 403 et la 404 (`error_page`), sans cache, et jamais en accès direct (`internal`). La 503 se branche sur le reverse proxy (voir « Page de maintenance » dans la partie homelab).
 - **Aperçu** : `npm run dev`, puis http://localhost:5173/404.html (ou `403.html`, `503.html`).
 - **Vérifié** (site construit, servi comme par GitHub Pages et avec les en-têtes de nginx, dans un navigateur piloté par script) : bon code HTTP pour chaque page, aucune ressource bloquée par la CSP, police chargée même à une adresse profonde, aucun défilement horizontal à 320 px. Les fichiers du site principal (`index-*.js`, `index-*.css`) sont identiques à l'octet près : il n'est pas modifié.
@@ -238,6 +260,8 @@ reference/               maquette HTML validée au départ du projet (hors build
 
 - **Boot à 60 images/s, sans décalage de mise en page.** Une seule boucle `requestAnimationFrame` traite à chaque image les lignes dont l'heure est venue. L'écran du journal est une grille fixe de lignes, créées une seule fois : pour faire défiler, on réécrit seulement leur texte. Aucun élément n'est ajouté ni déplacé, donc aucun « décalage de mise en page » (CLS passé de 0,44 à 0 grâce à ce choix). Le seul effet animé, le curseur clignotant, n'utilise que l'opacité. À la fin, pas de fondu : l'écran bascule d'un coup sur le menu, comme un vrai système.
 - **Police auto-hébergée et préchargée.** IBM Plex Mono est servie par le site lui-même : pas de Google Fonts, donc fonctionnement hors ligne et aucune donnée de visite transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 Ko).
+- **Terminal téléchargé à la demande.** Le terminal caché (commandes, système de fichiers simulé, générique, textes sources des fiches pour `cat`) est un fichier JavaScript à part, chargé par `import()` à sa première ouverture. Le JavaScript chargé à l'ouverture du site passe de 36,1 à 27,8 Ko compressés (−23 %).
+- **Rien d'inutile dans les pages publiées.** Les consignes de rédaction des fiches (commentaires `<!-- … -->` du Markdown) et les commentaires des pages HTML sont retirés au build ; les données structurées sont écrites sur une seule ligne.
 - **Cache long.** Les fichiers hashés sont gardés un an par le navigateur ; `index.html` n'est jamais mis en cache, donc une nouvelle version est visible immédiatement.
 
 ### Référencement
@@ -253,7 +277,7 @@ reference/               maquette HTML validée au départ du projet (hors build
 - **Formulaire de contact sans serveur** : un formulaire HTML classique, envoyé directement au service Web3Forms qui transfère le message par e-mail sans le conserver. Le site ne reçoit ni ne stocke aucune donnée. La CSP n'autorise l'envoi de formulaires que vers le site lui-même et ce service (`form-action`), et seulement quand le formulaire est activé. Les mentions légales détaillent alors le traitement des données (RGPD).
 - **Mentions légales** (`#/mentions-legales`) : éditeur, hébergeur, propriété intellectuelle, crédits, données personnelles. Le site ne dépose aucun cookie : pas de bandeau de consentement nécessaire.
 - **Aucune injection possible.** Ce que tape le visiteur dans le terminal est affiché avec `textContent`, jamais interprété comme du HTML. Les textes de la configuration sont échappés avant affichage.
-- **CSP stricte** (`script-src 'self'`) : le navigateur refuse tout script externe ou injecté. Possible parce que le site n'a aucun script ni style écrit dans le HTML. Deux exceptions, autorisées chacune par son empreinte SHA-256 calculée au build, et non par `'unsafe-inline'` : les données structurées (un bloc JSON que le navigateur n'exécute pas, mais que le validateur du W3C demande d'autoriser) et le style de la page de maintenance (503), qui doit tenir dans un seul fichier. Sur GitHub Pages, qui ne permet pas d'envoyer des en-têtes HTTP, elle est ajoutée au build dans une balise `<meta>` ; la version Docker l'envoie en plus dans les en-têtes nginx.
+- **CSP stricte** (`script-src 'self'`) : le navigateur refuse tout script externe ou injecté. Possible parce que le site n'a aucun script ni style écrit dans le HTML. Deux exceptions, autorisées chacune par son empreinte SHA-256 calculée au build, et non par `'unsafe-inline'` : les données structurées (un bloc JSON que le navigateur n'exécute pas, mais que le validateur du W3C demande d'autoriser) et le style de la page de maintenance (503), qui doit tenir dans un seul fichier. Sur GitHub Pages, qui ne permet pas d'envoyer des en-têtes HTTP, elle est ajoutée au build dans une balise `<meta>` ; la version Docker l'envoie en plus dans les en-têtes nginx. Les deux viennent de la même définition (`plugins/content/csp.js`) : si `docker/security-headers.conf` ne correspond plus (par exemple après avoir retiré le formulaire de contact), le build s'arrête et indique la ligne à écrire.
 - **HTTPS** : certificat fourni et renouvelé automatiquement par GitHub Pages.
 - **Conteneur durci** : image multi-stage (aucun outil de build dans l'image finale), système de fichiers en lecture seule, pas d'élévation de privilèges, version de nginx masquée, en-têtes de sécurité (anti-clickjacking, nosniff, Referrer-Policy, Permissions-Policy).
 - **Liens externes** ouverts avec `rel="noopener noreferrer"` : la page ouverte ne peut pas agir sur le portfolio.
@@ -284,6 +308,13 @@ Pendant la construction, chaque étape a aussi été testée dans un navigateur 
 - **Lighthouse** : audit à refaire après la mise en ligne.
 
 Pour refaire l'audit : ouvrir le site dans Chrome, outils de développement (F12), onglet **Lighthouse**.
+
+**Vérifications automatiques** (`npm run check`, et à chaque publication avant la mise en ligne) :
+
+- `npm run lint` : ESLint (JavaScript) et Stylelint (CSS), avec leurs règles « recommandées », qui signalent les vraies erreurs (variable non définie, propriété CSS inconnue…) et non les questions de style ;
+- `npm test` : html-validate sur les pages construites, puis 8 tests du site construit exécuté dans un navigateur simulé (jsdom) : chaque bloc écrit dans une page autorisé par sa CSP, aucun commentaire publié, page 503 autonome, chaque rubrique et chaque fiche (RémiOS et vue jury), sommaire de la vue jury, adresses inconnues ou mal encodées, terminal téléchargé à la demande et ses commandes. Les tests ne dépendent pas du texte des fiches : on peut modifier le contenu sans les toucher.
+
+**Mise à jour du 7 octobre 2026** (séparation des langages, optimisation) : poids de l'accueil, compressé en gzip comme le sert GitHub Pages (HTML, CSS, JavaScript et les deux polices), de 74,4 à 65,5 Ko, dont JavaScript de 36,1 à 27,8 Ko. Avant/après comparé écran par écran (34 écrans et états, terminal compris) : contenu identique, sauf l'adresse mal encodée `#/%E9`, qui affiche désormais l'écran d'erreur au lieu de laisser une page vide.
 
 **Validation HTML (W3C)** : les pages construites (`index.html`, `404.html`, `403.html`, `503.html`) passent le [Nu Html Checker](https://validator.w3.org/nu/) sans erreur ni avertissement (6 octobre 2026). Pour vérifier le site en ligne : https://validator.w3.org/nu/?doc=https://remim.me/
 
@@ -573,7 +604,7 @@ ssh remi@homelab "cd ~/remios-portfolio && docker compose up -d --build && docke
 Questions probables du jury, et l'essentiel de la réponse.
 
 **Pourquoi ne pas avoir utilisé WordPress ou un framework comme React ?**
-Le site est statique : il n'a besoin ni de base de données ni de code côté serveur. Vite et du JavaScript simple suffisent, le code reste court, la page d'accueil pèse 66 Ko une fois compressée, et il n'y a rien à mettre à jour côté sécurité en dehors de nginx.
+Le site est statique : il n'a besoin ni de base de données ni de code côté serveur. Vite et du JavaScript simple suffisent, le code reste court, la page d'accueil pèse 65 Ko une fois compressée (polices comprises), et il n'y a rien à mettre à jour côté sécurité en dehors de nginx.
 
 **Comment une fiche Markdown devient-elle une page ?**
 Au build, un plugin Vite que j'ai ajouté lit chaque fichier `.md` : `gray-matter` sépare l'en-tête (titre, type, compétences…) du texte, `marked` convertit le texte en HTML, et le plugin vérifie les champs. Si une fiche est mal remplie, le build s'arrête avec un message clair.
@@ -630,6 +661,8 @@ Puis, après la construction :
 13. Publication sur GitHub Pages à l'adresse remim.me, puis référencement (données structurées, sitemap)
 14. Rubriques attendues pour l'épreuve E5 (consignes du professeur) : alternance et parcours, compétences techniques, certifications, mentions légales, formulaire de contact, mode brouillon, licence MIT
 15. Pages d'erreur 404, 403 et 503 dans le style du site
+16. Grille officielle du tableau de synthèse E5, veille automatique (actualités résumées chaque semaine par l'IA, tags, onglets), niveaux de compétence (demi-niveaux permis)
+17. Un langage par fichier (HTML, CSS, SVG et JavaScript séparés), terminal téléchargé à la demande, découpage du code par rubrique, vérifications et tests automatiques avant chaque publication
 
 ## Crédits et licences
 
@@ -637,3 +670,4 @@ Puis, après la construction :
 - **Contenu** (textes de `content/`, CV, photos, captures d'écran) : © Rémi Moreau, tous droits réservés. La licence MIT ne s'y applique pas.
 - **IBM Plex Mono** : © IBM Corp., licence SIL Open Font License 1.1 (`src/assets/fonts/OFL.txt`).
 - Outils de build (non envoyés aux visiteurs) : [Vite](https://vite.dev), [marked](https://marked.js.org), [gray-matter](https://github.com/jonschlinkert/gray-matter), tous sous licence MIT.
+- Outils de vérification (non envoyés aux visiteurs) : [ESLint](https://eslint.org), [Stylelint](https://stylelint.io), [html-validate](https://html-validate.org), [jsdom](https://github.com/jsdom/jsdom), tous sous licence MIT.

@@ -18,21 +18,18 @@ import { createLightbox } from './tui/lightbox.js';
 import { createJuryView } from './jury/jury-view.js';
 import { createSystemBar } from './ui/system-bar.js';
 import { createBoot } from './boot/sequence.js';
-import { createTerminal, isTerminalShortcut } from './terminal/terminal.js';
+import { isTerminalShortcut } from './terminal/shortcut.js';
 import { createSounds } from './audio/sounds.js';
 import { setupPagers } from './ui/pager.js';
 import { setupTabs } from './ui/tabs.js';
 import { isTypingTarget } from './utils/keyboard.js';
+import appHtml from './app.html?raw';
 
 // --- Construction de la page ---------------------------------------------------
 
+// Structure de la page (app.html) : barre fixe, les deux vues, calque du boot
 const app = document.querySelector('#app');
-app.innerHTML = `
-  <div class="system-bar" role="region" aria-label="Accès rapides"></div>
-  <main class="tui" id="tui"></main>
-  <main class="jury" id="jury" hidden></main>
-  <div class="boot" hidden aria-hidden="true"></div>
-  <button type="button" class="boot-skip" hidden>Passer le démarrage</button>`;
+app.innerHTML = appHtml;
 
 const tuiRoot = app.querySelector('#tui');
 const juryRoot = app.querySelector('#jury');
@@ -44,8 +41,26 @@ createLightbox();
 setupPagers(app); // barres « < 1 2 3 > » des listes paginées (veille)
 setupTabs(app); // onglets « Dernières actualités » / « Mes synthèses » (veille)
 
-const terminal = createTerminal({ onReboot: reboot, sounds });
-const tui = createTui(tuiRoot, { onReboot: reboot, onOpenTerminal: () => terminal.open() });
+// Terminal caché : son code (commandes, système de fichiers simulé, générique,
+// textes sources des fiches) forme un fichier JavaScript à part, téléchargé
+// seulement à sa première ouverture. La page se charge ainsi plus vite.
+let terminal = null;
+async function openTerminal() {
+  if (!terminal) {
+    try {
+      const { createTerminal } = await import('./terminal/terminal.js');
+      terminal ??= createTerminal({ onReboot: reboot, sounds });
+    } catch (error) {
+      // Hors ligne, ou nouvelle version du site publiée depuis l'ouverture de
+      // la page (le fichier du terminal a changé de nom) : rien ne s'ouvre.
+      console.error('Terminal indisponible :', error);
+      return;
+    }
+  }
+  terminal.open();
+}
+
+const tui = createTui(tuiRoot, { onReboot: reboot, onOpenTerminal: openTerminal });
 const jury = createJuryView(juryRoot);
 
 const boot = createBoot({
@@ -130,12 +145,12 @@ document.addEventListener('keydown', (event) => {
   // Terminal caché : ` ou ², ou Ctrl+Alt+T (depuis l'interface RémiOS)
   if (
     isTerminalShortcut(event) &&
-    !terminal.isOpen() &&
+    !terminal?.isOpen() &&
     !isTypingTarget(event.target) &&
     !isJuryRoute(parseRoute())
   ) {
     event.preventDefault(); // le caractère ` ne doit pas s'écrire dans le terminal
-    terminal.open();
+    openTerminal();
     return;
   }
 

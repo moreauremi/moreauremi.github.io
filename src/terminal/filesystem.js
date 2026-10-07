@@ -22,14 +22,31 @@
 // Chaque élément peut porter une `route` : l'écran que `open` affiche.
 // =============================================================================
 
-import { site, pages, realisations, getRealisation, TYPES } from '../content.js';
+import { site, realisations, getRealisation, TYPES } from '../content.js';
 import { link } from '../router.js';
 import { formatDate } from '../utils/dates.js';
+import { levelBarText, levelName } from '../utils/levels.js';
 
 export const HOME = `/home/${site.identite.utilisateur}`;
 
 const dir = (children = {}, extra = {}) => ({ type: 'dir', children, ...extra });
 const file = (content, extra = {}) => ({ type: 'file', content, ...extra });
+
+// Textes sources des fiches et des pages (Markdown sans les commentaires),
+// affichés par `cat`. Ils ne sont téléchargés qu'avec le terminal (voir
+// plugins/vite-plugin-content.js, modules « ?source »).
+const ficheSources = import.meta.glob('../../content/realisations/*.md', {
+  query: '?source',
+  import: 'default',
+  eager: true,
+});
+const pageSources = import.meta.glob('../../content/pages/*.md', {
+  query: '?source',
+  import: 'default',
+  eager: true,
+});
+const ficheSource = (slug) => ficheSources[`../../content/realisations/${slug}.md`];
+const pageSource = (name) => pageSources[`../../content/pages/${name}.md`];
 
 export function buildFilesystem() {
   // Un sous-dossier par type de réalisation, une fiche = un fichier .md
@@ -38,18 +55,18 @@ export function buildFilesystem() {
     realisationsDir.children[type] = dir({}, { route: link.section('realisations') });
   }
   for (const r of realisations) {
-    realisationsDir.children[r.type].children[`${r.slug}.md`] = file(r.raw, {
+    realisationsDir.children[r.type].children[`${r.slug}.md`] = file(ficheSource(r.slug), {
       route: link.fiche(r.slug),
       slug: r.slug,
     });
   }
 
   const home = dir({
-    'presentation.md': file(pages.presentation.raw, { route: link.section('presentation') }),
-    'alternance.md': file(pages.alternance.raw, { route: link.section('alternance') }),
+    'presentation.md': file(pageSource('presentation'), { route: link.section('presentation') }),
+    'alternance.md': file(pageSource('alternance'), { route: link.section('alternance') }),
     'competences.txt': file(competencesText(), { route: link.section('competences') }),
-    'veille.md': file(pages.veille.raw, { route: link.section('veille') }),
-    'syntheses.md': file(pages.syntheses.raw, { route: link.section('veille') }),
+    'veille.md': file(pageSource('veille'), { route: link.section('veille') }),
+    'syntheses.md': file(pageSource('syntheses'), { route: link.section('veille') }),
     'certifications.txt': file(certificationsText(), { route: link.section('certifications') }),
     'contact.txt': file(contactText(), { route: link.section('contact') }),
     'mentions-legales.txt': file(mentionsText(), { route: link.legal() }),
@@ -117,7 +134,7 @@ function competencesText() {
     lines.push('', `# ${domaine.nom}`);
     for (const item of domaine.items) {
       const level = item.niveau
-        ? `[${'##'.repeat(item.niveau)}${'--'.repeat(niveaux.length - item.niveau)}] ${niveaux[item.niveau - 1].nom}`
+        ? `${levelBarText(item.niveau, niveaux.length)} ${levelName(item.niveau, niveaux)}`
         : '[À COMPLÉTER]';
       const fiches = (item.preuves ?? []).filter(getRealisation);
       lines.push(`${item.nom.padEnd(width)}  ${level}${fiches.length ? `  → ${fiches.join(', ')}` : ''}`);

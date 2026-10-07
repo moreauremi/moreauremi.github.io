@@ -1,7 +1,7 @@
 // =============================================================================
 // Accès au contenu du site : configuration + fichiers Markdown
 // -----------------------------------------------------------------------------
-// Les fichiers .md sont déjà convertis en { meta, html, raw } au build par
+// Les fichiers .md sont déjà convertis en { meta, html } au build par
 // plugins/vite-plugin-content.js. import.meta.glob (fonction de Vite) importe
 // d'un coup tous les fichiers d'un dossier : ajouter une fiche dans
 // content/realisations/ suffit, aucune ligne de code à modifier.
@@ -49,7 +49,7 @@ export const TYPES = {
 // Les fiches en brouillon valent null dans le site publié : elles sont écartées.
 export const realisations = Object.values(ficheModules)
   .filter(Boolean)
-  .map(({ meta, html, raw }) => ({ ...meta, html, raw }))
+  .map(({ meta, html }) => ({ ...meta, html }))
   .sort((a, b) => {
     const dated = Number(hasDate(b)) - Number(hasDate(a));
     if (dated !== 0) return dated;
@@ -68,9 +68,9 @@ export function realisationsOfType(type) {
 
 // Pages simples (présentation, veille), indexées par nom de fichier
 export const pages = Object.fromEntries(
-  Object.entries(pageModules).map(([file, { meta, html, raw }]) => [
+  Object.entries(pageModules).map(([file, { meta, html }]) => [
     file.split('/').pop().replace('.md', ''),
-    { ...meta, html, raw },
+    { ...meta, html },
   ]),
 );
 

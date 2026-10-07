@@ -106,7 +106,7 @@ html[data-view='jury'] body {
 
 .jury-btn--primary {
   background: var(--jury-accent);
-  color: #ffffff;
+  color: var(--on-accent);
 }
 
 .jury-toc ol {

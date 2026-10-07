@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Blocs de contenu partagés par RémiOS et la vue jury (voir src/blocks.js)
+   Blocs de contenu partagés par RémiOS et la vue jury (voir src/blocks/)
    --------------------------------------------------------------------------
    Les couleurs viennent de variables définies par le conteneur :
      --accent        titres et liens
@@ -140,7 +140,6 @@
   font-weight: 400;
 }
 
-.skills-level,
 .levels dt {
   white-space: nowrap;
 }
@@ -313,7 +312,7 @@ a.tag:focus-visible {
 .tab[aria-selected='true'] {
   border-color: var(--accent);
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   cursor: default;
 }
 
@@ -375,7 +374,7 @@ a.tag:focus-visible {
 .pager-btn[aria-current='page'] {
   border-color: var(--accent);
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   font-weight: 600;
   cursor: default;
 }
@@ -575,7 +574,7 @@ a.tag:focus-visible {
   padding: 6px 20px;
   border: 0;
   background: var(--accent);
-  color: #ffffff;
+  color: var(--on-accent);
   font: inherit;
   font-weight: 600;
   cursor: pointer;

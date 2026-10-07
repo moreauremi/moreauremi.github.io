@@ -2,6 +2,7 @@
 // (`npm run dev`) et qui fabrique la version finale statique (`npm run build`).
 import { defineConfig } from 'vite';
 import contentPlugin from './plugins/vite-plugin-content.js';
+import inlinePlugin from './plugins/vite-plugin-inline.js';
 
 export default defineConfig({
   // Chemins relatifs dans le HTML généré (./assets/… plutôt que /assets/…).
@@ -11,8 +12,10 @@ export default defineConfig({
   // la navigation passe par le « hash » de l'URL (#/jury, #/realisations/nas…).
   base: './',
 
-  // Plugin maison : convertit les fichiers Markdown de content/ au build
-  plugins: [contentPlugin()],
+  // Plugins maison : recopie dans 503.html de son style et de son icône
+  // (pages qui ne peuvent rien télécharger), et conversion des fichiers
+  // Markdown de content/ au build
+  plugins: [inlinePlugin(), contentPlugin()],
 
   // Constantes remplacées dans le code au moment du build.
   // __BUILD_DATE__ : date de génération du site, affichée dans la vue jury.
@@ -24,8 +27,10 @@ export default defineConfig({
     // Dossier de sortie du build (valeur par défaut, écrite ici pour être explicite).
     // C'est ce dossier, 100 % statique, que nginx servira.
     outDir: 'dist',
-    // Le site n'a qu'un seul fichier JavaScript : le petit code de
-    // préchargement des modules que Vite ajoute par défaut est inutile.
+    // Le site a un fichier JavaScript principal, plus celui du terminal,
+    // téléchargé à sa première ouverture (import() dans src/main.js). Tous
+    // les navigateurs actuels savent précharger les modules : le petit code
+    // de remplacement que Vite ajoute par défaut pour les anciens est inutile.
     modulePreload: { polyfill: false },
     // Pages fabriquées : le site, et les pages d'erreur servies par le serveur
     // (404 et 403 : GitHub Pages et nginx ; 503 : le reverse proxy du homelab).

@@ -17,36 +17,24 @@
     <script type="module" src="/src/errors.js"></script>
   </head>
   <body>
-    <div class="tui">
-      <header class="tui-bar">
-        <span class="tui-bar-tty">RémiOS 1.0 <span class="tui-bar-extra">(tty1)</span></span>
-        <span class="tui-bar-title">Rémi Moreau · Portfolio BTS SIO SISR</span>
-      </header>
-
-      <main class="tui-stage">
-        <section class="tui-box error-box" aria-labelledby="error-title">
-          <h1 class="tui-box-title" id="error-title"><span aria-hidden="true">[ </span>Erreur 403<span aria-hidden="true"> ]</span></h1>
-          <div class="tui-box-inner">
-            <pre class="error-code" aria-hidden="true">
+    <!-- Cadre commun aux pages d'erreur (barre du haut, boîte, boutons, pied
+         de page) : src/error-layout.html. Le contenu propre à cette page,
+         ci-dessous, y est inséré par plugins/vite-plugin-inline.js. -->
+    <template data-layout="/src/error-layout.html">
+      <h1 class="tui-box-title" id="error-title"><span aria-hidden="true">[ </span>Erreur 403<span aria-hidden="true"> ]</span></h1>
+      <div class="tui-box-inner">
+        <pre class="error-code" aria-hidden="true">
  _  _      ___    _____
 | || |    / _ \  |___ /
 | || |_  | | | |   |_ \
 |__   _| | |_| |  ___) |
    |_|    \___/  |____/</pre>
-            <pre class="error-shell"><span class="error-prompt">visiteur@remios:~$</span> ls <span data-path>/dossier</span>
+        <pre class="error-shell"><span class="error-prompt">visiteur@remios:~$</span> ls <span data-path>/dossier</span>
 ls: impossible d'ouvrir le répertoire '<span data-path>/dossier</span>'&nbsp;: Permission non accordée
 <span class="error-prompt">visiteur@remios:~$</span> sudo ls <span data-path>/dossier</span>
 visiteur n'est pas dans le fichier sudoers. Cet incident sera signalé.</pre>
-            <p>Cette adresse existe, mais son contenu n'est pas consultable directement. Rassurez-vous, rien n'est signalé à personne&nbsp;: les réalisations, leurs captures et le CV s'ouvrent depuis le menu principal.</p>
-          </div>
-          <div class="tui-actions">
-            <a class="tui-btn tui-btn--primary" href="/">&lt; Menu principal &gt;</a>
-            <a class="tui-btn" href="/#/jury">&lt; Vue rapide jury &gt;</a>
-          </div>
-        </section>
-      </main>
-
-      <footer class="tui-footer"><a href="/#/mentions-legales">Mentions légales</a></footer>
-    </div>
+        <p>Cette adresse existe, mais son contenu n'est pas consultable directement. Rassurez-vous, rien n'est signalé à personne&nbsp;: les réalisations, leurs captures et le CV s'ouvrent depuis le menu principal.</p>
+      </div>
+    </template>
   </body>
 </html>

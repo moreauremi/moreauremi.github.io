@@ -6,3 +6,7 @@ dist
 reference
 *.log
 .DS_Store
+
+# Documents de travail personnels (réponses, CV d'origine) : jamais copiés
+# dans l'image, même pendant l'étape de build
+a-integrer
