@@ -16,7 +16,7 @@ technos:
   - "Linux"
   - "Nginx"
   - "DNS"
-competences: []  # codes du référentiel, ex. [C1, C4] (grille officielle à venir)
+competences: []  # codes du référentiel, ex. [B1.1, B1.4]
 ---
 
 <!--
@@ -25,7 +25,7 @@ competences: []  # codes du référentiel, ex. [C1, C4] (grille officielle à ve
   - Captures : déposer l'image dans public/captures/caffein/, puis écrire
       ![Description de l'image](captures/caffein/nom-du-fichier.webp "Légende affichée")
     et supprimer l'image « a-venir.svg » ci-dessous.
-  - competences : codes définis dans content/site.config.js, ex. [C1, C4]
+  - competences : codes définis dans content/site.config.js, ex. [B1.1, B1.4]
 -->
 
 ## Contexte

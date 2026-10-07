@@ -8,6 +8,8 @@
 // =============================================================================
 
 import site from '../content/site.config.js';
+import veille from '../content/veille/actualites.json';
+import { tagSlug } from './utils/tags.js';
 
 const ficheModules = import.meta.glob('../content/realisations/*.md', {
   eager: true,
@@ -72,7 +74,36 @@ export const pages = Object.fromEntries(
   ]),
 );
 
-// Libellé d'une compétence à partir de son code (ex. « C1 »)
+// --- Veille automatique (content/veille/actualites.json, voir scripts/veille.mjs)
+
+// Actualités, les plus récentes d'abord
+export const actualites = [...veille.actualites].sort(
+  (a, b) => b.date.localeCompare(a.date) || a.titre.localeCompare(b.titre, 'fr'),
+);
+export const veilleMiseAJour = veille.miseAJour;
+
+// Tags de la veille, du plus utilisé au moins utilisé : { nom, slug, count }
+export const veilleTags = [
+  ...actualites
+    .flatMap((a) => a.tags)
+    .reduce((tags, nom) => {
+      const slug = tagSlug(nom);
+      const tag = tags.get(slug) ?? { nom, slug, count: 0 };
+      tag.count += 1;
+      return tags.set(slug, tag);
+    }, new Map())
+    .values(),
+].sort((a, b) => b.count - a.count || a.nom.localeCompare(b.nom, 'fr'));
+
+export function getVeilleTag(slug) {
+  return veilleTags.find((t) => t.slug === slug) ?? null;
+}
+
+export function actualitesByTag(slug) {
+  return actualites.filter((a) => a.tags.some((t) => tagSlug(t) === slug));
+}
+
+// Libellé d'une compétence à partir de son code (ex. « B1.1 »)
 export function competenceLabel(code) {
   return site.competences.find((c) => c.code === code)?.libelle ?? code;
 }

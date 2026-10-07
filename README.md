@@ -17,6 +17,7 @@ Le site se présente comme le démarrage d'un système Linux : écran GRUB, jour
 - [Architecture](#architecture)
 - [Choix techniques](#choix-techniques)
 - [Qualité mesurée](#qualité-mesurée)
+- [Veille automatique](#veille-automatique)
 - [Mettre en ligne sur remim.me (GitHub Pages)](#mettre-en-ligne-sur-remimme-github-pages)
 - [Autre option : héberger sur le homelab (Docker + nginx)](#autre-option--héberger-sur-le-homelab-docker--nginx)
 - [Préparer l'oral](#préparer-loral)
@@ -71,8 +72,10 @@ Sur mobile, le terminal s'ouvre avec le bouton `[tty2]` de la barre du haut.
 | `#/presentation`, `#/alternance`, `#/realisations`, `#/competences`, `#/synthese`, `#/veille`, `#/certifications`, `#/contact` | une rubrique |
 | `#/mentions-legales` | mentions légales |
 | `#/realisations/<slug>` | une fiche, style RémiOS (ex. `#/realisations/nas`) |
+| `#/veille/<tag>` | les actualités de la veille qui portent ce tag (ex. `#/veille/rancongiciel`) |
 | `#/jury` | vue rapide jury : **le lien à donner au jury** |
 | `#/jury/<slug>` | une fiche, style sobre |
+| `#/jury/veille/<tag>` | un tag de la veille, style sobre |
 | `#/jury/mentions-legales` | mentions légales, style sobre |
 | `#/message-envoye` | confirmation après l'envoi du formulaire de contact |
 
@@ -98,7 +101,7 @@ Tout le contenu est dans `content/` : aucune ligne de code à toucher.
   statut: terminé
   resume: "Une phrase qui résume la réalisation."
   technos: [Zabbix, Debian]
-  competences: [C1, C4]           # codes définis dans site.config.js
+  competences: [B1.1, B1.4]       # codes définis dans site.config.js
   brouillon: true                 # facultatif : fiche non publiée (voir ci-dessous)
   ```
 
@@ -119,11 +122,14 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [ ] **Réalisations 1Life** (3 fiches en brouillon) : titres et contenu, après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
 - [ ] **Homelab Jellyfin, NAS, CAFFEIN, Crypto Dashboard Pro** : détails techniques balisés `[À COMPLÉTER]`, captures.
 - [ ] **Compétences techniques** : niveau de chaque compétence (`savoirFaire` dans `site.config.js`).
-- [ ] **Grille de compétences** : remplacer C1 à C6 dans `site.config.js` par la grille officielle du tableau de synthèse, puis renseigner `competences` dans chaque fiche.
+- [x] **Grille de compétences** : les six compétences du tableau de synthèse officiel (B1.1 à B1.6) sont dans `site.config.js`.
+- [ ] **Compétences des fiches** : renseigner `competences` dans chaque fiche (ex. `[B1.1, B1.5]`).
 - [ ] **PDF** : tableau de synthèse.
-- [ ] **Veille** : choisir le sujet (`veille.sujet`, le `[ WARN ]` du démarrage passera en `[  OK  ]`), puis rédiger `content/pages/veille.md`.
+- [x] **Veille** : sujet choisi (« La cybersécurité des PME industrielles ») et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
+- [ ] **Jeton Copilot** : créer le jeton GitHub « Copilot Requests » et l'ajouter aux secrets du dépôt (voir [Mise en route](#mise-en-route-une-seule-fois)), sinon la collecte du lundi échoue.
+- [ ] **Synthèses de veille** : rédiger régulièrement « Mes synthèses » dans `content/pages/veille.md`, à partir des actualités collectées.
 - [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif.
-- [ ] **Réalisations en formation** : le groupe affiche « À venir » tant qu'il n'y en a pas.
+- [ ] **Réalisations en formation** (3 fiches en brouillon) : titres et contenu, au fil des TP et projets de cours. Le groupe affiche « À venir » sur le site tant qu'aucune n'est publiée.
 
 ## Architecture
 
@@ -158,6 +164,8 @@ content/site.config.js   configuration : identité, contact, formulaire, PDF, ve
                          certifications, mentions légales, services du boot
 content/pages/           présentation, alternance et veille (Markdown)
 content/realisations/    une fiche Markdown par réalisation
+content/veille/          actualités de la veille (actualites.json), écrites chaque semaine par le robot
+scripts/veille.mjs       veille automatique : flux RSS → choix, résumés et tags par l'IA → actualites.json
 index.html               page unique : meta, Open Graph, préchargement de la police
 404.html, 403.html       pages d'erreur du serveur : adresse inconnue, accès refusé
 503.html                 page de maintenance affichée par le reverse proxy (fichier autonome)
@@ -278,6 +286,53 @@ Pendant la construction, chaque étape a aussi été testée dans un navigateur 
 Pour refaire l'audit : ouvrir le site dans Chrome, outils de développement (F12), onglet **Lighthouse**.
 
 **Validation HTML (W3C)** : les pages construites (`index.html`, `404.html`, `403.html`, `503.html`) passent le [Nu Html Checker](https://validator.w3.org/nu/) sans erreur ni avertissement (6 octobre 2026). Pour vérifier le site en ligne : https://validator.w3.org/nu/?doc=https://remim.me/
+
+## Veille automatique
+
+### Principe
+
+```
+Chaque lundi        flux RSS de 13 sources          IA (GitHub Copilot)       content/veille/
+GitHub Actions ──►  articles des 10 derniers ──►  choisit les plus utiles, ──►  actualites.json ──► site republié
+(veille.yml)        jours, filtrés par mots-clés    les résume, met des tags
+```
+
+- `.github/workflows/veille.yml` lance `scripts/veille.mjs` chaque lundi vers 7 h, puis enregistre le fichier d'actualités dans le dépôt et relance la publication du site.
+- Le sujet, les mots-clés, les tags proposés, les sources et le modèle d'IA se règlent dans `content/site.config.js`, rubrique `veille`.
+- La rubrique « Veille technologique » affiche les 8 dernières actualités, la liste des tags et les sources. Un clic sur un tag (`#/veille/<tag>`) affiche toutes les actualités qui le portent, depuis le début de la veille.
+
+### Choix et garde-fous
+
+- **Sources** : uniquement les flux RSS publiés par les médias eux-mêmes (ANSSI, Cybermalveillance.gouv.fr, LeMagIT…), faits pour être repris. Google Actualités et Bing Actualités ont été écartés : leurs conditions interdisent toute utilisation hors d'un lecteur RSS personnel.
+- **Pas d'invention** : l'IA résume le texte de l'article (récupéré sur la page quand le flux ne donne qu'une phrase), jamais le titre seul. Le titre, la source, la date et le lien viennent du flux, jamais de l'IA.
+- **Tags cohérents** : l'IA choisit d'abord parmi les tags existants (`veille.tags` et ceux déjà attribués) ; deux écritures d'un même tag (accents, majuscules) sont fusionnées.
+- **Sécurité** : le texte venu des flux et de l'IA est toujours échappé à l'affichage, seules les adresses `http(s)` deviennent des liens, et le build vérifie le fichier : une entrée incomplète arrête la publication, le site en ligne reste intact. Le jeton de l'IA n'est jamais dans le code, seulement dans les secrets GitHub.
+- **IA : GitHub Copilot**, appelé par Copilot CLI (2 requêtes par semaine), avec l'abonnement Copilot du compte (gratuit pour les étudiants vérifiés par GitHub Education). Copilot CLI est un agent capable de lancer des commandes : ici, il n'a droit à aucun outil (ni shell, ni écriture, ni serveur MCP), travaille dans un dossier vide, et le jeton d'écriture du dépôt n'est pas sur le disque pendant qu'il tourne. Un article piégé ne peut donc rien lui faire exécuter. GitHub Models, prévu au départ, a été fermé le 30 juillet 2026.
+
+### Mise en route (une seule fois)
+
+1. Avoir GitHub Copilot sur son compte : https://github.com/settings/copilot (gratuit pour les étudiants vérifiés par GitHub Education).
+2. Créer un jeton : https://github.com/settings/personal-access-tokens/new (jeton *fine-grained*). Propriétaire : son **compte personnel** (pas une organisation). Expiration : 1 an. Dans les permissions du compte (**Account permissions**), ajouter **Copilot Requests**, et rien d'autre : aucun accès aux dépôts. **Generate token**, puis copier le jeton.
+3. Sur GitHub, dépôt `moreauremi.github.io` → **Settings → Secrets and variables → Actions → New repository secret**. Nom : `COPILOT_GITHUB_TOKEN`, valeur : le jeton. Il n'est plus jamais affiché ensuite.
+4. Onglet **Actions → Veille automatique → Run workflow** pour lancer une première collecte sans attendre lundi. Le site est à jour quelques minutes plus tard.
+
+Le jeton expire au bout d'un an : en créer un nouveau et remplacer la valeur du secret (GitHub prévient par e-mail avant l'expiration).
+
+### En local
+
+```bash
+npm run veille -- --sans-ia     # collecte seulement : vérifie les flux et les mots-clés
+npm install -g @github/copilot  # une fois : installe Copilot CLI, puis `copilot login`
+npm run veille                  # collecte complète, écrit content/veille/actualites.json
+```
+
+### Dépannage
+
+- **« Copilot CLI a échoué »** : jeton expiré ou sans la permission « Copilot Requests », abonnement Copilot inactif, ou quota épuisé. Le message complet est dans le journal de la tâche (onglet Actions).
+- **Choisir le modèle** : `veille.ia.modele` (vide = modèle par défaut de Copilot). Les noms possibles sont listés par `copilot --help` (option `--model`).
+- **Changer de fournisseur d'IA** (Mistral, Groq, Gemini…) : `veille.ia.fournisseur: 'api'`, avec `url` et `modele` du service (tous proposent l'API au format OpenAI), et leur clé dans le secret utilisé par `veille.yml`.
+- **Un flux ne répond plus** : la tâche continue avec les autres et le signale dans son journal. Le retirer ou corriger son adresse dans `veille.flux`.
+- **Une actualité hors sujet ou un résumé faux** : la supprimer de `content/veille/actualites.json`, puis envoyer le changement (`git push`).
 
 ## Mettre en ligne sur remim.me (GitHub Pages)
 

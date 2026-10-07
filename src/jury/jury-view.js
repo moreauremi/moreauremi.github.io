@@ -6,12 +6,13 @@
 //
 //   #/jury                    page unique : toutes les rubriques du menu
 //   #/jury/<slug>             une fiche de réalisation dans le même style sobre
+//   #/jury/veille/<tag>       les actualités de la veille qui portent ce tag
 //   #/jury/mentions-legales   les mentions légales, dans le même style
 //
 // Le contenu vient des mêmes blocs que l'interface RémiOS (src/blocks.js).
 // =============================================================================
 
-import { site, realisationsOfType, getRealisation, TYPES } from '../content.js';
+import { site, realisationsOfType, getRealisation, getVeilleTag, TYPES } from '../content.js';
 import { link } from '../router.js';
 import {
   presentationBlock,
@@ -20,6 +21,7 @@ import {
   competencesBlock,
   syntheseBlock,
   veilleBlock,
+  veilleTagBlock,
   certificationsBlock,
   contactBlock,
   mentionsLegalesBlock,
@@ -40,7 +42,7 @@ const PARTS = [
   ['realisations', 'Réalisations', () => Object.entries(TYPES).map(([type, { group: label }]) => group(type, label)).join('')],
   ['competences', 'Compétences', () => demoteHeadings(competencesBlock(link.juryFiche))],
   ['synthese', 'Tableau de synthèse E5', () => syntheseBlock(link.juryFiche)],
-  ['veille', 'Veille technologique', () => demoteHeadings(veilleBlock())],
+  ['veille', 'Veille technologique', () => demoteHeadings(veilleBlock(link.juryVeilleTag))],
   ['certifications', 'Certifications', () => demoteHeadings(certificationsBlock())],
   ['contact', 'CV et contact', () => demoteHeadings(contactBlock({ legalHref: link.juryLegal() }))],
 ];
@@ -52,7 +54,15 @@ export function createJuryView(root) {
     current = route;
     const fiche = route.name === 'jury-fiche' ? getRealisation(route.slug) : null;
 
-    if (route.name === 'jury-fiche' && route.slug === 'mentions-legales') {
+    const tag = route.name === 'jury-tag' ? getVeilleTag(route.tag) : null;
+
+    if (route.name === 'jury-tag' && tag) {
+      root.innerHTML = tagPage(route.tag, tag);
+      setPlainTitle(`Veille : ${tag.nom} — Vue jury`);
+    } else if (route.name === 'jury-tag') {
+      root.innerHTML = missingPage('Tag introuvable', "Ce tag n'existe pas dans la veille, ou plus.");
+      setPlainTitle('Tag introuvable — Vue jury');
+    } else if (route.name === 'jury-fiche' && route.slug === 'mentions-legales') {
       root.innerHTML = legalPage();
       setPlainTitle('Mentions légales — Vue jury');
     } else if (route.name === 'jury-fiche' && fiche) {
@@ -87,7 +97,7 @@ export function createJuryView(root) {
 
   // Échap sur une fiche : retour à la page jury
   function handleKey(event) {
-    if (event.key === 'Escape' && !hasModifier(event) && current?.name === 'jury-fiche') {
+    if (event.key === 'Escape' && !hasModifier(event) && ['jury-fiche', 'jury-tag'].includes(current?.name)) {
       window.location.hash = link.jury();
     }
   }
@@ -178,6 +188,20 @@ function fichePage(r) {
   </div>`;
 }
 
+// Page d'un tag de la veille, dans le même style sobre
+function tagPage(slug, tag) {
+  return `<div class="jury-page">
+    <nav class="jury-back" aria-label="Navigation">
+      <a href="${link.jury()}">← Retour à la vue jury</a>
+    </nav>
+    <h1 tabindex="-1">Veille : ${escapeHtml(tag.nom)}</h1>
+    ${veilleTagBlock(slug, link.juryVeilleTag)}
+    <footer class="jury-footer">
+      <p><a href="${link.jury()}">← Retour à la vue jury</a> · <a href="${link.veilleTag(slug)}">Voir ce tag dans RémiOS</a></p>
+    </footer>
+  </div>`;
+}
+
 function legalPage() {
   return `<div class="jury-page">
     <nav class="jury-back" aria-label="Navigation">
@@ -191,10 +215,10 @@ function legalPage() {
   </div>`;
 }
 
-function missingPage() {
+function missingPage(title = 'Fiche introuvable', text = "Cette réalisation n'existe pas, ou plus.") {
   return `<div class="jury-page">
-    <h1 tabindex="-1">Fiche introuvable</h1>
-    <p>Cette réalisation n'existe pas, ou plus.</p>
+    <h1 tabindex="-1">${title}</h1>
+    <p>${text}</p>
     <p><a href="${link.jury()}">← Retour à la vue jury</a></p>
   </div>`;
 }

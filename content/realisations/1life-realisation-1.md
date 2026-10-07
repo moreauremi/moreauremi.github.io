@@ -6,7 +6,7 @@ date: "[À COMPLÉTER]"  # AAAA, AAAA-MM ou AAAA-MM-JJ (ex. 2026-11)
 statut: "[À COMPLÉTER]"  # ex. en cours, terminé
 resume: "[À COMPLÉTER : résumé en une phrase]"
 technos: []
-competences: []  # ex. [C1, C4]
+competences: []  # ex. [B1.1, B1.4]
 brouillon: true  # fiche vide : visible avec npm run dev, absente du site publié (retirer la ligne une fois remplie)
 ---
 
@@ -16,7 +16,7 @@ brouillon: true  # fiche vide : visible avec npm run dev, absente du site publi�
   - Captures : déposer l'image dans public/captures/1life-realisation-1/, puis écrire
       ![Description de l'image](captures/1life-realisation-1/nom-du-fichier.webp "Légende affichée")
     et supprimer l'image « a-venir.svg » ci-dessous.
-  - competences : codes définis dans content/site.config.js, ex. [C1, C4]
+  - competences : codes définis dans content/site.config.js, ex. [B1.1, B1.4]
 -->
 
 ## Contexte

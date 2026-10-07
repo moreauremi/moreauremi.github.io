@@ -1,0 +1,86 @@
+# =============================================================================
+# Veille automatique (rubrique « Veille technologique » du site)
+# -----------------------------------------------------------------------------
+# Chaque lundi matin, GitHub :
+#   1. lance scripts/veille.mjs : lecture des flux RSS, choix et résumé des
+#      actualités par l'IA, ajout dans content/veille/actualites.json ;
+#   2. enregistre ce fichier dans le dépôt (commit), s'il a changé ;
+#   3. relance la publication du site (workflow deploy.yml).
+#
+# L'IA est GitHub Copilot (Copilot CLI). Prérequis : un abonnement Copilot
+# (gratuit pour les étudiants) et un jeton GitHub avec la permission
+# « Copilot Requests », rangé dans les secrets du dépôt sous le nom
+# COPILOT_GITHUB_TOKEN (Settings → Secrets and variables → Actions). Voir le README.
+# Lancement à la main : onglet Actions → « Veille automatique » → Run workflow.
+# =============================================================================
+
+name: Veille automatique
+
+on:
+  schedule:
+    # Chaque lundi à 5 h 17 UTC (7 h 17 à Paris l'été, 6 h 17 l'hiver).
+    # Une minute « au hasard » : à l'heure pile, GitHub retarde souvent les tâches.
+    - cron: '17 5 * * 1'
+  workflow_dispatch:
+
+# Écrire dans le dépôt (le fichier d'actualités) et relancer la publication
+permissions:
+  contents: write
+  actions: write
+
+# Jamais deux veilles en même temps (elles écriraient le même fichier)
+concurrency:
+  group: veille
+  cancel-in-progress: false
+
+jobs:
+  veille:
+    name: Collecte et résumé des actualités
+    runs-on: ubuntu-latest
+    steps:
+      # persist-credentials: false : le jeton qui permet d'écrire dans le dépôt
+      # n'est pas laissé sur le disque pendant que l'IA travaille. Il n'est
+      # fourni qu'à l'étape d'enregistrement, plus bas.
+      - name: Récupérer le code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Installer Node.js (version indiquée dans .nvmrc)
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Installer Copilot CLI
+        run: npm install -g @github/copilot@1
+
+      # Le script n'utilise que Node.js et Copilot CLI : pas besoin de npm ci
+      - name: Collecter et résumer les actualités
+        run: node scripts/veille.mjs
+        env:
+          VEILLE_IA_CLE: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+
+      - name: Enregistrer les nouvelles actualités
+        id: commit
+        run: |
+          if git diff --quiet -- content/veille/actualites.json; then
+            echo "Aucune nouvelle actualité."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/veille/actualites.json
+          git commit -m "veille: actualités du $(date +%d/%m/%Y)"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      # Un envoi fait par GitHub Actions ne déclenche pas les autres workflows :
+      # la publication est donc relancée explicitement.
+      - name: Republier le site
+        if: steps.commit.outputs.changed == 'true'
+        run: gh workflow run deploy.yml --ref main
+        env:
+          GH_TOKEN: ${{ github.token }}

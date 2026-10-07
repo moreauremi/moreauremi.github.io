@@ -48,6 +48,7 @@
 .skills a,
 .profile-links a,
 .certif-links a,
+.veille-sources a,
 .field-check a {
   color: var(--accent);
   font-weight: 600;
@@ -204,6 +205,78 @@
   margin: 1em 0 0.5em;
 }
 
+/* --- Veille : actualités et tags --------------------------------------------- */
+
+.news-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.news-item {
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+}
+
+.news-meta {
+  margin: 0;
+  font-size: var(--font-size-small);
+}
+
+.news-title {
+  margin: 2px 0 4px;
+  font-weight: 600;
+}
+
+.news-title a {
+  color: var(--accent);
+  text-underline-offset: 2px;
+}
+
+.news-summary {
+  max-width: 75ch;
+  margin: 0 0 6px;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0 6px;
+  border: 1px solid var(--rule);
+  color: inherit;
+  font-size: var(--font-size-small);
+  text-decoration: none;
+}
+
+a.tag:hover,
+a.tag:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Tag de la page affichée */
+.tag.is-current {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.veille-sources {
+  margin: 0;
+  padding-left: 1.4em;
+}
+
 /* --- Certifications ----------------------------------------------------------- */
 
 .certifs {
@@ -284,6 +357,11 @@
 
 .legend dd {
   margin: 0;
+}
+
+.legend-criteres {
+  margin: 0.2em 0 0.6em;
+  padding-left: 1.4em;
 }
 
 /* --- Contact ---------------------------------------------------------------- */

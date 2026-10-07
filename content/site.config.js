@@ -104,19 +104,125 @@ export default {
     // Sujet de la veille, entre guillemets (ex. sujet: 'La supervision réseau').
     // null tant qu'il n'est pas choisi : le site affiche « À venir » et le
     // démarrage signale veille-techno.service en [ WARN ].
-    sujet: null,
+    sujet: 'La cybersécurité des PME industrielles',
+
+    // Veille automatique (scripts/veille.mjs, lancé chaque lundi par GitHub
+    // Actions) : les articles des flux ci-dessous sont triés par l'IA, qui
+    // garde les plus utiles au sujet, les résume et leur attribue des tags.
+    //
+    // Mots-clés : un article d'un média généraliste (specialise: false) n'est
+    // proposé à l'IA que s'il en contient au moins un. Majuscules et accents
+    // ne comptent pas.
+    motsCles: [
+      'cybersécurité', 'cyberattaque', 'cybercriminalité', 'rançongiciel', 'ransomware',
+      'hameçonnage', 'phishing', 'vulnérabilité', 'faille', 'fuite de données',
+      'piratage', 'pirate', 'NIS2', 'NIS 2', 'ANSSI', 'OT', 'SCADA',
+    ],
+    // Contexte : l'IA met en avant les articles qui concernent ces entreprises
+    // ou ces secteurs, sans écarter une actualité importante qui n'en parle pas.
+    contexte: ['PME', 'TPE', 'ETI', 'industrie', 'usine', 'production', 'sous-traitant', 'ERP'],
+    // Nombre maximal d'actualités retenues chaque semaine
+    parSemaine: 6,
+    // Tags proposés à l'IA. Elle les réutilise en priorité et n'en crée un
+    // nouveau que si aucun ne convient : les pages de tags restent cohérentes.
+    tags: [
+      'rançongiciel', 'hameçonnage', 'vulnérabilité', 'fuite de données', 'cybercriminalité',
+      'systèmes industriels (OT)', 'PME', 'réglementation', 'NIS2', 'sensibilisation',
+      'sauvegarde', "chaîne d'approvisionnement", 'intelligence artificielle',
+    ],
+    // IA utilisée : GitHub Copilot (Copilot CLI), avec l'abonnement Copilot du
+    // compte GitHub. Le jeton n'est jamais écrit ici : il est rangé dans les
+    // secrets du dépôt (COPILOT_GITHUB_TOKEN), voir le README.
+    //   modele : '' = modèle par défaut de Copilot, ou un nom précis (voir
+    //            `copilot --help`, option --model).
+    // Autre possibilité : fournisseur: 'api', avec url et modele d'un service
+    // au format de l'API OpenAI (Mistral, Groq, Gemini…).
+    ia: {
+      fournisseur: 'copilot',
+      modele: '',
+    },
+    // Flux RSS suivis. specialise: true = média entièrement consacré à la
+    // cybersécurité (tous ses articles sont proposés à l'IA).
+    flux: [
+      { nom: 'CERT-FR (ANSSI)', url: 'https://www.cert.ssi.gouv.fr/actualite/feed/', specialise: true },
+      { nom: 'CERT-FR, alertes', url: 'https://www.cert.ssi.gouv.fr/alerte/feed/', specialise: true },
+      { nom: 'Cybermalveillance.gouv.fr', url: 'https://www.cybermalveillance.gouv.fr/feed/atom-flux-actualites', specialise: true },
+      { nom: 'ZATAZ', url: 'https://www.zataz.com/feed/', specialise: true },
+      { nom: 'InCyber', url: 'https://incyber.org/feed/', specialise: true },
+      { nom: 'Le Monde Informatique, sécurité', url: 'https://www.lemondeinformatique.fr/flux-rss/thematique/securite/rss.xml', specialise: true },
+      { nom: '01net, sécurité', url: 'https://www.01net.com/actualites/securite/feed/', specialise: true },
+      { nom: 'UnderNews', url: 'https://www.undernews.fr/feed', specialise: true },
+      { nom: 'IT-Connect', url: 'https://www.it-connect.fr/feed/', specialise: false },
+      { nom: 'LeMagIT', url: 'https://www.lemagit.fr/rss/ContentSyndication.xml', specialise: false },
+      { nom: 'Silicon', url: 'https://www.silicon.fr/feed', specialise: false },
+      { nom: "L'Usine Digitale", url: 'https://www.usine-digitale.fr/rss', specialise: false },
+      { nom: "L'Usine Nouvelle", url: 'https://www.usinenouvelle.com/rss/', specialise: false },
+    ],
   },
 
   // --- Compétences du référentiel ---------------------------------------------
-  // Codes à utiliser dans le champ « competences » des fiches (ex. [C1, C4]).
-  // À remplacer par la grille officielle du tableau de synthèse de l'école.
+  // Codes à utiliser dans le champ « competences » des fiches (ex. [B1.1, B1.4]).
+  // Les six colonnes du tableau de synthèse officiel de l'épreuve E5 (bloc 1 du
+  // référentiel), avec les savoir-faire détaillés listés sous chacune.
   competences: [
-    { code: 'C1', libelle: '[À COMPLÉTER : compétence 1 du référentiel]' },
-    { code: 'C2', libelle: '[À COMPLÉTER : compétence 2 du référentiel]' },
-    { code: 'C3', libelle: '[À COMPLÉTER : compétence 3 du référentiel]' },
-    { code: 'C4', libelle: '[À COMPLÉTER : compétence 4 du référentiel]' },
-    { code: 'C5', libelle: '[À COMPLÉTER : compétence 5 du référentiel]' },
-    { code: 'C6', libelle: '[À COMPLÉTER : compétence 6 du référentiel]' },
+    {
+      code: 'B1.1',
+      libelle: 'Gérer le patrimoine informatique',
+      criteres: [
+        'Recenser et identifier les ressources numériques',
+        'Exploiter des référentiels, normes et standards adoptés par le prestataire informatique',
+        'Mettre en place et vérifier les niveaux d’habilitation associés à un service',
+        'Vérifier les conditions de la continuité d’un service informatique',
+        'Gérer des sauvegardes',
+        'Vérifier le respect des règles d’utilisation des ressources numériques',
+      ],
+    },
+    {
+      code: 'B1.2',
+      libelle: 'Répondre aux incidents et aux demandes d’assistance et d’évolution',
+      criteres: [
+        'Collecter, suivre et orienter des demandes',
+        'Traiter des demandes concernant les services réseau et système, applicatifs',
+        'Traiter des demandes concernant les applications',
+      ],
+    },
+    {
+      code: 'B1.3',
+      libelle: 'Développer la présence en ligne de l’organisation',
+      criteres: [
+        'Participer à la valorisation de l’image de l’organisation sur les médias numériques en tenant compte du cadre juridique et des enjeux économiques',
+        'Référencer les services en ligne de l’organisation et mesurer leur visibilité',
+        'Participer à l’évolution d’un site Web exploitant les données de l’organisation',
+      ],
+    },
+    {
+      code: 'B1.4',
+      libelle: 'Travailler en mode projet',
+      criteres: [
+        'Analyser les objectifs et les modalités d’organisation d’un projet',
+        'Planifier les activités',
+        'Évaluer les indicateurs de suivi d’un projet et analyser les écarts',
+      ],
+    },
+    {
+      code: 'B1.5',
+      libelle: 'Mettre à disposition des utilisateurs un service informatique',
+      criteres: [
+        'Réaliser les tests d’intégration et d’acceptation d’un service',
+        'Déployer un service',
+        'Accompagner les utilisateurs dans la mise en place d’un service',
+      ],
+    },
+    {
+      code: 'B1.6',
+      libelle: 'Organiser son développement professionnel',
+      criteres: [
+        'Mettre en place son environnement d’apprentissage personnel',
+        'Mettre en œuvre des outils et stratégies de veille informationnelle',
+        'Gérer son identité professionnelle',
+        'Développer son projet professionnel',
+      ],
+    },
   ],
 
   // --- Savoir-faire technique (rubrique « Compétences ») ---------------------

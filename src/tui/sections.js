@@ -45,7 +45,7 @@ export const SECTIONS = [
   {
     id: 'veille',
     label: 'Veille technologique',
-    render: veilleBlock,
+    render: () => veilleBlock(link.veilleTag),
   },
   {
     id: 'certifications',
@@ -74,12 +74,15 @@ export const EXTRA_PAGES = [
   },
 ];
 
-// Anciennes adresses des rubriques de réalisations (avant leur regroupement) :
-// les liens déjà partagés (#/perso…) mènent à la rubrique « Réalisations ».
+// Autres adresses d'une même page : anciennes adresses des rubriques de
+// réalisations (avant leur regroupement), pour que les liens déjà partagés
+// (#/perso…) mènent à la rubrique « Réalisations », et #/merci.
 const ALIASES = {
   entreprise: 'realisations',
   formation: 'realisations',
   perso: 'realisations',
+  // Page de confirmation du formulaire, sous le nom réglé chez Web3Forms
+  merci: 'message-envoye',
 };
 
 export function findSection(id) {

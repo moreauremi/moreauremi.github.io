@@ -14,8 +14,8 @@
 // =============================================================================
 
 import { link, navigate } from '../router.js';
-import { site, getRealisation } from '../content.js';
-import { ficheBlock } from '../blocks.js';
+import { site, getRealisation, getVeilleTag } from '../content.js';
+import { ficheBlock, veilleTagBlock } from '../blocks.js';
 import { safe } from '../utils/html.js';
 import { hasModifier, isTypingTarget } from '../utils/keyboard.js';
 import { setPromptTitle } from '../ui/tab-title.js';
@@ -92,6 +92,22 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
           kind: 'fiche',
           title: fiche.titre,
           html: box({ title: safe(fiche.titre), body: ficheBlock(fiche), actions: backButton(link.section(section.id)) }),
+          parent: link.section(section.id),
+        };
+      }
+    }
+
+    if (route.name === 'tag') {
+      const tag = getVeilleTag(route.tag);
+      if (tag) {
+        // Parent du tag : la rubrique « Veille technologique »
+        const section = findSection('veille');
+        selected = SECTIONS.indexOf(section);
+        const title = `Veille : ${tag.nom}`;
+        return {
+          kind: 'tag',
+          title,
+          html: box({ title: safe(title), body: veilleTagBlock(route.tag, link.veilleTag), actions: backButton(link.section(section.id)) }),
           parent: link.section(section.id),
         };
       }

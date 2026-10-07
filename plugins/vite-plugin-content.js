@@ -36,6 +36,7 @@ const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE_PATTERN = /^\d{4}(?:-\d{2}){0,2}(?:\/\d{4}(?:-\d{2}){0,2})?$/;
 const SINGLE_DATE_PATTERN = /^\d{4}(?:-\d{2}){0,2}$/;
 const CONFIG_FILE = 'content/site.config.js';
+const VEILLE_FILE = 'content/veille/actualites.json';
 // Adresses réservées à des pages de la vue jury (#/jury/mentions-legales) :
 // une fiche ne peut pas porter ces noms.
 const RESERVED_SLUGS = ['mentions-legales'];
@@ -98,6 +99,9 @@ export default function contentPlugin() {
       const site = await loadSiteConfig(root);
       const errors = [...checkDocuments(site, root), ...checkConfig(site, root)];
       if (errors.length) this.error(formatErrors(CONFIG_FILE, errors));
+      // Actualités écrites chaque semaine par scripts/veille.mjs
+      const veilleErrors = checkVeille(root);
+      if (veilleErrors.length) this.error(formatErrors(VEILLE_FILE, veilleErrors));
     },
 
     // Balises qui exigent l'adresse complète du site (aperçus de lien) : ajoutées
@@ -305,6 +309,33 @@ function checkDocuments(site, root) {
   return errors;
 }
 
+// Actualités de la veille : chaque entrée doit être complète. Le fichier est
+// écrit par un robot à partir de flux RSS et d'une IA : en cas de problème,
+// le build s'arrête et le site en ligne reste intact.
+function checkVeille(root) {
+  const file = path.join(root, VEILLE_FILE);
+  if (!fs.existsSync(file)) return [];
+  let data;
+  try {
+    data = JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch (error) {
+    return [`JSON illisible : ${error.message}`];
+  }
+  if (!Array.isArray(data.actualites)) return ['« actualites » doit être une liste.'];
+
+  const errors = [];
+  data.actualites.forEach((a, index) => {
+    const label = `actualité n° ${index + 1}${typeof a?.titre === 'string' ? ` (« ${a.titre} »)` : ''}`;
+    for (const key of ['titre', 'source', 'resume']) {
+      if (typeof a?.[key] !== 'string' || !a[key].trim()) errors.push(`${label} : « ${key} » doit être un texte.`);
+    }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(a?.date)) errors.push(`${label} : « date » doit être au format AAAA-MM-JJ.`);
+    if (typeof a?.url !== 'string' || !/^https?:\/\//.test(a.url)) errors.push(`${label} : « url » doit commencer par http:// ou https://.`);
+    if (!isTextList(a?.tags ?? null) || a.tags.length === 0) errors.push(`${label} : « tags » doit être une liste de textes, non vide.`);
+  });
+  return errors;
+}
+
 // Photo, savoir-faire et certifications
 function checkConfig(site, root) {
   const errors = [];
@@ -397,7 +428,7 @@ function checkRealisation(data, file, site, errors) {
   meta.competences = data.competences ?? [];
   const codes = site.competences.map((c) => c.code);
   if (!isTextList(meta.competences)) {
-    errors.push('« competences » doit être une liste de codes (ex. : [C1, C3]).');
+    errors.push('« competences » doit être une liste de codes (ex. : [B1.1, B1.4]).');
   } else {
     for (const code of meta.competences) {
       if (!codes.includes(code)) {
