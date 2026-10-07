@@ -114,7 +114,7 @@ Les textes `[À COMPLÉTER]` sont surlignés en jaune sur le site. Si une fiche 
 
 Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER`.
 
-- [ ] **Présentation** : photo professionnelle, projet professionnel (attendu par les consignes de l'épreuve E5).
+- [x] **Présentation** : photo professionnelle, projet professionnel (attendu par les consignes de l'épreuve E5).
 - [ ] **Alternance** : présentation de 1Life, missions, outils, bilan personnel, recommandation du tuteur, dates des expériences précédentes.
 - [ ] **Réalisations 1Life** (3 fiches en brouillon) : titres et contenu, après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
 - [ ] **Homelab Jellyfin, NAS, CAFFEIN, Crypto Dashboard Pro** : détails techniques balisés `[À COMPLÉTER]`, captures.

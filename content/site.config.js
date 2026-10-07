@@ -20,7 +20,7 @@ export default {
     // 1. Déposer l'image dans public/photo/ (format .webp conseillé, carrée, environ 400 × 400 px)
     // 2. Indiquer son chemin ici, sans « public/ » : photo: 'photo/remi-moreau.webp'
     // Vide = le site affiche « [À COMPLÉTER] ». Le build vérifie que le fichier existe.
-    photo: '',
+    photo: 'photo/remi-moreau.webp',
   },
 
   // Informations affichées à côté du logo, façon neofetch (dans cet ordre)

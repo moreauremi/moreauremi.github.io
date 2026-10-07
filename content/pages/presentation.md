@@ -39,7 +39,9 @@ J'ai toujours aimé interconnecter des machines. J'aime aussi être le plus auto
   exemple le type de poste ou le domaine qui t'attire après le BTS.
 -->
 
-[À COMPLÉTER : projet professionnel après le BTS]
+Je compte continuer à m'investir chez 1Life pour confirmer mon profil de consultant ERP. Ce métier me permet de garder le contact client tout en m'appuyant sur des compétences techniques, et chaque projet me fait progresser sur le paramétrage, les données et la compréhension des besoins des utilisateurs.
+
+C'est aussi l'occasion d'en apprendre toujours plus sur le fonctionnement de l'industrie française. Accompagner des entreprises aux métiers très différents me fait découvrir comment elles produisent, vendent et s'organisent au quotidien, et c'est ce qui me donne envie d'aller plus loin dans ce domaine.
 
 ## En dehors des cours
 
