@@ -1,4 +1,78 @@
 {
-  "miseAJour": null,
-  "actualites": []
+  "miseAJour": "2026-10-07",
+  "actualites": [
+    {
+      "id": "bc1edc2af2b8",
+      "date": "2026-10-06",
+      "titre": "Dell PowerEdge : une faille critique permet d’exécuter du code en tant que root sur les serveurs",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/dell-system-update-faille-critique-cve-2026-86360/",
+      "resume": "Dell a corrigé cinq vulnérabilités dans Dell System Update, dont une faille critique permettant à un attaquant non authentifié d’exécuter du code avec les privilèges root sur des serveurs PowerEdge. Les PME doivent mettre à jour l’outil, car une exploitation réussie pourrait compromettre le système d’exploitation et l’application.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
+      ]
+    },
+    {
+      "id": "9e6a36552480",
+      "date": "2026-10-05",
+      "titre": "Le risque cyber, frein à la croissance industrielle",
+      "source": "InCyber",
+      "url": "https://incyber.org/article/risque-cyber-frein-croissance-industrielle/",
+      "resume": "Une étude de Rockwell Automation menée auprès de décideurs industriels dans 17 pays montre que le risque cyber est perçu comme un frein important à la croissance et que la cybersécurité figure parmi les investissements technologiques jugés les plus rentables. Elle indique aussi que de nombreuses entreprises industrielles ont subi un incident récent, malgré une confiance élevée dans leur capacité de réaction.",
+      "tags": [
+        "systèmes industriels (OT)",
+        "PME"
+      ]
+    },
+    {
+      "id": "75bbc32f0ac3",
+      "date": "2026-10-05",
+      "titre": "NIS2 : ce qu’il faut attendre du projet de loi examiné à l’Assemblée nationale",
+      "source": "Silicon",
+      "url": "https://www.silicon.fr/cybersecurite-1371/nis2-ce-quil-faut-attendre-du-projet-de-loi-examine-a-lassemblee-nationale-229520",
+      "resume": "Le projet de loi examiné à l’Assemblée nationale transpose notamment NIS2 et élargit le périmètre français de la cybersécurité à davantage de secteurs, dont les industries manufacturières et la fabrication de produits chimiques. Les entités concernées, notamment certaines entreprises et acteurs de la chaîne d’approvisionnement, pourraient être soumises à des obligations proportionnées à leur criticité.",
+      "tags": [
+        "NIS2",
+        "réglementation",
+        "chaîne d'approvisionnement"
+      ]
+    },
+    {
+      "id": "969193858f02",
+      "date": "2026-10-05",
+      "titre": "Le coût moyen d’une cyberattaque est de 45 900 euros, et pourtant les PME françaises continuent de bouder l’assurance cyber dédiée",
+      "source": "L'Usine Digitale",
+      "url": "https://www.usine-digitale.fr/cybersecurite/le-cout-moyen-dune-cyberattaque-est-de-45-900-euros-et-pourtant-les-pme-francaises-continuent-de-bouder-lassurance-cyber-dediee.26IOA4ESPZA7JMIK3W3BJAHWRI.html",
+      "resume": "Une étude d’Hiscox examine la gestion des risques cyber par des organisations françaises de moins de 250 salariés, dans un contexte où les attaques se banalisent et où l’assurance cyber dédiée reste peu adoptée. Pour une PME industrielle, cette situation souligne l’importance d’évaluer les conséquences financières d’une attaque.",
+      "tags": [
+        "PME",
+        "cybercriminalité"
+      ]
+    },
+    {
+      "id": "5172893ab98e",
+      "date": "2026-10-02",
+      "titre": "Utilisateurs de FortiMail, attention à une nouvelle vulnérabilité critique",
+      "source": "LeMagIT",
+      "url": "https://www.lemagit.fr/actualites/366651574/Utilisateurs-de-FortiMail-patchez",
+      "resume": "Fortinet a signalé une vulnérabilité critique de traversée de chemin dans FortiMail, déjà exploitée, qui peut permettre à un attaquant non authentifié d’écrire des fichiers arbitraires et potentiellement de prendre le contrôle de la passerelle de messagerie. La désactivation d’une fonctionnalité ou la restriction de l’interface de gestion sont recommandées en attendant un correctif.",
+      "tags": [
+        "vulnérabilité",
+        "hameçonnage"
+      ]
+    },
+    {
+      "id": "347361444e18",
+      "date": "2026-09-28",
+      "titre": "Multiples vulnérabilités dans Citrix NetScaler ADC et Gateway (28 septembre 2026)",
+      "source": "CERT-FR, alertes",
+      "url": "https://www.cert.ssi.gouv.fr/alerte/CERTFR-2026-ALE-011/",
+      "resume": "Le CERT-FR signale plusieurs vulnérabilités affectant Citrix NetScaler ADC et Gateway, dont certaines permettent une exécution de code à distance par un attaquant non authentifié. Leur exploitation est active et des preuves de concept sont publiques, ce qui rend l’application des correctifs particulièrement importante pour les PME utilisant ces équipements.",
+      "tags": [
+        "vulnérabilité",
+        "systèmes industriels (OT)"
+      ]
+    }
+  ]
 }
