@@ -27,6 +27,8 @@ import { link } from './router.js';
 import { escapeHtml, safe, frenchSpacing } from './utils/html.js';
 import { formatDate } from './utils/dates.js';
 import { tagSlug } from './utils/tags.js';
+import { pagedList } from './ui/pager.js';
+import { tabs } from './ui/tabs.js';
 import { FORM_ACTION } from './utils/contact-form.js';
 
 // Attributs d'un lien qui s'ouvre dans un nouvel onglet
@@ -264,17 +266,16 @@ function criteresList(competence) {
 
 // --- Veille ------------------------------------------------------------------------
 
-// Nombre d'actualités affichées dans la rubrique (toutes restent accessibles
-// par leurs tags)
-const LATEST_NEWS = 8;
+// Nombre d'actualités par page (barre « < 1 2 3 > » sous la liste)
+const NEWS_PER_PAGE = 3;
 
 // `hrefForTag(slug)` : lien vers la page d'un tag (#/veille/<tag> dans RémiOS,
 // #/jury/veille/<tag> dans la vue jury)
 export function veilleBlock(hrefForTag) {
   const sujet = site.veille.sujet ? safe(site.veille.sujet) : 'À venir';
-  const update = veilleMiseAJour ? ` Dernière collecte : ${escapeHtml(formatDate(veilleMiseAJour))}.` : '';
+  const update = veilleMiseAJour ? `Dernière collecte : ${escapeHtml(formatDate(veilleMiseAJour))}. ` : '';
   const news = actualites.length
-    ? newsList(actualites.slice(0, LATEST_NEWS), hrefForTag)
+    ? newsList(actualites, hrefForTag)
     : '<p class="empty">Première collecte à venir.</p>';
   const tags = veilleTags.length
     ? `<h2 class="block-title" id="veille-tags">Explorer par tag</h2>
@@ -285,14 +286,24 @@ export function veilleBlock(hrefForTag) {
     .map((f) => `<li><a href="${escapeHtml(new URL(f.url).origin)}" ${NEW_TAB}>${escapeHtml(f.nom)}</a></li>`)
     .join('');
 
+  // Deux onglets au même niveau : les actualités collectées (et leurs tags),
+  // et les synthèses personnelles (content/pages/syntheses.md)
+  const onglets = tabs(
+    [
+      {
+        label: 'Dernières actualités',
+        html: `<p class="intro">${update}Résumés rédigés par une IA : l'article d'origine fait foi.</p>${news}${tags}`,
+      },
+      { label: 'Mes synthèses', html: `<div class="prose">${pages.syntheses.html}</div>` },
+    ],
+    { label: 'Veille' },
+  );
+
   return `<div class="prose">
     <p><strong>Sujet :</strong> ${sujet}</p>
     ${pages.veille.html}
   </div>
-  <h2 class="block-title" id="veille-actualites">Dernières actualités</h2>
-  <p class="intro">Collectées chaque semaine dans les sources ci-dessous, puis sélectionnées et résumées automatiquement par une IA.${update} Un résumé peut contenir une erreur : l'article d'origine fait foi.</p>
-  ${news}
-  ${tags}
+  ${onglets}
   <h2 class="block-title" id="veille-sources">Sources suivies</h2>
   <ul class="veille-sources">${sources}</ul>`;
 }
@@ -309,12 +320,13 @@ export function veilleTagBlock(slug, hrefForTag) {
   ${tagList(veilleTags, hrefForTag, { counts: true, current: slug })}`;
 }
 
-// Liste d'actualités : date et source, titre (lien vers l'article), résumé, tags.
+// Liste d'actualités, de la plus récente à la plus ancienne, par pages de
+// NEWS_PER_PAGE : date et source, titre (lien vers l'article), résumé, tags.
 // Tout ce texte vient de flux RSS et d'une IA : il est systématiquement
 // échappé, et seules les adresses http(s) deviennent des liens.
 function newsList(items, hrefForTag) {
-  return `<ul class="news-list" data-nav-list>${items
-    .map(
+  return pagedList(
+    items.map(
       (a) => `<li class="news-item">
       <p class="news-meta"><time datetime="${escapeHtml(a.date)}">${escapeHtml(formatDate(a.date))}</time> · ${escapeHtml(a.source)}</p>
       <p class="news-title">${
@@ -325,8 +337,9 @@ function newsList(items, hrefForTag) {
       <p class="news-summary">${escapeHtml(a.resume)}</p>
       ${tagList(a.tags.map((nom) => ({ nom, slug: tagSlug(nom) })), hrefForTag)}
     </li>`,
-    )
-    .join('')}</ul>`;
+    ),
+    { size: NEWS_PER_PAGE, listAttrs: 'class="news-list" data-nav-list', label: 'Pages des actualités' },
+  );
 }
 
 // Liste de tags cliquables. `counts` : nombre d'actualités entre parenthèses ;

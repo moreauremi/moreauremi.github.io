@@ -5,8 +5,9 @@ titre: Veille technologique
 <!--
   Le sujet, les mots-clés et les sources de la veille se règlent dans
   content/site.config.js (rubrique « veille »). Les actualités sont ajoutées
-  chaque semaine par scripts/veille.mjs : ce fichier contient la méthode et
-  les synthèses personnelles.
+  chaque semaine par scripts/veille.mjs. Ce fichier contient le pourquoi et
+  la méthode ; les synthèses personnelles sont dans syntheses.md (onglet
+  « Mes synthèses »).
 -->
 
 ## Pourquoi ce sujet
@@ -15,17 +16,4 @@ Les PME industrielles sont devenues des cibles de choix : moins protégées que 
 
 ## Méthode
 
-J'ai automatisé la collecte avec un outil que j'ai développé pour ce portfolio. Chaque lundi, une tâche GitHub Actions :
-
-1. lit les flux RSS d'une douzaine de sources spécialisées (listées plus bas), dont le CERT-FR de l'ANSSI et Cybermalveillance.gouv.fr ;
-2. garde les articles récents qui correspondent aux mots-clés du sujet (rançongiciel, NIS 2, vulnérabilité, systèmes industriels…) ;
-3. demande à une IA (GitHub Copilot) de choisir les plus utiles, de les résumer en quelques phrases et de leur attribuer des tags ;
-4. publie le résultat sur cette page, sans intervention de ma part.
-
-Les tags permettent de suivre un thème dans la durée : un clic sur « rançongiciel » affiche toutes les actualités collectées sur ce thème depuis le début de la veille.
-
-L'IA ne fait que trier et résumer : je lis les articles retenus, et l'article d'origine fait toujours foi.
-
-## Mes synthèses
-
-À venir.
+Chaque lundi, un outil que j'ai développé pour ce portfolio lit une douzaine de sources spécialisées (dont le CERT-FR de l'ANSSI), puis une IA (GitHub Copilot) choisit les articles les plus utiles, les résume et leur attribue des tags. Je lis ensuite les articles retenus.

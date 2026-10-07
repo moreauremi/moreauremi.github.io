@@ -190,8 +190,14 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
 
   // Dans une rubrique qui contient une liste de fiches, les flèches passent
   // d'une fiche à l'autre (ailleurs, elles font défiler la page normalement).
+  // Un arrêt par élément de la liste (son premier lien : pas les tags d'une
+  // actualité) ; les éléments masqués (autre page d'une liste paginée, autre
+  // onglet) sont ignorés.
   function moveInList(event, step) {
-    const links = [...stage.querySelectorAll('[data-nav-list] a')];
+    const links = [...stage.querySelectorAll('[data-nav-list] > li')]
+      .filter((li) => !li.closest('[data-off]'))
+      .map((li) => li.querySelector('a'))
+      .filter(Boolean);
     if (links.length === 0) return;
     event.preventDefault();
     const current = links.indexOf(document.activeElement);

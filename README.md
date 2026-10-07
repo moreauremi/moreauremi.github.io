@@ -86,7 +86,7 @@ Un lien direct vers une rubrique, une fiche ou la vue jury s'affiche sans jouer 
 Tout le contenu est dans `content/` : aucune ligne de code à toucher.
 
 - **Informations générales** (contact, sujet de veille, compétences du référentiel, PDF, mentions légales, services affichés au démarrage) : `content/site.config.js`, commenté ligne par ligne.
-- **Présentation, alternance et veille** : `content/pages/presentation.md`, `content/pages/alternance.md` et `content/pages/veille.md`.
+- **Présentation, alternance et veille** : `content/pages/presentation.md`, `content/pages/alternance.md`, `content/pages/veille.md` et `content/pages/syntheses.md` (synthèses de veille).
 - **Photo** : déposer le portrait dans `public/photo/` (`.webp` carré, environ 400 × 400 px), puis indiquer son chemin dans `identite.photo` (`photo: 'photo/remi-moreau.webp'`).
 - **Compétences techniques** (rubrique « Compétences ») : `savoirFaire` dans `content/site.config.js`. Pour chaque compétence, un niveau de 1 à 4 (Notions, Guidé, Autonome, Maîtrise) et les fiches qui la prouvent (`preuves: ['nas']`).
 - **Certifications** (certifications, langues, formations, badges) : `certifications` dans `content/site.config.js`, un exemple commenté y montre tous les champs. Le justificatif se dépose dans `public/docs/certifications/`.
@@ -127,7 +127,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [ ] **PDF** : tableau de synthèse.
 - [x] **Veille** : sujet choisi (« La cybersécurité des PME industrielles ») et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
 - [ ] **Jeton Copilot** : créer le jeton GitHub « Copilot Requests » et l'ajouter aux secrets du dépôt (voir [Mise en route](#mise-en-route-une-seule-fois)), sinon la collecte du lundi échoue.
-- [ ] **Synthèses de veille** : rédiger régulièrement « Mes synthèses » dans `content/pages/veille.md`, à partir des actualités collectées.
+- [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » dans `content/pages/syntheses.md`, à partir des actualités collectées.
 - [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif.
 - [ ] **Réalisations en formation** (3 fiches en brouillon) : titres et contenu, au fil des TP et projets de cours. Le groupe affiche « À venir » sur le site tant qu'aucune n'est publiée.
 
@@ -182,7 +182,7 @@ src/boot/                démarrage : écran GRUB, contenu du journal, déroulem
 src/jury/                vue rapide jury
 src/terminal/            terminal : fenêtre, commandes, système de fichiers simulé
 src/audio/               sons générés avec la Web Audio API
-src/ui/                  barre fixe en haut à droite (vue jury, bouton son), titre de l'onglet
+src/ui/                  barre fixe en haut à droite (vue jury, bouton son), titre de l'onglet, pagination « < 1 2 3 > », onglets
 src/utils/               petites fonctions partagées : HTML sûr, dates, clavier, réglages mémorisés,
                          adresse du service du formulaire de contact
 src/styles/              un fichier CSS par partie (tokens.css = toutes les couleurs, print.css = impression)
@@ -299,7 +299,8 @@ GitHub Actions ──►  articles des 10 derniers ──►  choisit les plus u
 
 - `.github/workflows/veille.yml` lance `scripts/veille.mjs` chaque lundi vers 7 h, puis enregistre le fichier d'actualités dans le dépôt et relance la publication du site.
 - Le sujet, les mots-clés, les tags proposés, les sources et le modèle d'IA se règlent dans `content/site.config.js`, rubrique `veille`.
-- La rubrique « Veille technologique » affiche les 8 dernières actualités, la liste des tags et les sources. Un clic sur un tag (`#/veille/<tag>`) affiche toutes les actualités qui le portent, depuis le début de la veille.
+- La rubrique « Veille technologique » a deux onglets au même niveau : **Dernières actualités** (affiché d'abord) et **Mes synthèses** (texte personnel, à écrire dans `content/pages/syntheses.md`). Changer d'onglet ne change pas d'adresse et ne fait rien défiler (au clavier : ← et → sur les onglets).
+- L'onglet « Dernières actualités » affiche toutes les actualités, de la plus récente à la plus ancienne, 3 par page : la barre `< 1 2 3 >` sous la liste change de page sur place, sans changer d'adresse ni faire défiler l'écran (au clavier : Tab jusqu'à la barre, puis ← et →). Suivent la liste des tags ; les sources sont sous les onglets. Un clic sur un tag (`#/veille/<tag>`) affiche toutes les actualités qui le portent, depuis le début de la veille, paginées de la même façon.
 
 ### Choix et garde-fous
 

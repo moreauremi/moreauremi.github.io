@@ -9,6 +9,7 @@
 //   ├── alternance.md
 //   ├── competences.txt
 //   ├── veille.md
+//   ├── syntheses.md
 //   ├── certifications.txt
 //   ├── contact.txt
 //   ├── mentions-legales.txt
@@ -48,6 +49,7 @@ export function buildFilesystem() {
     'alternance.md': file(pages.alternance.raw, { route: link.section('alternance') }),
     'competences.txt': file(competencesText(), { route: link.section('competences') }),
     'veille.md': file(pages.veille.raw, { route: link.section('veille') }),
+    'syntheses.md': file(pages.syntheses.raw, { route: link.section('veille') }),
     'certifications.txt': file(certificationsText(), { route: link.section('certifications') }),
     'contact.txt': file(contactText(), { route: link.section('contact') }),
     'mentions-legales.txt': file(mentionsText(), { route: link.legal() }),

@@ -20,6 +20,8 @@ import { createSystemBar } from './ui/system-bar.js';
 import { createBoot } from './boot/sequence.js';
 import { createTerminal, isTerminalShortcut } from './terminal/terminal.js';
 import { createSounds } from './audio/sounds.js';
+import { setupPagers } from './ui/pager.js';
+import { setupTabs } from './ui/tabs.js';
 import { isTypingTarget } from './utils/keyboard.js';
 
 // --- Construction de la page ---------------------------------------------------
@@ -39,6 +41,8 @@ const bootOverlay = app.querySelector('.boot');
 const sounds = createSounds();
 createSystemBar(app.querySelector('.system-bar'), { sounds });
 createLightbox();
+setupPagers(app); // barres « < 1 2 3 > » des listes paginées (veille)
+setupTabs(app); // onglets « Dernières actualités » / « Mes synthèses » (veille)
 
 const terminal = createTerminal({ onReboot: reboot, sounds });
 const tui = createTui(tuiRoot, { onReboot: reboot, onOpenTerminal: () => terminal.open() });
