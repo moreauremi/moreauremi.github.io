@@ -123,7 +123,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [x] **Présentation** : photo professionnelle, projet professionnel (attendu par les consignes de l'épreuve E5).
 - [ ] **Alternance** : présentation de 1Life, missions, outils, bilan personnel, recommandation du tuteur, dates des expériences précédentes.
 - [ ] **Réalisations 1Life** (3 fiches en brouillon) : titres et contenu, après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
-- [ ] **Homelab Jellyfin, NAS, CAFFEIN, Crypto Dashboard Pro** : détails techniques balisés `[À COMPLÉTER]`, captures.
+- [ ] **Homelab Jellyfin, NAS, Crypto Dashboard Pro** : détails techniques balisés `[À COMPLÉTER]`, captures.
 - [x] **Compétences techniques** : niveaux renseignés (octobre 2026). À remonter en cours d'année (Open-Prod, SQL, Docker…), et à relier aux fiches 1Life quand elles seront publiées (SQL et Open-Prod n'ont pas encore de preuve).
 - [x] **Grille de compétences** : les six compétences du tableau de synthèse officiel (B1.1 à B1.6) sont dans `site.config.js`.
 - [ ] **Compétences des fiches** : renseignées pour les 4 projets personnels ; à faire pour les fiches 1Life et de formation quand elles seront remplies (ex. `[B1.1, B1.5]`). Aucune fiche ne couvre encore B1.2 ni B1.3.

@@ -47,7 +47,7 @@ C'est aussi l'occasion d'en apprendre toujours plus sur le fonctionnement de l'i
 
 Mon homelab en est la mise en pratique : un hyperviseur Proxmox, avec des conteneurs Docker et des machines virtuelles, qui héberge un serveur multimédia Jellyfin pour mes vidéos personnelles et un NAS, accessibles à distance par VPN avec Tailscale.
 
-Je mène aussi deux projets de développement : CAFFEIN, un SaaS de facturation piloté par un assistant IA qui rend les outils CRM et ERP accessibles aux micro-entrepreneurs et aux artisans du BTP, et Crypto Dashboard Pro, un tableau de bord interactif qui suit en temps réel le cours des cryptomonnaies, avec un système d'alertes personnalisé.
+Je mène aussi deux projets de développement : CAFFEIN, un logiciel libre de gestion et de facturation pour les freelances, les micro-entrepreneurs et les TPE, dont l'assistant IA rédige devis et factures à partir d'une simple phrase, et Crypto Dashboard Pro, un tableau de bord interactif qui suit en temps réel le cours des cryptomonnaies, avec un système d'alertes personnalisé.
 
 ## Ce portfolio
 

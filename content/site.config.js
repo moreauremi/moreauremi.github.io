@@ -246,7 +246,7 @@ export default {
         items: [
           { nom: 'Linux', niveau: 3, preuves: ['homelab-jellyfin', 'nas', 'caffein'] },
           { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab-jellyfin', 'nas'] },
-          { nom: 'Docker', niveau: 2, preuves: ['homelab-jellyfin'] },
+          { nom: 'Docker', niveau: 2, preuves: ['homelab-jellyfin', 'caffein'] },
         ],
       },
       {
@@ -261,7 +261,7 @@ export default {
         nom: 'Langages de programmation',
         items: [
           { nom: 'Python', niveau: 3.5, preuves: ['crypto-dashboard-pro', 'caffein'] },
-          { nom: 'HTML', niveau: 2, preuves: ['caffein'] },
+          { nom: 'HTML', niveau: 2, preuves: [] },
         ],
       },
       {
@@ -271,7 +271,7 @@ export default {
       {
         nom: 'Outils et frameworks',
         items: [
-          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro'] },
+          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'caffein'] },
           { nom: 'Streamlit, Pandas, Plotly', niveau: 3, preuves: ['crypto-dashboard-pro'] },
           { nom: 'n8n (automatisation)', niveau: 2, preuves: ['caffein'] },
         ],
@@ -326,6 +326,6 @@ export default {
     { action: 'Started', unite: 'alternance@1life.service', description: 'consultant ERP Open-Prod' },
     { action: 'Mounted', unite: '/srv/nas', description: 'stockage réseau' },
     { action: 'Started', unite: 'jellyfin.service', description: 'serveur multimédia' },
-    { action: 'Started', unite: 'caffein.service', description: 'SaaS de facturation' },
+    { action: 'Started', unite: 'caffein.service', description: 'facturation assistée par IA' },
   ],
 };
