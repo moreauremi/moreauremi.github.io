@@ -278,6 +278,7 @@ reference/               maquette validée au départ du projet (hors build) : m
 - **Données structurées schema.org** (JSON-LD) : une fiche « personne » lue par les moteurs de recherche, avec le nom, le poste, l'entreprise, l'école, la ville, et les liens GitHub et LinkedIn. C'est ce qui aide Google à associer « Rémi Moreau » à ce site.
 - **Titre de l'onglet** : « RémiOS_ — Rémi Moreau · Portfolio BTS SIO SISR ». L'onglet affiche « RémiOS_ » avec son curseur clignotant, et les moteurs lisent le nom et les mots-clés qui suivent.
 - **Le CV n'est pas proposé aux moteurs** (`Disallow: /docs/` dans `robots.txt`), pour éviter que le numéro de téléphone apparaisse dans les résultats de recherche. Il reste téléchargeable depuis le site.
+- **Icône dans les résultats de Google** : Google demande une image carrée de 48 px ou d'un multiple de 48, et va chercher `/favicon.ico` par défaut. Le site déclare donc, en plus de `favicon.svg` (onglets), `favicon.ico` (16, 32 et 48 px) et `favicon-192.png`, rendus à partir du même dessin. Google met à jour l'icône à son propre rythme, de quelques jours à quelques semaines ; pour accélérer : [Google Search Console](https://search.google.com/search-console), **Inspection de l'URL** → `https://remim.me/` → **Demander une indexation**. Pour changer d'icône : modifier `favicon.svg`, puis refaire les trois images (au même nom, aux mêmes tailles).
 
 ### Sécurité
 

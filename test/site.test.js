@@ -50,6 +50,14 @@ test('la page 503 fonctionne sans rien télécharger', () => {
   }
 });
 
+test('icône pour Google : favicon.ico déclaré, avec une image de 48 px', () => {
+  assert.match(read('index.html'), /<link rel="icon" href="\.?\/favicon\.ico"/, 'favicon.ico déclaré');
+  // En-tête ICO : nombre d'images, puis largeur et hauteur de chacune (0 = 256)
+  const ico = fs.readFileSync(path.join(DIST, 'favicon.ico'));
+  const sizes = Array.from({ length: ico.readUInt16LE(4) }, (_, i) => [ico[6 + 16 * i] || 256, ico[7 + 16 * i] || 256]);
+  assert.ok(sizes.some(([w, h]) => w === h && w % 48 === 0), `une image carrée multiple de 48 px (trouvé : ${sizes.map((s) => s.join('×')).join(', ')})`);
+});
+
 // --- Site exécuté dans le navigateur simulé -------------------------------------
 
 test('accueil : démarrage, puis chaque rubrique du menu s\'ouvre', async (t) => {

@@ -19,9 +19,16 @@
     <!-- Couleur de la barre du navigateur sur mobile : noir, comme l'écran de boot -->
     <meta name="theme-color" content="#000000">
 
-    <!-- Icônes : onglet du navigateur, et écran d'accueil sur iPhone/iPad
-         (fichiers copiés tels quels depuis public/) -->
+    <!-- Icônes (fichiers copiés tels quels depuis public/) :
+         - favicon.svg : onglet des navigateurs récents ;
+         - favicon.ico (16, 32, 48 px) et favicon-192.png : Google Search, qui
+           demande une image carrée de 48 px ou d'un multiple de 48, et les
+           anciens navigateurs ;
+         - apple-touch-icon.png : écran d'accueil sur iPhone/iPad.
+         Les trois images viennent du même dessin que favicon.svg. -->
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon-192.png" type="image/png" sizes="192x192">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <!-- Open Graph : titre et description affichés quand le lien est partagé
