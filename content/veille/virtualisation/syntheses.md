@@ -19,6 +19,4 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
-## 09/10/2026 - test
-
-test
+À venir.
