@@ -76,7 +76,8 @@ Sur mobile, le terminal s'ouvre avec le bouton `[tty2]` de la barre du haut.
 | `#/presentation`, `#/alternance`, `#/realisations`, `#/competences`, `#/synthese`, `#/veille`, `#/certifications`, `#/contact` | une rubrique |
 | `#/mentions-legales` | mentions légales |
 | `#/realisations/<slug>` | une fiche, style RémiOS (ex. `#/realisations/nas`) |
-| `#/veille/<tag>` | les actualités de la veille qui portent ce tag (ex. `#/veille/rancongiciel`) |
+| `#/veille/<sujet>` | la veille, onglet de ce sujet ouvert (ex. `#/veille/virtualisation`) |
+| `#/veille/<sujet>/<tag>` | les actualités d'un sujet qui portent ce tag (ex. `#/veille/cybersecurite/rancongiciel`) ; l'ancienne forme `#/veille/<tag>` mène au premier sujet qui a ce tag |
 | `#/jury` | vue rapide jury : **le lien à donner au jury** |
 | `#/jury/<slug>` | une fiche, style sobre |
 | `#/jury/veille/<tag>` | un tag de la veille, style sobre |
@@ -90,7 +91,8 @@ Un lien direct vers une rubrique, une fiche ou la vue jury s'affiche sans jouer 
 Tout le contenu est dans `content/` : aucune ligne de code à toucher.
 
 - **Informations générales** (contact, sujet de veille, compétences du référentiel, PDF, mentions légales, services affichés au démarrage) : `content/site.config.js`, commenté ligne par ligne.
-- **Présentation, alternance et veille** : `content/pages/presentation.md`, `content/pages/alternance.md`, `content/pages/veille.md` et `content/pages/syntheses.md` (synthèses de veille, à écrire de préférence depuis le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses)).
+- **Présentation, alternance et veille** : `content/pages/presentation.md`, `content/pages/alternance.md`, `content/pages/veille.md` (méthode, commune aux trois sujets de veille).
+- **Veille** : un dossier par sujet, `content/veille/<sujet>/` : `sujet.md` (pourquoi ce sujet) et `syntheses.md` (mes synthèses, à écrire de préférence depuis le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses)). Les sujets, leurs mots-clés et leurs sources sont dans `veille.sujets` de `content/site.config.js`.
 - **Photo** : déposer le portrait dans `public/photo/` (`.webp` carré, environ 400 × 400 px), puis indiquer son chemin dans `identite.photo` (`photo: 'photo/remi-moreau.webp'`).
 - **Compétences techniques** (rubrique « Compétences ») : `savoirFaire` dans `content/site.config.js`. Pour chaque compétence, un niveau de 1 à 4 (Notions, Guidé, Autonome, Maîtrise), demi-niveaux permis (`3.5` s'affiche « Entre autonome et maîtrise ») et les fiches qui la prouvent (`preuves: ['nas']`).
 - **Certifications** (certifications, langues, formations, badges) : `certifications` dans `content/site.config.js`, un exemple commenté y montre tous les champs. Le justificatif se dépose dans `public/docs/certifications/`.
@@ -129,9 +131,9 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [x] **Grille de compétences** : les six compétences du tableau de synthèse officiel (B1.1 à B1.6) sont dans `site.config.js`.
 - [ ] **Compétences des fiches** : renseignées pour les 4 projets personnels ; à faire pour les fiches 1Life et de formation quand elles seront remplies (ex. `[B1.1, B1.5]`). Aucune fiche ne couvre encore B1.2 ni B1.3.
 - [ ] **PDF** : tableau de synthèse.
-- [x] **Veille** : sujet choisi (« La cybersécurité des PME industrielles ») et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
+- [x] **Veille** : trois sujets (cybersécurité des PME industrielles, virtualisation, facturation électronique) et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
 - [ ] **Jeton Copilot** : créer le jeton GitHub « Copilot Requests » et l'ajouter aux secrets du dépôt (voir [Mise en route](#mise-en-route-une-seule-fois)), sinon la collecte du lundi échoue.
-- [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » dans `content/pages/syntheses.md`, à partir des actualités collectées.
+- [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://veille.remim.me, à partir des actualités collectées.
 - [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif.
 - [ ] **Réalisations en formation** (3 fiches en brouillon) : titres et contenu, au fil des TP et projets de cours. Le groupe affiche « À venir » sur le site tant qu'aucune n'est publiée.
 
@@ -169,8 +171,10 @@ content/site.config.js   configuration : identité, contact, formulaire, PDF, ve
                          certifications, mentions légales, services du boot
 content/pages/           présentation, alternance et veille (Markdown)
 content/realisations/    une fiche Markdown par réalisation
-content/veille/          actualités de la veille (actualites.json), écrites chaque semaine par le robot
-scripts/veille.mjs       veille automatique : flux RSS → choix, résumés et tags par l'IA → actualites.json
+content/veille/<sujet>/  un dossier par sujet de veille : pourquoi ce sujet (sujet.md), mes synthèses
+                         (syntheses.md), actualités écrites chaque semaine par le robot (actualites.json)
+scripts/veille.mjs       veille automatique : pour chaque sujet, flux RSS → choix, résumés et tags par l'IA
+                         → actualites.json
 scripts/ia.mjs           appel de l'IA (Copilot CLI ou API), commun à la veille et à la reformulation
 scripts/reformuler.mjs   reformulation d'un passage pour le tableau de bord des synthèses (veille.remim.me)
 index.html               page unique : meta, Open Graph, préchargement de la police
@@ -327,23 +331,25 @@ Pour refaire l'audit : ouvrir le site dans Chrome, outils de développement (F12
 ### Principe
 
 ```
-Chaque lundi        flux RSS de 13 sources          IA (GitHub Copilot)       content/veille/
-GitHub Actions ──►  articles des 10 derniers ──►  choisit les plus utiles, ──►  actualites.json ──► site republié
-(veille.yml)        jours, filtrés par mots-clés    les résume, met des tags
+Chaque lundi        pour chaque sujet :             IA (GitHub Copilot)       content/veille/<sujet>/
+GitHub Actions ──►  flux RSS du sujet, articles ──►  choisit les plus utiles, ──►  actualites.json ──► site republié
+(veille.yml)        des 10 derniers jours,          les résume, met des tags
+                    filtrés par mots-clés
 ```
 
-- `.github/workflows/veille.yml` lance `scripts/veille.mjs` chaque lundi vers 7 h, puis enregistre le fichier d'actualités dans le dépôt et relance la publication du site.
+- **Trois sujets**, collectés au même moment, l'un après l'autre : **Cybersécurité** (la cybersécurité des PME industrielles, 13 sources dont le CERT-FR), **Virtualisation** (Hyper-V, Proxmox et l'après-VMware, 12 sources dont Proxmox et XCP-ng) et **Facturation électronique** (la réforme 2026-2027, 13 sources dont la FNFE-MPE, Service-public.fr et DAF Magazine). IOPOLE n'a pas de flux RSS : ses actualités sont captées par mot-clé dans les autres sources.
+- `.github/workflows/veille.yml` lance `scripts/veille.mjs` chaque lundi vers 7 h, puis enregistre les fichiers d'actualités dans le dépôt et relance la publication du site. Un sujet en échec (IA indisponible…) n'empêche pas les autres d'être enregistrés. La première collecte d'un nouveau sujet remonte à 30 jours au lieu de 10, pour démarrer avec du contenu.
 - Le sujet, les mots-clés, les tags proposés, les sources et le modèle d'IA se règlent dans `content/site.config.js`, rubrique `veille`.
-- La rubrique « Veille technologique » a deux onglets au même niveau : **Dernières actualités** (affiché d'abord) et **Mes synthèses** (texte personnel, dans `content/pages/syntheses.md`, écrit depuis le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses) ou à la main). Changer d'onglet ne change pas d'adresse et ne fait rien défiler (au clavier : ← et → sur les onglets).
-- L'onglet « Dernières actualités » affiche toutes les actualités, de la plus récente à la plus ancienne, 3 par page : la barre `< 1 2 3 >` sous la liste change de page sur place, sans changer d'adresse ni faire défiler l'écran (au clavier : Tab jusqu'à la barre, puis ← et →). Suivent la liste des tags ; les sources sont sous les onglets. Un clic sur un tag (`#/veille/<tag>`) affiche toutes les actualités qui le portent, depuis le début de la veille, paginées de la même façon.
+- La rubrique « Veille technologique » a un onglet par sujet. Dans chacun : le sujet, pourquoi je l'ai choisi, puis deux onglets au même niveau, **Dernières actualités** (affiché d'abord) et **Mes synthèses** (texte personnel, dans `content/veille/<sujet>/syntheses.md`, écrit depuis le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses) ou à la main), et enfin les sources suivies. Changer d'onglet ne change pas d'adresse et ne fait rien défiler (au clavier : ← et → sur les onglets) ; `#/veille/<sujet>` ouvre directement l'onglet d'un sujet.
+- L'onglet « Dernières actualités » affiche toutes les actualités, de la plus récente à la plus ancienne, 3 par page : la barre `< 1 2 3 >` sous la liste change de page sur place, sans changer d'adresse ni faire défiler l'écran (au clavier : Tab jusqu'à la barre, puis ← et →). Suivent la liste des tags du sujet. Un clic sur un tag (`#/veille/<sujet>/<tag>`) affiche toutes les actualités du sujet qui le portent, depuis le début de la veille, paginées de la même façon ; « < Retour > » ramène à l'onglet du sujet.
 
 ### Choix et garde-fous
 
 - **Sources** : uniquement les flux RSS publiés par les médias eux-mêmes (ANSSI, Cybermalveillance.gouv.fr, LeMagIT…), faits pour être repris. Google Actualités et Bing Actualités ont été écartés : leurs conditions interdisent toute utilisation hors d'un lecteur RSS personnel.
 - **Pas d'invention** : l'IA résume le texte de l'article (récupéré sur la page quand le flux ne donne qu'une phrase), jamais le titre seul. Le titre, la source, la date et le lien viennent du flux, jamais de l'IA.
-- **Tags cohérents** : l'IA choisit d'abord parmi les tags existants (`veille.tags` et ceux déjà attribués) ; deux écritures d'un même tag (accents, majuscules) sont fusionnées.
+- **Tags cohérents** : l'IA choisit d'abord parmi les tags existants du sujet (`tags` du sujet et ceux déjà attribués) ; deux écritures d'un même tag (accents, majuscules) sont fusionnées.
 - **Sécurité** : le texte venu des flux et de l'IA est toujours échappé à l'affichage, seules les adresses `http(s)` deviennent des liens, et le build vérifie le fichier : une entrée incomplète arrête la publication, le site en ligne reste intact. Le jeton de l'IA n'est jamais dans le code, seulement dans les secrets GitHub.
-- **IA : GitHub Copilot**, appelé par Copilot CLI (2 requêtes par semaine), avec l'abonnement Copilot du compte (gratuit pour les étudiants vérifiés par GitHub Education). Copilot CLI est un agent capable de lancer des commandes : ici, il n'a droit à aucun outil (ni shell, ni écriture, ni serveur MCP), travaille dans un dossier vide, et le jeton d'écriture du dépôt n'est pas sur le disque pendant qu'il tourne. Un article piégé ne peut donc rien lui faire exécuter. GitHub Models, prévu au départ, a été fermé le 30 juillet 2026.
+- **IA : GitHub Copilot**, appelé par Copilot CLI (2 requêtes par sujet et par semaine, plus une par reformulation demandée depuis le tableau de bord), avec l'abonnement Copilot du compte (gratuit pour les étudiants vérifiés par GitHub Education). Copilot CLI est un agent capable de lancer des commandes : ici, il n'a droit à aucun outil (ni shell, ni écriture, ni serveur MCP), travaille dans un dossier vide, et le jeton d'écriture du dépôt n'est pas sur le disque pendant qu'il tourne. Un article piégé ne peut donc rien lui faire exécuter. GitHub Models, prévu au départ, a été fermé le 30 juillet 2026.
 
 ### Mise en route (une seule fois)
 
@@ -358,8 +364,9 @@ Le jeton expire au bout d'un an : en créer un nouveau et remplacer la valeur du
 
 ```bash
 npm run veille -- --sans-ia     # collecte seulement : vérifie les flux et les mots-clés
+npm run veille -- --sans-ia --sujet virtualisation   # un seul sujet
 npm install -g @github/copilot  # une fois : installe Copilot CLI, puis `copilot login`
-npm run veille                  # collecte complète, écrit content/veille/actualites.json
+npm run veille                  # collecte complète, écrit content/veille/<sujet>/actualites.json
 ```
 
 ### Dépannage
@@ -367,12 +374,13 @@ npm run veille                  # collecte complète, écrit content/veille/actu
 - **« Copilot CLI a échoué »** : jeton expiré ou sans la permission « Copilot Requests », abonnement Copilot inactif, ou quota épuisé. Le message complet est dans le journal de la tâche (onglet Actions).
 - **Choisir le modèle** : `veille.ia.modele` (vide = modèle par défaut de Copilot). Les noms possibles sont listés par `copilot --help` (option `--model`).
 - **Changer de fournisseur d'IA** (Mistral, Groq, Gemini…) : `veille.ia.fournisseur: 'api'`, avec `url` et `modele` du service (tous proposent l'API au format OpenAI), et leur clé dans le secret utilisé par `veille.yml`.
-- **Un flux ne répond plus** : la tâche continue avec les autres et le signale dans son journal. Le retirer ou corriger son adresse dans `veille.flux`.
-- **Une actualité hors sujet ou un résumé faux** : la supprimer de `content/veille/actualites.json`, puis envoyer le changement (`git push`).
+- **Un flux ne répond plus** : la tâche continue avec les autres et le signale dans son journal. Le retirer ou corriger son adresse dans les `flux` du sujet.
+- **Une actualité hors sujet ou un résumé faux** : la supprimer de `content/veille/<sujet>/actualites.json`, puis envoyer le changement (`git push`).
+- **Ajouter un sujet** : un nouvel élément dans `veille.sujets` (identifiant, nom, mots-clés, sources…), un dossier `content/veille/<id>/` avec `sujet.md` et `syntheses.md` (copier ceux d'un autre sujet), puis l'ajouter à la liste des sujets du tableau de bord (`config.js` du dépôt `veille-syntheses`). La première collecte se fait au lundi suivant, ou tout de suite avec **Run workflow**.
 
 ## Tableau de bord des synthèses
 
-Les synthèses de l'onglet « Mes synthèses » s'écrivent depuis une page privée, **https://veille.remim.me** : liste, ajout, modification, suppression, aperçu, et **Reformuler avec l'IA** sur un passage sélectionné. Chaque enregistrement est un commit de `content/pages/syntheses.md` sur `main`, qui republie le site. Le code de la page, sa mise en route (DNS, jeton) et ses choix de sécurité sont dans son propre dépôt : [moreauremi/veille-syntheses](https://github.com/moreauremi/veille-syntheses).
+Les synthèses de l'onglet « Mes synthèses » s'écrivent depuis une page privée, **https://veille.remim.me** : choix du sujet, liste, ajout, modification, suppression, aperçu, et **Reformuler avec l'IA** sur un passage sélectionné. Chaque enregistrement est un commit de `content/veille/<sujet>/syntheses.md` sur `main`, qui republie le site. Le code de la page, sa mise en route (DNS, jeton) et ses choix de sécurité sont dans son propre dépôt : [moreauremi/veille-syntheses](https://github.com/moreauremi/veille-syntheses).
 
 La page est statique (GitHub Pages) et n'a pas de serveur pour appeler l'IA. La reformulation passe donc par un workflow de **ce** dépôt, qui réutilise l'IA et le secret de la veille :
 

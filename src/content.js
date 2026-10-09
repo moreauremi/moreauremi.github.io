@@ -8,7 +8,6 @@
 // =============================================================================
 
 import site from '../content/site.config.js';
-import veille from '../content/veille/actualites.json';
 import { tagSlug } from './utils/tags.js';
 
 const ficheModules = import.meta.glob('../content/realisations/*.md', {
@@ -16,6 +15,11 @@ const ficheModules = import.meta.glob('../content/realisations/*.md', {
   import: 'default',
 });
 const pageModules = import.meta.glob('../content/pages/*.md', {
+  eager: true,
+  import: 'default',
+});
+// Veille : un dossier par sujet (content/veille/<id>/)
+const veilleModules = import.meta.glob(['../content/veille/*/*.md', '../content/veille/*/actualites.json'], {
   eager: true,
   import: 'default',
 });
@@ -74,33 +78,61 @@ export const pages = Object.fromEntries(
   ]),
 );
 
-// --- Veille automatique (content/veille/actualites.json, voir scripts/veille.mjs)
+// --- Veille technologique (content/veille/<id>/, voir scripts/veille.mjs) -------
 
-// Actualités, les plus récentes d'abord
-export const actualites = [...veille.actualites].sort(
-  (a, b) => b.date.localeCompare(a.date) || a.titre.localeCompare(b.titre, 'fr'),
-);
-export const veilleMiseAJour = veille.miseAJour;
+// Les sujets de la configuration (veille.sujets), dans le même ordre, avec
+// leur contenu : pourquoi ce sujet (sujet.md), mes synthèses (syntheses.md),
+// actualités (actualites.json, absent tant que la première collecte n'a pas
+// eu lieu) et tags.
+export const veilles = (site.veille.sujets ?? []).map((sujet) => {
+  const file = (name) => veilleModules[`../content/veille/${sujet.id}/${name}`];
+  const data = file('actualites.json') ?? { miseAJour: null, actualites: [] };
+  // Actualités, les plus récentes d'abord
+  const actualites = [...data.actualites].sort(
+    (a, b) => b.date.localeCompare(a.date) || a.titre.localeCompare(b.titre, 'fr'),
+  );
+  return {
+    ...sujet,
+    pourquoi: file('sujet.md')?.html ?? '',
+    syntheses: file('syntheses.md')?.html ?? '<p>À venir.</p>',
+    actualites,
+    miseAJour: data.miseAJour,
+    tags: tagsOf(actualites),
+  };
+});
 
-// Tags de la veille, du plus utilisé au moins utilisé : { nom, slug, count }
-export const veilleTags = [
-  ...actualites
-    .flatMap((a) => a.tags)
-    .reduce((tags, nom) => {
-      const slug = tagSlug(nom);
-      const tag = tags.get(slug) ?? { nom, slug, count: 0 };
-      tag.count += 1;
-      return tags.set(slug, tag);
-    }, new Map())
-    .values(),
-].sort((a, b) => b.count - a.count || a.nom.localeCompare(b.nom, 'fr'));
-
-export function getVeilleTag(slug) {
-  return veilleTags.find((t) => t.slug === slug) ?? null;
+export function getVeille(id) {
+  return veilles.find((v) => v.id === id) ?? null;
 }
 
-export function actualitesByTag(slug) {
-  return actualites.filter((a) => a.tags.some((t) => tagSlug(t) === slug));
+// Tag d'un sujet : { nom, slug, count }, ou null
+export function getVeilleTag(veille, slug) {
+  return veille?.tags.find((t) => t.slug === slug) ?? null;
+}
+
+// Premier sujet qui a ce tag (anciennes adresses #/veille/<tag>, d'avant les
+// trois sujets)
+export function findVeilleOfTag(slug) {
+  return veilles.find((v) => getVeilleTag(v, slug)) ?? null;
+}
+
+export function actualitesByTag(veille, slug) {
+  return veille.actualites.filter((a) => a.tags.some((t) => tagSlug(t) === slug));
+}
+
+// Tags d'une liste d'actualités, du plus utilisé au moins utilisé
+function tagsOf(actualites) {
+  return [
+    ...actualites
+      .flatMap((a) => a.tags)
+      .reduce((tags, nom) => {
+        const slug = tagSlug(nom);
+        const tag = tags.get(slug) ?? { nom, slug, count: 0 };
+        tag.count += 1;
+        return tags.set(slug, tag);
+      }, new Map())
+      .values(),
+  ].sort((a, b) => b.count - a.count || a.nom.localeCompare(b.nom, 'fr'));
 }
 
 // Libellé d'une compétence à partir de son code (ex. « B1.1 »)

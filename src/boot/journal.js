@@ -90,16 +90,17 @@ export function unitLines() {
     after: description ? ` - ${description}.` : '.',
   });
 
-  // Veille : [ WARN ] tant qu'aucun sujet n'est défini dans la configuration
-  const { sujet } = site.veille;
-  const veille = sujet
-    ? ok({ action: 'Started', unite: 'veille-techno.service', description: sujet })
-    : { kind: 'unit', status: 'warn', before: '', unit: 'veille-techno.service', after: ' : sujet non défini, démarrage différé.' };
+  // Veille : un service par sujet (veille@<id>.service, comme une unité
+  // systemd « modèle »), [ WARN ] tant qu'aucun sujet n'est défini
+  const sujets = site.veille.sujets ?? [];
+  const veille = sujets.length
+    ? sujets.map((s) => ok({ action: 'Started', unite: `veille@${s.id}.service`, description: s.sujet }))
+    : [{ kind: 'unit', status: 'warn', before: '', unit: 'veille-techno.service', after: ' : sujet non défini, démarrage différé.' }];
 
   return [
     ...SYSTEM_UNITS.map(ok),
     ...site.boot.map(ok),
-    veille,
+    ...veille,
     ok({ action: 'Started', unite: 'tableau-de-synthese.service' }),
     ok({ action: 'Reached target', unite: 'Portfolio BTS SIO' }),
     ok({ action: 'Reached target', unite: 'Multi-User System' }),

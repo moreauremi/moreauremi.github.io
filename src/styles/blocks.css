@@ -321,6 +321,32 @@ a.tag:focus-visible {
   display: none;
 }
 
+/* Groupe d'onglets qui en contient d'autres (veille : un onglet par sujet) :
+   onglets plus grands, posés sur un panneau encadré, pour distinguer les
+   sujets des onglets « Dernières actualités » / « Mes synthèses » qu'ils
+   contiennent. */
+.tabs--main > .tab-list {
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
+.tabs--main > .tab-list > .tab {
+  min-height: 36px;
+  padding: 6px 16px;
+  border-color: var(--accent);
+}
+
+.tabs--main > .tab-panels {
+  padding: 16px;
+  border: 2px solid var(--accent);
+}
+
+@media (max-width: 720px) {
+  .tabs--main > .tab-panels {
+    padding: 12px 10px;
+  }
+}
+
 /* --- Pagination « < 1 2 3 > » (src/ui/pager.js) ------------------------------- */
 
 /* Les pages sont superposées dans la même case : la zone garde la hauteur

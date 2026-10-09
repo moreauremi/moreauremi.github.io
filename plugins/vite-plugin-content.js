@@ -34,7 +34,7 @@
 import path from 'node:path';
 import matter from 'gray-matter';
 import { publicBase } from '../src/utils/url.js';
-import { CONFIG_FILE, VEILLE_FILE, loadSiteConfig, checkDocuments, checkConfig, checkVeille } from './content/config.js';
+import { CONFIG_FILE, veilleFile, loadSiteConfig, checkDocuments, checkConfig, checkVeilleConfig, checkVeille } from './content/config.js';
 import { contentSecurityPolicy, cspHash, inlineStyleHashes, checkNginxPolicy, NGINX_HEADERS_FILE } from './content/csp.js';
 import { renderMarkdown, stripComments } from './content/markdown.js';
 import { checkRealisation, checkImage } from './content/realisation.js';
@@ -60,11 +60,13 @@ export default function contentPlugin() {
     // doit annoncer la même politique de sécurité que les pages.
     async buildStart() {
       const site = await loadSiteConfig(root);
-      const errors = [...checkDocuments(site, root), ...checkConfig(site, root)];
+      const errors = [...checkDocuments(site, root), ...checkConfig(site, root), ...checkVeilleConfig(site)];
       if (errors.length) this.error(formatErrors(CONFIG_FILE, errors));
-      // Actualités écrites chaque semaine par scripts/veille.mjs
-      const veilleErrors = checkVeille(root);
-      if (veilleErrors.length) this.error(formatErrors(VEILLE_FILE, veilleErrors));
+      // Actualités écrites chaque semaine par scripts/veille.mjs, une par sujet
+      for (const { id } of site.veille.sujets) {
+        const veilleErrors = checkVeille(root, id);
+        if (veilleErrors.length) this.error(formatErrors(veilleFile(id), veilleErrors));
+      }
       const headerErrors = checkNginxPolicy(site, root);
       if (headerErrors.length) this.error(formatErrors(NGINX_HEADERS_FILE, headerErrors));
     },

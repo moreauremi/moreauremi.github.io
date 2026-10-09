@@ -28,10 +28,10 @@ const REPOSITORY = process.env.GITHUB_REPOSITORY ?? '';
 const TOKEN = process.env.GH_TOKEN ?? '';
 delete process.env.GH_TOKEN;
 
-// Consignes de l'IA. Le passage est transmis comme une donnée JSON, jamais
-// mêlé aux consignes.
-const RULES = [
-  `Tu relis les synthèses de veille technologique de ${site.identite.nom}, étudiant en BTS SIO option SISR. Elles sont publiées sur son portfolio et lues par un jury d'examen. Sujet de la veille : ${site.veille.sujet}.`,
+// Consignes de l'IA, selon le sujet de veille de la synthèse. Le passage est
+// transmis comme une donnée JSON, jamais mêlé aux consignes.
+const rules = (sujet) => [
+  `Tu relis les synthèses de veille technologique de ${site.identite.nom}, étudiant en BTS SIO option SISR. Elles sont publiées sur son portfolio et lues par un jury d'examen.${sujet ? ` Sujet de la veille : ${sujet.sujet}.` : ''}`,
   "Reformule le passage fourni (champ « texte ») : un français correct, des phrases claires et fluides, un ton professionnel mais naturel. Corrige l'orthographe, la grammaire et la ponctuation.",
   "Garde exactement le sens, les faits, les chiffres, les dates, les noms propres et les liens. N'ajoute aucune information, aucun avis, aucun titre. Garde la même personne (je, nous…) et à peu près la même longueur.",
   'Garde la mise en forme Markdown : paragraphes, listes, gras, liens.',
@@ -47,7 +47,8 @@ async function main() {
 
   let reponse;
   try {
-    reponse = { etat: 'ok', texte: await rephrase(readText(release.body)) };
+    const demande = readRequest(release.body);
+    reponse = { etat: 'ok', texte: await rephrase(demande.texte, demande.sujet) };
     console.log('Reformulation faite.');
   } catch (error) {
     // Première ligne seulement : la suite peut contenir la réponse de l'IA
@@ -59,21 +60,23 @@ async function main() {
   if (reponse.etat !== 'ok') process.exitCode = 1;
 }
 
-// Corps du brouillon (JSON écrit par la page) → passage à reformuler
-function readText(body) {
-  let texte;
+// Corps du brouillon (JSON écrit par la page) → { texte, sujet }. `sujet` :
+// le sujet de veille de la synthèse (veille.sujets), ou null s'il est inconnu.
+function readRequest(body) {
+  let data;
   try {
-    texte = String(JSON.parse(body ?? '').texte ?? '').trim();
+    data = JSON.parse(body ?? '');
   } catch {
     throw new Error('demande illisible (JSON attendu).');
   }
+  const texte = String(data?.texte ?? '').trim();
   if (!texte) throw new Error('passage vide.');
   if (texte.length > MAX_TEXT) throw new Error(`passage trop long (${MAX_TEXT} caractères au plus) : en sélectionner une partie.`);
-  return texte;
+  return { texte, sujet: site.veille.sujets.find((s) => s.id === data.sujet) ?? null };
 }
 
-async function rephrase(texte) {
-  const answer = await askAi(RULES, JSON.stringify({ texte }), {
+async function rephrase(texte, sujet) {
+  const answer = await askAi(rules(sujet), JSON.stringify({ texte }), {
     settings: site.veille.ia,
     apiKey: process.env.VEILLE_IA_CLE,
     attempts: 2,

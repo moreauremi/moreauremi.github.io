@@ -3,8 +3,8 @@
 // -----------------------------------------------------------------------------
 // Vérifié au démarrage (en dev comme au build) : les fichiers déclarés dans la
 // configuration (PDF, photo, justificatifs) doivent exister dans public/, les
-// compétences ne peuvent renvoyer qu'à des fiches existantes, et chaque
-// actualité de la veille doit être complète.
+// compétences ne peuvent renvoyer qu'à des fiches existantes, les sujets de
+// veille doivent être bien déclarés, et chaque actualité doit être complète.
 // =============================================================================
 
 import fs from 'node:fs';
@@ -13,7 +13,8 @@ import { pathToFileURL } from 'node:url';
 import { isFilled, isTextList } from './utils.js';
 
 export const CONFIG_FILE = 'content/site.config.js';
-export const VEILLE_FILE = 'content/veille/actualites.json';
+// Fichier des actualités d'un sujet de veille (écrit par scripts/veille.mjs)
+export const veilleFile = (id) => `content/veille/${id}/actualites.json`;
 
 const SINGLE_DATE_PATTERN = /^\d{4}(?:-\d{2}){0,2}$/;
 const CERTIFICATION_CATEGORIES = ['certification', 'langue', 'formation', 'badge'];
@@ -39,11 +40,39 @@ export function checkDocuments(site, root) {
   return errors;
 }
 
-// Actualités de la veille : chaque entrée doit être complète. Le fichier est
-// écrit par un robot à partir de flux RSS et d'une IA : en cas de problème,
-// le build s'arrête et le site en ligne reste intact.
-export function checkVeille(root) {
-  const file = path.join(root, VEILLE_FILE);
+// Sujets de veille (veille.sujets de la configuration) : identifiants valides
+// et uniques, champs remplis, flux RSS en http(s).
+export function checkVeilleConfig(site) {
+  const errors = [];
+  const sujets = site.veille?.sujets;
+  if (!Array.isArray(sujets)) return ['« veille.sujets » doit être une liste.'];
+  const ids = new Set();
+  sujets.forEach((s, index) => {
+    const label = `veille.sujets, sujet n° ${index + 1}${isFilled(s?.id) ? ` (« ${s.id} »)` : ''}`;
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(s?.id ?? '')) errors.push(`${label} : « id » doit être en minuscules, chiffres et tirets.`);
+    else if (ids.has(s.id)) errors.push(`${label} : « id » déjà utilisé par un autre sujet.`);
+    ids.add(s?.id);
+    for (const key of ['nom', 'sujet', 'utile', 'pourQui']) {
+      if (!isFilled(s?.[key])) errors.push(`${label} : « ${key} » doit être un texte.`);
+    }
+    for (const key of ['motsCles', 'contexte', 'tags']) {
+      if (!isTextList(s?.[key] ?? null)) errors.push(`${label} : « ${key} » doit être une liste de textes.`);
+    }
+    if (!Number.isInteger(s?.parSemaine) || s.parSemaine < 1) errors.push(`${label} : « parSemaine » doit être un nombre entier positif.`);
+    if (!Array.isArray(s?.flux) || s.flux.length === 0) errors.push(`${label} : « flux » doit être une liste non vide.`);
+    for (const f of Array.isArray(s?.flux) ? s.flux : []) {
+      if (!isFilled(f?.nom) || !/^https?:\/\//.test(f?.url ?? '')) errors.push(`${label} : chaque flux a un « nom » et une « url » en http(s).`);
+    }
+  });
+  return errors;
+}
+
+// Actualités d'un sujet de veille : chaque entrée doit être complète. Le
+// fichier est écrit par un robot à partir de flux RSS et d'une IA : en cas de
+// problème, le build s'arrête et le site en ligne reste intact. Un sujet sans
+// fichier (première collecte pas encore faite) est permis.
+export function checkVeille(root, id) {
+  const file = path.join(root, veilleFile(id));
   if (!fs.existsSync(file)) return [];
   let data;
   try {

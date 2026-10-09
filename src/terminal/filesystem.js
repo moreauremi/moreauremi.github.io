@@ -9,7 +9,9 @@
 //   ├── alternance.md
 //   ├── competences.txt
 //   ├── veille.md
-//   ├── syntheses.md
+//   ├── veille/
+//   │   ├── cybersecurite/   sujet.md, syntheses.md
+//   │   └── …                (un dossier par sujet de veille)
 //   ├── certifications.txt
 //   ├── contact.txt
 //   ├── mentions-legales.txt
@@ -22,7 +24,7 @@
 // Chaque élément peut porter une `route` : l'écran que `open` affiche.
 // =============================================================================
 
-import { site, realisations, getRealisation, TYPES } from '../content.js';
+import { site, realisations, getRealisation, veilles, TYPES } from '../content.js';
 import { link } from '../router.js';
 import { formatDate } from '../utils/dates.js';
 import { levelBarText, levelName } from '../utils/levels.js';
@@ -45,8 +47,14 @@ const pageSources = import.meta.glob('../../content/pages/*.md', {
   import: 'default',
   eager: true,
 });
+const veilleSources = import.meta.glob('../../content/veille/*/*.md', {
+  query: '?source',
+  import: 'default',
+  eager: true,
+});
 const ficheSource = (slug) => ficheSources[`../../content/realisations/${slug}.md`];
 const pageSource = (name) => pageSources[`../../content/pages/${name}.md`];
+const veilleSource = (id, name) => veilleSources[`../../content/veille/${id}/${name}.md`];
 
 export function buildFilesystem() {
   // Un sous-dossier par type de réalisation, une fiche = un fichier .md
@@ -61,12 +69,24 @@ export function buildFilesystem() {
     });
   }
 
+  // Un dossier par sujet de veille : pourquoi ce sujet, mes synthèses
+  const veilleDir = dir({}, { route: link.section('veille') });
+  for (const v of veilles) {
+    veilleDir.children[v.id] = dir(
+      {
+        'sujet.md': file(veilleSource(v.id, 'sujet'), { route: link.veille(v.id) }),
+        'syntheses.md': file(veilleSource(v.id, 'syntheses'), { route: link.veille(v.id) }),
+      },
+      { route: link.veille(v.id) },
+    );
+  }
+
   const home = dir({
     'presentation.md': file(pageSource('presentation'), { route: link.section('presentation') }),
     'alternance.md': file(pageSource('alternance'), { route: link.section('alternance') }),
     'competences.txt': file(competencesText(), { route: link.section('competences') }),
     'veille.md': file(pageSource('veille'), { route: link.section('veille') }),
-    'syntheses.md': file(pageSource('syntheses'), { route: link.section('veille') }),
+    veille: veilleDir,
     'certifications.txt': file(certificationsText(), { route: link.section('certifications') }),
     'contact.txt': file(contactText(), { route: link.section('contact') }),
     'mentions-legales.txt': file(mentionsText(), { route: link.legal() }),

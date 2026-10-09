@@ -7,29 +7,35 @@
 //
 // Au clavier (modèle ARIA des onglets) : Tab atteint l'onglet actif, ← et →
 // passent à l'onglet voisin, Début et Fin au premier et au dernier.
+//
+// Des onglets peuvent en contenir d'autres (veille : un onglet par sujet, et
+// dans chacun « Dernières actualités » / « Mes synthèses ») : chaque groupe ne
+// gère que ses propres onglets et panneaux.
 // =============================================================================
 
 // Compteur d'identifiants : chaque affichage crée des id uniques, même si
 // RémiOS et la vue jury contiennent les mêmes onglets en même temps.
 let count = 0;
 
-// `items` : [{ label, html }], le premier est affiché ; `label` nomme le
-// groupe d'onglets pour les lecteurs d'écran.
-export function tabs(items, { label }) {
+// `items` : [{ label, html }] ; `label` nomme le groupe d'onglets pour les
+// lecteurs d'écran ; `selected` : numéro de l'onglet affiché au départ (le
+// premier par défaut) ; `variant` : « main » pour un groupe qui en contient
+// d'autres (onglets plus marqués, panneau encadré).
+export function tabs(items, { label, selected = 0, variant = '' }) {
   const id = `onglets-${++count}`;
   const buttons = items
     .map(
-      (item, i) => `<button type="button" class="tab" role="tab" id="${id}-onglet-${i}" aria-controls="${id}-panneau-${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${item.label}</button>`,
+      (item, i) => `<button type="button" class="tab" role="tab" id="${id}-onglet-${i}" aria-controls="${id}-panneau-${i}" aria-selected="${i === selected}" tabindex="${i === selected ? 0 : -1}">${item.label}</button>`,
     )
     .join('');
   // data-title : titre du panneau, affiché à l'impression (où tous les
   // panneaux sont imprimés l'un après l'autre)
   const panels = items
     .map(
-      (item, i) => `<div class="tab-panel" role="tabpanel" id="${id}-panneau-${i}" aria-labelledby="${id}-onglet-${i}" data-title="${item.label}"${i > 0 ? ' data-off' : ''}>${item.html}</div>`,
+      (item, i) => `<div class="tab-panel" role="tabpanel" id="${id}-panneau-${i}" aria-labelledby="${id}-onglet-${i}" data-title="${item.label}"${i !== selected ? ' data-off' : ''}>${item.html}</div>`,
     )
     .join('');
-  return `<div class="tabs">
+  return `<div class="tabs${variant ? ` tabs--${variant}` : ''}">
     <div class="tab-list" role="tablist" aria-label="${label}">${buttons}</div>
     <div class="tab-panels">${panels}</div>
   </div>`;
@@ -63,7 +69,8 @@ export function setupTabs(root) {
 function select(tab) {
   const container = tab.closest('.tabs');
   const zone = container.querySelector(':scope > .tab-panels');
-  const all = [...container.querySelectorAll('[role="tab"]')];
+  // Seulement les onglets de ce groupe, pas ceux des groupes qu'il contient
+  const all = [...container.querySelectorAll(':scope > .tab-list > [role="tab"]')];
   const panels = [...zone.children];
 
   keepScroll(zone, () => {

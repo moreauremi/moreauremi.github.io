@@ -6,13 +6,13 @@
 //
 //   #/jury                    page unique : toutes les rubriques du menu
 //   #/jury/<slug>             une fiche de réalisation dans le même style sobre
-//   #/jury/veille/<tag>       les actualités de la veille qui portent ce tag
+//   #/jury/veille/<sujet>/<tag>  les actualités d'un sujet de veille qui portent ce tag
 //   #/jury/mentions-legales   les mentions légales, dans le même style
 //
 // Le contenu vient des mêmes blocs que l'interface RémiOS (src/blocks/).
 // =============================================================================
 
-import { site, realisationsOfType, getRealisation, getVeilleTag, TYPES } from '../content.js';
+import { site, realisationsOfType, getRealisation, getVeille, getVeilleTag, findVeilleOfTag, TYPES } from '../content.js';
 import { link } from '../router.js';
 import {
   presentationBlock,
@@ -54,11 +54,13 @@ export function createJuryView(root) {
     current = route;
     const fiche = route.name === 'jury-fiche' ? getRealisation(route.slug) : null;
 
-    const tag = route.name === 'jury-tag' ? getVeilleTag(route.tag) : null;
+    // Ancienne adresse sans sujet (#/jury/veille/<tag>) : premier sujet qui a ce tag
+    const veille = route.name === 'jury-tag' ? (route.sujet ? getVeille(route.sujet) : findVeilleOfTag(route.tag)) : null;
+    const tag = getVeilleTag(veille, route.tag);
 
     if (route.name === 'jury-tag' && tag) {
-      root.innerHTML = tagPage(route.tag, tag);
-      setPlainTitle(`Veille : ${tag.nom} — Vue jury`);
+      root.innerHTML = tagPage(veille, route.tag, tag);
+      setPlainTitle(`Veille ${veille.nom} : ${tag.nom} — Vue jury`);
     } else if (route.name === 'jury-tag') {
       root.innerHTML = missingPage('Tag introuvable', "Ce tag n'existe pas dans la veille, ou plus.");
       setPlainTitle('Tag introuvable — Vue jury');
@@ -200,11 +202,11 @@ function fichePage(r) {
 }
 
 // Page d'un tag de la veille
-function tagPage(slug, tag) {
+function tagPage(veille, slug, tag) {
   return subPage({
-    title: `Veille : ${escapeHtml(tag.nom)}`,
-    body: veilleTagBlock(slug, link.juryVeilleTag),
-    remios: `<a href="${link.veilleTag(slug)}">Voir ce tag dans RémiOS</a>`,
+    title: `Veille ${escapeHtml(veille.nom)} : ${escapeHtml(tag.nom)}`,
+    body: veilleTagBlock(veille, slug, link.juryVeilleTag),
+    remios: `<a href="${link.veilleTag(veille.id, slug)}">Voir ce tag dans RémiOS</a>`,
   });
 }
 

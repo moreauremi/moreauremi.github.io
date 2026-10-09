@@ -92,7 +92,7 @@ function render(route, options) {
 
   // Bip de validation à l'ouverture d'une rubrique ou d'une fiche
   // (pas au premier affichage : le visiteur n'a encore rien choisi)
-  if (options?.focus !== false && ['section', 'fiche', 'tag'].includes(route.name)) sounds.select();
+  if (options?.focus !== false && ['section', 'veille', 'fiche', 'tag'].includes(route.name)) sounds.select();
 
   const juryMode = isJuryRoute(route);
   // L'attribut data-view sur <html> permet au CSS d'adapter le fond de page

@@ -3,17 +3,18 @@ titre: Veille technologique
 ---
 
 <!--
-  Le sujet, les mots-clés et les sources de la veille se règlent dans
-  content/site.config.js (rubrique « veille »). Les actualités sont ajoutées
-  chaque semaine par scripts/veille.mjs. Ce fichier contient le pourquoi et
-  la méthode ; les synthèses personnelles sont dans syntheses.md (onglet
-  « Mes synthèses »).
+  Rubrique « Veille technologique » : trois sujets, un onglet chacun.
+  Les sujets, leurs mots-clés et leurs sources se règlent dans
+  content/site.config.js (veille.sujets). Chaque sujet a son dossier
+  content/veille/<id>/ :
+    sujet.md          pourquoi ce sujet
+    syntheses.md      mes synthèses (écrites depuis https://veille.remim.me)
+    actualites.json   actualités ajoutées chaque lundi par scripts/veille.mjs
+  Ce fichier contient ce qui est commun aux trois sujets : la méthode.
 -->
 
-## Pourquoi ce sujet
-
-Les PME industrielles sont devenues des cibles de choix : moins protégées que les grands groupes, elles dépendent pourtant de leurs systèmes informatiques et de leurs machines pour produire. En alternance chez un intégrateur d'ERP pour l'industrie, je vois chaque jour à quel point une entreprise s'arrête si ses outils sont indisponibles.
+Je suis trois sujets, liés à mon alternance et à mes projets : la sécurité des entreprises industrielles, la virtualisation qui fait tourner leurs serveurs, et la réforme de la facturation électronique, qui change leurs logiciels de gestion.
 
 ## Méthode
 
-Chaque lundi, un outil que j'ai développé pour ce portfolio lit une douzaine de sources spécialisées (dont le CERT-FR de l'ANSSI), puis une IA (GitHub Copilot) choisit les articles les plus utiles, les résume et leur attribue des tags. Je lis ensuite les articles retenus.
+Chaque lundi, un outil que j'ai développé pour ce portfolio lit une trentaine de sources spécialisées (dont le CERT-FR de l'ANSSI), puis une IA (GitHub Copilot) choisit pour chaque sujet les articles les plus utiles, les résume et leur attribue des tags. Je lis ensuite les articles retenus, puis j'écris mes synthèses : ce que j'en retiens, ce que ça change pour les entreprises, ce que j'en fais.

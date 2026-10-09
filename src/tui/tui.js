@@ -14,8 +14,8 @@
 // =============================================================================
 
 import { link, navigate } from '../router.js';
-import { site, getRealisation, getVeilleTag } from '../content.js';
-import { ficheBlock, veilleTagBlock } from '../blocks/index.js';
+import { site, getRealisation, getVeille, getVeilleTag, findVeilleOfTag } from '../content.js';
+import { ficheBlock, veilleBlock, veilleTagBlock } from '../blocks/index.js';
 import { safe } from '../utils/html.js';
 import { hasModifier, isTypingTarget } from '../utils/keyboard.js';
 import { setPromptTitle } from '../ui/tab-title.js';
@@ -95,18 +95,37 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
       }
     }
 
+    // #/veille/<sujet> : la rubrique « Veille technologique », onglet du sujet
+    // ouvert. Sinon, ancienne adresse d'un tag (#/veille/<tag>).
+    if (route.name === 'veille') {
+      const veille = getVeille(route.key);
+      const section = findSection('veille');
+      if (veille) {
+        selected = SECTIONS.indexOf(section);
+        return {
+          kind: 'section',
+          title: section.label,
+          html: box({ title: section.label, body: veilleBlock(link.veilleTag, { sujet: veille.id }), actions: backButton(link.home()) }),
+          parent: link.home(),
+        };
+      }
+      const legacy = findVeilleOfTag(route.key);
+      if (legacy) return resolve({ name: 'tag', sujet: legacy.id, tag: route.key });
+    }
+
     if (route.name === 'tag') {
-      const tag = getVeilleTag(route.tag);
+      const veille = getVeille(route.sujet);
+      const tag = getVeilleTag(veille, route.tag);
       if (tag) {
-        // Parent du tag : la rubrique « Veille technologique »
+        // Parent du tag : la rubrique « Veille technologique », onglet du sujet
         const section = findSection('veille');
         selected = SECTIONS.indexOf(section);
-        const title = `Veille : ${tag.nom}`;
+        const title = `Veille ${veille.nom} : ${tag.nom}`;
         return {
           kind: 'tag',
           title,
-          html: box({ title: safe(title), body: veilleTagBlock(route.tag, link.veilleTag), actions: backButton(link.section(section.id)) }),
-          parent: link.section(section.id),
+          html: box({ title: safe(title), body: veilleTagBlock(veille, route.tag, link.veilleTag), actions: backButton(link.veille(veille.id)) }),
+          parent: link.veille(veille.id),
         };
       }
     }

@@ -100,39 +100,18 @@ export default {
   },
 
   // --- Veille technologique ---------------------------------------------------
+  // Trois sujets, un onglet chacun dans la rubrique « Veille technologique ».
+  // Chaque sujet a son dossier content/veille/<id>/ : sujet.md (pourquoi ce
+  // sujet), syntheses.md (mes synthèses), actualites.json (écrit chaque lundi).
+  //
+  // Veille automatique (scripts/veille.mjs, lancé chaque lundi par GitHub
+  // Actions) : pour chaque sujet, les articles de ses flux sont triés par
+  // l'IA, qui garde les plus utiles, les résume et leur attribue des tags.
   veille: {
-    // Sujet de la veille, entre guillemets (ex. sujet: 'La supervision réseau').
-    // null tant qu'il n'est pas choisi : le site affiche « À venir » et le
-    // démarrage signale veille-techno.service en [ WARN ].
-    sujet: 'La cybersécurité des PME industrielles',
-
-    // Veille automatique (scripts/veille.mjs, lancé chaque lundi par GitHub
-    // Actions) : les articles des flux ci-dessous sont triés par l'IA, qui
-    // garde les plus utiles au sujet, les résume et leur attribue des tags.
-    //
-    // Mots-clés : un article d'un média généraliste (specialise: false) n'est
-    // proposé à l'IA que s'il en contient au moins un. Majuscules et accents
-    // ne comptent pas.
-    motsCles: [
-      'cybersécurité', 'cyberattaque', 'cybercriminalité', 'rançongiciel', 'ransomware',
-      'hameçonnage', 'phishing', 'vulnérabilité', 'faille', 'fuite de données',
-      'piratage', 'pirate', 'NIS2', 'NIS 2', 'ANSSI', 'OT', 'SCADA',
-    ],
-    // Contexte : l'IA met en avant les articles qui concernent ces entreprises
-    // ou ces secteurs, sans écarter une actualité importante qui n'en parle pas.
-    contexte: ['PME', 'TPE', 'ETI', 'industrie', 'usine', 'production', 'sous-traitant', 'ERP'],
-    // Nombre maximal d'actualités retenues chaque semaine
-    parSemaine: 6,
-    // Tags proposés à l'IA. Elle les réutilise en priorité et n'en crée un
-    // nouveau que si aucun ne convient : les pages de tags restent cohérentes.
-    tags: [
-      'rançongiciel', 'hameçonnage', 'vulnérabilité', 'fuite de données', 'cybercriminalité',
-      'systèmes industriels (OT)', 'PME', 'réglementation', 'NIS2', 'sensibilisation',
-      'sauvegarde', "chaîne d'approvisionnement", 'intelligence artificielle',
-    ],
-    // IA utilisée : GitHub Copilot (Copilot CLI), avec l'abonnement Copilot du
-    // compte GitHub. Le jeton n'est jamais écrit ici : il est rangé dans les
-    // secrets du dépôt (COPILOT_GITHUB_TOKEN), voir le README.
+    // IA utilisée, commune aux trois sujets : GitHub Copilot (Copilot CLI),
+    // avec l'abonnement Copilot du compte GitHub. Le jeton n'est jamais écrit
+    // ici : il est rangé dans les secrets du dépôt (COPILOT_GITHUB_TOKEN),
+    // voir le README.
     //   modele : '' = modèle par défaut de Copilot, ou un nom précis (voir
     //            `copilot --help`, option --model).
     // Autre possibilité : fournisseur: 'api', avec url et modele d'un service
@@ -141,22 +120,126 @@ export default {
       fournisseur: 'copilot',
       modele: '',
     },
-    // Flux RSS suivis. specialise: true = média entièrement consacré à la
-    // cybersécurité (tous ses articles sont proposés à l'IA).
-    flux: [
-      { nom: 'CERT-FR (ANSSI)', url: 'https://www.cert.ssi.gouv.fr/actualite/feed/', specialise: true },
-      { nom: 'CERT-FR, alertes', url: 'https://www.cert.ssi.gouv.fr/alerte/feed/', specialise: true },
-      { nom: 'Cybermalveillance.gouv.fr', url: 'https://www.cybermalveillance.gouv.fr/feed/atom-flux-actualites', specialise: true },
-      { nom: 'ZATAZ', url: 'https://www.zataz.com/feed/', specialise: true },
-      { nom: 'InCyber', url: 'https://incyber.org/feed/', specialise: true },
-      { nom: 'Le Monde Informatique, sécurité', url: 'https://www.lemondeinformatique.fr/flux-rss/thematique/securite/rss.xml', specialise: true },
-      { nom: '01net, sécurité', url: 'https://www.01net.com/actualites/securite/feed/', specialise: true },
-      { nom: 'UnderNews', url: 'https://www.undernews.fr/feed', specialise: true },
-      { nom: 'IT-Connect', url: 'https://www.it-connect.fr/feed/', specialise: false },
-      { nom: 'LeMagIT', url: 'https://www.lemagit.fr/rss/ContentSyndication.xml', specialise: false },
-      { nom: 'Silicon', url: 'https://www.silicon.fr/feed', specialise: false },
-      { nom: "L'Usine Digitale", url: 'https://www.usine-digitale.fr/rss', specialise: false },
-      { nom: "L'Usine Nouvelle", url: 'https://www.usinenouvelle.com/rss/', specialise: false },
+
+    // Pour chaque sujet :
+    //   id         nom du dossier content/veille/<id>/ et de l'adresse #/veille/<id>
+    //              (minuscules, chiffres et tirets)
+    //   nom        libellé de l'onglet
+    //   sujet      intitulé complet, affiché en tête de l'onglet
+    //   motsCles   un article d'un média généraliste (specialise: false) n'est
+    //              proposé à l'IA que s'il en contient au moins un (mot entier ;
+    //              majuscules et accents ne comptent pas)
+    //   contexte   l'IA met en avant les articles qui en parlent, sans écarter
+    //              une actualité importante qui n'en parle pas
+    //   utile      ce que l'IA doit retenir (consigne de choix des articles)
+    //   pourQui    à qui le résumé explique pourquoi c'est important
+    //   parSemaine nombre maximal d'actualités retenues chaque semaine
+    //   tags       tags proposés à l'IA : elle les réutilise en priorité et n'en
+    //              crée un nouveau que si aucun ne convient
+    //   flux       flux RSS suivis ; specialise: true = média entièrement
+    //              consacré au sujet (tous ses articles sont proposés à l'IA)
+    sujets: [
+      {
+        id: 'cybersecurite',
+        nom: 'Cybersécurité',
+        sujet: 'La cybersécurité des PME industrielles',
+        motsCles: [
+          'cybersécurité', 'cyberattaque', 'cybercriminalité', 'rançongiciel', 'ransomware',
+          'hameçonnage', 'phishing', 'vulnérabilité', 'faille', 'fuite de données',
+          'piratage', 'pirate', 'NIS2', 'NIS 2', 'ANSSI', 'OT', 'SCADA',
+        ],
+        contexte: ['PME', 'TPE', 'ETI', 'industrie', 'usine', 'production', 'sous-traitant', 'ERP'],
+        utile: 'menaces et attaques visant les entreprises, en particulier industrielles ou de petite taille, vulnérabilités critiques des outils qu\'elles utilisent, réglementation, bonnes pratiques, chiffres clés',
+        pourQui: 'une PME, en particulier industrielle',
+        parSemaine: 6,
+        tags: [
+          'rançongiciel', 'hameçonnage', 'vulnérabilité', 'fuite de données', 'cybercriminalité',
+          'systèmes industriels (OT)', 'PME', 'réglementation', 'NIS2', 'sensibilisation',
+          'sauvegarde', "chaîne d'approvisionnement", 'intelligence artificielle',
+        ],
+        flux: [
+          { nom: 'CERT-FR (ANSSI)', url: 'https://www.cert.ssi.gouv.fr/actualite/feed/', specialise: true },
+          { nom: 'CERT-FR, alertes', url: 'https://www.cert.ssi.gouv.fr/alerte/feed/', specialise: true },
+          { nom: 'Cybermalveillance.gouv.fr', url: 'https://www.cybermalveillance.gouv.fr/feed/atom-flux-actualites', specialise: true },
+          { nom: 'ZATAZ', url: 'https://www.zataz.com/feed/', specialise: true },
+          { nom: 'InCyber', url: 'https://incyber.org/feed/', specialise: true },
+          { nom: 'Le Monde Informatique, sécurité', url: 'https://www.lemondeinformatique.fr/flux-rss/thematique/securite/rss.xml', specialise: true },
+          { nom: '01net, sécurité', url: 'https://www.01net.com/actualites/securite/feed/', specialise: true },
+          { nom: 'UnderNews', url: 'https://www.undernews.fr/feed', specialise: true },
+          { nom: 'IT-Connect', url: 'https://www.it-connect.fr/feed/', specialise: false },
+          { nom: 'LeMagIT', url: 'https://www.lemagit.fr/rss/ContentSyndication.xml', specialise: false },
+          { nom: 'Silicon', url: 'https://www.silicon.fr/feed', specialise: false },
+          { nom: "L'Usine Digitale", url: 'https://www.usine-digitale.fr/rss', specialise: false },
+          { nom: "L'Usine Nouvelle", url: 'https://www.usinenouvelle.com/rss/', specialise: false },
+        ],
+      },
+      {
+        id: 'virtualisation',
+        nom: 'Virtualisation',
+        sujet: "La virtualisation dans les PME : Hyper-V, Proxmox et l'après-VMware",
+        motsCles: [
+          'virtualisation', 'hyperviseur', 'hyperviseurs', 'Hyper-V', 'Proxmox', 'VMware', 'vSphere',
+          'ESXi', 'vCenter', 'Broadcom', 'XCP-ng', 'Xen', 'Nutanix', 'KVM', 'machine virtuelle',
+          'machines virtuelles', 'VM', 'VDI', 'Azure Local', 'Azure Stack HCI', 'Windows Server',
+          'OpenStack', 'cloud privé',
+        ],
+        contexte: ['PME', 'TPE', 'ETI', 'migration', 'licence', 'licences', 'prix', 'coût', 'Hyper-V', 'Proxmox'],
+        utile: "nouvelles versions et fonctions des hyperviseurs (Hyper-V, Proxmox VE, VMware vSphere, XCP-ng, Nutanix…), changements de licences et de prix (Broadcom), migrations hors de VMware et retours d'expérience, failles de sécurité des hyperviseurs, sauvegarde des machines virtuelles, chiffres du marché",
+        pourQui: 'une PME qui héberge ses propres serveurs',
+        parSemaine: 6,
+        tags: [
+          'Hyper-V', 'Proxmox', 'VMware', 'Broadcom', 'licences', 'migration', 'nouvelle version',
+          'sécurité', 'sauvegarde', 'stockage', 'conteneurs', 'cloud',
+        ],
+        flux: [
+          { nom: 'Proxmox, annonces', url: 'https://forum.proxmox.com/forums/announcements.7/index.rss', specialise: true },
+          { nom: 'XCP-ng', url: 'https://xcp-ng.org/blog/rss/', specialise: true },
+          { nom: 'Le Monde Informatique, virtualisation', url: 'https://www.lemondeinformatique.fr/flux-rss/thematique/virtualisation/rss.xml', specialise: true },
+          { nom: 'Le Monde Informatique, datacenter', url: 'https://www.lemondeinformatique.fr/flux-rss/thematique/datacenter/rss.xml', specialise: false },
+          { nom: 'Le Monde Informatique, infrastructure', url: 'https://www.lemondeinformatique.fr/flux-rss/thematique/infrastructure/rss.xml', specialise: false },
+          { nom: 'IT-Connect', url: 'https://www.it-connect.fr/feed/', specialise: false },
+          { nom: 'LeMagIT', url: 'https://www.lemagit.fr/rss/ContentSyndication.xml', specialise: false },
+          { nom: 'Silicon', url: 'https://www.silicon.fr/feed', specialise: false },
+          { nom: 'ZDNet France', url: 'https://www.zdnet.fr/feeds/rss/actualites/', specialise: false },
+          { nom: 'Next', url: 'https://next.ink/feed/', specialise: false },
+          { nom: 'InformatiqueNews', url: 'https://www.informatiquenews.fr/feed', specialise: false },
+          { nom: 'DCmag', url: 'https://dcmag.fr/feed/', specialise: false },
+        ],
+      },
+      {
+        id: 'facturation-electronique',
+        nom: 'Facturation électronique',
+        sujet: 'La facturation électronique obligatoire (réforme 2026-2027)',
+        motsCles: [
+          'facturation électronique', 'facture électronique', 'factures électroniques', 'e-invoicing',
+          'e-facture', 'e-reporting', 'Factur-X', 'UBL', 'plateforme agréée', 'plateformes agréées',
+          'PDP', 'PPF', 'portail public de facturation', 'Chorus Pro', 'IOPOLE', 'Peppol',
+          'dématérialisation des factures', 'réforme de la facturation',
+        ],
+        contexte: ['PME', 'TPE', 'ETI', 'ERP', 'éditeur', 'expert-comptable', 'calendrier', 'septembre 2026', 'septembre 2027'],
+        utile: "calendrier et obligations de la réforme (réception depuis septembre 2026, émission par les PME et TPE en septembre 2027, e-reporting), plateformes agréées (dont IOPOLE) et leur immatriculation, formats (Factur-X, UBL, CII), annuaire et portail public, conséquences pour les ERP et les logiciels de gestion, sanctions, retours d'expérience et chiffres",
+        pourQui: "une PME, et pour un intégrateur d'ERP qui accompagne ses clients dans la réforme",
+        parSemaine: 6,
+        tags: [
+          'calendrier', 'plateformes agréées', 'IOPOLE', 'Factur-X', 'e-reporting', 'ERP', 'PME',
+          'annuaire', 'sanctions', 'Peppol', 'expert-comptable', 'administration',
+        ],
+        flux: [
+          { nom: 'FNFE-MPE', url: 'https://fnfe-mpe.org/feed/', specialise: true },
+          { nom: 'Service-public.fr, professionnels', url: 'https://www.service-public.fr/abonnements/rss/actu-actu-pro.rss', specialise: false },
+          { nom: 'economie.gouv.fr', url: 'https://www.economie.gouv.fr/rss/toutesactualites', specialise: false },
+          { nom: 'DAF Magazine', url: 'https://www.daf-mag.fr/feed', specialise: false },
+          { nom: 'Finyear', url: 'https://www.finyear.com/xml/syndication.rss', specialise: false },
+          { nom: 'Docoon (plateforme agréée)', url: 'https://www.docoon.com/feed/', specialise: false },
+          { nom: 'Sage, blog', url: 'https://www.sage.com/fr-fr/blog/feed/', specialise: false },
+          { nom: 'Le Monde Informatique, logiciel', url: 'https://www.lemondeinformatique.fr/flux-rss/thematique/logiciel/rss.xml', specialise: false },
+          { nom: 'Le Monde Informatique, ERP', url: 'https://www.lemondeinformatique.fr/flux-rss/thematique/erp/rss.xml', specialise: false },
+          { nom: 'Journal du Net', url: 'https://www.journaldunet.com/rss/', specialise: false },
+          { nom: 'Solutions Numériques', url: 'https://www.solutions-numeriques.com/feed/', specialise: false },
+          { nom: 'Silicon', url: 'https://www.silicon.fr/feed', specialise: false },
+          { nom: 'LeMagIT', url: 'https://www.lemagit.fr/rss/ContentSyndication.xml', specialise: false },
+        ],
+      },
     ],
   },
 

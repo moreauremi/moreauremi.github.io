@@ -2,9 +2,11 @@
 # Veille automatique (rubrique « Veille technologique » du site)
 # -----------------------------------------------------------------------------
 # Chaque lundi matin, GitHub :
-#   1. lance scripts/veille.mjs : lecture des flux RSS, choix et résumé des
-#      actualités par l'IA, ajout dans content/veille/actualites.json ;
-#   2. enregistre ce fichier dans le dépôt (commit), s'il a changé ;
+#   1. lance scripts/veille.mjs : pour chacun des sujets de veille, lecture
+#      des flux RSS, choix et résumé des actualités par l'IA, ajout dans
+#      content/veille/<sujet>/actualites.json ;
+#   2. enregistre ces fichiers dans le dépôt (commit), s'ils ont changé, même
+#      si un des sujets a échoué (les autres ne sont pas perdus) ;
 #   3. relance la publication du site (workflow deploy.yml).
 #
 # L'IA est GitHub Copilot (Copilot CLI). Prérequis : un abonnement Copilot
@@ -55,23 +57,28 @@ jobs:
         run: npm install -g @github/copilot@1
 
       # Le script n'utilise que Node.js et Copilot CLI : pas besoin de npm ci
-      - name: Collecter et résumer les actualités
+      - name: Collecter et résumer les actualités (tous les sujets)
         run: node scripts/veille.mjs
         env:
           VEILLE_IA_CLE: ${{ secrets.COPILOT_GITHUB_TOKEN }}
 
+      # Même si un sujet a échoué : les actualités des autres sont enregistrées.
+      # git status voit aussi les fichiers nouveaux (première collecte d'un sujet).
       - name: Enregistrer les nouvelles actualités
         id: commit
+        if: ${{ !cancelled() }}
         run: |
-          if git diff --quiet -- content/veille/actualites.json; then
+          if [ -z "$(git status --porcelain -- 'content/veille/*/actualites.json')" ]; then
             echo "Aucune nouvelle actualité."
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add content/veille/actualites.json
+          git add 'content/veille/*/actualites.json'
           git commit -m "veille: actualités du $(date +%d/%m/%Y)"
+          # Une synthèse a pu être enregistrée entre-temps depuis le tableau de bord
+          git pull --rebase --quiet "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" main
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
           echo "changed=true" >> "$GITHUB_OUTPUT"
         env:
@@ -80,7 +87,7 @@ jobs:
       # Un envoi fait par GitHub Actions ne déclenche pas les autres workflows :
       # la publication est donc relancée explicitement.
       - name: Republier le site
-        if: steps.commit.outputs.changed == 'true'
+        if: ${{ !cancelled() && steps.commit.outputs.changed == 'true' }}
         run: gh workflow run deploy.yml --ref main
         env:
           GH_TOKEN: ${{ github.token }}

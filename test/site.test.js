@@ -98,6 +98,42 @@ test('vue jury : sommaire et parties', async (t) => {
   assert.deepEqual(errors, []);
 });
 
+test('veille : un onglet par sujet, et dans chacun « actualités » et « synthèses »', async (t) => {
+  const { window, document, errors, wait } = await openSite(t, '#/veille');
+  const topics = () => [...document.querySelectorAll('.tabs--main > .tab-list > [role="tab"]')];
+  const panels = () => [...document.querySelectorAll('.tabs--main > .tab-panels > [role="tabpanel"]')];
+  assert.ok(topics().length >= 2, 'plusieurs sujets');
+  for (const panel of panels()) {
+    assert.equal(panel.querySelectorAll(':scope > .tabs > .tab-list > [role="tab"]').length, 2, `deux onglets dans « ${panel.dataset.title} »`);
+  }
+
+  // Changer de sujet : seul le panneau du sujet choisi est affiché
+  topics()[1].click();
+  assert.deepEqual(panels().map((p) => !p.hasAttribute('data-off')), panels().map((_, i) => i === 1));
+
+  // Onglet intérieur : ne change pas le sujet affiché
+  const inner = panels()[1].querySelectorAll(':scope > .tabs > .tab-list > [role="tab"]');
+  inner[1].click();
+  assert.equal(inner[1].getAttribute('aria-selected'), 'true');
+  assert.equal(topics()[1].getAttribute('aria-selected'), 'true', 'le sujet reste choisi');
+
+  // Adresse d'un sujet : son onglet ouvert d'emblée
+  const id = panels()[2 % panels().length].querySelector('[id^="veille-"][id$="-sources"]').id.replace(/^veille-|-sources$/g, '');
+  window.location.hash = `#/veille/${id}`;
+  await wait();
+  assert.equal(topics()[2 % topics().length].getAttribute('aria-selected'), 'true', `#/veille/${id}`);
+
+  // Page d'un tag (s'il y en a), avec retour vers l'onglet du sujet
+  const tag = document.querySelector('.tabs--main a.tag');
+  if (tag) {
+    window.location.hash = tag.getAttribute('href');
+    await wait();
+    assert.match(document.querySelector('.tui-box-title').textContent, /Veille .+ : /);
+    assert.match(document.querySelector('[data-back]').getAttribute('href'), /^#\/veille\/[a-z0-9-]+$/);
+  }
+  assert.deepEqual(errors, []);
+});
+
 test('adresse inconnue ou mal encodée : écran d\'erreur, sans plantage', async (t) => {
   // Premier affichage directement sur une adresse mal encodée
   const first = await openSite(t, '#/%E9');
