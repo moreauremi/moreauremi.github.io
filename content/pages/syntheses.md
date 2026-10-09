@@ -19,6 +19,6 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
-## Octobre 2026 : Les PME et ses enjeux
+## 09/10/2026 : NIS2 arrive chez les PME industrielles
 
 Pour cette première semaine, je me rends compte du nombre de problèmes de cybersécurité qui sont découverts chaque semaine. Entre les mises à jour qui entraînent des failles et les coûts qu’elles engendrent; en moyenne 45 900 €, c’est une dépense énorme qui pourrait mettre des PME à genoux ou, tout du moins, les ralentir. De plus, la loi NIS2, qui est examinée par l’Assemblée nationale, risque d’engendrer des coûts, même si c’est pour en éviter de futurs.
