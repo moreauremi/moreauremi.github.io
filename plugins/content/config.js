@@ -83,6 +83,8 @@ export function checkVeille(root, id) {
   if (!Array.isArray(data.actualites)) return ['« actualites » doit être une liste.'];
 
   const errors = [];
+  // Adresses écartées depuis le tableau de bord (« Hors sujet »), facultatif
+  if (data.ecartees !== undefined && !isTextList(data.ecartees)) errors.push('« ecartees » doit être une liste d\'adresses.');
   data.actualites.forEach((a, index) => {
     const label = `actualité n° ${index + 1}${typeof a?.titre === 'string' ? ` (« ${a.titre} »)` : ''}`;
     for (const key of ['titre', 'source', 'resume']) {

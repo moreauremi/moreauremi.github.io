@@ -74,7 +74,9 @@ async function main() {
 
 async function collectTopic(topic) {
   const data = readData(topic);
-  const known = new Set(data.actualites.map((a) => normalizeUrl(a.url)));
+  // Déjà publiées, ou écartées depuis le tableau de bord (« Hors sujet ») :
+  // jamais reproposées
+  const known = new Set([...data.actualites.map((a) => a.url), ...(data.ecartees ?? [])].map(normalizeUrl));
 
   // 1. Collecte
   const maxAge = data.actualites.length ? MAX_AGE_DAYS : FIRST_AGE_DAYS;

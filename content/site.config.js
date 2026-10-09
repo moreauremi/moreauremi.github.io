@@ -351,7 +351,7 @@ export default {
         nom: 'Réseaux et sécurité',
         items: [
           { nom: 'VPN (Tailscale)', niveau: 3, preuves: ['homelab-jellyfin', 'nas'] },
-          { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['caffein'] },
+          { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['caffein', 'portfolio-remios'] },
           { nom: 'Serveur web, reverse proxy (Nginx)', niveau: 2, preuves: ['caffein'] },
         ],
       },
@@ -359,7 +359,7 @@ export default {
         nom: 'Langages de programmation',
         items: [
           { nom: 'Python', niveau: 3.5, preuves: ['crypto-dashboard-pro', 'caffein'] },
-          { nom: 'HTML', niveau: 2, preuves: [] },
+          { nom: 'HTML', niveau: 2, preuves: ['portfolio-remios'] },
         ],
       },
       {
@@ -369,7 +369,7 @@ export default {
       {
         nom: 'Outils et frameworks',
         items: [
-          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'caffein'] },
+          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'caffein', 'portfolio-remios'] },
           { nom: 'Streamlit, Pandas, Plotly', niveau: 3, preuves: ['crypto-dashboard-pro'] },
           { nom: 'n8n (automatisation)', niveau: 2, preuves: ['caffein'] },
         ],

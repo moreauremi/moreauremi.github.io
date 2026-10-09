@@ -7,7 +7,10 @@
 #      content/veille/<sujet>/actualites.json ;
 #   2. enregistre ces fichiers dans le dépôt (commit), s'ils ont changé, même
 #      si un des sujets a échoué (les autres ne sont pas perdus) ;
-#   3. relance la publication du site (workflow deploy.yml).
+#   3. relance la publication du site (workflow deploy.yml) ;
+#   4. vérifie la régularité des synthèses : un sujet sans synthèse depuis
+#      21 jours ouvre (ou relance) une issue de rappel, qui prévient par e-mail
+#      (scripts/rappel-syntheses.mjs).
 #
 # L'IA est GitHub Copilot (Copilot CLI). Prérequis : un abonnement Copilot
 # (gratuit pour les étudiants) et un jeton GitHub avec la permission
@@ -25,10 +28,12 @@ on:
     - cron: '17 5 * * 1'
   workflow_dispatch:
 
-# Écrire dans le dépôt (le fichier d'actualités) et relancer la publication
+# Écrire dans le dépôt (le fichier d'actualités), relancer la publication,
+# ouvrir ou fermer l'issue de rappel des synthèses
 permissions:
   contents: write
   actions: write
+  issues: write
 
 # Jamais deux veilles en même temps (elles écriraient le même fichier)
 concurrency:
@@ -89,5 +94,12 @@ jobs:
       - name: Republier le site
         if: ${{ !cancelled() && steps.commit.outputs.changed == 'true' }}
         run: gh workflow run deploy.yml --ref main
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      # Même si la collecte a échoué : le rappel ne dépend que des synthèses
+      - name: Rappel de régularité des synthèses
+        if: ${{ !cancelled() }}
+        run: node scripts/rappel-syntheses.mjs
         env:
           GH_TOKEN: ${{ github.token }}

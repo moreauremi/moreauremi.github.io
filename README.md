@@ -129,10 +129,11 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [ ] **Homelab Jellyfin, NAS, Crypto Dashboard Pro** : détails techniques balisés `[À COMPLÉTER]`, captures.
 - [x] **Compétences techniques** : niveaux renseignés (octobre 2026). À remonter en cours d'année (Open-Prod, SQL, Docker…), et à relier aux fiches 1Life quand elles seront publiées (SQL et Open-Prod n'ont pas encore de preuve).
 - [x] **Grille de compétences** : les six compétences du tableau de synthèse officiel (B1.1 à B1.6) sont dans `site.config.js`.
-- [ ] **Compétences des fiches** : renseignées pour les 4 projets personnels ; à faire pour les fiches 1Life et de formation quand elles seront remplies (ex. `[B1.1, B1.5]`). Aucune fiche ne couvre encore B1.2 ni B1.3.
+- [ ] **Compétences des fiches** : renseignées pour les 5 projets personnels ; à faire pour les fiches 1Life et de formation quand elles seront remplies (ex. `[B1.1, B1.5]`). B1.3 est couverte par la fiche « Portfolio RémiOS » ; aucune fiche ne couvre encore B1.2 (incidents et demandes d'assistance : plutôt une fiche 1Life).
+- [ ] **Fiche « Portfolio RémiOS »** (`content/realisations/portfolio-remios.md`) : rédigée d'après ce README, à relire.
 - [ ] **PDF** : tableau de synthèse.
 - [x] **Veille** : trois sujets (cybersécurité des PME industrielles, virtualisation, facturation électronique) et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
-- [ ] **Jeton Copilot** : créer le jeton GitHub « Copilot Requests » et l'ajouter aux secrets du dépôt (voir [Mise en route](#mise-en-route-une-seule-fois)), sinon la collecte du lundi échoue.
+- [x] **Jeton Copilot** : jeton GitHub « Copilot Requests » rangé dans les secrets du dépôt (`COPILOT_GITHUB_TOKEN`) ; la collecte des trois sujets fonctionne (9 octobre 2026). À renouveler avant son expiration, un an après sa création (voir [Mise en route](#mise-en-route-une-seule-fois)).
 - [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://veille.remim.me, à partir des actualités collectées.
 - [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif.
 - [ ] **Réalisations en formation** (3 fiches en brouillon) : titres et contenu, au fil des TP et projets de cours. Le groupe affiche « À venir » sur le site tant qu'aucune n'est publiée.
@@ -385,7 +386,8 @@ npm run veille                  # collecte complète, écrit content/veille/<suj
 - **Choisir le modèle** : `veille.ia.modele` (vide = modèle par défaut de Copilot). Les noms possibles sont listés par `copilot --help` (option `--model`).
 - **Changer de fournisseur d'IA** (Mistral, Groq, Gemini…) : `veille.ia.fournisseur: 'api'`, avec `url` et `modele` du service (tous proposent l'API au format OpenAI), et leur clé dans le secret utilisé par `veille.yml`.
 - **Un flux ne répond plus** : la tâche continue avec les autres et le signale dans son journal. Le retirer ou corriger son adresse dans les `flux` du sujet.
-- **Une actualité hors sujet ou un résumé faux** : la supprimer de `content/veille/<sujet>/actualites.json`, puis envoyer le changement (`git push`).
+- **Une actualité hors sujet ou un résumé faux** : bouton **Hors sujet** du tableau de bord, qui la retire et note son adresse dans `ecartees` (la collecte ne la reproposera plus). À la main : la supprimer de `content/veille/<sujet>/actualites.json` et ajouter son adresse à la liste `ecartees` du même fichier, puis envoyer le changement (`git push`).
+- **Rappel des synthèses** : chaque lundi, après la collecte, `scripts/rappel-syntheses.mjs` lit la date de la dernière synthèse de chaque sujet (dans son titre, `19/01/2027 - …`). Un sujet sans synthèse, ou sans rien depuis 21 jours, ouvre une issue « Veille : synthèses à écrire » qui vous mentionne (e-mail de GitHub) ; elle est relancée chaque lundi par un commentaire, et se ferme toute seule quand tous les sujets sont à jour. Bilan sans rien envoyer : `node scripts/rappel-syntheses.mjs --essai`.
 - **Ajouter un sujet** : un nouvel élément dans `veille.sujets` (identifiant, nom, mots-clés, sources…), un dossier `content/veille/<id>/` avec `sujet.md` et `syntheses.md` (copier ceux d'un autre sujet), puis l'ajouter à la liste des sujets du tableau de bord (`config.js` du dépôt `veille-syntheses`). La première collecte se fait au lundi suivant, ou tout de suite avec **Run workflow**.
 
 ## Tableau de bord des synthèses
