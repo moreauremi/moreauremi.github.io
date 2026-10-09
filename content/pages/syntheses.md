@@ -10,7 +10,7 @@ titre: Mes synthèses
 
   Une synthèse par titre de niveau 2, la plus récente en haut, par exemple :
 
-  ## Octobre 2026 : NIS 2 arrive dans les PME industrielles
+  ## 09/10/2026 - NIS 2 arrive dans les PME industrielles
 
   Texte de la synthèse…
 
