@@ -19,7 +19,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const MAX_DAYS = 21; // au-delà, le sujet est en retard
 const TITLE = 'Veille : synthèses à écrire';
-const DASHBOARD = 'https://veille.remim.me';
+const DASHBOARD = 'https://dashboard.remim.me';
 const DAY = 24 * 60 * 60 * 1000;
 
 // Texte de syntheses.md → date (AAAA-MM-JJ) de la synthèse la plus récente,

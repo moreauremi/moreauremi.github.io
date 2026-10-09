@@ -51,7 +51,7 @@ C'est aussi ma présence en ligne de candidat : le jury, les recruteurs et mes c
 **L'hébergement et le nom de domaine.**
 
 - GitHub Pages sert le site en HTTPS, avec un certificat renouvelé automatiquement.
-- Le domaine remim.me est géré chez Namecheap : des enregistrements A vers les serveurs de GitHub Pages, un CNAME pour www, et un autre pour veille.remim.me, le sous-domaine du tableau de bord.
+- Le domaine remim.me est géré chez Namecheap : des enregistrements A vers les serveurs de GitHub Pages, un CNAME pour www, et un autre pour dashboard.remim.me, le sous-domaine du tableau de bord.
 - La publication est continue, avec GitHub Actions : à chaque envoi, vérification du code, construction, tests, puis mise en ligne. Une erreur arrête tout, et le site en ligne reste intact.
 - Une version Docker est prête pour l'héberger sur mon homelab : une image construite en deux étapes, servie par Nginx avec des en-têtes de sécurité.
 
@@ -63,15 +63,16 @@ C'est aussi ma présence en ligne de candidat : le jury, les recruteurs et mes c
 
 **La veille technologique.** Chaque lundi, une tâche GitHub Actions lit les flux RSS de 33 sources. GitHub Copilot choisit ensuite, pour chacun de mes trois sujets (cybersécurité des PME industrielles, virtualisation, facturation électronique), les articles les plus utiles, les résume et leur attribue des tags. Les actualités s'affichent dans la rubrique « Veille technologique », un onglet par sujet.
 
-**Le tableau de bord des synthèses** (veille.remim.me). C'est un second site statique, dans son propre dépôt, pour écrire mes synthèses sans ouvrir d'éditeur de code :
+**Le tableau de bord** (dashboard.remim.me). C'est un second site statique, dans son propre dépôt, pour piloter le portfolio sans ouvrir d'éditeur de code :
 
-- connexion par un jeton GitHub limité au dépôt du site et à deux droits : chaque enregistrement est un commit, qui republie le site ;
+- une vue d'ensemble : l'état de chaque veille (dernière synthèse, actualités à traiter, dernière collecte), le résultat de la dernière publication et de la dernière collecte, et les visites du site ;
+- connexion par un jeton GitHub limité au dépôt du site et à deux droits : chaque synthèse enregistrée est un commit, qui republie le site ;
 - reformulation d'un passage par l'IA : la page n'a pas de serveur, elle passe par un workflow GitHub Actions, sans jamais exposer le secret de l'IA ;
 - choix des actualités citées en sources, et retrait d'une actualité hors sujet ;
 - ancienneté de la dernière synthèse de chaque sujet, avec un rappel par e-mail (issue GitHub) si un sujet n'a rien depuis trois semaines ;
 - visites du site sur 7, 30 ou 90 jours, pages les plus vues et provenance des visiteurs.
 
-![Schéma d'architecture du portfolio : les visiteurs ouvrent remim.me en HTTPS ; le nom de domaine, géré chez Namecheap, mène à GitHub Pages, qui sert le portfolio et le tableau de bord veille.remim.me. Chaque page vue est comptée par GoatCounter. J'écris dans VS Code ou depuis le tableau de bord, qui enregistre dans le dépôt par l'API GitHub. Chaque envoi déclenche GitHub Actions, qui teste puis publie le site. Chaque lundi, la veille lit 33 flux RSS et fait résumer les articles par GitHub Copilot.](schemas/portfolio-architecture.svg "Architecture du portfolio : publication, veille automatique et tableau de bord")
+![Schéma d'architecture du portfolio : les visiteurs ouvrent remim.me en HTTPS ; le nom de domaine, géré chez Namecheap, mène à GitHub Pages, qui sert le portfolio et le tableau de bord dashboard.remim.me. Chaque page vue est comptée par GoatCounter. J'écris dans VS Code ou depuis le tableau de bord, qui enregistre dans le dépôt par l'API GitHub. Chaque envoi déclenche GitHub Actions, qui teste puis publie le site. Chaque lundi, la veille lit 33 flux RSS et fait résumer les articles par GitHub Copilot.](schemas/portfolio-architecture.svg "Architecture du portfolio : publication, veille automatique et tableau de bord")
 
 Claude Code m'a assisté pendant le développement.
 
@@ -87,7 +88,9 @@ Code source (licence MIT) : [le site](https://github.com/moreauremi/moreauremi.g
 
 ![Terminal caché : les commandes ls et cat affichent les fichiers du site, dont le dossier de chaque sujet de veille](captures/portfolio-remios/terminal.webp "Terminal caché : le site parcouru comme un système de fichiers")
 
-![Tableau de bord des synthèses : barre des trois sujets avec l'ancienneté de la dernière synthèse, liste des synthèses publiées, boîte des visites, et éditeur avec les actualités à citer en sources](captures/portfolio-remios/tableau-de-bord.webp "Tableau de bord veille.remim.me : écrire, citer ses sources, suivre sa régularité")
+![Vue d'ensemble du tableau de bord : état des trois veilles avec l'ancienneté de la dernière synthèse, état de la publication et de la collecte façon journal de démarrage, accès rapides, et boîte des visites du site](captures/portfolio-remios/tableau-de-bord.webp "Tableau de bord dashboard.remim.me : la vue d'ensemble")
+
+![Vue Synthèses du tableau de bord : barre des sujets, liste des synthèses publiées, éditeur, et actualités du sujet à cocher pour les citer en sources](captures/portfolio-remios/syntheses.webp "Tableau de bord : écrire une synthèse et citer ses sources")
 
 ## Résultats et tests
 

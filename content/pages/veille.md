@@ -8,7 +8,7 @@ titre: Veille technologique
   content/site.config.js (veille.sujets). Chaque sujet a son dossier
   content/veille/<id>/ :
     sujet.md          pourquoi ce sujet
-    syntheses.md      mes synthèses (écrites depuis https://veille.remim.me)
+    syntheses.md      mes synthèses (écrites depuis https://dashboard.remim.me)
     actualites.json   actualités ajoutées chaque lundi par scripts/veille.mjs
   Ce fichier contient ce qui est commun aux trois sujets : la méthode.
 -->

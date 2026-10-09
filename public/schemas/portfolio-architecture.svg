@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 668" width="800" height="668" role="img" aria-labelledby="t d" font-family="'IBM Plex Mono', ui-monospace, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace">
   <title id="t">Portfolio RémiOS — architecture</title>
-  <desc id="d">Les visiteurs (jury, recruteurs) ouvrent remim.me en HTTPS : le nom de domaine, géré chez Namecheap, mène à GitHub Pages, qui sert le portfolio, et le sous-domaine veille.remim.me au tableau de bord des synthèses. Chaque page vue est comptée par GoatCounter, sans cookie. J'écris le contenu dans VS Code ou depuis le tableau de bord, qui enregistre les synthèses dans le dépôt du site par l'API GitHub. Chaque envoi déclenche GitHub Actions : deploy.yml teste le site puis le publie ; une erreur bloque la mise en ligne. Chaque lundi, veille.yml lit les flux RSS de 33 sources, fait choisir et résumer les articles par GitHub Copilot, enregistre les actualités dans le dépôt et rappelle par une issue les synthèses à écrire. reformuler.yml fait reformuler un passage par Copilot, à la demande du tableau de bord.</desc>
+  <desc id="d">Les visiteurs (jury, recruteurs) ouvrent remim.me en HTTPS : le nom de domaine, géré chez Namecheap, mène à GitHub Pages, qui sert le portfolio, et le sous-domaine dashboard.remim.me au tableau de bord. Chaque page vue est comptée par GoatCounter, sans cookie. J'écris le contenu dans VS Code ou depuis le tableau de bord, qui enregistre les synthèses dans le dépôt du site par l'API GitHub. Chaque envoi déclenche GitHub Actions : deploy.yml teste le site puis le publie ; une erreur bloque la mise en ligne. Chaque lundi, veille.yml lit les flux RSS de 33 sources, fait choisir et résumer les articles par GitHub Copilot, enregistre les actualités dans le dépôt et rappelle par une issue les synthèses à écrire. reformuler.yml fait reformuler un passage par Copilot, à la demande du tableau de bord.</desc>
   <defs>
     <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M0 0 L10 5 L0 10 z" fill="#1a1d23"/>
@@ -34,7 +34,7 @@
   <rect x="292" y="124" width="256" height="92" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
   <text x="308" y="150" font-size="15" font-weight="600" fill="#1a1d23">GitHub Pages</text>
   <text x="308" y="172" font-size="12" fill="#4a5260">remim.me : le portfolio</text>
-  <text x="308" y="190" font-size="12" fill="#4a5260">veille.remim.me : synthèses</text>
+  <text x="308" y="190" font-size="12" fill="#4a5260">dashboard.remim.me : pilotage</text>
 
   <rect x="292" y="256" width="256" height="152" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
   <text x="308" y="282" font-size="15" font-weight="600" fill="#1a1d23">GitHub Actions</text>

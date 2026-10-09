@@ -134,7 +134,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [ ] **PDF** : tableau de synthèse.
 - [x] **Veille** : trois sujets (cybersécurité des PME industrielles, virtualisation, facturation électronique) et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
 - [x] **Jeton Copilot** : jeton GitHub « Copilot Requests » rangé dans les secrets du dépôt (`COPILOT_GITHUB_TOKEN`) ; la collecte des trois sujets fonctionne (9 octobre 2026). À renouveler avant son expiration, un an après sa création (voir [Mise en route](#mise-en-route-une-seule-fois)).
-- [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://veille.remim.me, à partir des actualités collectées.
+- [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://dashboard.remim.me, à partir des actualités collectées.
 - [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif.
 - [ ] **Réalisations en formation** (3 fiches en brouillon) : titres et contenu, au fil des TP et projets de cours. Le groupe affiche « À venir » sur le site tant qu'aucune n'est publiée.
 
@@ -177,7 +177,7 @@ content/veille/<sujet>/  un dossier par sujet de veille : pourquoi ce sujet (suj
 scripts/veille.mjs       veille automatique : pour chaque sujet, flux RSS → choix, résumés et tags par l'IA
                          → actualites.json
 scripts/ia.mjs           appel de l'IA (Copilot CLI ou API), commun à la veille et à la reformulation
-scripts/reformuler.mjs   reformulation d'un passage pour le tableau de bord des synthèses (veille.remim.me)
+scripts/reformuler.mjs   reformulation d'un passage pour le tableau de bord (dashboard.remim.me)
 index.html               page unique : meta, Open Graph, préchargement de la police
 404.html, 403.html       pages d'erreur du serveur : adresse inconnue, accès refusé
 503.html                 page de maintenance affichée par le reverse proxy (fichier autonome)
@@ -392,12 +392,12 @@ npm run veille                  # collecte complète, écrit content/veille/<suj
 
 ## Tableau de bord des synthèses
 
-Les synthèses de l'onglet « Mes synthèses » s'écrivent depuis une page privée, **https://veille.remim.me** : choix du sujet, liste, ajout, modification, suppression, aperçu, et **Reformuler avec l'IA** sur un passage sélectionné. Chaque enregistrement est un commit de `content/veille/<sujet>/syntheses.md` sur `main`, qui republie le site. Le code de la page, sa mise en route (DNS, jeton) et ses choix de sécurité sont dans son propre dépôt : [moreauremi/veille-syntheses](https://github.com/moreauremi/veille-syntheses).
+Un tableau de bord privé, **https://dashboard.remim.me**, pilote le portfolio. Sa **vue d'ensemble** montre l'état de chaque veille (dernière synthèse, actualités à traiter, dernière collecte), le résultat de la dernière publication et de la dernière collecte, et les visites du site. Sa vue **Synthèses** sert à écrire l'onglet « Mes synthèses » de chaque sujet : choix du sujet, liste, ajout, modification, suppression, aperçu, actualités à citer en sources, et **Reformuler avec l'IA** sur un passage sélectionné. Chaque enregistrement est un commit de `content/veille/<sujet>/syntheses.md` sur `main`, qui republie le site. Le code de la page, sa mise en route (DNS, jeton) et ses choix de sécurité sont dans son propre dépôt : [moreauremi/veille-syntheses](https://github.com/moreauremi/veille-syntheses).
 
 La page est statique (GitHub Pages) et n'a pas de serveur pour appeler l'IA. La reformulation passe donc par un workflow de **ce** dépôt, qui réutilise l'IA et le secret de la veille :
 
 ```
-veille.remim.me ──► version (release) brouillon ──► workflow reformuler.yml ──► scripts/reformuler.mjs ──► réponse écrite
+dashboard.remim.me ──► version (release) brouillon ──► workflow reformuler.yml ──► scripts/reformuler.mjs ──► réponse écrite
                     de ce dépôt, avec le passage    (lancé par la page)          Copilot (scripts/ia.mjs)    dans le même brouillon,
                                                                                                              lue puis supprimée par la page
 ```

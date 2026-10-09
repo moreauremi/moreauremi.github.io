@@ -1,6 +1,6 @@
 // =============================================================================
 // Reformulation d'un passage de synthèse, pour le tableau de bord des synthèses
-// (https://veille.remim.me, dépôt moreauremi/veille-syntheses)
+// (https://dashboard.remim.me, dépôt moreauremi/veille-syntheses)
 // -----------------------------------------------------------------------------
 // Le tableau de bord est une page statique : il n'a pas de serveur pour
 // appeler l'IA. Il passe donc par GitHub Actions (.github/workflows/reformuler.yml) :

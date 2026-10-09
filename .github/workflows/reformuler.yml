@@ -1,7 +1,7 @@
 # =============================================================================
 # Reformulation par l'IA, pour le tableau de bord des synthèses
 # -----------------------------------------------------------------------------
-# Lancé par la page https://veille.remim.me (dépôt moreauremi/veille-syntheses)
+# Lancé par la page https://dashboard.remim.me (dépôt moreauremi/veille-syntheses)
 # quand on clique sur « Reformuler avec l'IA » : la page dépose le passage dans
 # une version brouillon de ce dépôt, lance ce workflow avec son numéro, puis
 # lit la réponse écrite dans le même brouillon (voir scripts/reformuler.mjs).
