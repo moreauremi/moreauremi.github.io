@@ -83,8 +83,11 @@ export function checkVeille(root, id) {
   if (!Array.isArray(data.actualites)) return ['« actualites » doit être une liste.'];
 
   const errors = [];
-  // Adresses écartées depuis le tableau de bord (« Hors sujet »), facultatif
-  if (data.ecartees !== undefined && !isTextList(data.ecartees)) errors.push('« ecartees » doit être une liste d\'adresses.');
+  // Actualités écartées depuis le tableau de bord (« Hors sujet ») : absentes
+  // du site, gardées pour pouvoir les remettre. Facultatif.
+  if (data.horsSujet !== undefined && !(Array.isArray(data.horsSujet) && data.horsSujet.every((a) => typeof a?.titre === 'string' && /^https?:\/\//.test(a?.url ?? '')))) {
+    errors.push('« horsSujet » doit être une liste d\'actualités (titre et adresse).');
+  }
   data.actualites.forEach((a, index) => {
     const label = `actualité n° ${index + 1}${typeof a?.titre === 'string' ? ` (« ${a.titre} »)` : ''}`;
     for (const key of ['titre', 'source', 'resume']) {
