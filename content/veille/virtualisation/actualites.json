@@ -1,0 +1,57 @@
+{
+  "miseAJour": "2026-10-09",
+  "actualites": [
+    {
+      "id": "19a9219d8dc8",
+      "date": "2026-10-08",
+      "titre": "VMware : trois ans après le rachat, la migration est toujours un sujet brûlant",
+      "source": "Next",
+      "url": "https://next.ink/260701/vmware-trois-ans-apres-le-rachat-la-migration-est-toujours-un-sujet-brulant/",
+      "resume": "Le rachat de VMware par Broadcom a supprimé certains produits et les licences perpétuelles, au profit d’offres par abonnement. Une étude citée par Rimini Street indique que les coûts et les changements de licences poussent de nombreuses entreprises à envisager une diversification ou une migration partielle et progressive.",
+      "tags": [
+        "VMware",
+        "Broadcom",
+        "migration"
+      ]
+    },
+    {
+      "id": "940e851cf60b",
+      "date": "2026-10-06",
+      "titre": "Vates lève 30 M€ pour bâtir un acteur européen de la virtualisation",
+      "source": "Silicon",
+      "url": "https://www.silicon.fr/business-1367/vates-leve-30-me-pour-batir-un-acteur-europeen-de-la-virtualisation-229536",
+      "resume": "Vates a levé 30 millions d’euros pour développer sa plateforme open source de virtualisation, dans un contexte de remise en question des choix VMware. L’entreprise met l’accent sur la performance, le stockage, la sécurité, l’automatisation et l’accompagnement de projets de migration.",
+      "tags": [
+        "migration",
+        "stockage",
+        "sécurité"
+      ]
+    },
+    {
+      "id": "2d810e650036",
+      "date": "2026-10-05",
+      "titre": "October 2026 Updates #1 for XCP-ng 8.3 LTS",
+      "source": "XCP-ng",
+      "url": "https://xcp-ng.org/blog/2026/10/05/october-2026-updates-1-for-xcp-ng-8-3-lts/",
+      "resume": "Une mise à jour de maintenance de XCP-ng 8.3 LTS accélère les migrations de stockage et améliore les performances des grands disques QCOW2. Elle corrige aussi des problèmes de fiabilité, de sauvegarde et de corruption de données sur certaines machines virtuelles Windows, tout en mettant OpenSSL à jour.",
+      "tags": [
+        "nouvelle version",
+        "stockage",
+        "sauvegarde"
+      ]
+    },
+    {
+      "id": "dda16ec72224",
+      "date": "2026-09-25",
+      "titre": "Virtualisation : comment la concurrence s’est rapprochée de VMware",
+      "source": "Silicon",
+      "url": "https://www.silicon.fr/cloud-1370/virtualisation-magic-quadrant-2026-229379",
+      "resume": "Selon Gartner, VMware conserve une avance en matière de vision, mais Microsoft, Nutanix, Red Hat et d’autres concurrents se rapprochent sur l’exécution. Hyper-V bénéficie notamment d’intégrations, d’améliorations de sécurité matérielle et d’outils hybrides, tandis que Proxmox figure parmi les fournisseurs analysés.",
+      "tags": [
+        "VMware",
+        "Hyper-V",
+        "Proxmox"
+      ]
+    }
+  ]
+}

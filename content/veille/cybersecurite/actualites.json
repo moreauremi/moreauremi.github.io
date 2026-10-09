@@ -1,6 +1,44 @@
 {
-  "miseAJour": "2026-10-07",
+  "miseAJour": "2026-10-09",
   "actualites": [
+    {
+      "id": "fb953339553b",
+      "date": "2026-10-08",
+      "titre": "Atlassian : une faille critique permet de lire des fichiers sur Jira, Confluence et Bitbucket",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/atlassian-cve-2026-21589-faille-critique-jira-confluence-bitbucket/",
+      "resume": "Atlassian a corrigé une vulnérabilité critique permettant à un attaquant non authentifié de lire certains fichiers sur plusieurs produits Data Center auto-hébergés. Les PME industrielles utilisant ces solutions doivent appliquer les correctifs ou, temporairement, retirer les instances d’Internet afin de réduire le risque d’exposition de fichiers sensibles.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
+      ]
+    },
+    {
+      "id": "781603ff146a",
+      "date": "2026-10-08",
+      "titre": "Flare dévoile une nouvelle menace ClickFix qui dissimule son code malveillant via DNS",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/malwares-virus-antivirus/flare-devoile-une-nouvelle-menace-clickfix-qui-dissimule-son-code-malveillant-via-dns.html",
+      "resume": "Flare a analysé CrocoRat, un cheval de Troie utilisé dans des campagnes ClickFix où une fausse page de vérification pousse la victime à exécuter elle-même une commande. Le logiciel utilise des enregistrements DNS TXT pour dissimuler la charge PowerShell suivante, ce qui complique la détection et rend la sensibilisation des utilisateurs importante pour une PME industrielle.",
+      "tags": [
+        "hameçonnage",
+        "cybercriminalité",
+        "sensibilisation"
+      ]
+    },
+    {
+      "id": "cc072f7029eb",
+      "date": "2026-10-07",
+      "titre": "Présidentielle 2027 : la cybercriminalité du quotidien s’invite dans le débat",
+      "source": "InCyber",
+      "url": "https://incyber.org/article/presidentielle-2027-la-cybercriminalite-du-quotidien-sinvite-dans-le-debat/",
+      "resume": "L’article décrit une cybercriminalité visant aussi les particuliers, les TPE et les associations, notamment par rançongiciels, faux conseillers bancaires et usurpations d’identité. Il souligne que l’intelligence artificielle rend les courriels frauduleux et les imitations vocales plus crédibles, ce qui renforce le besoin de mesures techniques et de sensibilisation dans les PME industrielles.",
+      "tags": [
+        "cybercriminalité",
+        "intelligence artificielle",
+        "sensibilisation"
+      ]
+    },
     {
       "id": "bc1edc2af2b8",
       "date": "2026-10-06",
@@ -11,6 +49,18 @@
       "tags": [
         "vulnérabilité",
         "PME"
+      ]
+    },
+    {
+      "id": "0582b66ef572",
+      "date": "2026-10-05",
+      "titre": "Bulletin d'actualité CERTFR-2026-ACT-042 (05 octobre 2026)",
+      "source": "CERT-FR (ANSSI)",
+      "url": "https://www.cert.ssi.gouv.fr/actualite/CERTFR-2026-ACT-042/",
+      "resume": "Le CERT-FR signale plusieurs vulnérabilités affectant notamment NetScaler ADC et Gateway, dont deux permettant une exécution de code à distance sans authentification et exploitées activement avant la disponibilité des correctifs. Cette situation souligne l’importance, pour une PME industrielle, de suivre les avis de sécurité et de prioriser rapidement les mises à jour des équipements exposés.",
+      "tags": [
+        "vulnérabilité",
+        "systèmes industriels (OT)"
       ]
     },
     {
@@ -60,6 +110,32 @@
       "tags": [
         "vulnérabilité",
         "hameçonnage"
+      ]
+    },
+    {
+      "id": "0689e90231e7",
+      "date": "2026-10-01",
+      "titre": "Ransomware : +171% d’attaques en un an, quelle stratégie de reprise en France ?",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/malwares-virus-antivirus/ransomware-171-dattaques-en-un-an-quelle-strategie-de-reprise-en-france.html",
+      "resume": "Une étude présentée par Cohesity indique que les entreprises françaises privilégient une reprise progressive après une cyberattaque, en restaurant d’abord une « entreprise minimale » capable d’assurer les fonctions critiques. Pour une PME industrielle, cette approche met l’accent sur la définition préalable des activités prioritaires et d’un kit de survie numérique plutôt que sur une restauration précipitée.",
+      "tags": [
+        "rançongiciel",
+        "sauvegarde",
+        "PME"
+      ]
+    },
+    {
+      "id": "e22a8ec3db4f",
+      "date": "2026-09-30",
+      "titre": "Vol de données fiscales : l’ANSSI confirme les mauvaises pratiques cyber de Bercy",
+      "source": "Silicon",
+      "url": "https://www.silicon.fr/cybersecurite-1371/vol-de-donnees-fiscales-lanssi-confirme-les-mauvaises-pratiques-cyber-de-bercy-229447",
+      "resume": "Selon l’ANSSI, le vol de données fiscales résulte de faiblesses classiques combinées : identifiants dérobés, authentification insuffisante, cloisonnement limité et supervision lacunaire. Cet incident montre qu’une PME industrielle doit renforcer les accès, segmenter ses réseaux et surveiller les exfiltrations pour limiter l’impact d’une compromission de comptes.",
+      "tags": [
+        "fuite de données",
+        "vulnérabilité",
+        "PME"
       ]
     },
     {

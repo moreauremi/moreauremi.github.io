@@ -1,0 +1,83 @@
+{
+  "miseAJour": "2026-10-09",
+  "actualites": [
+    {
+      "id": "f3274fbb59b4",
+      "date": "2026-10-07",
+      "titre": "La facturation électronique ne se résume pas à choisir une plateforme",
+      "source": "Journal du Net",
+      "url": "https://www.journaldunet.com/fintech/1555429-la-facturation-electronique-ne-se-resume-pas-a-choisir-une-plateforme/",
+      "resume": "Depuis septembre 2026, les grandes entreprises et ETI émettent des factures électroniques, tandis que toutes les entreprises doivent pouvoir les recevoir ; pour la plupart des PME, l’émission devient obligatoire en septembre 2027. La préparation nécessite d’adapter les outils, de fiabiliser les données clients et d’identifier correctement les destinataires, ce qui implique un accompagnement structuré par l’intégrateur ERP.",
+      "tags": [
+        "calendrier",
+        "PME",
+        "ERP"
+      ]
+    },
+    {
+      "id": "4df265e8820b",
+      "date": "2026-10-06",
+      "titre": "Facturation électronique : quels impacts pour les Daf quand la PA ne facture pas ?",
+      "source": "DAF Magazine",
+      "url": "https://www.daf-mag.fr/bi-1244/transformation-processus-2133/facturation-electronique-quels-impacts-pour-les-daf-quand-la-pa-ne-facture-pas-27568",
+      "resume": "Klee Group avait anticipé la réforme et intégré ses exigences dans le choix de son nouvel ERP, mais la connexion entre l’ERP et la plateforme agréée n’était toujours pas active lors de l’entrée en vigueur. Cet exemple montre qu’une préparation métier et réglementaire ne suffit pas sans validation opérationnelle des interfaces et des flux.",
+      "tags": [
+        "ERP",
+        "plateformes agréées",
+        "calendrier"
+      ]
+    },
+    {
+      "id": "13f610da2852",
+      "date": "2026-10-05",
+      "titre": "Facturation électronique : des difficultés moins importantes que prévu, mais une adhésion en recul",
+      "source": "DAF Magazine",
+      "url": "https://www.daf-mag.fr/bi-1244/transformation-processus-2133/facturation-electronique-des-difficultes-moins-importantes-que-prevu-mais-une-adhesion-en-recul-27578",
+      "resume": "Un baromètre publié après l’entrée en vigueur de la réforme indique que les entreprises ont rencontré moins de bugs, de partenaires non préparés et de difficultés liées aux plateformes qu’elles ne le craignaient. Malgré ce démarrage opérationnel plutôt favorable, l’adhésion à la réforme recule, un point important pour les PME et leurs accompagnateurs.",
+      "tags": [
+        "PME",
+        "plateformes agréées",
+        "administration"
+      ]
+    },
+    {
+      "id": "937b2b66d7b0",
+      "date": "2026-09-29",
+      "titre": "Facturation électronique : quel état des lieux peut-on faire après la phase de démarrage ?",
+      "source": "DAF Magazine",
+      "url": "https://www.daf-mag.fr/bi-1244/transformation-processus-2133/facturation-electronique-quel-etat-des-lieux-peut-on-faire-apres-la-phase-de-demarrage-27484",
+      "resume": "Trois semaines après le démarrage, 42 % des entreprises soumises à l’obligation d’émission avaient commencé à transmettre des factures, avec des niveaux différents selon la taille des entreprises. Certaines plateformes agréées n’avaient pas encore démarré leur activité, soulignant pour les intégrateurs l’importance d’évaluer la préparation et la pérennité des partenaires choisis.",
+      "tags": [
+        "calendrier",
+        "plateformes agréées",
+        "ERP"
+      ]
+    },
+    {
+      "id": "695e93c93452",
+      "date": "2026-09-23",
+      "titre": "Facture électronique : comment se transforme le cycle Order-to-Cash",
+      "source": "DAF Magazine",
+      "url": "https://www.daf-mag.fr/bi-1244/transformation-processus-2133/facture-electronique-comment-se-transforme-le-cycle-order-to-cash-27408",
+      "resume": "La facturation électronique peut fournir de nouvelles données sur le traitement des factures, notamment les validations, rejets ou litiges transmis par les plateformes agréées. Leur intégration dans les outils de gestion du risque et du recouvrement pourrait améliorer la productivité et éviter certaines relances, ce qui ouvre un chantier d’accompagnement pour les intégrateurs ERP.",
+      "tags": [
+        "plateformes agréées",
+        "ERP",
+        "e-reporting"
+      ]
+    },
+    {
+      "id": "dedf3b0057c3",
+      "date": "2026-09-22",
+      "titre": "Facturation électronique : de l’ERP à la PA, comment choisir ?",
+      "source": "DAF Magazine",
+      "url": "https://www.daf-mag.fr/bi-1244/facturation-electronique-de-lerp-a-la-pa-comment-choisir-27393",
+      "resume": "La réforme distingue les solutions de dématérialisation, qui portent les usages métier, des plateformes agréées, qui assurent notamment la transmission via Peppol. Le choix du schéma de flux est complexe lorsque les entreprises utilisent des ERP variés, ce qui renforce le rôle des experts-comptables et des intégrateurs dans la conception d’une architecture adaptée.",
+      "tags": [
+        "plateformes agréées",
+        "Peppol",
+        "ERP"
+      ]
+    }
+  ]
+}
