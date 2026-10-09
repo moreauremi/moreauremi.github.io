@@ -284,12 +284,21 @@ reference/               maquette validée au départ du projet (hors build) : m
 
 - **Site 100 % statique** : pas de base de données, pas de code exécuté sur le serveur. La surface d'attaque se limite à nginx.
 - **Formulaire de contact sans serveur** : un formulaire HTML classique, envoyé directement au service Web3Forms qui transfère le message par e-mail sans le conserver. Le site ne reçoit ni ne stocke aucune donnée. La CSP n'autorise l'envoi de formulaires que vers le site lui-même et ce service (`form-action`), et seulement quand le formulaire est activé. Les mentions légales détaillent alors le traitement des données (RGPD).
-- **Mentions légales** (`#/mentions-legales`) : éditeur, hébergeur, propriété intellectuelle, crédits, données personnelles. Le site ne dépose aucun cookie : pas de bandeau de consentement nécessaire.
+- **Mentions légales** (`#/mentions-legales`) : éditeur, hébergeur, propriété intellectuelle, crédits, données personnelles, mesure d'audience. Le site ne dépose aucun cookie : pas de bandeau de consentement nécessaire.
+- **Mesure d'audience sans script extérieur** : voir [Mesure d'audience](#mesure-daudience). La CSP n'autorise les requêtes (`connect-src`, `img-src`) que vers le site lui-même et le point de comptage de GoatCounter, et seulement quand la mesure est activée.
 - **Aucune injection possible.** Ce que tape le visiteur dans le terminal est affiché avec `textContent`, jamais interprété comme du HTML. Les textes de la configuration sont échappés avant affichage.
 - **CSP stricte** (`script-src 'self'`) : le navigateur refuse tout script externe ou injecté. Possible parce que le site n'a aucun script ni style écrit dans le HTML. Deux exceptions, autorisées chacune par son empreinte SHA-256 calculée au build, et non par `'unsafe-inline'` : les données structurées (un bloc JSON que le navigateur n'exécute pas, mais que le validateur du W3C demande d'autoriser) et le style de la page de maintenance (503), qui doit tenir dans un seul fichier. Sur GitHub Pages, qui ne permet pas d'envoyer des en-têtes HTTP, elle est ajoutée au build dans une balise `<meta>` ; la version Docker l'envoie en plus dans les en-têtes nginx. Les deux viennent de la même définition (`plugins/content/csp.js`) : si `docker/security-headers.conf` ne correspond plus (par exemple après avoir retiré le formulaire de contact), le build s'arrête et indique la ligne à écrire.
 - **HTTPS** : certificat fourni et renouvelé automatiquement par GitHub Pages.
 - **Conteneur durci** : image multi-stage (aucun outil de build dans l'image finale), système de fichiers en lecture seule, pas d'élévation de privilèges, version de nginx masquée, en-têtes de sécurité (anti-clickjacking, nosniff, Referrer-Policy, Permissions-Policy).
 - **Liens externes** ouverts avec `rel="noopener noreferrer"` : la page ouverte ne peut pas agir sur le portfolio.
+
+### Mesure d'audience
+
+- **GoatCounter** (gratuit pour un site personnel, open source) compte les écrans consultés : `#/`, `#/veille/virtualisation`, `#/realisations/caffein`, `#/jury`… Statistiques sur https://remim.goatcounter.com et dans le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses).
+- **Sans le script de GoatCounter** : `src/utils/audience.js` envoie lui-même une requête par écran affiché (`navigator.sendBeacon`, comme le script officiel), avec seulement la page, le site d'origine à l'arrivée et la largeur de l'écran. Le site garde sa règle « aucun script extérieur », et son poids ne change pas.
+- **Rien n'est compté** en dehors de https://remim.me (développement, tests, homelab), pour un navigateur piloté par un programme (tests, robots), ni quand le navigateur demande à ne pas être suivi (Do Not Track, Global Privacy Control).
+- **Ne pas compter ses propres visites** : ouvrir une fois https://remim.me/#toggle-goatcounter sur chaque appareil (Mac, téléphone). Un message confirme ; la même adresse réactive le comptage.
+- **Réglage** : `audience.goatcounter` dans `content/site.config.js`. Vide = aucune mesure : la CSP, la ligne nginx (vérifiée au build) et les mentions légales s'adaptent toutes seules.
 
 ## Qualité mesurée
 
@@ -662,7 +671,7 @@ Une page d'erreur dans le style du site, avec le bon code HTTP : 404 pour une ad
 Site statique (pas de base de données, aucun code exécuté sur le serveur), HTTPS, politique de sécurité du contenu (CSP) stricte qui bloque tout script externe ou injecté. Le formulaire de contact est envoyé à un service tiers (Web3Forms), seule destination autorisée par la CSP ; le site ne stocke aucune donnée. Sur GitHub Pages, la CSP est dans une balise meta ; la version Docker ajoute les en-têtes HTTP complets (anti-clickjacking, nosniff…), masque la version de nginx et tourne dans un conteneur en lecture seule.
 
 **Et le RGPD ?**
-Aucun cookie, aucune mesure d'audience, aucune ressource extérieure : rien à consentir. Le seul traitement de données personnelles est le formulaire de contact. Les mentions légales disent à quoi servent les données (répondre au message), par qui elles passent (Web3Forms), combien de temps elles sont gardées et comment exercer ses droits.
+Aucun cookie, aucune ressource extérieure, rien n'est enregistré sur l'appareil du visiteur : pas de bandeau de consentement. La mesure d'audience (GoatCounter) ne garde que des totaux, sans adresse IP ni identifiant ; elle est décrite dans les mentions légales, et les navigateurs qui demandent à ne pas être suivis ne sont pas comptés. Le seul traitement de données personnelles est le formulaire de contact. Les mentions légales disent à quoi servent les données (répondre au message), par qui elles passent (Web3Forms), combien de temps elles sont gardées et comment exercer ses droits.
 
 **Pourquoi héberger la police soi-même ?**
 Pour que le site marche sans accès extérieur, et pour ne pas transmettre l'adresse IP des visiteurs à Google : en 2022, un tribunal de Munich a condamné un site qui chargeait Google Fonts sans consentement (RGPD).

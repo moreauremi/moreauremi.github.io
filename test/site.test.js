@@ -14,6 +14,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import { DIST, openSite } from './browser.js';
+import site from '../content/site.config.js';
 
 const PAGES = ['index.html', '404.html', '403.html', '503.html'];
 const read = (file) => fs.readFileSync(path.join(DIST, file), 'utf8');
@@ -138,6 +139,35 @@ test('veille : un onglet par sujet, et dans chacun « actualités » et « synth
     await wait();
     assert.match(document.querySelector('.tui-box-title').textContent, /Veille .+ : /);
     assert.match(document.querySelector('[data-back]').getAttribute('href'), /^#\/veille\/[a-z0-9-]+$/);
+  }
+  assert.deepEqual(errors, []);
+});
+
+test('mesure d\'audience : annoncée dans les mentions légales et autorisée par la CSP, rien d\'envoyé en test', async (t) => {
+  const counter = site.audience?.goatcounter ? new URL(site.audience.goatcounter).origin : null;
+  const csp = /http-equiv="Content-Security-Policy" content="([^"]+)"/.exec(read('index.html'))[1].replaceAll('&#39;', "'");
+  assert.equal(/connect-src [^;]*goatcounter/.test(csp), Boolean(counter), 'connect-src');
+
+  const { window, document, errors, wait } = await openSite(t, '#/mentions-legales');
+  const text = document.querySelector('.tui-box-inner').textContent;
+  assert.equal(text.includes('GoatCounter'), Boolean(counter), 'paragraphe « Mesure d\'audience »');
+  assert.equal(text.includes("n'utilise aucun outil de mesure d'audience"), !counter);
+
+  // Navigateur piloté par un programme (les tests, les robots) : rien n'est compté
+  const sent = [];
+  window.navigator.sendBeacon = (url) => sent.push(new URL(url)) > 0;
+  window.location.hash = '#/veille';
+  await wait();
+  assert.deepEqual(sent, []);
+
+  // Visiteur ordinaire : une page vue par écran affiché, envoyée à GoatCounter
+  if (counter) {
+    Object.defineProperty(window.navigator, 'webdriver', { value: false, configurable: true });
+    window.location.hash = '#/realisations';
+    await wait();
+    assert.equal(sent.length, 1);
+    assert.equal(`${sent[0].origin}${sent[0].pathname}`, `${counter}/count`);
+    assert.equal(sent[0].searchParams.get('p'), '/realisations');
   }
   assert.deepEqual(errors, []);
 });

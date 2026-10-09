@@ -23,6 +23,7 @@ import { createSounds } from './audio/sounds.js';
 import { setupPagers } from './ui/pager.js';
 import { setupTabs } from './ui/tabs.js';
 import { isTypingTarget } from './utils/keyboard.js';
+import { countView, handleCountingToggle } from './utils/audience.js';
 import appHtml from './app.html?raw';
 
 // --- Construction de la page ---------------------------------------------------
@@ -94,6 +95,9 @@ function render(route, options) {
   // (pas au premier affichage : le visiteur n'a encore rien choisi)
   if (options?.focus !== false && ['section', 'veille', 'fiche', 'tag'].includes(route.name)) sounds.select();
 
+  // Mesure d'audience : un écran affiché = une page vue (voir utils/audience.js)
+  countView();
+
   const juryMode = isJuryRoute(route);
   // L'attribut data-view sur <html> permet au CSS d'adapter le fond de page
   document.documentElement.dataset.view = juryMode ? 'jury' : 'tui';
@@ -112,11 +116,12 @@ function reboot() {
 // Premier affichage : l'écran demandé est rendu tout de suite (sous le boot),
 // sans déplacer le focus. Le boot ne se joue qu'à l'arrivée sur l'accueil :
 // un lien direct (#/jury, #/realisations/nas…) affiche la page sans attendre.
+handleCountingToggle(); // #toggle-goatcounter : ne plus compter ses propres visites
 const firstRoute = parseRoute();
 render(firstRoute, { focus: false });
 if (firstRoute.name === 'home') boot.start();
 
-onRouteChange((route) => render(route));
+onRouteChange((route) => render(handleCountingToggle() ? parseRoute() : route));
 
 // --- Passer le démarrage -----------------------------------------------------------
 

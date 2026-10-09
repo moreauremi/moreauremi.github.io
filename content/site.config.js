@@ -90,6 +90,21 @@ export default {
     cle: 'b50721de-2c4b-4c0c-9b1e-c16876ec32e9',
   },
 
+  // --- Mesure d'audience ------------------------------------------------------
+  // GoatCounter (https://www.goatcounter.com : gratuit pour un site personnel,
+  // open source, sans cookie) compte les écrans consultés. Le script de
+  // GoatCounter n'est pas chargé : src/utils/audience.js envoie lui-même une
+  // requête par écran affiché (#/veille, #/realisations/nas…), et le site
+  // garde sa règle « aucun script extérieur ». Statistiques : sur
+  // https://remim.goatcounter.com et dans le tableau de bord des synthèses.
+  // Pour ne pas compter ses propres visites : ouvrir une fois
+  // https://remim.me/#toggle-goatcounter sur chaque appareil.
+  // Vide = aucune mesure : la politique de sécurité et les mentions légales
+  // s'adaptent toutes seules.
+  audience: {
+    goatcounter: 'https://remim.goatcounter.com',
+  },
+
   // --- Documents PDF ----------------------------------------------------------
   // 1. Déposer le fichier dans public/docs/ (ex. public/docs/cv.pdf)
   // 2. Indiquer son chemin ici, sans « public/ » : cv: 'docs/cv.pdf'

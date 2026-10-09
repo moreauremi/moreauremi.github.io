@@ -75,6 +75,9 @@ export async function openSite(t, hash = '') {
 }
 
 function addMissingApis(window) {
+  // Navigateur piloté par un programme : la mesure d'audience ne compte rien
+  // (src/utils/audience.js), alors même que la page se croit sur remim.me
+  Object.defineProperty(window.navigator, 'webdriver', { value: true, configurable: true });
   // Animations normales (le boot se joue), comme sur la plupart des appareils
   window.matchMedia = (media) => ({ matches: false, media, addEventListener() {}, removeEventListener() {} });
   window.HTMLDialogElement.prototype.showModal = function showModal() {

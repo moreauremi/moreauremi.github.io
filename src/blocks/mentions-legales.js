@@ -37,11 +37,19 @@ export function mentionsLegalesBlock() {
     </ul>
 
     <h2>Données personnelles et cookies</h2>
-    <p>Ce site ne dépose aucun cookie, n'utilise aucun outil de mesure d'audience et ne charge aucune ressource extérieure (police, script, image).</p>
+    <p>Ce site ne dépose aucun cookie${site.audience?.goatcounter ? '' : ", n'utilise aucun outil de mesure d'audience"} et ne charge aucune ressource extérieure (police, script, image).</p>
     <p>Le réglage du son (activé ou coupé) est mémorisé dans le navigateur du visiteur, sur son appareil : il n'est jamais transmis.</p>
     <p>Comme tout hébergeur, ${safe(hebergeur.nom)} enregistre l'adresse IP des visiteurs pour la sécurité de son service : voir sa <a href="${escapeHtml(hebergeur.confidentialite)}" ${NEW_TAB}>déclaration de confidentialité</a>.</p>
+    ${site.audience?.goatcounter ? audiencePrivacy() : ''}
     ${site.formulaire?.cle ? formPrivacy(mail) : ''}
   </div>`);
+}
+
+// Mesure d'audience (voir src/utils/audience.js)
+function audiencePrivacy() {
+  return `<h2>Mesure d'audience</h2>
+    <p>Pour connaître la fréquentation du site, chaque page consultée est comptée avec GoatCounter, un outil de statistiques open source qui ne dépose aucun cookie et ne conserve ni l'adresse IP ni d'identifiant des visiteurs. Seuls des totaux sont enregistrés : page consultée, date, site d'origine, navigateur, système, taille d'écran et pays. Voir sa <a href="https://www.goatcounter.com/help/privacy" ${NEW_TAB}>politique de confidentialité</a>.</p>
+    <p>Les navigateurs réglés pour demander à ne pas être suivis (« Do Not Track » ou « Global Privacy Control ») ne sont pas comptés.</p>`;
 }
 
 // Informations obligatoires (RGPD) dès qu'un formulaire collecte des données

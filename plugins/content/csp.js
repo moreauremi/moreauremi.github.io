@@ -16,19 +16,22 @@ import { FORM_ACTION } from '../../src/utils/contact-form.js';
 export const NGINX_HEADERS_FILE = 'docker/security-headers.conf';
 
 // Scripts, styles, polices et images ne peuvent venir que du site lui-même.
-// Seule exception : si le formulaire de contact est activé, il peut être
-// envoyé au service qui transmet les messages.
+// Deux exceptions : si le formulaire de contact est activé, il peut être
+// envoyé au service qui transmet les messages ; si la mesure d'audience est
+// activée, une requête peut partir vers GoatCounter (connect-src pour
+// sendBeacon, img-src pour les navigateurs qui ne l'ont pas).
 // `scriptHashes`, `styleHashes` : empreintes des blocs écrits dans la page
 // (données structurées, style de 503.html), autorisés un par un.
 export function contentSecurityPolicy(site, { scriptHashes = [], styleHashes = [] } = {}) {
   const formAction = site.formulaire?.cle ? `'self' ${new URL(FORM_ACTION).origin}` : "'self'";
+  const audience = site.audience?.goatcounter ? ` ${new URL(site.audience.goatcounter).origin}` : '';
   return [
     "default-src 'self'",
     ["script-src 'self'", ...scriptHashes].join(' '),
     ["style-src 'self'", ...styleHashes].join(' '),
-    "img-src 'self' data:",
+    `img-src 'self' data:${audience}`,
     "font-src 'self'",
-    "connect-src 'self'",
+    `connect-src 'self'${audience}`,
     "object-src 'none'",
     "base-uri 'self'",
     `form-action ${formAction}`,
