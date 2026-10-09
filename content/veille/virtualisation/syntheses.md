@@ -19,11 +19,4 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
-## 09/10/2026 - dofghdiughdrfkugh
-
-ekguheriughidurghdiurshgui
-
-**Sources**
-
-- [VMware : trois ans après le rachat, la migration est toujours un sujet brûlant](https://next.ink/260701/vmware-trois-ans-apres-le-rachat-la-migration-est-toujours-un-sujet-brulant/) (Next, 8 octobre 2026)
-- [Vates lève 30 M€ pour bâtir un acteur européen de la virtualisation](https://www.silicon.fr/business-1367/vates-leve-30-me-pour-batir-un-acteur-europeen-de-la-virtualisation-229536) (Silicon, 6 octobre 2026)
+À venir.
