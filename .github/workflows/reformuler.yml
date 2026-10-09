@@ -1,0 +1,68 @@
+# =============================================================================
+# Reformulation par l'IA, pour le tableau de bord des synthèses
+# -----------------------------------------------------------------------------
+# Lancé par la page https://veille.remim.me (dépôt moreauremi/veille-syntheses)
+# quand on clique sur « Reformuler avec l'IA » : la page dépose le passage dans
+# une version brouillon de ce dépôt, lance ce workflow avec son numéro, puis
+# lit la réponse écrite dans le même brouillon (voir scripts/reformuler.mjs).
+#
+# L'IA est celle de la veille : GitHub Copilot, avec le même secret
+# COPILOT_GITHUB_TOKEN (voir veille.yml et le README).
+# =============================================================================
+
+name: Reformulation (tableau de bord des synthèses)
+
+on:
+  workflow_dispatch:
+    inputs:
+      demande:
+        description: Numéro de la version brouillon qui contient le passage (créée par le tableau de bord)
+        required: true
+        type: string
+
+# Lire et écrire la version brouillon de la demande ; rien d'autre
+permissions:
+  contents: write
+
+jobs:
+  reformuler:
+    name: Reformuler le passage
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Installer Node.js (version indiquée dans .nvmrc)
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Installer Copilot CLI
+        run: npm install -g @github/copilot@1
+
+      # Le numéro de la demande passe par une variable d'environnement, jamais
+      # directement dans la commande (pas d'injection possible)
+      - name: Reformuler
+        id: reformuler
+        run: node scripts/reformuler.mjs
+        env:
+          REFORMULATION_ID: ${{ inputs.demande }}
+          VEILLE_IA_CLE: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+
+      # Échec avant la reformulation (installation…) : la page est prévenue au
+      # lieu d'attendre. Seulement sur un brouillon créé par le tableau de bord.
+      - name: Prévenir la page en cas d'échec
+        if: failure() && steps.reformuler.outcome == 'skipped'
+        run: |
+          brouillon=$(gh api "repos/$GITHUB_REPOSITORY/releases/$REFORMULATION_ID" --jq '.draft and (.tag_name | startswith("reformulation-"))')
+          if [ "$brouillon" = "true" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/releases/$REFORMULATION_ID" \
+              -f body='{"etat":"erreur","message":"la tâche GitHub Actions a échoué : voir son journal dans l’onglet Actions du dépôt."}' > /dev/null
+          fi
+        env:
+          REFORMULATION_ID: ${{ inputs.demande }}
+          GH_TOKEN: ${{ github.token }}

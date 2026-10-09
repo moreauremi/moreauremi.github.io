@@ -13,6 +13,10 @@ titre: Mes synthèses
   ## Octobre 2026 : NIS 2 arrive dans les PME industrielles
 
   Texte de la synthèse…
+
+  Les synthèses s'écrivent de préférence depuis le tableau de bord
+  https://veille.remim.me, qui enregistre ce fichier sur GitHub : faire
+  `git pull` avant de le modifier à la main. Voir le README.
 -->
 
 À venir.

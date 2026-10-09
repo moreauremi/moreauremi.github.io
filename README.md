@@ -18,6 +18,7 @@ Le site se présente comme le démarrage d'un système Linux : écran GRUB, jour
 - [Choix techniques](#choix-techniques)
 - [Qualité mesurée](#qualité-mesurée)
 - [Veille automatique](#veille-automatique)
+- [Tableau de bord des synthèses](#tableau-de-bord-des-synthèses)
 - [Mettre en ligne sur remim.me (GitHub Pages)](#mettre-en-ligne-sur-remimme-github-pages)
 - [Autre option : héberger sur le homelab (Docker + nginx)](#autre-option--héberger-sur-le-homelab-docker--nginx)
 - [Préparer l'oral](#préparer-loral)
@@ -89,7 +90,7 @@ Un lien direct vers une rubrique, une fiche ou la vue jury s'affiche sans jouer 
 Tout le contenu est dans `content/` : aucune ligne de code à toucher.
 
 - **Informations générales** (contact, sujet de veille, compétences du référentiel, PDF, mentions légales, services affichés au démarrage) : `content/site.config.js`, commenté ligne par ligne.
-- **Présentation, alternance et veille** : `content/pages/presentation.md`, `content/pages/alternance.md`, `content/pages/veille.md` et `content/pages/syntheses.md` (synthèses de veille).
+- **Présentation, alternance et veille** : `content/pages/presentation.md`, `content/pages/alternance.md`, `content/pages/veille.md` et `content/pages/syntheses.md` (synthèses de veille, à écrire de préférence depuis le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses)).
 - **Photo** : déposer le portrait dans `public/photo/` (`.webp` carré, environ 400 × 400 px), puis indiquer son chemin dans `identite.photo` (`photo: 'photo/remi-moreau.webp'`).
 - **Compétences techniques** (rubrique « Compétences ») : `savoirFaire` dans `content/site.config.js`. Pour chaque compétence, un niveau de 1 à 4 (Notions, Guidé, Autonome, Maîtrise), demi-niveaux permis (`3.5` s'affiche « Entre autonome et maîtrise ») et les fiches qui la prouvent (`preuves: ['nas']`).
 - **Certifications** (certifications, langues, formations, badges) : `certifications` dans `content/site.config.js`, un exemple commenté y montre tous les champs. Le justificatif se dépose dans `public/docs/certifications/`.
@@ -170,6 +171,8 @@ content/pages/           présentation, alternance et veille (Markdown)
 content/realisations/    une fiche Markdown par réalisation
 content/veille/          actualités de la veille (actualites.json), écrites chaque semaine par le robot
 scripts/veille.mjs       veille automatique : flux RSS → choix, résumés et tags par l'IA → actualites.json
+scripts/ia.mjs           appel de l'IA (Copilot CLI ou API), commun à la veille et à la reformulation
+scripts/reformuler.mjs   reformulation d'un passage pour le tableau de bord des synthèses (veille.remim.me)
 index.html               page unique : meta, Open Graph, préchargement de la police
 404.html, 403.html       pages d'erreur du serveur : adresse inconnue, accès refusé
 503.html                 page de maintenance affichée par le reverse proxy (fichier autonome)
@@ -207,7 +210,8 @@ test/                    tests du site construit (npm test), dans un navigateur 
 eslint.config.js,        règles de vérification du code (npm run lint) et du HTML construit (npm test)
   stylelint.config.js,
   .htmlvalidate.json
-.github/workflows/       publication automatique sur GitHub Pages (remim.me), veille hebdomadaire
+.github/workflows/       publication automatique sur GitHub Pages (remim.me), veille hebdomadaire,
+                         reformulation à la demande du tableau de bord des synthèses
 Dockerfile, docker/      image Docker et configuration nginx (hébergement sur le homelab)
 docker-compose.yml       lancement du conteneur sur le homelab
 LICENSE                  licence MIT du code
@@ -330,7 +334,7 @@ GitHub Actions ──►  articles des 10 derniers ──►  choisit les plus u
 
 - `.github/workflows/veille.yml` lance `scripts/veille.mjs` chaque lundi vers 7 h, puis enregistre le fichier d'actualités dans le dépôt et relance la publication du site.
 - Le sujet, les mots-clés, les tags proposés, les sources et le modèle d'IA se règlent dans `content/site.config.js`, rubrique `veille`.
-- La rubrique « Veille technologique » a deux onglets au même niveau : **Dernières actualités** (affiché d'abord) et **Mes synthèses** (texte personnel, à écrire dans `content/pages/syntheses.md`). Changer d'onglet ne change pas d'adresse et ne fait rien défiler (au clavier : ← et → sur les onglets).
+- La rubrique « Veille technologique » a deux onglets au même niveau : **Dernières actualités** (affiché d'abord) et **Mes synthèses** (texte personnel, dans `content/pages/syntheses.md`, écrit depuis le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses) ou à la main). Changer d'onglet ne change pas d'adresse et ne fait rien défiler (au clavier : ← et → sur les onglets).
 - L'onglet « Dernières actualités » affiche toutes les actualités, de la plus récente à la plus ancienne, 3 par page : la barre `< 1 2 3 >` sous la liste change de page sur place, sans changer d'adresse ni faire défiler l'écran (au clavier : Tab jusqu'à la barre, puis ← et →). Suivent la liste des tags ; les sources sont sous les onglets. Un clic sur un tag (`#/veille/<tag>`) affiche toutes les actualités qui le portent, depuis le début de la veille, paginées de la même façon.
 
 ### Choix et garde-fous
@@ -365,6 +369,24 @@ npm run veille                  # collecte complète, écrit content/veille/actu
 - **Changer de fournisseur d'IA** (Mistral, Groq, Gemini…) : `veille.ia.fournisseur: 'api'`, avec `url` et `modele` du service (tous proposent l'API au format OpenAI), et leur clé dans le secret utilisé par `veille.yml`.
 - **Un flux ne répond plus** : la tâche continue avec les autres et le signale dans son journal. Le retirer ou corriger son adresse dans `veille.flux`.
 - **Une actualité hors sujet ou un résumé faux** : la supprimer de `content/veille/actualites.json`, puis envoyer le changement (`git push`).
+
+## Tableau de bord des synthèses
+
+Les synthèses de l'onglet « Mes synthèses » s'écrivent depuis une page privée, **https://veille.remim.me** : liste, ajout, modification, suppression, aperçu, et **Reformuler avec l'IA** sur un passage sélectionné. Chaque enregistrement est un commit de `content/pages/syntheses.md` sur `main`, qui republie le site. Le code de la page, sa mise en route (DNS, jeton) et ses choix de sécurité sont dans son propre dépôt : [moreauremi/veille-syntheses](https://github.com/moreauremi/veille-syntheses).
+
+La page est statique (GitHub Pages) et n'a pas de serveur pour appeler l'IA. La reformulation passe donc par un workflow de **ce** dépôt, qui réutilise l'IA et le secret de la veille :
+
+```
+veille.remim.me ──► version (release) brouillon ──► workflow reformuler.yml ──► scripts/reformuler.mjs ──► réponse écrite
+                    de ce dépôt, avec le passage    (lancé par la page)          Copilot (scripts/ia.mjs)    dans le même brouillon,
+                                                                                                             lue puis supprimée par la page
+```
+
+- Un brouillon n'est visible que des personnes qui peuvent écrire dans le dépôt : le passage ne devient jamais public, et il n'est jamais écrit dans les journaux du workflow (publics, comme le dépôt).
+- Le workflow n'a que le droit `contents: write` (lire et modifier le brouillon), refuse toute version qui n'est pas un brouillon `reformulation-…`, et Copilot n'hérite pas du jeton du dépôt.
+- Les exécutions réussies sont supprimées par la page au passage ; les échouées restent, pour lire leur journal (onglet **Actions → Reformulation**).
+
+Le fichier reste du Markdown ordinaire : on peut toujours le modifier à la main. Penser alors à `git pull` d'abord, puisque le tableau de bord enregistre directement sur GitHub (sinon `git push` est refusé : `git pull --rebase`, puis `git push`).
 
 ## Mettre en ligne sur remim.me (GitHub Pages)
 

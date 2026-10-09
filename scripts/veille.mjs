@@ -13,22 +13,22 @@
 // Le site lit ce fichier au build : la rubrique « Veille » affiche les
 // dernières actualités, et chaque tag mène à la liste des articles qui le portent.
 //
-// L'IA est GitHub Copilot, appelée par Copilot CLI (commande `copilot`). Le
-// jeton vient de la variable d'environnement VEILLE_IA_CLE (dans GitHub : le
-// secret COPILOT_GITHUB_TOKEN). Il n'est jamais écrit dans le dépôt. En local,
-// sans cette variable, Copilot CLI utilise le compte connecté (`copilot login`).
+// L'IA est GitHub Copilot, appelée par Copilot CLI (commande `copilot`, voir
+// scripts/ia.mjs). Le jeton vient de la variable d'environnement VEILLE_IA_CLE
+// (dans GitHub : le secret COPILOT_GITHUB_TOKEN). Il n'est jamais écrit dans le
+// dépôt. En local, sans cette variable, Copilot CLI utilise le compte connecté
+// (`copilot login`).
 //
 // `npm run veille -- --sans-ia` : collecte seulement, sans appeler l'IA ni
 // modifier le fichier (pour vérifier les flux et les mots-clés).
 // =============================================================================
 
-import { spawn } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { tagSlug, withoutAccents } from '../src/utils/tags.js';
+import { askAi as callAi } from './ia.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_FILE = path.join(ROOT, 'content/veille/actualites.json');
@@ -323,115 +323,14 @@ function toEntry(article, summary, vocabulary) {
 
 // --- Appel de l'IA -----------------------------------------------------------------
 
-// Consignes + données → objet JSON renvoyé par l'IA
+// Consignes + données → objet JSON renvoyé par l'IA (scripts/ia.mjs).
+// Un échec arrête la veille : le fichier d'actualités n'est pas modifié.
 async function askAi(system, user) {
-  const content = config.ia.fournisseur === 'api' ? await askApi(system, user) : await askCopilot(system, user);
-  // Réponse attendue : un objet JSON, parfois entouré de texte ou de ```json.
-  // Copilot CLI coupe ses lignes à la largeur d'un terminal en remplaçant une
-  // espace par un retour à la ligne, y compris au milieu d'un texte du JSON,
-  // qui devient illisible : chaque retour à la ligne redevient une espace
-  // (hors des textes, une espace ne change rien au JSON).
-  const json = content
-    .slice(content.indexOf('{'), content.lastIndexOf('}') + 1)
-    .replace(/[ \t]*\r?\n[ \t]*/g, ' ');
   try {
-    return JSON.parse(json);
-  } catch {
-    fail(`réponse de l'IA illisible (JSON attendu) :\n${content.slice(0, 500)}`);
+    return await callAi(system, user, { settings: config.ia, apiKey: API_KEY });
+  } catch (error) {
+    fail(error.message);
   }
-}
-
-// GitHub Copilot, par Copilot CLI en mode non interactif.
-// Copilot CLI est un agent capable de lire des fichiers et de lancer des
-// commandes : ici, il n'a droit à aucun outil (ni shell, ni écriture, ni
-// serveur MCP) et travaille dans un dossier temporaire vide. Un article piégé
-// qui lui demanderait d'agir ne peut donc rien faire : seul son texte de
-// réponse est utilisé, et il est vérifié ensuite.
-async function askCopilot(system, user, attempt = 1) {
-  const workdir = fs.mkdtempSync(path.join(os.tmpdir(), 'veille-'));
-  const args = [
-    '-p', `${system}\n\nDonnées (JSON) :\n${user}`,
-    '--silent', // seulement la réponse, sans statistiques
-    '--no-ask-user',
-    '--available-tools=', // aucun outil
-    '--deny-tool=shell',
-    '--deny-tool=write',
-    '--disable-builtin-mcps',
-    '--no-custom-instructions',
-    '--no-auto-update',
-    '--stream', 'off',
-    '-C', workdir,
-  ];
-  if (config.ia.modele) args.push('--model', config.ia.modele);
-
-  const env = { ...process.env };
-  if (API_KEY) env.COPILOT_GITHUB_TOKEN = API_KEY;
-  const { code, stdout, stderr } = await run('copilot', args, env, 300_000);
-  fs.rmSync(workdir, { recursive: true, force: true });
-
-  if (code !== 0 || !stdout.trim()) {
-    const detail = `${stderr}\n${stdout}`.trim().slice(0, 800);
-    if (attempt < 3 && /rate limit|429|timeout|ECONNRESET|5\d\d/i.test(detail)) {
-      console.warn(`! Copilot indisponible (${detail.split('\n')[0]}), nouvel essai dans 30 s.`);
-      await new Promise((resolve) => setTimeout(resolve, 30_000));
-      return askCopilot(system, user, attempt + 1);
-    }
-    fail(`Copilot CLI a échoué (code ${code}). Jeton absent, expiré ou sans la permission « Copilot Requests » ? Voir le README.\n${detail}`);
-  }
-  return stdout;
-}
-
-// Lance une commande et récupère sa sortie ; arrêtée au bout de `timeout` ms
-function run(command, args, env, timeout) {
-  return new Promise((resolve) => {
-    const child = spawn(command, args, { env, stdio: ['ignore', 'pipe', 'pipe'] });
-    let stdout = '';
-    let stderr = '';
-    child.stdout.on('data', (chunk) => (stdout += chunk));
-    child.stderr.on('data', (chunk) => (stderr += chunk));
-    const timer = setTimeout(() => child.kill('SIGTERM'), timeout);
-    child.on('error', (error) => {
-      clearTimeout(timer);
-      const hint = error.code === 'ENOENT' ? ' Copilot CLI est-il installé ? (npm install -g @github/copilot)' : '';
-      fail(`impossible de lancer « ${command} » : ${error.message}.${hint}`);
-    });
-    child.on('close', (code) => {
-      clearTimeout(timer);
-      resolve({ code, stdout, stderr });
-    });
-  });
-}
-
-// Autre fournisseur : API au format OpenAI (chat completions), réponse imposée
-// en JSON. Nouvel essai après 30 s en cas de surcharge (429) ou d'erreur serveur.
-async function askApi(system, user, attempt = 1) {
-  const response = await fetch(config.ia.url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${API_KEY}` },
-    body: JSON.stringify({
-      model: config.ia.modele,
-      messages: [
-        { role: 'system', content: system },
-        { role: 'user', content: user },
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.2,
-    }),
-    signal: AbortSignal.timeout(180_000),
-  });
-
-  if ((response.status === 429 || response.status >= 500) && attempt < 3) {
-    console.warn(`! l'IA a répondu ${response.status}, nouvel essai dans 30 s.`);
-    await new Promise((resolve) => setTimeout(resolve, 30_000));
-    return askApi(system, user, attempt + 1);
-  }
-  if (!response.ok) {
-    const detail = (await response.text()).slice(0, 500);
-    const hint = response.status === 404 ? ` Le modèle « ${config.ia.modele} » existe-t-il encore ? (veille.ia.modele)` : '';
-    fail(`l'IA a répondu ${response.status}.${hint}\n${detail}`);
-  }
-
-  return (await response.json()).choices?.[0]?.message?.content ?? '';
 }
 
 // --- Outils -----------------------------------------------------------------------
