@@ -61,8 +61,11 @@ jobs:
         with:
           node-version-file: .nvmrc
 
+      # Version fixée : une nouvelle version peut changer de comportement sans
+      # prévenir. 1.0.94 est la dernière validée par une collecte réussie (9 octobre
+      # 2026). Pour la mettre à jour : changer le numéro dans les trois workflows.
       - name: Installer Copilot CLI
-        run: npm install -g @github/copilot@1
+        run: npm install -g @github/copilot@1.0.94
 
       # Le script n'utilise que Node.js et Copilot CLI : pas besoin de npm ci
       - name: Collecter et résumer les actualités (tous les sujets)

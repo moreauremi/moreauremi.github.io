@@ -387,7 +387,8 @@ npm run veille                  # collecte complète, écrit content/veille/<suj
 
 ### Dépannage
 
-- **« Copilot CLI a échoué »** : jeton expiré ou sans la permission « Copilot Requests », abonnement Copilot inactif, ou quota épuisé. Le message complet est dans le journal de la tâche (onglet Actions).
+- **« Copilot CLI a échoué »** : jeton expiré ou sans la permission « Copilot Requests », abonnement Copilot inactif, ou quota épuisé. Le message complet est dans le journal de la tâche (onglet Actions). « Bad credentials » alors que le jeton existe toujours (https://github.com/settings/personal-access-tokens) : regarder l'état de GitHub (https://www.githubstatus.com) avant de changer de jeton.
+- **Version de Copilot CLI** : fixée dans les trois workflows (`veille.yml`, `reformuler.yml`, `veille-mail.yml`), pour qu'une nouvelle version ne change pas le comportement sans prévenir. Pour en changer, modifier le numéro dans les trois, puis lancer une collecte à la main pour vérifier.
 - **Choisir le modèle** : `veille.ia.modele` (vide = modèle par défaut de Copilot). Les noms possibles sont listés par `copilot --help` (option `--model`).
 - **Changer de fournisseur d'IA** (Mistral, Groq, Gemini…) : `veille.ia.fournisseur: 'api'`, avec `url` et `modele` du service (tous proposent l'API au format OpenAI), et leur clé dans le secret utilisé par `veille.yml`.
 - **Un flux ne répond plus** : la tâche continue avec les autres et le signale dans son journal. Le retirer ou corriger son adresse dans les `flux` du sujet.
