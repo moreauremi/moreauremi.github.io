@@ -26,4 +26,22 @@ export default [
     files: ['*.js', 'plugins/**/*.js', 'scripts/**/*.mjs', 'content/**/*.js', 'test/**/*.js'],
     languageOptions: { globals: globals.node },
   },
+
+  // Relais Gmail, exécuté par Google Apps Script : un script classique (pas un
+  // module), avec les services de Google
+  {
+    files: ['apps-script/**/*.js'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        GmailApp: 'readonly',
+        LockService: 'readonly',
+        PropertiesService: 'readonly',
+        ScriptApp: 'readonly',
+        Session: 'readonly',
+        UrlFetchApp: 'readonly',
+        console: 'readonly',
+      },
+    },
+  },
 ];

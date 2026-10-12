@@ -18,6 +18,7 @@ Le site se présente comme le démarrage d'un système Linux : écran GRUB, jour
 - [Choix techniques](#choix-techniques)
 - [Qualité mesurée](#qualité-mesurée)
 - [Veille automatique](#veille-automatique)
+- [Veille par e-mail](#veille-par-e-mail)
 - [Tableau de bord des synthèses](#tableau-de-bord-des-synthèses)
 - [Mettre en ligne sur remim.me (GitHub Pages)](#mettre-en-ligne-sur-remimme-github-pages)
 - [Autre option : héberger sur le homelab (Docker + nginx)](#autre-option--héberger-sur-le-homelab-docker--nginx)
@@ -134,6 +135,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [x] **Veille** : trois sujets (cybersécurité des PME industrielles, virtualisation, facturation électronique) et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
 - [x] **Jeton Copilot** : jeton GitHub « Copilot Requests » rangé dans les secrets du dépôt (`COPILOT_GITHUB_TOKEN`) ; la collecte des trois sujets fonctionne (9 octobre 2026). À renouveler avant son expiration, un an après sa création (voir [Mise en route](#mise-en-route-une-seule-fois)).
 - [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://dashboard.remim.me, à partir des actualités collectées.
+- [ ] **Veille par e-mail** : créer le jeton du relais et installer le relais Gmail (voir [Veille par e-mail](#mise-en-route-du-relais-gmail-une-seule-fois)).
 - [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif.
 - [ ] **Réalisations en formation** (3 fiches en brouillon) : titres et contenu, au fil des TP et projets de cours. Le groupe affiche « À venir » sur le site tant qu'aucune n'est publiée.
 
@@ -177,6 +179,9 @@ scripts/veille.mjs       veille automatique : pour chaque sujet, flux RSS → ch
                          → actualites.json
 scripts/ia.mjs           appel de l'IA (Copilot CLI ou API), commun à la veille et à la reformulation
 scripts/reformuler.mjs   reformulation d'un passage pour le tableau de bord (dashboard.remim.me)
+scripts/veille-mail.mjs  veille par e-mail : e-mail des actualités du lundi, lecture de mes réponses,
+                         synthèse mise en forme par l'IA, publication après mon « ok »
+apps-script/             relais Gmail de la veille par e-mail (Google Apps Script, copié dans mon compte Google)
 index.html               page unique : meta, Open Graph, préchargement de la police
 404.html, 403.html       pages d'erreur du serveur : adresse inconnue, accès refusé
 503.html                 page de maintenance affichée par le reverse proxy (fichier autonome)
@@ -215,7 +220,7 @@ eslint.config.js,        règles de vérification du code (npm run lint) et du H
   stylelint.config.js,
   .htmlvalidate.json
 .github/workflows/       publication automatique sur GitHub Pages (remim.me), veille hebdomadaire,
-                         reformulation à la demande du tableau de bord des synthèses
+                         reformulation à la demande du tableau de bord des synthèses, veille par e-mail
 Dockerfile, docker/      image Docker et configuration nginx (hébergement sur le homelab)
 docker-compose.yml       lancement du conteneur sur le homelab
 LICENSE                  licence MIT du code
@@ -389,6 +394,63 @@ npm run veille                  # collecte complète, écrit content/veille/<suj
 - **Une actualité hors sujet ou un résumé faux** : bouton **Hors sujet** du tableau de bord. L'actualité quitte la liste `actualites` (elle disparaît du site) pour la liste `horsSujet` du même fichier, où elle reste, avec sa date d'écartement : l'onglet « Hors sujet » du tableau de bord permet de la retrouver et de la remettre. La collecte ne la reproposera pas. À la main : déplacer l'entrée de `actualites` vers `horsSujet` dans `content/veille/<sujet>/actualites.json`, puis envoyer le changement (`git push`).
 - **Rappel des synthèses** : chaque lundi, après la collecte, `scripts/rappel-syntheses.mjs` lit la date de la dernière synthèse de chaque sujet (dans son titre, `19/01/2027 - …`). Un sujet sans synthèse, ou sans rien depuis 21 jours, ouvre une issue « Veille : synthèses à écrire » qui vous mentionne (e-mail de GitHub) ; elle est relancée chaque lundi par un commentaire, et se ferme toute seule quand tous les sujets sont à jour. Bilan sans rien envoyer : `node scripts/rappel-syntheses.mjs --essai`.
 - **Ajouter un sujet** : un nouvel élément dans `veille.sujets` (identifiant, nom, mots-clés, sources…), un dossier `content/veille/<id>/` avec `sujet.md` et `syntheses.md` (copier ceux d'un autre sujet), puis l'ajouter à la liste des sujets du tableau de bord (`config.js` du dépôt `veille-syntheses`). La première collecte se fait au lundi suivant, ou tout de suite avec **Run workflow**.
+
+## Veille par e-mail
+
+Chaque lundi, les nouvelles actualités arrivent aussi par e-mail, numérotées. J'y réponds avec mon avis sur celles qui m'ont marqué ; l'IA le met en forme de synthèse, sans rien y ajouter, et me la renvoie à relire. Je réponds « ok » et elle est publiée, exactement comme depuis le [tableau de bord](#tableau-de-bord-des-synthèses).
+
+### Principe
+
+```
+Lundi       veille.yml ──► scripts/veille-mail.mjs --annonce ──► version (release) brouillon « veille-mail-… » :
+                                                                 actualités numérotées, e-mail à envoyer
+                                                                               │
+Toutes les  relais Gmail (apps-script/veille-mail.js, dans mon compte Google) ◄┘
+10 minutes  envoie l'e-mail ──► je réponds ──► il range ma réponse dans le brouillon et lance veille-mail.yml
+                                                                               │
+            scripts/veille-mail.mjs ◄──────────────────────────────────────────┘
+              « 1, 3 : mon avis… »  ──► l'IA (Copilot) met mon avis en forme ──► e-mail de relecture
+              « ok »                ──► un commit par synthèse (syntheses.md) ──► site republié ──► e-mail « publié »
+```
+
+Le site n'a pas de serveur pour recevoir des e-mails, et GitHub Actions non plus. Le relais est donc un petit script **Google Apps Script**, qui tourne gratuitement dans mon compte Google : il envoie les e-mails préparés et attend mes réponses. Tout le reste (lecture de ma réponse, IA, publication) se fait dans GitHub Actions, comme la collecte et la reformulation. Comme pour la reformulation, une version brouillon de ce dépôt sert de boîte aux lettres entre les deux.
+
+### Répondre
+
+- **À l'e-mail des actualités** : une ligne par synthèse, qui commence par les numéros des actualités dont elle parle (du même sujet), puis mon avis, sur une ou plusieurs lignes. Le texte avant la première ligne de numéros (« Salut, ») est ignoré. « rien » : pas de synthèse cette semaine.
+  ```
+  1, 3 : NIS2 va coûter cher aux PME, mais moins qu'une attaque. Chez nos clients…
+  7 : Proxmox devient une vraie alternative à VMware…
+  ```
+- **À l'e-mail de relecture** : « ok » publie tout, « ok 1 » seulement la synthèse 1, « annule » abandonne. Tout autre texte est une correction, appliquée par l'IA à toutes les synthèses, ou à une seule si elle commence par son numéro (« 2 : enlève la dernière phrase »). Une nouvelle relecture suit.
+- **Après une erreur** (IA indisponible…) : un e-mail le dit ; « réessaie » relance avec la même réponse.
+- Une réponse mal formée (numéro inconnu, sujets mélangés, avis trop court) n'est jamais devinée : un e-mail explique quoi corriger, et il suffit de répondre à nouveau.
+
+### Choix et garde-fous
+
+- **Mon texte, pas celui de l'IA** : sa consigne est de garder mes idées, mes exemples, mes conclusions et la première personne, sans ajouter d'avis ni d'expérience, et de ne reprendre que les faits des résumés. Un avis de moins d'une phrase est refusé. La page « Veille technologique » le dit (méthode).
+- **Rien n'est publié sans mon « ok »**, et je relis le texte exact qui sera publié, titre daté compris.
+- **Même format que le tableau de bord** : titre « JJ/MM/AAAA - … », bloc « Sources » avec les liens des actualités (tirés du fichier d'actualités, jamais de l'IA), même message de commit. Le rappel des synthèses et le tableau de bord voient donc ces synthèses comme les autres. Une tâche relancée ne publie jamais deux fois la même synthèse.
+- **Confidentialité** : mon avis et les brouillons restent dans la version brouillon, visible seulement des personnes qui peuvent écrire dans le dépôt, et ne sont jamais écrits dans les journaux du workflow (publics).
+- **Sécurité** : le relais ne lit que les fils qu'il a ouverts, et seulement mes propres messages. Son jeton GitHub est limité à ce dépôt (versions et lancement des workflows) et rangé dans les propriétés du script, jamais dans le code. Le workflow refuse toute version qui n'est pas un brouillon `veille-mail-…`, Copilot travaille sans aucun outil et n'hérite pas du jeton du dépôt, et le texte des flux, de l'IA et de mes réponses est échappé dans les e-mails.
+- **Ménage** : un échange encore ouvert 21 jours après son e-mail est abandonné, et son brouillon supprimé le lundi suivant.
+
+### Mise en route du relais Gmail (une seule fois)
+
+1. **Jeton GitHub du relais** : https://github.com/settings/personal-access-tokens/new (jeton *fine-grained*, à part de celui du tableau de bord : chacun se révoque séparément). Propriétaire : son compte personnel. Expiration : 1 an. **Repository access** : *Only select repositories* → `moreauremi.github.io`. **Repository permissions** : **Contents** et **Actions** en *Read and write*, rien d'autre. **Generate token**, puis copier le jeton.
+2. **Projet Apps Script** : https://script.google.com → **Nouveau projet**, le nommer « Relais veille RémiOS ». Remplacer tout le contenu de `Code.gs` par celui de `apps-script/veille-mail.js`, puis enregistrer.
+3. **Jeton dans le projet** : **Paramètres du projet** (roue dentée) → **Propriétés du script** → **Ajouter une propriété** : nom `GITHUB_TOKEN`, valeur : le jeton. Enregistrer.
+4. **Installation** : retour à l'**Éditeur**, choisir la fonction `install` dans la liste en haut, puis **Exécuter**. Google demande l'autorisation de lire et d'envoyer des e-mails et de contacter un service externe (GitHub). L'avertissement « Google n'a pas validé cette application » est normal pour un script personnel : **Paramètres avancés → Accéder à Relais veille RémiOS (non sécurisé) → Autoriser**. Le journal affiche « Relais installé… » : le relais vérifie désormais toutes les 10 minutes.
+5. **Essai sans attendre lundi** : sur GitHub, onglet **Actions → Veille par e-mail → Run workflow**, avec `essai`. Un e-mail des 3 dernières actualités de chaque sujet arrive dans les 10 minutes. Pour ne rien publier, répondre ensuite « annule ».
+
+Les e-mails partent de mon propre compte, expéditeur « RémiOS veille » : ils arrivent non lus dans la boîte de réception, sous le libellé « Veille RémiOS ».
+
+### Dépannage
+
+- **Pas d'e-mail le lundi** : sans nouvelle actualité, pas d'e-mail. Sinon, vérifier sur GitHub qu'un brouillon « Veille par e-mail du … » existe (**Releases**), puis l'onglet **Exécutions** du projet Apps Script.
+- **Erreurs du relais** : elles sont dans **Exécutions** du projet Apps Script, et Google envoie un résumé par e-mail. « GitHub a répondu 401 » : jeton expiré ou révoqué, en créer un nouveau et remplacer la propriété `GITHUB_TOKEN`.
+- **Erreur de la tâche** (IA indisponible, quota…) : un e-mail le signale, le détail est dans **Actions → Veille par e-mail**. Une tâche qui ne répond pas en 45 minutes est aussi signalée par le relais.
+- **Mettre le relais en pause** : projet Apps Script → **Déclencheurs** → supprimer le déclencheur `check`. Relancer `install` pour le remettre.
 
 ## Tableau de bord des synthèses
 
@@ -665,6 +727,7 @@ Puis, après la construction :
 15. Pages d'erreur 404, 403 et 503 dans le style du site
 16. Grille officielle du tableau de synthèse E5, veille automatique (actualités résumées chaque semaine par l'IA, tags, onglets), niveaux de compétence (demi-niveaux permis)
 17. Un langage par fichier (HTML, CSS, SVG et JavaScript séparés), terminal téléchargé à la demande, découpage du code par rubrique, vérifications et tests automatiques avant chaque publication
+18. Veille par e-mail : actualités du lundi reçues par e-mail, synthèse écrite en y répondant, mise en forme par l'IA, publiée après validation (relais Gmail en Google Apps Script)
 
 ## Crédits et licences
 

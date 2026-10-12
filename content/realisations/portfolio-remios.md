@@ -16,6 +16,7 @@ technos:
   - "DNS"
   - "GoatCounter"
   - "GitHub Copilot"
+  - "Google Apps Script"
   - "Docker"
   - "Nginx"
   - "Claude Code"
@@ -63,6 +64,8 @@ C'est aussi ma présence en ligne de candidat : le jury, les recruteurs et mes c
 
 **La veille technologique.** Chaque lundi, une tâche GitHub Actions lit les flux RSS de 33 sources. GitHub Copilot choisit ensuite, pour chacun de mes trois sujets (cybersécurité des PME industrielles, virtualisation, facturation électronique), les articles les plus utiles, les résume et leur attribue des tags. Les actualités s'affichent dans la rubrique « Veille technologique », un onglet par sujet.
 
+**La veille par e-mail.** Les nouvelles actualités m'arrivent aussi par e-mail, numérotées. Je réponds avec mon avis sur celles qui m'ont marqué (« 1, 3 : ce que j'en retiens… ») ; l'IA le met en forme de synthèse, sans rien y ajouter, et me la renvoie à relire. Je réponds « ok » et elle est publiée, ou je demande une correction. Le site n'a pas de serveur : un petit script Google Apps Script, dans mon compte Gmail, relaie les e-mails avec GitHub Actions, qui fait travailler l'IA et enregistre la synthèse. Rien n'est publié sans ma validation, et seuls mes propres messages sont lus.
+
 **Le tableau de bord** (dashboard.remim.me). C'est un second site statique, dans son propre dépôt, pour piloter le portfolio sans ouvrir d'éditeur de code :
 
 - une vue d'ensemble : l'état de chaque veille (dernière synthèse, actualités à traiter, dernière collecte), le résultat de la dernière publication et de la dernière collecte, et les visites du site ;
@@ -97,7 +100,7 @@ Code source (licence MIT) : [le site](https://github.com/moreauremi/moreauremi.g
 - **Audit Lighthouse** du site en ligne (26 septembre 2026) : 100/100 en performance, accessibilité, bonnes pratiques et référencement, sur mobile comme sur ordinateur.
 - **Accessibilité** : règles WCAG 2.2 AA vérifiées avec axe-core sur chaque écran, navigation complète au clavier, aucune page qui défile horizontalement, même sur un écran de 320 px.
 - **Validation HTML** : les pages passent le validateur du W3C sans erreur.
-- **Tests automatisés**, lancés avant chaque mise en ligne : 14 pour le site (politique de sécurité, chaque rubrique et chaque fiche, vue jury, onglets de la veille, mesure d'audience, terminal, rappel des synthèses) et 19 pour le tableau de bord (format des synthèses, échanges simulés avec GitHub et GoatCounter, graphique des visites).
+- **Tests automatisés**, lancés avant chaque mise en ligne : 23 pour le site (politique de sécurité, chaque rubrique et chaque fiche, vue jury, onglets de la veille, mesure d'audience, terminal, rappel des synthèses, lecture des réponses et échange complet de la veille par e-mail) et 19 pour le tableau de bord (format des synthèses, échanges simulés avec GitHub et GoatCounter, graphique des visites).
 
 Le site est en ligne depuis septembre 2026, et sa fréquentation est mesurée depuis le 9 octobre 2026.
 

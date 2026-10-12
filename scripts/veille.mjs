@@ -25,6 +25,10 @@
 // `npm run veille -- --sans-ia` : collecte seulement, sans appeler l'IA ni
 // modifier les fichiers (pour vérifier les flux et les mots-clés).
 // `npm run veille -- --sujet virtualisation` : un seul sujet.
+//
+// Si la variable VEILLE_NOUVELLES donne un chemin de fichier, les identifiants
+// des actualités ajoutées y sont écrits ({ "<sujet>": ["<id>", …] }) : la
+// veille par e-mail (scripts/veille-mail.mjs) les envoie ensuite.
 // =============================================================================
 
 import crypto from 'node:crypto';
@@ -41,6 +45,8 @@ const { ia, sujets } = site.veille;
 const DRY_RUN = process.argv.includes('--sans-ia');
 const ONLY = process.argv.includes('--sujet') ? process.argv[process.argv.indexOf('--sujet') + 1] : null;
 const API_KEY = process.env.VEILLE_IA_CLE;
+const NEW_ITEMS_FILE = process.env.VEILLE_NOUVELLES;
+const newItems = {}; // sujet → identifiants des actualités ajoutées
 
 const DAY = 24 * 60 * 60 * 1000;
 const MAX_AGE_DAYS = 10; // un lundi manqué n'en fait pas perdre une semaine
@@ -69,6 +75,7 @@ async function main() {
       failed.push(topic.nom);
     }
   }
+  if (NEW_ITEMS_FILE && !DRY_RUN) fs.writeFileSync(NEW_ITEMS_FILE, `${JSON.stringify(newItems)}\n`);
   if (failed.length) fail(`échec pour ${failed.join(', ')} (les autres sujets sont enregistrés).`);
 }
 
@@ -108,6 +115,7 @@ async function collectTopic(topic) {
   data.miseAJour = new Date().toISOString().slice(0, 10);
   fs.mkdirSync(path.dirname(dataFile(topic)), { recursive: true });
   fs.writeFileSync(dataFile(topic), `${JSON.stringify(data, null, 2)}\n`);
+  newItems[topic.id] = added.map((a) => a.id);
   for (const a of added) console.log(`  + ${a.date}  [${a.tags.join(', ')}]  ${a.titre}`);
 }
 

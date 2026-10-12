@@ -8,7 +8,10 @@
 #   2. enregistre ces fichiers dans le dépôt (commit), s'ils ont changé, même
 #      si un des sujets a échoué (les autres ne sont pas perdus) ;
 #   3. relance la publication du site (workflow deploy.yml) ;
-#   4. vérifie la régularité des synthèses : un sujet sans synthèse depuis
+#   4. prépare l'e-mail des nouvelles actualités, envoyé par le relais Gmail :
+#      j'y réponds avec mon avis pour en faire une synthèse
+#      (scripts/veille-mail.mjs, voir veille-mail.yml) ;
+#   5. vérifie la régularité des synthèses : un sujet sans synthèse depuis
 #      21 jours ouvre (ou relance) une issue de rappel, qui prévient par e-mail
 #      (scripts/rappel-syntheses.mjs).
 #
@@ -28,8 +31,8 @@ on:
     - cron: '17 5 * * 1'
   workflow_dispatch:
 
-# Écrire dans le dépôt (le fichier d'actualités), relancer la publication,
-# ouvrir ou fermer l'issue de rappel des synthèses
+# Écrire dans le dépôt (le fichier d'actualités, le brouillon de l'e-mail),
+# relancer la publication, ouvrir ou fermer l'issue de rappel des synthèses
 permissions:
   contents: write
   actions: write
@@ -66,6 +69,7 @@ jobs:
         run: node scripts/veille.mjs
         env:
           VEILLE_IA_CLE: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          VEILLE_NOUVELLES: ${{ runner.temp }}/nouvelles.json
 
       # Même si un sujet a échoué : les actualités des autres sont enregistrées.
       # git status voit aussi les fichiers nouveaux (première collecte d'un sujet).
@@ -95,6 +99,15 @@ jobs:
         if: ${{ !cancelled() && steps.commit.outputs.changed == 'true' }}
         run: gh workflow run deploy.yml --ref main
         env:
+          GH_TOKEN: ${{ github.token }}
+
+      # Les nouvelles actualités, rangées dans une version brouillon que le
+      # relais Gmail (apps-script/veille-mail.js) envoie par e-mail
+      - name: Préparer l'e-mail des nouvelles actualités
+        if: ${{ !cancelled() && steps.commit.outputs.changed == 'true' }}
+        run: node scripts/veille-mail.mjs --annonce
+        env:
+          VEILLE_NOUVELLES: ${{ runner.temp }}/nouvelles.json
           GH_TOKEN: ${{ github.token }}
 
       # Même si la collecte a échoué : le rappel ne dépend que des synthèses
