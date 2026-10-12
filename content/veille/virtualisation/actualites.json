@@ -1,6 +1,19 @@
 {
-  "miseAJour": "2026-10-09",
+  "miseAJour": "2026-10-12",
   "actualites": [
+    {
+      "id": "1006614d5c42",
+      "date": "2026-10-09",
+      "titre": "Olivier Lambert (Vates) « Le marché, à mon avis, a changé à tout jamais »",
+      "source": "InformatiqueNews",
+      "url": "https://www.informatiquenews.fr/olivier-lambert-vates-le-marche-a-change-a-tout-jamais-250633",
+      "resume": "Vates lève 30 millions d’euros pour développer sa plateforme open source XCP-ng et Xen Orchestra, dans un contexte de départs de VMware liés à la hausse des tarifs et aux nouvelles contraintes commerciales de Broadcom. Pour une PME, cette évolution renforce l’intérêt d’étudier des solutions alternatives et de préparer une migration progressive de ses infrastructures.",
+      "tags": [
+        "migration",
+        "Broadcom",
+        "licences"
+      ]
+    },
     {
       "id": "19a9219d8dc8",
       "date": "2026-10-08",

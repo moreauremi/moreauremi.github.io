@@ -1,6 +1,19 @@
 {
-  "miseAJour": "2026-10-09",
+  "miseAJour": "2026-10-12",
   "actualites": [
+    {
+      "id": "5b3022539fd7",
+      "date": "2026-10-12",
+      "titre": "Facture électronique 2027 : les cinq questions que les PME doivent poser à leur prestataire",
+      "source": "Journal du Net",
+      "url": "https://www.journaldunet.com/management/direction-generale/1556389-facture-electronique-2027-les-cinq-questions-que-les-pme-doivent-poser-a-leur-prestataire/",
+      "resume": "Depuis le 1er septembre 2026, les entreprises assujetties à la TVA doivent pouvoir recevoir des factures électroniques, tandis que les PME, TPE et micro-entreprises devront en émettre à partir du 1er septembre 2027. Pour une PME et son intégrateur ERP, un PDF seul ne suffit pas : il faut vérifier le format structuré et le profil utilisé, notamment pour Factur-X.",
+      "tags": [
+        "calendrier",
+        "PME",
+        "Factur-X"
+      ]
+    },
     {
       "id": "f3274fbb59b4",
       "date": "2026-10-07",

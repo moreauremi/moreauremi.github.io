@@ -1,6 +1,44 @@
 {
-  "miseAJour": "2026-10-09",
+  "miseAJour": "2026-10-12",
   "actualites": [
+    {
+      "id": "e39fe0d4fbec",
+      "date": "2026-10-12",
+      "titre": "50°C dans les frigos : une cyberattaque oblige Intermarché, Leclerc et Super U à jeter leurs produits frais",
+      "source": "01net, sécurité",
+      "url": "https://www.01net.com/actualites/50-degres-frigos-intermarche-systeme-u-cyberattaque-oblige-150-supermarches-jeter.html",
+      "resume": "Une cyberattaque a modifié à distance les consignes des systèmes de régulation du froid de magasins, provoquant la hausse des températures et la destruction de produits frais et surgelés. Cet incident montre qu’une attaque contre des systèmes industriels (OT) peut interrompre directement l’activité et entraîner des pertes importantes pour une PME.",
+      "tags": [
+        "systèmes industriels (OT)",
+        "cybercriminalité",
+        "PME"
+      ]
+    },
+    {
+      "id": "fdd44104cbd9",
+      "date": "2026-10-12",
+      "titre": "Bulletin d'actualité CERTFR-2026-ACT-043 (12 octobre 2026)",
+      "source": "CERT-FR (ANSSI)",
+      "url": "https://www.cert.ssi.gouv.fr/actualite/CERTFR-2026-ACT-043/",
+      "resume": "Le CERT-FR recense les vulnérabilités significatives de la semaine et rappelle que les entreprises doivent les intégrer à leur analyse de risques et définir un plan d’action lorsque leur système d’information est exposé.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
+      ]
+    },
+    {
+      "id": "e9cd6f650e14",
+      "date": "2026-10-09",
+      "titre": "DGFiP : les six failles que l’ANSSI invite à corriger après le scraping",
+      "source": "Silicon",
+      "url": "https://www.silicon.fr/cybersecurite-1371/dgfip-les-six-failles-que-lanssi-invite-a-corriger-apres-le-scraping-229579",
+      "resume": "Le retour d’expérience de l’ANSSI sur le scraping ayant touché la DGFiP met en évidence plusieurs contrôles à renforcer, notamment l’exposition des applications, l’authentification, les droits d’accès, la détection et la réponse à incident. Il rappelle qu’une application métier directement accessible depuis Internet augmente les risques et doit être protégée par des mécanismes complémentaires.",
+      "tags": [
+        "vulnérabilité",
+        "fuite de données",
+        "PME"
+      ]
+    },
     {
       "id": "fb953339553b",
       "date": "2026-10-08",
@@ -27,6 +65,18 @@
       ]
     },
     {
+      "id": "aab48c3e557d",
+      "date": "2026-10-07",
+      "titre": "Cybersécurité : en 2026, les entreprises passent de la défense à la résilience",
+      "source": "Le Monde Informatique, sécurité",
+      "url": "https://www.lemondeinformatique.fr/actualites/lire-cybersecurite-en-2026-les-entreprises-passent-de-la-defense-a-la-resilience-100839.html",
+      "resume": "Le rapport Hiscox présenté dans l’article décrit la cybersécurité comme un risque métier affectant les finances, les opérations et la réputation, et non plus comme un simple sujet informatique. Les entreprises renforcent donc leur cyber-résilience en associant technologie, gouvernance, formation et processus, une approche pertinente pour les PME industrielles.",
+      "tags": [
+        "PME",
+        "sensibilisation"
+      ]
+    },
+    {
       "id": "cc072f7029eb",
       "date": "2026-10-07",
       "titre": "Présidentielle 2027 : la cybercriminalité du quotidien s’invite dans le débat",
@@ -49,6 +99,19 @@
       "tags": [
         "vulnérabilité",
         "PME"
+      ]
+    },
+    {
+      "id": "fa8c6b47fc1f",
+      "date": "2026-10-05",
+      "titre": "Microsoft pointe la montée en puissance des attaques assistées par l'IA",
+      "source": "Le Monde Informatique, sécurité",
+      "url": "https://www.lemondeinformatique.fr/actualites/lire-microsoft-pointe-la-montee-en-puissance-des-attaques-assistees-par-l-ia-100829.html",
+      "resume": "Selon le rapport de Microsoft, l’intelligence artificielle accélère et augmente l’échelle des opérations malveillantes, tandis que les attaques par hameçonnage et l’exploitation d’applications exposées progressent. Pour une PME industrielle, ces évolutions renforcent l’importance de la sensibilisation et de la protection des accès, notamment face aux messages usurpant des collaborateurs, partenaires ou fournisseurs.",
+      "tags": [
+        "intelligence artificielle",
+        "hameçonnage",
+        "chaîne d'approvisionnement"
       ]
     },
     {
