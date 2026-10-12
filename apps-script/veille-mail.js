@@ -51,6 +51,7 @@ function check() {
     const releases = github('GET', '/releases?per_page=100')
       .filter((release) => release.draft && release.tag_name.indexOf(PREFIX) === 0)
       .reverse();
+    console.log(`${releases.length} échange(s) en cours`);
     for (const release of releases) {
       try {
         handle(release);
@@ -65,6 +66,7 @@ function check() {
 
 function handle(release) {
   const state = JSON.parse(release.body);
+  console.log(`${release.name} (n° ${release.id}) : étape « ${state.etape} », phase « ${state.phase} »`);
   if (state.etape === 'a-envoyer') return send(release, state);
   if (state.etape === 'attente') return waitForReply(release, state);
   if (state.etape === 'travail' && Date.now() - (state.lanceLe || 0) > STUCK_MINUTES * 60000) {
@@ -102,8 +104,10 @@ function send(release, state) {
   sent.moveToInbox();
   sent.markUnread();
 
+  console.log(`  e-mail envoyé : « ${message.getSubject()} »`);
   if (state.fin) {
     github('DELETE', `/releases/${release.id}`);
+    console.log('  échange terminé : brouillon supprimé');
     return;
   }
   state.fil = sent.getId();
@@ -117,11 +121,16 @@ function send(release, state) {
 // est rangée dans le brouillon, puis le workflow est lancé
 function waitForReply(release, state) {
   const thread = state.fil ? GmailApp.getThreadById(state.fil) : null;
-  if (!thread) return;
+  if (!thread) {
+    console.log('  fil Gmail introuvable (supprimé ?)');
+    return;
+  }
   const me = Session.getEffectiveUser().getEmail().toLowerCase();
-  const replies = thread
-    .getMessages()
-    .filter((m) => !m.isDraft() && !m.isInTrash() && m.getDate().getTime() > state.vuLe && m.getFrom().toLowerCase().indexOf(me) !== -1);
+  // Messages arrivés après le dernier traité ; seuls les miens comptent
+  const recent = thread.getMessages().filter((m) => !m.isDraft() && !m.isInTrash() && m.getDate().getTime() > state.vuLe);
+  const replies = recent.filter((m) => m.getFrom().toLowerCase().indexOf(me) !== -1);
+  console.log(`  fil « ${thread.getFirstMessageSubject()} » : ${thread.getMessageCount()} message(s), ${recent.length} nouveau(x), dont ${replies.length} de ${me}`);
+  recent.filter((m) => replies.indexOf(m) === -1).forEach((m) => console.log(`  ignoré : message de ${m.getFrom()}`));
   if (replies.length === 0) return;
 
   const reply = replies[replies.length - 1];
@@ -143,6 +152,7 @@ function waitForReply(release, state) {
     throw error;
   }
   reply.markRead();
+  console.log('  réponse transmise : tâche GitHub « Veille par e-mail » lancée');
 }
 
 function save(release, state) {
