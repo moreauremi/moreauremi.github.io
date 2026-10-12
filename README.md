@@ -133,7 +133,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [ ] **Fiche « Portfolio RémiOS »** (`content/realisations/portfolio-remios.md`) : rédigée d'après ce README, à relire.
 - [ ] **PDF** : tableau de synthèse.
 - [x] **Veille** : trois sujets (cybersécurité des PME industrielles, virtualisation, facturation électronique) et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
-- [x] **Jeton Copilot** : jeton GitHub « Copilot Requests » rangé dans les secrets du dépôt (`COPILOT_GITHUB_TOKEN`) ; la collecte des trois sujets fonctionne (9 octobre 2026). À renouveler avant son expiration, un an après sa création (voir [Mise en route](#mise-en-route-une-seule-fois)).
+- [x] **Jeton Copilot** : jeton GitHub « Copilot Requests » rangé dans les secrets du dépôt (`COPILOT_GITHUB_TOKEN`) ; la collecte des trois sujets fonctionne (9 octobre 2026 ; jeton recréé le 12 octobre 2026). À renouveler avant son expiration, un an après sa création (voir [Mise en route](#mise-en-route-une-seule-fois)).
 - [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://dashboard.remim.me, à partir des actualités collectées.
 - [ ] **Veille par e-mail** : créer le jeton du relais et installer le relais Gmail (voir [Veille par e-mail](#mise-en-route-du-relais-gmail-une-seule-fois)).
 - [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif.
@@ -387,7 +387,7 @@ npm run veille                  # collecte complète, écrit content/veille/<suj
 
 ### Dépannage
 
-- **« Copilot CLI a échoué »** : jeton expiré ou sans la permission « Copilot Requests », abonnement Copilot inactif, ou quota épuisé. Le message complet est dans le journal de la tâche (onglet Actions). « Bad credentials » alors que le jeton existe toujours (https://github.com/settings/personal-access-tokens) : regarder l'état de GitHub (https://www.githubstatus.com) avant de changer de jeton.
+- **« Copilot CLI a échoué »** : jeton expiré ou sans la permission « Copilot Requests », abonnement Copilot inactif, ou quota épuisé. Le message complet est dans le journal de la tâche (onglet Actions). « Authentication failed » ou « Bad credentials » : le plus souvent, la permission **Copilot Requests** manque au jeton (dans *Account permissions*, pas dans *Repository permissions*) ; l'ajouter avec **Edit** sur la page du jeton ne change pas sa valeur, le secret reste bon. Vérifier aussi que le secret `COPILOT_GITHUB_TOKEN` contient bien ce jeton, et pas celui du relais Gmail (cas rencontré le 12 octobre 2026).
 - **Version de Copilot CLI** : fixée dans les trois workflows (`veille.yml`, `reformuler.yml`, `veille-mail.yml`), pour qu'une nouvelle version ne change pas le comportement sans prévenir. Pour en changer, modifier le numéro dans les trois, puis lancer une collecte à la main pour vérifier.
 - **Choisir le modèle** : `veille.ia.modele` (vide = modèle par défaut de Copilot). Les noms possibles sont listés par `copilot --help` (option `--model`).
 - **Changer de fournisseur d'IA** (Mistral, Groq, Gemini…) : `veille.ia.fournisseur: 'api'`, avec `url` et `modele` du service (tous proposent l'API au format OpenAI), et leur clé dans le secret utilisé par `veille.yml`.
