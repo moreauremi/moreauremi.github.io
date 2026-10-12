@@ -364,7 +364,7 @@ export default {
       },
       {
         nom: 'Bases de données',
-        items: [{ nom: 'SQL (requêtes sur l\'ERP Open-Prod)', niveau: 2, preuves: [] }],
+        items: [{ nom: 'SQL', niveau: 2, preuves: [] }],
       },
       {
         nom: 'Outils et frameworks',

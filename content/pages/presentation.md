@@ -23,7 +23,7 @@ Ces expériences m'ont beaucoup appris, et surtout ce qui me plaisait : le conta
 
 ## Mon alternance
 
-Le poste de consultant ERP chez 1Life, intégrateur de l'ERP Open-Prod au sein du groupe Visiativ, réunit exactement ces deux envies : la relation client et ma passion pour l'informatique. Depuis septembre 2026, je m'y forme sur Open-Prod, sur des bases de démonstration, avant d'intervenir chez les clients : flux achat-vente, gestion à l'affaire, flux de production, et administration des bases de test avec des scripts et des requêtes SQL.
+Le poste de consultant ERP chez 1Life, intégrateur de l'ERP Open-Prod au sein du groupe Visiativ, réunit exactement ces deux envies : la relation client et ma passion pour l'informatique. Depuis septembre 2026, je m'y forme sur Open-Prod, sur des bases de démonstration, avant d'intervenir chez les clients : flux achat-vente, gestion à l'affaire, flux de production, et administration de mon environnement de test (mises à jour de l'ERP, duplication et restauration de bases).
 
 1Life accompagne les entreprises de l'industrie, un secteur très diversifié où chaque client est différent. Pour quelqu'un de curieux comme moi, c'est l'assurance d'apprendre quelque chose de nouveau en permanence.
 
