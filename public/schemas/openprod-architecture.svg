@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="800" height="640" role="img" aria-labelledby="t d" font-family="'IBM Plex Mono', ui-monospace, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace">
+  <title id="t">Environnement Open-Prod v10 — architecture</title>
+  <desc id="d">Depuis mon poste Windows, j'administre la machine virtuelle en SSH et j'utilise Open-Prod dans le navigateur. La machine virtuelle Ubuntu 24.04 fait tourner le serveur Open-Prod 10.2 (Python, construit sur Odoo, service systemd), qui stocke ses données dans PostgreSQL (bases de démonstration et de formation) et produit les documents PDF avec JasperReports. L'outillage MyFab (scripts PHP de 1Life, dont app-manager et sql-update) pilote le serveur et récupère les mises à jour depuis quatre dépôts Git : Open-Prod, modules MyFab, rapports Jasper et scripts MyFab. Les bases sont dupliquées, restaurées et importées depuis le navigateur.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1a1d23"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="640" fill="#ffffff"/>
+
+  <!-- Titre -->
+  <text x="32" y="44" font-size="20" font-weight="600" fill="#1a1d23">Environnement Open-Prod v10 — architecture</text>
+  <text x="32" y="68" font-size="13" fill="#4a5260">Ma machine virtuelle de formation chez 1Life : ERP, base de données, outillage</text>
+  <line x1="32" y1="84" x2="768" y2="84" stroke="#1a1d23" stroke-width="1"/>
+
+  <!-- Mon poste -->
+  <rect x="32" y="104" width="472" height="64" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="48" y="126" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">MON POSTE (WINDOWS)</text>
+  <text x="48" y="152" font-size="13" font-weight="600" fill="#1a1d23">Terminal SSH</text>
+  <text x="312" y="152" font-size="13" font-weight="600" fill="#1a1d23">Navigateur web</text>
+
+  <!-- Machine virtuelle -->
+  <rect x="32" y="196" width="736" height="292" rx="8" fill="#f5f6f8" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="48" y="220" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">MACHINE VIRTUELLE UBUNTU 24.04</text>
+
+  <!-- Outillage MyFab -->
+  <rect x="48" y="234" width="188" height="100" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="64" y="256" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">OUTILLAGE MYFAB</text>
+  <text x="64" y="282" font-size="13" font-weight="600" fill="#1a1d23">Scripts PHP 1Life</text>
+  <text x="64" y="304" font-size="12" fill="#4a5260">app-manager</text>
+  <text x="64" y="322" font-size="12" fill="#4a5260">sql-update…</text>
+
+  <!-- Serveur Open-Prod -->
+  <rect x="296" y="234" width="208" height="100" rx="6" fill="#eef2fa" stroke="#1e3c8c" stroke-width="1.5"/>
+  <text x="312" y="256" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">SERVEUR OPEN-PROD</text>
+  <text x="312" y="282" font-size="13" font-weight="600" fill="#1a1d23">Open-Prod 10.2</text>
+  <text x="312" y="304" font-size="12" fill="#1a1d23">Python, base Odoo</text>
+  <text x="312" y="322" font-size="12" fill="#1a1d23">service systemd</text>
+
+  <!-- JasperReports -->
+  <rect x="564" y="234" width="188" height="100" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="580" y="256" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">JASPERREPORTS</text>
+  <text x="580" y="282" font-size="13" font-weight="600" fill="#1a1d23">Documents PDF</text>
+  <text x="580" y="304" font-size="12" fill="#4a5260">factures, bons</text>
+  <text x="580" y="322" font-size="12" fill="#4a5260">de livraison…</text>
+
+  <!-- PostgreSQL -->
+  <rect x="296" y="382" width="208" height="84" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="312" y="404" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">POSTGRESQL</text>
+  <text x="312" y="430" font-size="13" font-weight="600" fill="#1a1d23">Bases de démo</text>
+  <text x="312" y="450" font-size="12" fill="#4a5260">et de formation</text>
+
+  <!-- Gestion des bases -->
+  <rect x="564" y="382" width="188" height="84" rx="6" fill="#ffffff" stroke="#4a5260" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="580" y="404" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">GESTION DES BASES</text>
+  <text x="580" y="430" font-size="12" fill="#1a1d23">dupliquer, restaurer</text>
+  <text x="580" y="450" font-size="12" fill="#4a5260">depuis le navigateur</text>
+
+  <!-- Dépôts Git -->
+  <rect x="32" y="508" width="472" height="76" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="48" y="530" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">DÉPÔTS GIT</text>
+  <text x="48" y="554" font-size="12" fill="#1a1d23">Open-Prod · modules MyFab</text>
+  <text x="48" y="572" font-size="12" fill="#1a1d23">rapports Jasper · scripts MyFab</text>
+  <text x="552" y="540" font-size="11.5" fill="#4a5260">versions affichées par</text>
+  <text x="552" y="558" font-size="11.5" fill="#4a5260">la commande openprod-info</text>
+
+  <!-- Flèches -->
+  <g fill="none" stroke="#1a1d23" stroke-width="1.5" marker-end="url(#a)">
+    <path d="M142 168 V233"/>
+    <path d="M400 168 V233"/>
+    <path d="M236 284 H295"/>
+    <path d="M504 284 H563"/>
+    <path d="M564 424 H505"/>
+    <path d="M142 508 V335"/>
+  </g>
+  <path d="M400 335 V381" fill="none" stroke="#1a1d23" stroke-width="1.5" marker-start="url(#a)" marker-end="url(#a)"/>
+
+  <!-- Libellés des flèches -->
+  <text x="150" y="186" font-size="11" fill="#4a5260">SSH</text>
+  <text x="266" y="276" font-size="10.5" fill="#4a5260" text-anchor="middle">pilote</text>
+  <text x="534" y="276" font-size="10.5" fill="#4a5260" text-anchor="middle">imprime</text>
+  <text x="410" y="362" font-size="11" fill="#4a5260">données</text>
+  <text x="152" y="410" font-size="11" fill="#4a5260">mises à jour</text>
+  <text x="152" y="426" font-size="11" fill="#4a5260">du code</text>
+
+  <!-- Pied -->
+  <line x1="32" y1="604" x2="768" y2="604" stroke="#d5d9e0" stroke-width="1"/>
+  <text x="32" y="626" font-size="11.5" fill="#4a5260">Réalisation : Environnement Open-Prod v10</text>
+  <text x="768" y="626" font-size="11.5" fill="#4a5260" text-anchor="end">Rémi Moreau · remim.me</text>
+</svg>
