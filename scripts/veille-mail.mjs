@@ -54,6 +54,10 @@ import { escapeHtml } from '../src/utils/html.js';
 import { askAi } from './ia.mjs';
 
 export const PREFIX = 'veille-mail-';
+const NAME = 'Veille par e-mail du ';
+// Brouillon d'un échange : reconnu par son tag, ou par son titre, car GitHub
+// remplace le tag d'un brouillon modifié par « untagged-… »
+export const isExchange = (release) => Boolean(release.draft && (release.tag_name?.startsWith(PREFIX) || release.name?.startsWith(NAME)));
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = (site.urlPublique || 'https://remim.me/').replace(/\/$/, '');
 const DASHBOARD = 'https://dashboard.remim.me';
@@ -671,7 +675,7 @@ async function announce(latest = false) {
   const state = announcement(groups, day);
   await github('POST', '/releases', {
     tag_name: `${PREFIX}${day}-${Date.now().toString(36)}`,
-    name: `Veille par e-mail du ${shortDate(day)}`,
+    name: `${NAME}${shortDate(day)}`,
     body: serialize(state),
     draft: true,
   });
@@ -682,7 +686,7 @@ async function announce(latest = false) {
 async function cleanUp() {
   const limit = today(new Date(Date.now() - KEEP_DAYS * DAY));
   const releases = await github('GET', '/releases?per_page=100');
-  for (const release of releases.filter((r) => r.draft && r.tag_name.startsWith(PREFIX))) {
+  for (const release of releases.filter(isExchange)) {
     let semaine = null;
     try {
       semaine = JSON.parse(release.body ?? '').semaine;
@@ -705,7 +709,7 @@ async function main() {
   if (!/^\d+$/.test(id)) fail('numéro de brouillon invalide.');
   const release = await github('GET', `/releases/${id}`);
   // Seul un brouillon de la veille par e-mail peut être modifié ici
-  if (!release.draft || !release.tag_name.startsWith(PREFIX)) fail("ce n'est pas un échange de la veille par e-mail.");
+  if (!isExchange(release)) fail("ce n'est pas un échange de la veille par e-mail.");
   const state = readState(release.body);
   const save = (next) => github('PATCH', `/releases/${id}`, { body: serialize(next) });
 

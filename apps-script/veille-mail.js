@@ -4,7 +4,7 @@
 // À copier dans un projet Apps Script de mon compte Google (script.google.com),
 // voir le README, « Veille par e-mail ». Toutes les 10 minutes, check() :
 //
-//   1. liste les versions (releases) brouillons « veille-mail-… » du dépôt du
+//   1. liste les versions (releases) brouillons « Veille par e-mail du … » du dépôt du
 //      site : une par semaine, créée par la veille du lundi ;
 //   2. étape « a-envoyer » : envoie l'e-mail préparé dans le brouillon (le
 //      premier ouvre un fil, les suivants y répondent), puis attend ma réponse ;
@@ -24,6 +24,7 @@
 /* exported install, check */
 
 const PREFIX = 'veille-mail-';
+const NAME = 'Veille par e-mail du ';
 const WORKFLOW = 'veille-mail.yml';
 const LABEL = 'Veille RémiOS'; // libellé Gmail des fils de la veille
 const SENDER_NAME = 'RémiOS veille';
@@ -47,11 +48,13 @@ function check() {
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(1000)) return; // la vérification précédente n'est pas finie
   try {
-    // Les plus anciens d'abord
-    const releases = github('GET', '/releases?per_page=100')
-      .filter((release) => release.draft && release.tag_name.indexOf(PREFIX) === 0)
+    // Brouillons des échanges, les plus anciens d'abord. Reconnus par leur tag,
+    // ou par leur titre : GitHub remplace le tag d'un brouillon modifié par « untagged-… »
+    const drafts = github('GET', '/releases?per_page=100').filter((release) => release.draft);
+    const releases = drafts
+      .filter((release) => release.tag_name.indexOf(PREFIX) === 0 || (release.name || '').indexOf(NAME) === 0)
       .reverse();
-    console.log(`${releases.length} échange(s) en cours`);
+    console.log(`${drafts.length} brouillon(s) sur GitHub, dont ${releases.length} échange(s) en cours`);
     for (const release of releases) {
       try {
         handle(release);

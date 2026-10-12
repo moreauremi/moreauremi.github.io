@@ -9,6 +9,7 @@ import {
   checkDraft,
   cleanReply,
   insertSynthesis,
+  isExchange,
   parseChoices,
   parseValidation,
   ReplyError,
@@ -163,4 +164,11 @@ test("échange : réponse non comprise ou panne de l'IA → e-mail d'explication
   // « réessaie » reprend la réponse précédente
   const retried = await respond({ ...failed, etape: 'travail', reponse: 'réessaie' }, { write: async () => ({ titre: 'T', texte: 'x'.repeat(50) }) });
   assert.equal(retried[0].phase, 'validation');
+});
+
+test("brouillon d'un échange : reconnu par son tag, ou par son titre une fois le tag remplacé par GitHub", () => {
+  assert.ok(isExchange({ draft: true, tag_name: 'veille-mail-2026-10-12-abc', name: 'Veille par e-mail du 12/10/2026' }));
+  assert.ok(isExchange({ draft: true, tag_name: 'untagged-f7c5472e1aafa5c42ed8', name: 'Veille par e-mail du 12/10/2026' }));
+  assert.ok(!isExchange({ draft: true, tag_name: 'reformulation-x', name: 'Reformulation en cours (tableau de bord des synthèses)' }));
+  assert.ok(!isExchange({ draft: false, tag_name: 'veille-mail-2026-10-12-abc', name: 'Veille par e-mail du 12/10/2026' }));
 });

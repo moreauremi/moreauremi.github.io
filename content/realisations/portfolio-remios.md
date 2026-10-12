@@ -100,7 +100,7 @@ Code source (licence MIT) : [le site](https://github.com/moreauremi/moreauremi.g
 - **Audit Lighthouse** du site en ligne (26 septembre 2026) : 100/100 en performance, accessibilité, bonnes pratiques et référencement, sur mobile comme sur ordinateur.
 - **Accessibilité** : règles WCAG 2.2 AA vérifiées avec axe-core sur chaque écran, navigation complète au clavier, aucune page qui défile horizontalement, même sur un écran de 320 px.
 - **Validation HTML** : les pages passent le validateur du W3C sans erreur.
-- **Tests automatisés**, lancés avant chaque mise en ligne : 23 pour le site (politique de sécurité, chaque rubrique et chaque fiche, vue jury, onglets de la veille, mesure d'audience, terminal, rappel des synthèses, lecture des réponses et échange complet de la veille par e-mail) et 19 pour le tableau de bord (format des synthèses, échanges simulés avec GitHub et GoatCounter, graphique des visites).
+- **Tests automatisés**, lancés avant chaque mise en ligne : 24 pour le site (politique de sécurité, chaque rubrique et chaque fiche, vue jury, onglets de la veille, mesure d'audience, terminal, rappel des synthèses, lecture des réponses et échange complet de la veille par e-mail) et 19 pour le tableau de bord (format des synthèses, échanges simulés avec GitHub et GoatCounter, graphique des visites).
 
 Le site est en ligne depuis septembre 2026, et sa fréquentation est mesurée depuis le 9 octobre 2026.
 
