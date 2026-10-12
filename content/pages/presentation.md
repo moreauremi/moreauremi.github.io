@@ -11,7 +11,7 @@ titre: Présentation
 
 Je m'appelle Rémi Moreau. Je prépare un BTS SIO (Services informatiques aux organisations), option SISR (Solutions d'infrastructure, systèmes et réseaux), à MyDigitalSchool Nantes, dans la promotion 2026-2028, en alternance comme consultant ERP.
 
-Du paramétrage de solutions pour des PME industrielles à l'administration d'une infrastructure auto-hébergée, je fais le lien entre les besoins des utilisateurs et les outils techniques qui y répondent.
+De l'ERP des PME industrielles, que j'apprends à paramétrer, à l'administration de mon infrastructure auto-hébergée, j'aime faire le lien entre les besoins des utilisateurs et les outils techniques qui y répondent.
 
 ## Mon parcours
 
@@ -23,7 +23,7 @@ Ces expériences m'ont beaucoup appris, et surtout ce qui me plaisait : le conta
 
 ## Mon alternance
 
-Le poste de consultant ERP chez 1Life, intégrateur de l'ERP Open-Prod au sein du groupe Visiativ, réunit exactement ces deux envies : la relation client et ma passion pour l'informatique. Depuis septembre 2026, j'y paramètre Open-Prod pour les flux de vente et de production, avec des requêtes SQL et des notions de comptabilité.
+Le poste de consultant ERP chez 1Life, intégrateur de l'ERP Open-Prod au sein du groupe Visiativ, réunit exactement ces deux envies : la relation client et ma passion pour l'informatique. Depuis septembre 2026, je m'y forme sur Open-Prod, sur des bases de démonstration, avant d'intervenir chez les clients : flux achat-vente, gestion à l'affaire, flux de production, et administration des bases de test avec des scripts et des requêtes SQL.
 
 1Life accompagne les entreprises de l'industrie, un secteur très diversifié où chaque client est différent. Pour quelqu'un de curieux comme moi, c'est l'assurance d'apprendre quelque chose de nouveau en permanence.
 

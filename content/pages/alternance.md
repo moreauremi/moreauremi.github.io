@@ -18,7 +18,7 @@ titre: Alternance et parcours
 
 ## Mon poste et mes missions
 
-Depuis septembre 2026, je suis consultant ERP en alternance. Je paramètre l'ERP Open-Prod pour les flux de vente et de production des clients, avec des requêtes SQL et des notions de comptabilité.
+Depuis septembre 2026, je suis consultant ERP en alternance. Les premières semaines sont consacrées à la formation sur l'ERP Open-Prod, sur des bases de démonstration, avant d'intervenir chez les clients : flux achat-vente, gestion à l'affaire, flux de production, et administration des bases de test (mises à jour par scripts et requêtes SQL, duplication, import).
 
 [À COMPLÉTER : missions confiées, avec des exemples concrets (paramétrage, formation des utilisateurs, assistance…)]
 

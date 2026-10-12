@@ -21,7 +21,6 @@ Le site se présente comme le démarrage d'un système Linux : écran GRUB, jour
 - [Tableau de bord des synthèses](#tableau-de-bord-des-synthèses)
 - [Mettre en ligne sur remim.me (GitHub Pages)](#mettre-en-ligne-sur-remimme-github-pages)
 - [Autre option : héberger sur le homelab (Docker + nginx)](#autre-option--héberger-sur-le-homelab-docker--nginx)
-- [Préparer l'oral](#préparer-loral)
 - [Étapes de construction](#étapes-de-construction)
 - [Crédits et licences](#crédits-et-licences)
 
@@ -641,46 +640,6 @@ ssh remi@homelab "cd ~/remios-portfolio && docker compose up -d --build && docke
 - **Le build échoue** : lire le message, il indique souvent une fiche mal remplie ; le corriger et relancer. Le même message apparaît en local avec `npm run build`.
 - **Le conteneur redémarre en boucle** : `docker compose logs`. Si nginx se plaint d'un système de fichiers en lecture seule, mettre en commentaire les lignes `read_only`, `tmpfs` et leurs dossiers dans `docker-compose.yml`, puis relancer.
 - **Seul le reverse proxy doit accéder au conteneur** : utiliser l'option B (réseau Docker commun) et supprimer la ligne `ports:` ; le site n'est alors plus joignable directement depuis le réseau.
-
-## Préparer l'oral
-
-Questions probables du jury, et l'essentiel de la réponse.
-
-**Pourquoi ne pas avoir utilisé WordPress ou un framework comme React ?**
-Le site est statique : il n'a besoin ni de base de données ni de code côté serveur. Vite et du JavaScript simple suffisent, le code reste court, la page d'accueil pèse 65 Ko une fois compressée (polices comprises), et il n'y a rien à mettre à jour côté sécurité en dehors de nginx.
-
-**Comment une fiche Markdown devient-elle une page ?**
-Au build, un plugin Vite que j'ai ajouté lit chaque fichier `.md` : `gray-matter` sépare l'en-tête (titre, type, compétences…) du texte, `marked` convertit le texte en HTML, et le plugin vérifie les champs. Si une fiche est mal remplie, le build s'arrête avec un message clair.
-
-**Comment fonctionne la navigation sans rechargement ?**
-Par le hash de l'URL (`#/realisations/nas`). Le navigateur ne recharge pas la page quand il change : il émet un événement `hashchange` que mon routeur écoute pour afficher le bon écran. Chaque écran a donc une adresse partageable, sans configuration côté serveur.
-
-**Une animation de 5 secondes, ce n'est pas gênant pour le visiteur ou pour l'accessibilité ?**
-Le menu est déjà affiché sous le démarrage, qui n'est qu'un calque : un clic, une touche ou le bouton « Passer » le retirent instantanément. Il ne se joue qu'à l'accueil, jamais sur un lien direct, et pas du tout si le système demande de réduire les animations. La vue jury reste accessible en un clic pendant le boot.
-
-**Comment le démarrage reste-t-il fluide ?**
-Une seule boucle `requestAnimationFrame`, synchronisée sur l'affichage de l'écran. Le journal est une grille de lignes fixes dont je réécris seulement le texte : rien ne bouge dans la page, ce qui a fait passer le décalage de mise en page mesuré par Lighthouse de 0,44 à 0.
-
-**Le terminal est-il dangereux ?**
-Non : il est entièrement simulé dans le navigateur, rien n'est exécuté ni envoyé au serveur. La saisie est affichée comme du texte brut (`textContent`) et la politique de sécurité du contenu (CSP) empêche tout script injecté de s'exécuter.
-
-**Comment le site est-il hébergé ?**
-Sur GitHub Pages, à l'adresse remim.me. Le domaine, obtenu gratuitement chez Namecheap grâce au GitHub Student Pack, pointe vers les serveurs de GitHub par quatre enregistrements DNS de type A (et un CNAME pour www) ; GitHub fournit le certificat HTTPS. À chaque push, un workflow GitHub Actions reconstruit le site, vérifie les fiches et le remet en ligne. Le projet contient aussi une image Docker durcie (build Node, puis nginx en lecture seule) pour l'héberger sur mon homelab.
-
-**Que voit-on si l'adresse est fausse, ou si le serveur est arrêté ?**
-Une page d'erreur dans le style du site, avec le bon code HTTP : 404 pour une adresse inconnue (GitHub Pages la sert de lui-même), 403 pour un accès refusé, 503 pendant une maintenance. La 503 est affichée par le reverse proxy quand le conteneur est arrêté : elle ne peut rien charger depuis le site, donc elle tient en un seul fichier, et sa CSP autorise son style par son empreinte SHA-256 plutôt que d'accepter tous les styles écrits dans la page.
-
-**Quelles mesures de sécurité ?**
-Site statique (pas de base de données, aucun code exécuté sur le serveur), HTTPS, politique de sécurité du contenu (CSP) stricte qui bloque tout script externe ou injecté. Le formulaire de contact est envoyé à un service tiers (Web3Forms), seule destination autorisée par la CSP ; le site ne stocke aucune donnée. Sur GitHub Pages, la CSP est dans une balise meta ; la version Docker ajoute les en-têtes HTTP complets (anti-clickjacking, nosniff…), masque la version de nginx et tourne dans un conteneur en lecture seule.
-
-**Et le RGPD ?**
-Aucun cookie, aucune ressource extérieure, rien n'est enregistré sur l'appareil du visiteur : pas de bandeau de consentement. La mesure d'audience (GoatCounter) ne garde que des totaux, sans adresse IP ni identifiant ; elle est décrite dans les mentions légales, et les navigateurs qui demandent à ne pas être suivis ne sont pas comptés. Le seul traitement de données personnelles est le formulaire de contact. Les mentions légales disent à quoi servent les données (répondre au message), par qui elles passent (Web3Forms), combien de temps elles sont gardées et comment exercer ses droits.
-
-**Pourquoi héberger la police soi-même ?**
-Pour que le site marche sans accès extérieur, et pour ne pas transmettre l'adresse IP des visiteurs à Google : en 2022, un tribunal de Munich a condamné un site qui chargeait Google Fonts sans consentement (RGPD).
-
-**Comment ajoutez-vous une réalisation ?**
-Je copie une fiche Markdown, je remplis l'en-tête et le texte, je dépose les captures dans `public/captures/`. Tant qu'elle n'est pas prête, `brouillon: true` la garde hors du site publié. Elle apparaît ensuite automatiquement dans la rubrique « Réalisations », la vue jury, le tableau de synthèse, les compétences qui la citent et le terminal. Un `git push` suffit : GitHub Actions vérifie la fiche, reconstruit le site et le met en ligne (sur le homelab : `docker compose up -d --build`).
 
 ## Étapes de construction
 

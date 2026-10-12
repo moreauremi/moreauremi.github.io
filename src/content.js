@@ -32,7 +32,7 @@ export const TYPES = {
   entreprise: {
     label: 'Réalisation en entreprise',
     group: 'En entreprise (1Life)',
-    intro: "Missions réalisées en alternance chez 1Life (part of Visiativ) depuis septembre 2026 : paramétrage de l'ERP Open-Prod (flux de vente et de production), requêtes SQL, notions comptables.",
+    intro: "Réalisations en alternance chez 1Life (part of Visiativ) depuis septembre 2026 : formation sur l'ERP Open-Prod (flux achat-vente, gestion à l'affaire, production) et administration des bases de test.",
   },
   formation: {
     label: 'Réalisation en formation',
