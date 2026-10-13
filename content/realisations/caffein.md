@@ -71,7 +71,7 @@ Je mène ce projet seul, sur mon temps personnel, avec un budget limité : les A
 - **Sécurité de l'application** : mots de passe hachés (scrypt), sessions dans un cookie HttpOnly, limitation des tentatives de connexion par adresse IP, protection CSRF, en-têtes de sécurité (CSP stricte, anti-iframe), données sensibles des justificatifs chiffrées en AES-256-GCM.
 - **Sauvegardes** : une commande sauvegarde la base, les documents et la clé de chiffrement dans une archive, et une autre la restaure ; la sauvegarde peut être planifiée chaque nuit avec cron.
 
-**Claude Code** m'a assisté pendant l'écriture du code.
+Réalisé avec **Claude Code**. Mon rôle : définir le besoin, faire les choix et tester.
 
 ![Schéma d'architecture de CAFFEIN : le freelance décrit sa facture en une phrase depuis son navigateur. Le nom de domaine mène au serveur Linux hébergé chez Hostinger, où Nginx, en reverse proxy HTTPS, relaie la requête vers le service caffein.service (API FastAPI, interface React, 8 scripts planifiés qui remplacent n8n). L'API Claude transforme la phrase en brouillon, avec une analyse locale en repli. La facture et son PDF sont enregistrés dans les données locales (SQLite, justificatifs chiffrés), puis les scripts l'envoient au client final par SMTP et gèrent les relances.](schemas/caffein-architecture.svg "Architecture de CAFFEIN : parcours d'une demande, de la phrase à la facture envoyée")
 

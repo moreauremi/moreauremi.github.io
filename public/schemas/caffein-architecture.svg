@@ -105,6 +105,6 @@
 
   <!-- Pied -->
   <line x1="32" y1="664" x2="768" y2="664" stroke="#d5d9e0" stroke-width="1"/>
-  <text x="32" y="686" font-size="11.5" fill="#4a5260">Développement assisté par Claude Code</text>
+  <text x="32" y="686" font-size="11.5" fill="#4a5260">Réalisé avec Claude Code</text>
   <text x="768" y="686" font-size="11.5" fill="#4a5260" text-anchor="end">Rémi Moreau · remim.me</text>
 </svg>

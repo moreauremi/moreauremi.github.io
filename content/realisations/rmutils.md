@@ -26,7 +26,8 @@ competences: [B1.1, B1.2, B1.5]  # codes du référentiel, ex. [B1.1, B1.4]
   - Contenu rédigé d'après le dépôt GitHub (README, RMutils.bat, RMutils_Lite.bat,
     .gitignore, .gitattributes) : c'est la référence, le CV sera aligné dessus.
   - À ajouter quand c'est possible : une capture du menu et d'un rapport HTML
-    (sur un PC sans données personnelles), et les PC sur lesquels l'outil a été testé.
+    (sur un PC sans données personnelles), et le détail des tests (fonctions
+    vérifiées, Windows 10 ou 11) une fois l'outil utilisé en conditions réelles.
 -->
 
 ## Contexte
@@ -65,7 +66,7 @@ RMutils les réunit dans un seul outil, à copier sur une clé USB et à lancer 
 - Le QR code est produit par un petit encodeur écrit en C#, compilé à la volée par PowerShell, puis dessiné avec des caractères de bloc.
 - Les scripts sont en ASCII, sans accents, avec des fins de ligne Windows : cmd.exe gère mal l'UTF-8 et les fins de ligne Unix. Le fichier .gitattributes empêche Git de les convertir.
 
-**Claude Code** m'a assisté pendant l'écriture du code.
+Réalisé avec **Claude Code**. Mon rôle : définir le besoin, faire les choix et tester.
 
 ![Schéma du fonctionnement de RMutils : la clé USB contient RMutils.bat, RMutils_Lite.bat et la liste d'applications. Sur le PC Windows, cmd.exe vérifie les droits et se relance en administrateur, puis PowerShell exécute le code placé après #PSBEGIN et affiche le menu au clavier. Le menu pilote les outils de Windows (Windows Update, winget, DISM et SFC, netsh et pnputil), et le journal, les rapports et les sauvegardes sont écrits sur la clé, dans un dossier par PC.](schemas/rmutils-fonctionnement.svg "Fonctionnement de RMutils : du double-clic sur la clé USB au rapport enregistré sur la clé")
 
@@ -74,6 +75,7 @@ Code source : [github.com/moreauremi/RMutils](https://github.com/moreauremi/RMut
 ## Résultats
 
 - Première version publique sur GitHub le 12 octobre 2026, avec une documentation complète : fonctionnalités, utilisation, sécurité, fonctionnement et limites.
+- Premiers essais sur mon PC et sur des PC de proches. Toutes les fonctions n'ont pas encore été vérifiées en conditions réelles.
 - Deux versions prêtes à l'emploi, qui partagent la même liste d'applications et les mêmes dossiers sur la clé.
 - Chaque intervention laisse une trace sur la clé : un journal par session, nommé avec le nom du PC et la date, et pour chaque PC un dossier avec les rapports HTML, le rapport de batterie et les sauvegardes.
 

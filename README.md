@@ -130,7 +130,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [ ] **Réalisations 1Life** (3 fiches en brouillon) : titres et contenu, après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
 - [ ] **Homelab Jellyfin et NAS** (en brouillon depuis le 13 octobre 2026, retirés du site en ligne) : détails techniques balisés `[À COMPLÉTER]` et captures, puis retirer la ligne `brouillon: true`.
 - [ ] **Crypto Dashboard Pro** : contexte, tests et difficultés balisés `[À COMPLÉTER]`.
-- [ ] **RMutils** : une capture du menu et d'un rapport HTML, et les PC sur lesquels l'outil a été testé.
+- [ ] **RMutils** : une capture du menu et d'un rapport HTML, et le détail des tests une fois l'outil utilisé en conditions réelles (premiers essais faits sur mon PC et des PC de proches).
 - [x] **Compétences techniques** : niveaux renseignés (octobre 2026). À remonter en cours d'année (Open-Prod, SQL, Docker…), et à relier aux fiches 1Life quand elles seront publiées (SQL et Open-Prod n'ont pas encore de preuve).
 - [x] **Grille de compétences** : les six compétences du tableau de synthèse officiel (B1.1 à B1.6) sont dans `site.config.js`.
 - [ ] **Compétences des fiches** : renseignées pour les 6 projets personnels ; à faire pour les fiches 1Life et de formation quand elles seront remplies (ex. `[B1.1, B1.5]`). B1.3 est couverte par la fiche « Portfolio RémiOS », B1.2 (incidents et demandes d'assistance) par la fiche « RMutils » ; une fiche 1Life sur l'assistance aux utilisateurs la renforcerait.

@@ -77,7 +77,7 @@ C'est aussi ma présence en ligne de candidat : le jury, les recruteurs et mes c
 
 ![Schéma d'architecture du portfolio : les visiteurs ouvrent remim.me en HTTPS ; le nom de domaine, géré chez Namecheap, mène à GitHub Pages, qui sert le portfolio et le tableau de bord dashboard.remim.me. Chaque page vue est comptée par GoatCounter. J'écris dans VS Code ou depuis le tableau de bord, qui enregistre dans le dépôt par l'API GitHub. Chaque envoi déclenche GitHub Actions, qui teste puis publie le site. Chaque lundi, la veille lit 33 flux RSS et fait résumer les articles par GitHub Copilot.](schemas/portfolio-architecture.svg "Architecture du portfolio : publication, veille automatique et tableau de bord")
 
-Claude Code m'a assisté pendant le développement.
+Réalisé avec **Claude Code**. Mon rôle : définir le besoin, faire les choix et tester.
 
 Code source (licence MIT) : [le site](https://github.com/moreauremi/moreauremi.github.io) et [le tableau de bord](https://github.com/moreauremi/veille-syntheses).
 
