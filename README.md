@@ -6,6 +6,8 @@ Portfolio de **Rémi Moreau**, étudiant en BTS SIO option SISR à MyDigitalScho
 
 **En ligne : https://remim.me** · vue rapide jury : https://remim.me/#/jury
 
+**Réalisé avec [Claude Code](https://claude.com/claude-code).** Mon rôle : définir le besoin, faire les choix et tester.
+
 Le site se présente comme le démarrage d'un système Linux : écran GRUB, journal du noyau, services systemd, puis un menu façon ncurses qui donne accès aux réalisations, au tableau de synthèse et à la veille technologique. Une **vue rapide jury**, sobre et imprimable, rassemble tout le contenu sur une seule page.
 
 ## Sommaire
@@ -126,10 +128,12 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [x] **Présentation** : photo professionnelle, projet professionnel (attendu par les consignes de l'épreuve E5).
 - [ ] **Alternance** : présentation de 1Life, missions, outils, bilan personnel, recommandation du tuteur, dates des expériences précédentes.
 - [ ] **Réalisations 1Life** (3 fiches en brouillon) : titres et contenu, après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
-- [ ] **Homelab Jellyfin, NAS, Crypto Dashboard Pro** : détails techniques balisés `[À COMPLÉTER]`, captures.
+- [ ] **Homelab Jellyfin et NAS** (en brouillon depuis le 13 octobre 2026, retirés du site en ligne) : détails techniques balisés `[À COMPLÉTER]` et captures, puis retirer la ligne `brouillon: true`.
+- [ ] **Crypto Dashboard Pro** : contexte, tests et difficultés balisés `[À COMPLÉTER]`.
+- [ ] **RMutils** : une capture du menu et d'un rapport HTML, et les PC sur lesquels l'outil a été testé.
 - [x] **Compétences techniques** : niveaux renseignés (octobre 2026). À remonter en cours d'année (Open-Prod, SQL, Docker…), et à relier aux fiches 1Life quand elles seront publiées (SQL et Open-Prod n'ont pas encore de preuve).
 - [x] **Grille de compétences** : les six compétences du tableau de synthèse officiel (B1.1 à B1.6) sont dans `site.config.js`.
-- [ ] **Compétences des fiches** : renseignées pour les 5 projets personnels ; à faire pour les fiches 1Life et de formation quand elles seront remplies (ex. `[B1.1, B1.5]`). B1.3 est couverte par la fiche « Portfolio RémiOS » ; aucune fiche ne couvre encore B1.2 (incidents et demandes d'assistance : plutôt une fiche 1Life).
+- [ ] **Compétences des fiches** : renseignées pour les 6 projets personnels ; à faire pour les fiches 1Life et de formation quand elles seront remplies (ex. `[B1.1, B1.5]`). B1.3 est couverte par la fiche « Portfolio RémiOS », B1.2 (incidents et demandes d'assistance) par la fiche « RMutils » ; une fiche 1Life sur l'assistance aux utilisateurs la renforcerait.
 - [ ] **Fiche « Portfolio RémiOS »** (`content/realisations/portfolio-remios.md`) : rédigée d'après ce README, à relire.
 - [ ] **PDF** : tableau de synthèse.
 - [x] **Veille** : trois sujets (cybersécurité des PME industrielles, virtualisation, facturation électronique) et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
