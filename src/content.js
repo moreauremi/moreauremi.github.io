@@ -9,6 +9,7 @@
 
 import site from '../content/site.config.js';
 import { tagSlug } from './utils/tags.js';
+import { hasPlaceholder } from './utils/html.js';
 
 const ficheModules = import.meta.glob('../content/realisations/*.md', {
   eager: true,
@@ -68,6 +69,49 @@ export function getRealisation(slug) {
 
 export function realisationsOfType(type) {
   return realisations.filter((r) => r.type === type);
+}
+
+// --- Technos des fiches (#/technos/<techno>) ---------------------------------------
+
+// Identifiant d'une techno, utilisé dans les adresses et pour reconnaître deux
+// écritures d'une même techno, comme pour les tags de la veille :
+//   'GitHub Actions'  → 'github-actions'
+//   'Batch (cmd.exe)' → 'batch-cmd-exe'
+export const technoSlug = tagSlug;
+
+// Technos des fiches publiées : { nom, slug, count }, de la plus utilisée à la
+// moins utilisée (count : nombre de fiches qui la citent). Le nom affiché est
+// celui de la fiche la plus récente. Un repère [À COMPLÉTER] n'est pas une techno.
+export const technos = [
+  ...realisations
+    .flatMap((r) => uniqueTechnos(r))
+    .reduce((list, nom) => {
+      const slug = technoSlug(nom);
+      const techno = list.get(slug) ?? { nom, slug, count: 0 };
+      techno.count += 1;
+      return list.set(slug, techno);
+    }, new Map())
+    .values(),
+].sort((a, b) => b.count - a.count || a.nom.localeCompare(b.nom, 'fr'));
+
+export function getTechno(slug) {
+  return technos.find((t) => t.slug === slug) ?? null;
+}
+
+// Réalisations qui citent une techno, les plus récentes d'abord
+export function realisationsByTechno(slug) {
+  return realisations.filter((r) => uniqueTechnos(r).some((nom) => technoSlug(nom) === slug));
+}
+
+// Technos d'une fiche, sans repère [À COMPLÉTER] ni doublon (même identifiant)
+function uniqueTechnos(realisation) {
+  const seen = new Set();
+  return realisation.technos.filter((nom) => {
+    const slug = technoSlug(nom);
+    if (hasPlaceholder(nom) || !slug || seen.has(slug)) return false;
+    seen.add(slug);
+    return true;
+  });
 }
 
 // Pages simples (présentation, veille), indexées par nom de fichier

@@ -14,8 +14,8 @@
 // =============================================================================
 
 import { link, navigate } from '../router.js';
-import { site, getRealisation, getVeille, getVeilleTag, findVeilleOfTag } from '../content.js';
-import { ficheBlock, veilleBlock, veilleTagBlock } from '../blocks/index.js';
+import { site, getRealisation, getTechno, getVeille, getVeilleTag, findVeilleOfTag } from '../content.js';
+import { ficheBlock, technoBlock, veilleBlock, veilleTagBlock } from '../blocks/index.js';
 import { safe } from '../utils/html.js';
 import { hasModifier, isTypingTarget } from '../utils/keyboard.js';
 import { setPromptTitle } from '../ui/tab-title.js';
@@ -89,7 +89,24 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
         return {
           kind: 'fiche',
           title: fiche.titre,
-          html: box({ title: safe(fiche.titre), body: ficheBlock(fiche), actions: backButton(link.section(section.id)) }),
+          html: box({ title: safe(fiche.titre), body: ficheBlock(fiche, link.techno), actions: backButton(link.section(section.id)) }),
+          parent: link.section(section.id),
+        };
+      }
+    }
+
+    // #/technos/<techno> : les réalisations qui utilisent cette techno
+    if (route.name === 'techno') {
+      const techno = getTechno(route.techno);
+      if (techno) {
+        // Parent : la rubrique « Réalisations »
+        const section = findSection('realisations');
+        selected = SECTIONS.indexOf(section);
+        const title = `Réalisations : ${techno.nom}`;
+        return {
+          kind: 'techno',
+          title,
+          html: box({ title: safe(title), body: technoBlock(techno, link.fiche, link.techno), actions: backButton(link.section(section.id)) }),
           parent: link.section(section.id),
         };
       }

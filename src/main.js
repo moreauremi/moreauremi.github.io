@@ -83,7 +83,7 @@ const boot = createBoot({
 // --- Affichage de l'écran demandé -----------------------------------------------
 
 function isJuryRoute(route) {
-  return route.name === 'jury' || route.name === 'jury-fiche' || route.name === 'jury-tag';
+  return ['jury', 'jury-fiche', 'jury-techno', 'jury-tag'].includes(route.name);
 }
 
 function render(route, options) {
@@ -93,7 +93,7 @@ function render(route, options) {
 
   // Bip de validation à l'ouverture d'une rubrique ou d'une fiche
   // (pas au premier affichage : le visiteur n'a encore rien choisi)
-  if (options?.focus !== false && ['section', 'veille', 'fiche', 'tag'].includes(route.name)) sounds.select();
+  if (options?.focus !== false && ['section', 'veille', 'fiche', 'techno', 'tag'].includes(route.name)) sounds.select();
 
   // Mesure d'audience : un écran affiché = une page vue (voir utils/audience.js)
   countView();

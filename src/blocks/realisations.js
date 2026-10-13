@@ -1,7 +1,12 @@
-// Rubrique « Réalisations » et fiches de réalisation (content/realisations/).
+// Rubrique « Réalisations », fiches de réalisation (content/realisations/) et
+// pages des technos (toutes les réalisations qui utilisent une techno).
+//
+// `hrefFor(slug)` : lien d'une fiche ; `hrefForTechno(slug)` : lien de la page
+// d'une techno (#/technos/<techno> dans RémiOS, #/jury/technos/<techno> dans
+// la vue jury).
 
-import { realisationsOfType, competenceLabel, TYPES } from '../content.js';
-import { escapeHtml, safe } from '../utils/html.js';
+import { realisationsOfType, realisationsByTechno, technos, technoSlug, competenceLabel, TYPES } from '../content.js';
+import { escapeHtml, hasPlaceholder, safe } from '../utils/html.js';
 import { formatDate } from '../utils/dates.js';
 
 
@@ -23,7 +28,11 @@ export function realisationsBlock(hrefFor) {
 export function realisationList(type, hrefFor) {
   const items = realisationsOfType(type);
   if (items.length === 0) return '<p class="empty">À venir.</p>';
+  return ficheLinks(items, hrefFor);
+}
 
+// Liste de fiches : titre (lien vers la fiche) et résumé
+function ficheLinks(items, hrefFor) {
   return `<ul class="fiche-list" data-nav-list>${items
     .map(
       (r) => `
@@ -44,18 +53,52 @@ function draftBadge(r) {
   return r.brouillon ? ' <span class="draft-badge">brouillon, non publié</span>' : '';
 }
 
-// Caractéristiques d'une fiche : type, date, statut, technologies
-export function ficheMeta(r) {
-  const technos = r.technos.length
-    ? `<ul class="tags">${r.technos.map((t) => `<li>${safe(t)}</li>`).join('')}</ul>`
+// Caractéristiques d'une fiche : type, date, statut, technologies.
+// Chaque techno est une étiquette cliquable qui mène à sa page.
+export function ficheMeta(r, hrefForTechno) {
+  const list = r.technos.length
+    ? `<ul class="tags" aria-label="Technos">${r.technos.map((nom) => `<li>${technoBadge(nom, hrefForTechno)}</li>`).join('')}</ul>`
     : '<mark class="ph">[À COMPLÉTER]</mark>';
 
   return `<dl class="fiche-meta">
     <dt>Type</dt><dd>${TYPES[r.type].label}${draftBadge(r)}</dd>
     <dt>Date</dt><dd>${safe(formatDate(r.date))}</dd>
     <dt>Statut</dt><dd>${safe(r.statut)}</dd>
-    <dt>Technos</dt><dd>${technos}</dd>
+    <dt>Technos</dt><dd>${list}</dd>
   </dl>`;
+}
+
+// Étiquette d'une techno, aux couleurs de sa marque (src/styles/technos.css,
+// qui la reconnaît à son attribut data-techno).
+//   link     : lien vers la page de la techno (sinon simple étiquette)
+//   current  : techno de la page affichée (non cliquable, mise en évidence)
+//   count    : nombre de réalisations, affiché à droite de l'étiquette
+// Un repère [À COMPLÉTER] reste un texte surligné, sans lien.
+function technoBadge(nom, hrefForTechno, { link = true, current = false, count = null } = {}) {
+  if (hasPlaceholder(nom)) return safe(nom);
+  const slug = technoSlug(nom);
+  const number =
+    count === null
+      ? ''
+      : `<span class="techno-count"><span class="visually-hidden"> (</span>${count}<span class="visually-hidden"> réalisation${count > 1 ? 's' : ''})</span></span>`;
+  const label = `${escapeHtml(nom)}${number}`;
+  if (current) return `<span class="techno is-current" data-techno="${slug}" aria-current="page">${label}</span>`;
+  if (!link) return `<span class="techno" data-techno="${slug}">${label}</span>`;
+  return `<a class="techno" data-techno="${slug}" href="${hrefForTechno(slug)}">${label}</a>`;
+}
+
+// Page d'une techno : les réalisations qui l'utilisent, puis toutes les technos
+// des fiches, avec leur nombre de réalisations.
+export function technoBlock(techno, hrefFor, hrefForTechno) {
+  const items = realisationsByTechno(techno.slug);
+  const count = `${items.length} réalisation${items.length > 1 ? 's' : ''}`;
+  const all = technos
+    .map((t) => `<li>${technoBadge(t.nom, hrefForTechno, { count: t.count, current: t.slug === techno.slug })}</li>`)
+    .join('');
+  return `<p class="intro">${count} avec ${technoBadge(techno.nom, hrefForTechno, { link: false })}, de la plus récente à la plus ancienne.</p>
+  ${ficheLinks(items, hrefFor)}
+  <h2 class="block-title" id="technos-toutes">Toutes les technos</h2>
+  <ul class="tags tags--all" aria-label="Toutes les technos">${all}</ul>`;
 }
 
 // Compétences du référentiel mobilisées par une fiche
@@ -71,9 +114,9 @@ export function ficheCompetences(r) {
 }
 
 // Fiche complète : caractéristiques, texte de la fiche, compétences
-export function ficheBlock(r) {
+export function ficheBlock(r, hrefForTechno) {
   return `<article class="fiche">
-    ${ficheMeta(r)}
+    ${ficheMeta(r, hrefForTechno)}
     <div class="prose">${r.html}</div>
     <div class="prose">${ficheCompetences(r)}</div>
   </article>`;

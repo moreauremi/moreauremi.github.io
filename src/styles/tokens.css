@@ -6,8 +6,9 @@
    changer une couleur partout, il suffit de la modifier à cet endroit.
    Exceptions volontaires : les ombres et voiles noirs semi-transparents
    (effets visuels, écrits là où ils servent), le noir et blanc de
-   l'impression (print.css) et la page de maintenance (maintenance.css,
-   qui doit fonctionner seule).
+   l'impression (print.css), la page de maintenance (maintenance.css,
+   qui doit fonctionner seule) et les couleurs de marque des technos
+   (technos.css, une par techno).
 
    Palette reprise de la maquette validée (reference/maquette.html).
    Les contrastes texte/fond respectent le niveau AA des règles d'accessibilité

@@ -1,0 +1,90 @@
+/* ==========================================================================
+   Couleurs des technos (étiquettes des fiches et pages #/technos/<techno>)
+   --------------------------------------------------------------------------
+   Une couleur par techno, celle de sa marque, comme les badges shields.io des
+   README GitHub (couleurs de Simple Icons). La techno est reconnue par son
+   identifiant, écrit dans l'attribut data-techno : son nom en minuscules,
+   sans accents, avec des tirets à la place des espaces et de la ponctuation.
+     « Python »          → [data-techno="python"]
+     « GitHub Actions »  → [data-techno="github-actions"]
+     « Batch (cmd.exe) » → [data-techno="batch-cmd-exe"]
+     « Ubuntu 24.04 »    → couvert par [data-techno^="ubuntu-"] : « Ubuntu »
+                           suivi de n'importe quelle version
+
+   --techno-bg  : couleur de fond (celle de la marque)
+   --techno-ink : couleur du texte. Blanc par défaut ; noir (#000000) quand le
+                  blanc ne se lit pas assez bien sur la couleur de la marque.
+   Les tests (npm test) vérifient que chaque couple atteint le contraste
+   minimal du site (4,5:1, niveau AA).
+
+   Une techno absente de ce fichier garde la couleur par défaut (gris neutre,
+   celui des badges sans couleur).
+   ========================================================================== */
+
+.techno {
+  --techno-bg: #555555;
+  --techno-ink: #ffffff;
+}
+
+/* --- Versions : le nom de la techno suivi d'un numéro -----------------------
+   Placées avant les règles exactes : à poids égal, la dernière règle gagne,
+   donc une techno écrite exactement (ci-dessous) garde sa propre couleur. */
+.techno[data-techno^="ubuntu-"] { --techno-bg: #e95420; --techno-ink: #000000; }
+.techno[data-techno^="windows-"] { --techno-bg: #0078d4; }
+
+/* --- Langages et formats --- */
+.techno[data-techno="python"] { --techno-bg: #3776ab; }
+.techno[data-techno="javascript"] { --techno-bg: #f7df1e; --techno-ink: #000000; }
+.techno[data-techno="html"] { --techno-bg: #e34f26; --techno-ink: #000000; }
+.techno[data-techno="css"] { --techno-bg: #1572b6; }
+.techno[data-techno="php"] { --techno-bg: #777bb4; --techno-ink: #000000; }
+.techno[data-techno="powershell"] { --techno-bg: #5391fe; --techno-ink: #000000; }
+.techno[data-techno="batch-cmd-exe"] { --techno-bg: #4d4d4d; }
+.techno[data-techno="markdown"] { --techno-bg: #000000; }
+
+/* --- Systèmes et outils Windows --- */
+.techno[data-techno="linux"] { --techno-bg: #fcc624; --techno-ink: #000000; }
+.techno[data-techno="ubuntu"] { --techno-bg: #e95420; --techno-ink: #000000; }
+.techno[data-techno="systemd"] { --techno-bg: #201a26; }
+.techno[data-techno="windows"] { --techno-bg: #0078d4; }
+.techno[data-techno="winget"] { --techno-bg: #0078d4; }
+.techno[data-techno="dism"] { --techno-bg: #0078d4; }
+.techno[data-techno="sfc"] { --techno-bg: #0078d4; }
+.techno[data-techno="netsh"] { --techno-bg: #0078d4; }
+
+/* --- Virtualisation, conteneurs, réseau --- */
+.techno[data-techno="proxmox"] { --techno-bg: #e57000; --techno-ink: #000000; }
+.techno[data-techno="docker"] { --techno-bg: #2496ed; --techno-ink: #000000; }
+.techno[data-techno="nginx"] { --techno-bg: #009639; --techno-ink: #000000; }
+.techno[data-techno="tailscale"] { --techno-bg: #242424; }
+.techno[data-techno="jellyfin"] { --techno-bg: #00a4dc; --techno-ink: #000000; }
+.techno[data-techno="hostinger"] { --techno-bg: #673de6; }
+
+/* --- Bases de données et ERP --- */
+.techno[data-techno="postgresql"] { --techno-bg: #4169e1; }
+.techno[data-techno="sqlite"] { --techno-bg: #003b57; }
+.techno[data-techno="odoo"] { --techno-bg: #714b67; }
+
+/* --- Git et GitHub --- */
+.techno[data-techno="git"] { --techno-bg: #f05032; --techno-ink: #000000; }
+.techno[data-techno="git-lfs"] { --techno-bg: #f64935; --techno-ink: #000000; }
+.techno[data-techno="github"] { --techno-bg: #181717; }
+.techno[data-techno="github-actions"] { --techno-bg: #2088ff; --techno-ink: #000000; }
+.techno[data-techno="github-pages"] { --techno-bg: #222222; }
+.techno[data-techno="github-copilot"] { --techno-bg: #000000; }
+
+/* --- Développement web et données --- */
+.techno[data-techno="vs-code"] { --techno-bg: #007acc; }
+.techno[data-techno="vite"] { --techno-bg: #646cff; --techno-ink: #000000; }
+.techno[data-techno="react"] { --techno-bg: #61dafb; --techno-ink: #000000; }
+.techno[data-techno="fastapi"] { --techno-bg: #009688; --techno-ink: #000000; }
+.techno[data-techno="streamlit"] { --techno-bg: #ff4b4b; --techno-ink: #000000; }
+.techno[data-techno="pandas"] { --techno-bg: #150458; }
+.techno[data-techno="plotly"] { --techno-bg: #3f4f75; }
+.techno[data-techno="n8n"] { --techno-bg: #ea4b71; --techno-ink: #000000; }
+.techno[data-techno="google-apps-script"] { --techno-bg: #4285f4; --techno-ink: #000000; }
+.techno[data-techno="api-coingecko"] { --techno-bg: #8dc63f; --techno-ink: #000000; }
+
+/* --- IA --- */
+.techno[data-techno="api-claude"] { --techno-bg: #d97757; --techno-ink: #000000; }
+.techno[data-techno="claude-code"] { --techno-bg: #d97757; --techno-ink: #000000; }

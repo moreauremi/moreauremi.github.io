@@ -6,18 +6,20 @@
 //
 //   #/jury                    page unique : toutes les rubriques du menu
 //   #/jury/<slug>             une fiche de réalisation dans le même style sobre
+//   #/jury/technos/<techno>   les réalisations qui utilisent une techno
 //   #/jury/veille/<sujet>/<tag>  les actualités d'un sujet de veille qui portent ce tag
 //   #/jury/mentions-legales   les mentions légales, dans le même style
 //
 // Le contenu vient des mêmes blocs que l'interface RémiOS (src/blocks/).
 // =============================================================================
 
-import { site, realisationsOfType, getRealisation, getVeille, getVeilleTag, findVeilleOfTag, TYPES } from '../content.js';
+import { site, realisationsOfType, getRealisation, getTechno, getVeille, getVeilleTag, findVeilleOfTag, TYPES } from '../content.js';
 import { link } from '../router.js';
 import {
   presentationBlock,
   alternanceBlock,
   ficheBlock,
+  technoBlock,
   competencesBlock,
   syntheseBlock,
   veilleBlock,
@@ -57,8 +59,15 @@ export function createJuryView(root) {
     // Ancienne adresse sans sujet (#/jury/veille/<tag>) : premier sujet qui a ce tag
     const veille = route.name === 'jury-tag' ? (route.sujet ? getVeille(route.sujet) : findVeilleOfTag(route.tag)) : null;
     const tag = getVeilleTag(veille, route.tag);
+    const techno = route.name === 'jury-techno' ? getTechno(route.techno) : null;
 
-    if (route.name === 'jury-tag' && tag) {
+    if (route.name === 'jury-techno' && techno) {
+      root.innerHTML = technoPage(techno);
+      setPlainTitle(`Réalisations : ${techno.nom} — Vue jury`);
+    } else if (route.name === 'jury-techno') {
+      root.innerHTML = missingPage('Techno introuvable', "Aucune réalisation publiée n'utilise cette techno.");
+      setPlainTitle('Techno introuvable — Vue jury');
+    } else if (route.name === 'jury-tag' && tag) {
       root.innerHTML = tagPage(veille, route.tag, tag);
       setPlainTitle(`Veille ${veille.nom} : ${tag.nom} — Vue jury`);
     } else if (route.name === 'jury-tag') {
@@ -99,7 +108,7 @@ export function createJuryView(root) {
 
   // Échap sur une fiche : retour à la page jury
   function handleKey(event) {
-    if (event.key === 'Escape' && !hasModifier(event) && ['jury-fiche', 'jury-tag'].includes(current?.name)) {
+    if (event.key === 'Escape' && !hasModifier(event) && ['jury-fiche', 'jury-techno', 'jury-tag'].includes(current?.name)) {
       window.location.hash = link.jury();
     }
   }
@@ -196,8 +205,17 @@ function subPage({ title, body, remios = '' }) {
 function fichePage(r) {
   return subPage({
     title: safe(r.titre),
-    body: ficheBlock(r),
+    body: ficheBlock(r, link.juryTechno),
     remios: `<a href="${link.fiche(r.slug)}">Voir cette fiche dans RémiOS</a>`,
+  });
+}
+
+// Page d'une techno : les réalisations qui l'utilisent
+function technoPage(techno) {
+  return subPage({
+    title: `Réalisations : ${escapeHtml(techno.nom)}`,
+    body: technoBlock(techno, link.juryFiche, link.juryTechno),
+    remios: `<a href="${link.techno(techno.slug)}">Voir cette techno dans RémiOS</a>`,
   });
 }
 

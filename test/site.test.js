@@ -19,6 +19,8 @@ import site from '../content/site.config.js';
 const PAGES = ['index.html', '404.html', '403.html', '503.html'];
 const read = (file) => fs.readFileSync(path.join(DIST, file), 'utf8');
 const boxTitle = (document) => document.querySelector('.tui-box-title')?.textContent ?? '';
+// Texte sans les espaces insécables ni les retours à la ligne, pour comparer
+const plain = (text) => text.replace(/\s+/g, ' ').trim();
 
 // --- Pages publiées -----------------------------------------------------------
 
@@ -91,12 +93,91 @@ test('chaque fiche s\'ouvre dans RémiOS et dans la vue jury, sans consignes de 
     assert.ok(boxTitle(document).includes(title), `fiche « ${title} »`);
     assert.ok(document.querySelector('.tui-box-inner .fiche'), `contenu de « ${title} »`);
     assert.ok(!document.querySelector('.tui-stage').innerHTML.includes('<!--'), `commentaire publié dans « ${title} »`);
+    // #tui : la vue jury, masquée, garde la page affichée juste avant
+    for (const badge of document.querySelectorAll('#tui .fiche-meta a.techno')) {
+      assert.equal(badge.getAttribute('href'), `#/technos/${badge.dataset.techno}`, `techno « ${badge.textContent} » de « ${title} »`);
+    }
 
     window.location.hash = href.replace('#/realisations/', '#/jury/');
     await wait();
     assert.equal(document.querySelector('#jury h1').textContent, title, `fiche « ${title} », vue jury`);
+    for (const badge of document.querySelectorAll('#jury .fiche-meta a.techno')) {
+      assert.equal(badge.getAttribute('href'), `#/jury/technos/${badge.dataset.techno}`, `techno « ${badge.textContent} » de « ${title} », vue jury`);
+    }
   }
   assert.deepEqual(errors, []);
+});
+
+test('technos : chaque étiquette mène aux réalisations qui l\'utilisent, dans RémiOS et la vue jury', async (t) => {
+  const { window, document, errors, wait } = await openSite(t, '#/realisations');
+  const fiches = [...document.querySelectorAll('.fiche-link')].map((a) => a.getAttribute('href'));
+  const seen = new Set();
+
+  for (const fiche of fiches) {
+    window.location.hash = fiche;
+    await wait();
+    const badges = [...document.querySelectorAll('#tui .fiche-meta a.techno')].map((a) => ({
+      href: a.getAttribute('href'),
+      slug: a.dataset.techno,
+      name: plain(a.textContent),
+    }));
+
+    for (const { href, slug, name } of badges) {
+      seen.add(slug);
+      // RémiOS : titre, fiche d'origine dans la liste, techno mise en évidence, retour
+      // (la techno est reconnue à son identifiant : deux fiches peuvent l'écrire
+      // un peu différemment, « Github » et « GitHub » par exemple)
+      window.location.hash = href;
+      await wait();
+      assert.ok(plain(boxTitle(document)).includes('Réalisations : '), `page de « ${name} »`);
+      const listed = [...document.querySelectorAll('.tui-box-inner .fiche-link')].map((a) => a.getAttribute('href'));
+      assert.ok(listed.includes(fiche), `« ${name} » liste ${fiche}`);
+      assert.equal(document.querySelector('.tui-box-inner .tags--all .is-current')?.dataset.techno, slug, `« ${name} » mise en évidence`);
+      assert.equal(document.querySelector('[data-back]').getAttribute('href'), '#/realisations');
+
+      // Vue jury : même liste, liens vers les fiches en style sobre
+      window.location.hash = `#/jury/technos/${slug}`;
+      await wait();
+      assert.ok(plain(document.querySelector('#jury h1').textContent).includes('Réalisations : '), `« ${name} », vue jury`);
+      assert.equal(document.querySelector('#jury .tags--all .is-current')?.dataset.techno, slug, `« ${name} » mise en évidence, vue jury`);
+      const juryListed = [...document.querySelectorAll('#jury .fiche-link')].map((a) => a.getAttribute('href'));
+      assert.ok(juryListed.includes(fiche.replace('#/realisations/', '#/jury/')), `« ${name} » liste ${fiche}, vue jury`);
+    }
+  }
+  assert.ok(seen.size > 0, 'au moins une techno publiée');
+
+  // Toutes les technos de la liste ont une page (et seulement celles des fiches)
+  const all = [...document.querySelectorAll('#jury .tags--all .techno')].map((el) => el.dataset.techno);
+  assert.deepEqual(new Set(all), seen, 'liste « Toutes les technos » = technos des fiches publiées');
+  assert.deepEqual(errors, []);
+});
+
+test('technos : chaque couleur de technos.css se lit bien (contraste d\'au moins 4,5:1)', () => {
+  const css = fs.readFileSync(path.resolve(import.meta.dirname, '../src/styles/technos.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  const rules = [...css.matchAll(/([^{}]+)\{([^}]*)\}/g)].map(([, selector, body]) => ({
+    selector: selector.trim(),
+    bg: /--techno-bg:\s*(#[0-9a-f]{6})/i.exec(body)?.[1],
+    ink: /--techno-ink:\s*(#[0-9a-f]{6})/i.exec(body)?.[1],
+  }));
+  const base = rules.find((r) => r.selector === '.techno');
+  assert.ok(base?.bg && base?.ink, 'couleurs par défaut (.techno)');
+
+  // Contraste selon les règles d'accessibilité (WCAG 2)
+  const luminance = (hex) =>
+    [1, 3, 5]
+      .map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+      .map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4))
+      .reduce((sum, c, i) => sum + c * [0.2126, 0.7152, 0.0722][i], 0);
+  const contrast = (a, b) => {
+    const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  };
+
+  for (const { selector, bg, ink } of rules) {
+    assert.ok(bg, `${selector} : --techno-bg au format #rrvvbb`);
+    const ratio = contrast(bg, ink ?? base.ink);
+    assert.ok(ratio >= 4.5, `${selector} : contraste ${ratio.toFixed(2)}:1, il faut au moins 4,5:1 (essayer --techno-ink: #000000)`);
+  }
 });
 
 test('vue jury : sommaire et parties', async (t) => {
@@ -179,14 +260,16 @@ test('adresse inconnue ou mal encodée : écran d\'erreur, sans plantage', async
   assert.deepEqual(first.errors, []);
 
   const { window, document, errors, wait } = await openSite(t, '#/');
-  for (const hash of ['#/rubrique-inconnue', '#/realisations/inconnue', '#/veille/inconnu', '#/a/b/c', '#/%E9']) {
+  for (const hash of ['#/rubrique-inconnue', '#/realisations/inconnue', '#/technos/inconnue', '#/veille/inconnu', '#/a/b/c', '#/%E9']) {
     window.location.hash = hash;
     await wait();
     assert.ok(boxTitle(document).includes('Erreur'), hash);
   }
-  window.location.hash = '#/jury/inconnue';
-  await wait();
-  assert.match(document.querySelector('#jury h1').textContent, /introuvable/);
+  for (const hash of ['#/jury/inconnue', '#/jury/technos/inconnue']) {
+    window.location.hash = hash;
+    await wait();
+    assert.match(document.querySelector('#jury h1').textContent, /introuvable/, hash);
+  }
   assert.deepEqual(errors, []);
 });
 

@@ -23,7 +23,9 @@
   margin: 0;
 }
 
-/* Technologies sous forme d'étiquettes */
+/* Technologies sous forme d'étiquettes, aux couleurs de chaque techno comme
+   les badges des README GitHub (couleurs : technos.css). Chacune mène à la
+   page de la techno : toutes les réalisations qui l'utilisent. */
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -33,9 +35,39 @@
   list-style: none;
 }
 
-.tags li {
+.techno {
+  display: inline-block;
   padding: 0 6px;
-  border: 1px solid var(--rule);
+  border: 1px solid rgb(0 0 0 / 0.3); /* filet un peu plus foncé que le fond */
+  background: var(--techno-bg);
+  color: var(--techno-ink);
+  text-decoration: none;
+}
+
+a.techno:hover {
+  text-decoration: underline;
+}
+
+/* Techno de la page affichée, dans la liste de toutes les technos */
+.techno.is-current {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  font-weight: 600;
+}
+
+/* Nombre de réalisations, séparé du nom par un filet (couleur du texte) */
+.techno-count {
+  margin-left: 6px;
+  padding-left: 6px;
+  border-left: 1px solid;
+}
+
+/* Contraste élevé de Windows : les couleurs sont remplacées par celles du
+   système, le cadre garde la forme de l'étiquette */
+@media (forced-colors: active) {
+  .techno {
+    border-color: CanvasText;
+  }
 }
 
 /* Espace entre le texte de la fiche et la liste des compétences */

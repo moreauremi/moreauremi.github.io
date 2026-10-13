@@ -6,14 +6,15 @@
 // du conteneur change. Une information n'est donc écrite qu'à un seul endroit.
 //
 // `hrefFor(slug)` indique où mène le lien d'une fiche : #/realisations/<slug>
-// dans RémiOS, #/jury/<slug> dans la vue jury.
+// dans RémiOS, #/jury/<slug> dans la vue jury. De même, `hrefForTechno(slug)`
+// pour la page d'une techno : #/technos/<techno> ou #/jury/technos/<techno>.
 //
 // Un fichier par rubrique ; ce module les rassemble pour le reste du code.
 // =============================================================================
 
 export { presentationBlock } from './presentation.js';
 export { alternanceBlock } from './alternance.js';
-export { realisationsBlock, realisationList, ficheMeta, ficheCompetences, ficheBlock } from './realisations.js';
+export { realisationsBlock, realisationList, ficheMeta, ficheCompetences, ficheBlock, technoBlock } from './realisations.js';
 export { competencesBlock } from './competences.js';
 export { syntheseBlock } from './synthese.js';
 export { veilleBlock, veilleTagBlock } from './veille.js';

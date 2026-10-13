@@ -95,6 +95,14 @@
     overflow: visible;
   }
 
+  /* Étiquettes des technos : les navigateurs n'impriment pas les fonds par
+     défaut ; texte noir encadré, pour qu'aucune ne disparaisse */
+  .techno {
+    border-color: #000000 !important;
+    background: none !important;
+    color: #000000 !important;
+  }
+
   /* Les repères [À COMPLÉTER] restent visibles, encadrés */
   mark.ph {
     border: 1px dashed #000000;

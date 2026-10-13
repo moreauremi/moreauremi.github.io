@@ -5,6 +5,12 @@
 // Repère de contenu à compléter : « [À COMPLÉTER] » ou « [À COMPLÉTER : précision] »
 const PLACEHOLDER = /\[À COMPLÉTER[^\]]*\]/g;
 
+// Le texte contient-il un repère [À COMPLÉTER] ? (expression sans « g » :
+// un test répété ne dépend pas du résultat du précédent)
+export function hasPlaceholder(value) {
+  return /\[À COMPLÉTER[^\]]*\]/.test(String(value));
+}
+
 // Remplace les caractères spéciaux du HTML par leur équivalent affichable.
 // Indispensable avant d'insérer un texte dans une page : un « < » dans un titre
 // serait sinon interprété comme le début d'une balise.

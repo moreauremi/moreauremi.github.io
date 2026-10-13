@@ -173,9 +173,32 @@ html[data-view='jury'] body {
   border-radius: 4px;
 }
 
-.jury .tags li {
+/* Étiquettes des technos : coins légèrement arrondis, comme avant. La couleur
+   du texte reste celle de la techno (et non le bleu des liens de la vue jury). */
+.jury .techno {
   border-radius: 3px;
+  color: var(--techno-ink);
   font-size: 0.875rem;
+}
+
+/* Liste de fiches d'une page techno : titre (lien) puis résumé */
+.jury .fiche-list {
+  gap: 10px;
+}
+
+.jury .fiche-link {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+}
+
+.jury .fiche-link-title {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.jury .fiche-link-summary {
+  color: var(--jury-muted);
 }
 
 .jury-footer {

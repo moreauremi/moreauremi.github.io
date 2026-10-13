@@ -51,7 +51,7 @@ npm run check    # les trois à la suite : lint, build, test (comme avant chaque
 
 1. **Démarrage** (à l'arrivée sur l'accueil, 5 secondes au maximum) : GRUB, messages du noyau, services systemd détournés avec mes projets (`jellyfin.service`, `alternance@1life.service`…), connexion automatique, puis `portfolio --menu`. Le bouton « Passer le démarrage », n'importe quelle touche ou un clic l'interrompent. Si le système demande de réduire les animations, le site arrive directement sur le menu.
 2. **Menu façon whiptail** : identité façon neofetch à gauche, 8 rubriques numérotées à droite (présentation, alternance et parcours, réalisations, compétences, tableau de synthèse E5, veille, certifications, CV et contact). Chaque rubrique s'ouvre dans une boîte de dialogue avec `< Retour >`. `<Redémarrer>` rejoue le démarrage. Les mentions légales sont accessibles par un lien en bas d'écran.
-3. **Fiches de réalisation** : contexte, objectifs, mise en œuvre, captures (agrandissables), résultats, difficultés, compétences du référentiel. Chaque fiche a sa propre adresse, partageable.
+3. **Fiches de réalisation** : contexte, objectifs, mise en œuvre, captures (agrandissables), résultats, difficultés, compétences du référentiel. Chaque fiche a sa propre adresse, partageable. Les technos de la fiche sont des étiquettes aux couleurs de leur marque, comme les badges des README GitHub : chacune ouvre la liste de toutes les réalisations qui l'utilisent.
 4. **Vue rapide jury** : bouton jaune en haut à droite, visible en permanence (même pendant le démarrage). Version classique, fond clair, tout sur une page, imprimable.
 5. **Terminal caché** : `remi@remios:~$`, avec historique, autocomplétion et une douzaine de commandes. Les fiches y sont des fichiers. Tout est simulé.
 6. **Sons** (coupés par défaut) : bip POST, clics de disque, bip de validation, générés par le navigateur.
@@ -78,10 +78,12 @@ Sur mobile, le terminal s'ouvre avec le bouton `[tty2]` de la barre du haut.
 | `#/presentation`, `#/alternance`, `#/realisations`, `#/competences`, `#/synthese`, `#/veille`, `#/certifications`, `#/contact` | une rubrique |
 | `#/mentions-legales` | mentions légales |
 | `#/realisations/<slug>` | une fiche, style RémiOS (ex. `#/realisations/nas`) |
+| `#/technos/<techno>` | les réalisations qui utilisent une techno, puis toutes les technos (ex. `#/technos/python`) |
 | `#/veille/<sujet>` | la veille, onglet de ce sujet ouvert (ex. `#/veille/virtualisation`) |
 | `#/veille/<sujet>/<tag>` | les actualités d'un sujet qui portent ce tag (ex. `#/veille/cybersecurite/rancongiciel`) ; l'ancienne forme `#/veille/<tag>` mène au premier sujet qui a ce tag |
 | `#/jury` | vue rapide jury : **le lien à donner au jury** |
 | `#/jury/<slug>` | une fiche, style sobre |
+| `#/jury/technos/<techno>` | une techno, style sobre |
 | `#/jury/veille/<tag>` | un tag de la veille, style sobre |
 | `#/jury/mentions-legales` | mentions légales, style sobre |
 | `#/message-envoye` | confirmation après l'envoi du formulaire de contact |
@@ -98,6 +100,7 @@ Tout le contenu est dans `content/` : aucune ligne de code à toucher.
 - **Photo** : déposer le portrait dans `public/photo/` (`.webp` carré, environ 400 × 400 px), puis indiquer son chemin dans `identite.photo` (`photo: 'photo/remi-moreau.webp'`).
 - **Compétences techniques** (rubrique « Compétences ») : `savoirFaire` dans `content/site.config.js`. Pour chaque compétence, un niveau de 1 à 4 (Notions, Guidé, Autonome, Maîtrise), demi-niveaux permis (`3.5` s'affiche « Entre autonome et maîtrise ») et les fiches qui la prouvent (`preuves: ['nas']`).
 - **Certifications** (certifications, langues, formations, badges) : `certifications` dans `content/site.config.js`, un exemple commenté y montre tous les champs. Le justificatif se dépose dans `public/docs/certifications/`.
+- **Couleur d'une techno** (étiquettes des fiches) : une ligne dans `src/styles/technos.css`, par exemple `.techno[data-techno="python"] { --techno-bg: #3776ab; }`. L'identifiant est le nom en minuscules, sans accents, avec des tirets (« GitHub Actions » → `github-actions`). Texte blanc par défaut ; ajouter `--techno-ink: #000000;` sur une couleur claire. `npm test` vérifie que chaque couleur se lit bien. Une techno sans ligne reste grise.
 - **Formulaire de contact** : la clé Web3Forms est dans `formulaire.cle` ; les messages arrivent à l'adresse associée à cette clé. Pour changer d'adresse, créer une nouvelle clé gratuite sur [web3forms.com](https://web3forms.com) et la remplacer. Clé vide = pas de formulaire, seul le lien e-mail est affiché. La politique de sécurité (CSP) et les mentions légales s'adaptent toutes seules.
 - **Ajouter une réalisation** : copier une fiche de `content/realisations/`, la renommer (minuscules, chiffres et tirets : `supervision-zabbix.md`), puis remplir le bloc d'en-tête :
 
