@@ -11,6 +11,7 @@ technos:
   - "Tailscale"
   - "[À COMPLÉTER : logiciel du NAS]"
 competences: [B1.1, B1.5, B1.6]  # codes du référentiel, ex. [B1.1, B1.4]
+brouillon: true  # fiche à compléter : visible avec npm run dev, absente du site publié (retirer la ligne une fois remplie)
 ---
 
 <!--
