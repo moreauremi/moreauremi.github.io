@@ -25,9 +25,12 @@ competences: [B1.1, B1.2, B1.5]  # codes du référentiel, ex. [B1.1, B1.4]
   - competences : codes définis dans content/site.config.js, ex. [B1.1, B1.4]
   - Contenu rédigé d'après le dépôt GitHub (README, RMutils.bat, RMutils_Lite.bat,
     .gitignore, .gitattributes) : c'est la référence, le CV sera aligné dessus.
-  - À ajouter quand c'est possible : une capture du menu et d'un rapport HTML
-    (sur un PC sans données personnelles), et le détail des tests (fonctions
-    vérifiées, Windows 10 ou 11) une fois l'outil utilisé en conditions réelles.
+  - Captures des menus et du QR code : vrai code de RMutils lancé sous PowerShell 7,
+    avec un nom de PC et des réseaux Wi-Fi d'exemple (13 octobre 2026).
+  - À ajouter quand c'est possible : une capture d'un rapport HTML et d'un
+    diagnostic, prise sur un vrai PC Windows sans données personnelles, et le
+    détail des tests (fonctions vérifiées, Windows 10 ou 11) une fois l'outil
+    utilisé en conditions réelles.
 -->
 
 ## Contexte
@@ -72,10 +75,23 @@ Réalisé avec **Claude Code**. Mon rôle : définir le besoin, faire les choix 
 
 Code source : [github.com/moreauremi/RMutils](https://github.com/moreauremi/RMutils)
 
+## Captures d'écran
+
+Captures du vrai code de RMutils, exécuté sous PowerShell 7 le 13 octobre 2026. Le nom du PC, la version de Windows et les réseaux Wi-Fi sont des exemples.
+
+![Menu principal de RMutils : logo en ASCII, nom du PC et version de Windows, sept rubriques numérotées dont la première est surlignée, et la description de la rubrique sélectionnée](captures/rmutils/menu-principal.webp "Menu principal : flèches pour naviguer, chiffres pour un accès direct")
+
+![Rubrique Réparation, « Réparer Windows (DISM + SFC) » sélectionné : la description détaille DISM /RestoreHealth puis sfc /scannow, quand les lancer et leur durée](captures/rmutils/reparation.webp "Réparation : chaque action est décrite avant d'être lancée")
+
+![Rubrique Diagnostic, « Diagnostic réseau » sélectionné : tests dans l'ordre box, Internet, DNS puis web, et ce qu'indique le premier test en échec](captures/rmutils/diagnostic.webp "Diagnostic réseau : le premier test en échec indique où ça coince")
+
+![Outil Mot de passe Wi-Fi sur un réseau d'exemple : nom du réseau, sécurité WPA2-Personnel, mot de passe en vert, puis le QR code à scanner avec un téléphone](captures/rmutils/wifi-qr.webp "Mot de passe Wi-Fi et QR code, sur un réseau d'exemple")
+
 ## Résultats
 
 - Première version publique sur GitHub le 12 octobre 2026, avec une documentation complète : fonctionnalités, utilisation, sécurité, fonctionnement et limites.
 - Premiers essais sur mon PC et sur des PC de proches. Toutes les fonctions n'ont pas encore été vérifiées en conditions réelles.
+- Le QR code de la capture a été vérifié : un lecteur de QR code y retrouve bien le nom du réseau et le mot de passe.
 - Deux versions prêtes à l'emploi, qui partagent la même liste d'applications et les mêmes dossiers sur la clé.
 - Chaque intervention laisse une trace sur la clé : un journal par session, nommé avec le nom du PC et la date, et pour chaque PC un dossier avec les rapports HTML, le rapport de batterie et les sauvegardes.
 
