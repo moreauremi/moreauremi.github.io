@@ -30,6 +30,7 @@
    Placées avant les règles exactes : à poids égal, la dernière règle gagne,
    donc une techno écrite exactement (ci-dessous) garde sa propre couleur. */
 .techno[data-techno^="ubuntu-"] { --techno-bg: #e95420; --techno-ink: #000000; }
+.techno[data-techno^="debian-"] { --techno-bg: #a81d33; }
 .techno[data-techno^="windows-"] { --techno-bg: #0078d4; }
 
 /* --- Langages et formats --- */
@@ -45,6 +46,7 @@
 /* --- Systèmes et outils Windows --- */
 .techno[data-techno="linux"] { --techno-bg: #fcc624; --techno-ink: #000000; }
 .techno[data-techno="ubuntu"] { --techno-bg: #e95420; --techno-ink: #000000; }
+.techno[data-techno="debian"] { --techno-bg: #a81d33; }
 .techno[data-techno="systemd"] { --techno-bg: #201a26; }
 .techno[data-techno="windows"] { --techno-bg: #0078d4; }
 .techno[data-techno="winget"] { --techno-bg: #0078d4; }
@@ -54,16 +56,20 @@
 
 /* --- Virtualisation, conteneurs, réseau --- */
 .techno[data-techno="proxmox"] { --techno-bg: #e57000; --techno-ink: #000000; }
+.techno[data-techno="virtualbox"] { --techno-bg: #183a61; }
 .techno[data-techno="docker"] { --techno-bg: #2496ed; --techno-ink: #000000; }
 .techno[data-techno="nginx"] { --techno-bg: #009639; --techno-ink: #000000; }
+.techno[data-techno="apache"] { --techno-bg: #d22128; }
 .techno[data-techno="tailscale"] { --techno-bg: #242424; }
 .techno[data-techno="jellyfin"] { --techno-bg: #00a4dc; --techno-ink: #000000; }
 .techno[data-techno="hostinger"] { --techno-bg: #673de6; }
 
-/* --- Bases de données et ERP --- */
+/* --- Bases de données, ERP et gestion de parc --- */
 .techno[data-techno="postgresql"] { --techno-bg: #4169e1; }
 .techno[data-techno="sqlite"] { --techno-bg: #003b57; }
+.techno[data-techno="mariadb"] { --techno-bg: #003545; }
 .techno[data-techno="odoo"] { --techno-bg: #714b67; }
+.techno[data-techno="glpi"] { --techno-bg: #fec95c; --techno-ink: #000000; }
 
 /* --- Git et GitHub --- */
 .techno[data-techno="git"] { --techno-bg: #f05032; --techno-ink: #000000; }
