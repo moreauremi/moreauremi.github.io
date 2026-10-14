@@ -194,7 +194,10 @@ test('veille : un onglet par sujet, et dans chacun « actualités » et « synth
   const panels = () => [...document.querySelectorAll('.tabs--main > .tab-panels > [role="tabpanel"]')];
   assert.ok(topics().length >= 2, 'plusieurs sujets');
   for (const panel of panels()) {
-    assert.equal(panel.querySelectorAll(':scope > .tabs > .tab-list > [role="tab"]').length, 2, `deux onglets dans « ${panel.dataset.title} »`);
+    const inner = [...panel.querySelectorAll(':scope > .tabs > .tab-list > [role="tab"]')];
+    assert.equal(inner.length, 2, `deux onglets dans « ${panel.dataset.title} »`);
+    // Mes synthèses d'abord, ouvertes d'emblée
+    assert.deepEqual(inner.map((tab) => [tab.textContent, tab.getAttribute('aria-selected')]), [['Mes synthèses', 'true'], ['Dernières actualités', 'false']]);
   }
 
   // Changer de sujet : seul le panneau du sujet choisi est affiché

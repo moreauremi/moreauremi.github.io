@@ -1,6 +1,7 @@
 // Rubrique « Veille technologique » : un onglet par sujet (content/veille/<id>/),
-// et dans chacun, deux onglets : les actualités collectées chaque semaine (et
-// leurs tags), et mes synthèses. Puis les sources suivies pour ce sujet.
+// et dans chacun, deux onglets : mes synthèses (ouvert d'abord), et les
+// actualités collectées chaque semaine (et leurs tags). Puis les sources
+// suivies pour ce sujet.
 
 import { pages, veilles, getVeilleTag, actualitesByTag } from '../content.js';
 import { escapeHtml, safe } from '../utils/html.js';
@@ -43,15 +44,15 @@ function sujetPanel(veille, hrefForTag) {
     .map((f) => `<li><a href="${escapeHtml(new URL(f.url).origin)}" ${NEW_TAB}>${escapeHtml(f.nom)}</a></li>`)
     .join('');
 
-  // Deux onglets au même niveau : les actualités collectées (et leurs tags),
-  // et mes synthèses (content/veille/<id>/syntheses.md)
+  // Deux onglets au même niveau : mes synthèses (content/veille/<id>/syntheses.md),
+  // ouvert d'abord, et les actualités collectées (et leurs tags)
   const onglets = tabs(
     [
+      { label: 'Mes synthèses', html: `<div class="prose">${veille.syntheses}</div>` },
       {
         label: 'Dernières actualités',
         html: `<p class="intro">${update}Résumés rédigés par une IA : l'article d'origine fait foi.</p>${news}${tags}`,
       },
-      { label: 'Mes synthèses', html: `<div class="prose">${veille.syntheses}</div>` },
     ],
     { label: `Veille ${escapeHtml(veille.nom)}` },
   );
