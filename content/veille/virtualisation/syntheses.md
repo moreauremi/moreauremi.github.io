@@ -19,4 +19,13 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
-À venir.
+## 14/10/2026 - La virtualisation face aux changements du marché VMware
+
+La virtualisation est nécessaire dans les milieux technologiques, mais aussi dès que l’on a besoin de tester certains logiciels. Je constate à quel point les acteurs du secteur ont de l’influence : disposer d’un service de virtualisation stable est donc essentiel.
+
+Le rachat de VMware par Broadcom illustre, selon moi, les limites d’une vision directement guidée par le profit. La suppression de certains produits et des licences perpétuelles, remplacées par des offres par abonnement, pousse de nombreuses entreprises à envisager une diversification ou une migration partielle et progressive. Dans ce contexte, l’émergence d’alternatives, comme les plateformes open source développées par Vates, montre que les utilisateurs recherchent d’autres solutions de virtualisation.
+
+**Sources**
+
+- [VMware : trois ans après le rachat, la migration est toujours un sujet brûlant](https://next.ink/260701/vmware-trois-ans-apres-le-rachat-la-migration-est-toujours-un-sujet-brulant/) (Next, 8 octobre 2026)
+- [Vates lève 30 M€ pour bâtir un acteur européen de la virtualisation](https://www.silicon.fr/business-1367/vates-leve-30-me-pour-batir-un-acteur-europeen-de-la-virtualisation-229536) (Silicon, 6 octobre 2026)
