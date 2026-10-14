@@ -376,7 +376,7 @@ export default {
       },
       {
         nom: 'Logiciels métier',
-        items: [{ nom: 'ERP Open-Prod', niveau: 2, preuves: [] }],
+        items: [{ nom: 'ERP Open-Prod', niveau: 2, preuves: ['1life-realisation-1'] }],
       },
     ],
   },

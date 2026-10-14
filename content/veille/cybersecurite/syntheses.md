@@ -30,6 +30,11 @@ Je trouve cela très intéressant, car cela montre à quel point une petite erre
 - [Flare dévoile une nouvelle menace ClickFix qui dissimule son code malveillant via DNS](https://www.undernews.fr/malwares-virus-antivirus/flare-devoile-une-nouvelle-menace-clickfix-qui-dissimule-son-code-malveillant-via-dns.html) (UnderNews, 8 octobre 2026)
 - [Présidentielle 2027 : la cybercriminalité du quotidien s’invite dans le débat](https://incyber.org/article/presidentielle-2027-la-cybercriminalite-du-quotidien-sinvite-dans-le-debat/) (InCyber, 7 octobre 2026)
 
-## 09/10/2026 : NIS2 arrive chez les PME industrielles
+## 09/10/2026 - NIS2 arrive chez les PME industrielles
 
 Pour cette première semaine, je me rends compte du nombre de problèmes de cybersécurité qui sont découverts chaque semaine. Entre les mises à jour qui entraînent des failles et les coûts qu’elles engendrent; en moyenne 45 900 €, c’est une dépense énorme qui pourrait mettre des PME à genoux ou, tout du moins, les ralentir. De plus, la loi NIS2, qui est examinée par l’Assemblée nationale, risque d’engendrer des coûts, même si c’est pour en éviter de futurs.
+
+**Sources**
+
+- [NIS2 : ce qu’il faut attendre du projet de loi examiné à l’Assemblée nationale](https://www.silicon.fr/cybersecurite-1371/nis2-ce-quil-faut-attendre-du-projet-de-loi-examine-a-lassemblee-nationale-229520) (Silicon, 5 octobre 2026)
+- [Le coût moyen d’une cyberattaque est de 45 900 euros, et pourtant les PME françaises continuent de bouder l’assurance cyber dédiée](https://www.usine-digitale.fr/cybersecurite/le-cout-moyen-dune-cyberattaque-est-de-45-900-euros-et-pourtant-les-pme-francaises-continuent-de-bouder-lassurance-cyber-dediee.26IOA4ESPZA7JMIK3W3BJAHWRI.html) (L'Usine Digitale, 5 octobre 2026)
