@@ -323,7 +323,7 @@ a.tag:focus-visible {
 
 /* Groupe d'onglets qui en contient d'autres (veille : un onglet par sujet) :
    onglets plus grands, posés sur un panneau encadré, pour distinguer les
-   sujets des onglets « Dernières actualités » / « Mes synthèses » qu'ils
+   sujets des onglets « Mes synthèses » / « Dernières actualités » qu'ils
    contiennent. */
 .tabs--main > .tab-list {
   margin-bottom: 0;

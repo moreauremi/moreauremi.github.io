@@ -40,7 +40,7 @@ const sounds = createSounds();
 createSystemBar(app.querySelector('.system-bar'), { sounds });
 createLightbox();
 setupPagers(app); // barres « < 1 2 3 > » des listes paginées (veille)
-setupTabs(app); // onglets « Dernières actualités » / « Mes synthèses » (veille)
+setupTabs(app); // onglets « Mes synthèses » / « Dernières actualités » (veille)
 
 // Terminal caché : son code (commandes, système de fichiers simulé, générique,
 // textes sources des fiches) forme un fichier JavaScript à part, téléchargé

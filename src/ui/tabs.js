@@ -9,7 +9,7 @@
 // passent à l'onglet voisin, Début et Fin au premier et au dernier.
 //
 // Des onglets peuvent en contenir d'autres (veille : un onglet par sujet, et
-// dans chacun « Dernières actualités » / « Mes synthèses ») : chaque groupe ne
+// dans chacun « Mes synthèses » / « Dernières actualités ») : chaque groupe ne
 // gère que ses propres onglets et panneaux.
 // =============================================================================
 
