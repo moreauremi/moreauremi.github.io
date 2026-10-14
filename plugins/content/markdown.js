@@ -42,11 +42,11 @@ export function renderMarkdown(markdown) {
         return `<p>${inner}</p>\n`;
       },
 
-      // Liens externes : ouverts dans un nouvel onglet, sans que la page ouverte
-      // puisse agir sur celle-ci (rel="noopener noreferrer").
+      // Liens externes et documents PDF : ouverts dans un nouvel onglet, sans
+      // que la page ouverte puisse agir sur celle-ci (rel="noopener noreferrer").
       link({ href, title, tokens }) {
         const label = this.parser.parseInline(tokens);
-        const external = /^https?:\/\//.test(href);
+        const external = /^https?:\/\//.test(href) || /\.pdf(?:[?#]|$)/i.test(href);
         const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
         const target = external ? ' target="_blank" rel="noopener noreferrer"' : '';
         return `<a href="${escapeHtml(href)}"${titleAttr}${target}>${label}</a>`;

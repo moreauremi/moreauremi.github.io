@@ -342,7 +342,7 @@ export default {
       {
         nom: 'Systèmes et virtualisation',
         items: [
-          { nom: 'Linux', niveau: 3, preuves: ['homelab-jellyfin', 'nas', 'caffein'] },
+          { nom: 'Linux', niveau: 3, preuves: ['homelab-jellyfin', 'nas', 'caffein', 'glpi'] },
           { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab-jellyfin', 'nas'] },
           { nom: 'Docker', niveau: 2, preuves: ['homelab-jellyfin', 'caffein'] },
         ],
@@ -364,7 +364,7 @@ export default {
       },
       {
         nom: 'Bases de données',
-        items: [{ nom: 'SQL', niveau: 2, preuves: [] }],
+        items: [{ nom: 'SQL', niveau: 2, preuves: ['glpi'] }],
       },
       {
         nom: 'Outils et frameworks',
