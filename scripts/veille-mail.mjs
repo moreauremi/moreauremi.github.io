@@ -96,10 +96,13 @@ export const shortDate = (day) => day.split('-').reverse().join('/');
 // message précédent (« Le lun. 12 oct. 2026 à 07:30, … a écrit : », lignes
 // « > »), ni la signature (« -- », « Envoyé de mon iPhone »).
 // [^\S\n] : une espace, y compris insécable, mais pas un retour à la ligne.
+// Gmail coupe la ligne « Le … a écrit : » où il veut, même entre « a » et
+// « écrit » : elle peut tenir sur quatre lignes (sans ligne vide, qui la
+// séparerait de mon texte).
 export function cleanReply(text) {
   let body = String(text ?? '').replace(/\r\n?/g, '\n');
   const cuts = [
-    /^[^\S\n]*(?:Le|On)\b[^\n]*(?:\n[^\n]*)?\b(?:a écrit|wrote)[^\S\n]*:[^\S\n]*$/m,
+    /^[^\S\n]*(?:Le|On)\b(?:[^\n]*\S[^\n]*\n){0,3}?[^\n]*?\b(?:a\s+écrit|wrote)[^\S\n]*:[^\S\n]*$/m,
     /^[^\S\n]*>/m,
     /^[^\S\n]*-{2,}[^\S\n]*(?:Message d'origine|Original Message|Forwarded message|Message transféré)/im,
     /^[^\S\n]*De[^\S\n]*:[^\n]*\n[^\S\n]*(?:Envoyé|Date)[^\S\n]*:/m,

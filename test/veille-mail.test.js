@@ -59,6 +59,19 @@ test('réponse : sans la citation du message précédent ni la signature', () =>
   assert.equal(cleanReply('ok\n-- \nRémi'), 'ok');
 });
 
+// Réponse réelle : Gmail a coupé la ligne entre « a » et « écrit ». Avant, mon
+// « ok » était lu comme une correction, et la synthèse « corrigée » revenait
+// sans fin.
+test('réponse : citation « a écrit » coupée par Gmail sur plusieurs lignes', () => {
+  const split = 'ok\r\n\r\nLe lun. 12 oct. 2026 à 16:12, RémiOS veille <remimoreau2006@gmail.com> a\r\nécrit :\r\n\r\n> Voici tes 3 synthèses';
+  assert.equal(cleanReply(split), 'ok');
+  assert.deepEqual(parseValidation(split, 3), { action: 'publier', numeros: [] });
+  assert.equal(cleanReply('ok\n\nLe lun. 12 oct. 2026 à 16:12,\nRémiOS veille <\nremimoreau2006@gmail.com> a\nécrit :\n'), 'ok');
+  assert.equal(cleanReply(`3 : ${AVIS}\n\nLe lun. 12 oct. 2026 à 16:12, RémiOS veille <moi@gmail.com> a\nécrit :\n> 1 : ne doit pas être lu`), `3 : ${AVIS}`);
+  // Une ligne de ma réponse qui commence par « Le » est gardée
+  assert.equal(cleanReply(`Le titre est trop long\n\nLe lun. 12 oct. 2026 à 16:12, RémiOS veille <moi@gmail.com> a\nécrit :`), 'Le titre est trop long');
+});
+
 test('choix : une synthèse par ligne de numéros, avis sur plusieurs lignes', () => {
   const reply = `Salut,\n\n1, 3 : ${AVIS}\nEt chez 1Life, on le voit déjà.\n\n4 — Proxmox devient une vraie alternative à VMware pour nos clients.${QUOTED}`;
   assert.deepEqual(parseChoices(reply, STATE.actualites), {
