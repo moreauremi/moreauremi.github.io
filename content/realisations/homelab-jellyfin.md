@@ -15,15 +15,16 @@ technos:
   - "VS Code"
   - "Claude Code"
 competences: [B1.1, B1.4, B1.5, B1.6]  # codes du référentiel, ex. [B1.1, B1.4]
-brouillon: true  # fiche à compléter : visible avec npm run dev, absente du site publié (retirer la ligne une fois remplie)
 ---
 
 <!--
   Guide de rédaction
   - Remplacer chaque [À COMPLÉTER] par le vrai contenu (ou supprimer la ligne).
+    La fiche est publiée : les repères restants n'apparaissent pas sur le site
+    en ligne (seulement avec npm run dev), une section vide non plus.
   - Captures : déposer l'image dans public/captures/homelab-jellyfin/, puis écrire
       ![Description de l'image](captures/homelab-jellyfin/nom-du-fichier.webp "Légende affichée")
-    et supprimer l'image « a-venir.svg » ci-dessous.
+    à la place de l'image provisoire « a-venir.svg » correspondante, ci-dessous.
     Ne montrer que des vidéos personnelles dans les captures (pas d'affiches de
     films ou de séries du commerce).
   - competences : codes définis dans content/site.config.js, ex. [B1.1, B1.4]
@@ -50,7 +51,11 @@ J'ai d'abord découpé le projet en étapes clés, puis choisi l'architecture. L
 
 ## Captures d'écran
 
-![Emplacement réservé : capture d'écran à venir](captures/a-venir.svg "[À COMPLÉTER : légende de la capture]")
+![Emplacement réservé pour une capture de la bibliothèque de vidéos dans Jellyfin](captures/a-venir.svg "Bibliothèque de vidéos dans Jellyfin (capture à venir)")
+
+![Emplacement réservé pour une capture de la lecture à distance dans Swiftfin](captures/a-venir.svg "Lecture à distance dans l'application Swiftfin, par le VPN Tailscale (capture à venir)")
+
+![Emplacement réservé pour une capture de l'interface de Proxmox](captures/a-venir.svg "Proxmox : les conteneurs et machines virtuelles du homelab (capture à venir)")
 
 ## Résultats et tests
 

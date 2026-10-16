@@ -2,7 +2,7 @@
 // (savoirFaire dans content/site.config.js).
 
 import { site, getRealisation } from '../content.js';
-import { safe } from '../utils/html.js';
+import { placeholder, safe } from '../utils/html.js';
 import { levelBarText, levelName } from '../utils/levels.js';
 
 
@@ -51,7 +51,9 @@ function levelBar(value) {
 }
 
 function level(value) {
-  if (value === null) return '<mark class="ph">[À COMPLÉTER]</mark>';
+  if (value === null) {
+    return placeholder('[À COMPLÉTER]') || '<span aria-hidden="true">—</span><span class="visually-hidden">niveau non renseigné</span>';
+  }
   const { niveaux } = site.savoirFaire;
   const number = String(value).replace('.', ',');
   return `${levelBar(value)} ${safe(levelName(value, niveaux))}<span class="visually-hidden"> (niveau ${number} sur ${niveaux.length})</span>`;

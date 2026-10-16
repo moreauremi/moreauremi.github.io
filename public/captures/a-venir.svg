@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">
-  <!-- Image provisoire : remplacée par les vraies captures d'écran dans chaque fiche -->
-  <rect width="1200" height="675" fill="#e9dfa8"/>
-  <rect x="24" y="24" width="1152" height="627" fill="none" stroke="#5a4a00" stroke-width="4" stroke-dasharray="18 12"/>
-  <text x="600" y="318" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="44" font-weight="600" fill="#5a4a00">[ Capture d'écran à venir ]</text>
-  <text x="600" y="382" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="26" fill="#5a4a00">public/captures/&lt;slug&gt;/nom-du-fichier.webp</text>
+  <!-- Image provisoire, publiée en attendant les vraies captures d'écran de la fiche :
+       écran de terminal sobre, pour ne pas ressembler à un repère [À COMPLÉTER] -->
+  <rect width="1200" height="675" fill="#101418"/>
+  <rect x="24" y="24" width="1152" height="627" fill="none" stroke="#5b6573" stroke-width="3" stroke-dasharray="16 12"/>
+  <text x="600" y="320" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="44" font-weight="600" fill="#e6e8eb">[ Capture d'écran à venir ]</text>
+  <text x="600" y="382" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="26" fill="#9aa4b2">en cours de préparation</text>
 </svg>

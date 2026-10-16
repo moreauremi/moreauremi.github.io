@@ -16,6 +16,10 @@
 // absente du site publié : au build, ses modules sont vides (null), et son
 // texte n'apparaît nulle part dans les fichiers envoyés aux visiteurs.
 //
+// Les repères [À COMPLÉTER] suivent la même logique : surlignés avec
+// `npm run dev`, retirés au build, avec les paragraphes et les sections qui
+// ne contenaient qu'eux.
+//
 // gray-matter (lecture du frontmatter) et marked (Markdown → HTML) ne tournent
 // que sur la machine qui fabrique le site : le navigateur reçoit du HTML déjà
 // prêt et n'a aucune bibliothèque à télécharger.
@@ -36,10 +40,11 @@ import matter from 'gray-matter';
 import { publicBase } from '../src/utils/url.js';
 import { CONFIG_FILE, veilleFile, loadSiteConfig, checkDocuments, checkConfig, checkVeilleConfig, checkVeille } from './content/config.js';
 import { contentSecurityPolicy, cspHash, inlineStyleHashes, checkNginxPolicy, NGINX_HEADERS_FILE } from './content/csp.js';
-import { renderMarkdown, stripComments } from './content/markdown.js';
+import { renderMarkdown, stripComments, stripSourcePlaceholders } from './content/markdown.js';
 import { checkRealisation, checkImage } from './content/realisation.js';
 import { applySeo, structuredData, sitemapXml, robotsTxt } from './content/seo.js';
 import { formatErrors, toPosix } from './content/utils.js';
+import { hasPlaceholder, withoutPlaceholders } from '../src/utils/html.js';
 
 export default function contentPlugin() {
   let root = process.cwd();
@@ -152,9 +157,11 @@ export default function contentPlugin() {
       if (!file.startsWith('content/')) return null;
 
       // Texte source pour le terminal (`cat`). Brouillon : publié seulement
-      // en développement, comme la fiche elle-même.
+      // en développement, comme la fiche elle-même ; repères retirés au build.
+      // Fins de ligne Windows (CRLF) ramenées à LF : même texte sur tout poste.
       if (new URLSearchParams(query).has('source')) {
-        const text = matter(source).data.brouillon && !isDev ? null : stripComments(source);
+        let text = matter(source).data.brouillon && !isDev ? null : stripComments(source.replace(/\r\n?/g, '\n'));
+        if (text && !isDev) text = stripSourcePlaceholders(text);
         return { code: `export default ${JSON.stringify(text)};`, map: null };
       }
 
@@ -169,7 +176,7 @@ export default function contentPlugin() {
         ? checkRealisation(data, file, site, errors)
         : data;
 
-      const { html, images } = renderMarkdown(content);
+      const { html, images } = renderMarkdown(content, { hidePlaceholders: !isDev });
       for (const src of images) checkImage(src, root, errors);
 
       if (errors.length) this.error(formatErrors(file, errors));
@@ -177,7 +184,20 @@ export default function contentPlugin() {
       // Brouillon : publié seulement en développement
       if (meta.brouillon && !isDev) return { code: 'export default null;', map: null };
 
-      return { code: `export default ${JSON.stringify({ meta, html })};`, map: null };
+      const published = isDev ? meta : withoutMetaPlaceholders(meta);
+      return { code: `export default ${JSON.stringify({ meta: published, html })};`, map: null };
     },
   };
+}
+
+// Site publié : en-tête sans repères [À COMPLÉTER]. Une techno « [À COMPLÉTER] »
+// sort de la liste, un statut ou une date à compléter devient vide.
+function withoutMetaPlaceholders(meta) {
+  return Object.fromEntries(
+    Object.entries(meta).map(([key, value]) => {
+      if (typeof value === 'string') return [key, withoutPlaceholders(value)];
+      if (Array.isArray(value)) return [key, value.filter((item) => !hasPlaceholder(item))];
+      return [key, value];
+    }),
+  );
 }

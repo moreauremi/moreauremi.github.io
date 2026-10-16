@@ -139,7 +139,8 @@ function contactText() {
     `E-mail   : ${email}`,
     `GitHub   : ${github}`,
     `LinkedIn : ${linkedin}`,
-    `CV       : ${site.documents.cv || '[À COMPLÉTER : CV en PDF]'}`,
+    // CV absent : repère avec `npm run dev`, ligne retirée du site publié
+    site.documents.cv || import.meta.env.DEV ? `CV       : ${site.documents.cv || '[À COMPLÉTER : CV en PDF]'}` : '',
   ]
     .filter(Boolean)
     .join('\n');
@@ -155,7 +156,7 @@ function competencesText() {
     for (const item of domaine.items) {
       const level = item.niveau
         ? `${levelBarText(item.niveau, niveaux.length)} ${levelName(item.niveau, niveaux)}`
-        : '[À COMPLÉTER]';
+        : import.meta.env.DEV ? '[À COMPLÉTER]' : '—';
       const fiches = (item.preuves ?? []).filter(getRealisation);
       lines.push(`${item.nom.padEnd(width)}  ${level}${fiches.length ? `  → ${fiches.join(', ')}` : ''}`);
     }

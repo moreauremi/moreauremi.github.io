@@ -21,6 +21,8 @@ const read = (file) => fs.readFileSync(path.join(DIST, file), 'utf8');
 const boxTitle = (document) => document.querySelector('.tui-box-title')?.textContent ?? '';
 // Texte sans les espaces insécables ni les retours à la ligne, pour comparer
 const plain = (text) => text.replace(/\s+/g, ' ').trim();
+// Repère de contenu à compléter : visible avec `npm run dev`, jamais publié
+const PLACEHOLDER = 'À COMPLÉTER';
 
 // --- Pages publiées -----------------------------------------------------------
 
@@ -75,6 +77,7 @@ test('accueil : démarrage, puis chaque rubrique du menu s\'ouvre', async (t) =>
     await wait();
     assert.ok(boxTitle(document).includes(label), `rubrique « ${label} »`);
     assert.ok(document.querySelector('.tui-box-inner').children.length > 0, `rubrique « ${label} » vide`);
+    assert.ok(!document.querySelector('.tui-box-inner').textContent.includes(PLACEHOLDER), `repère [${PLACEHOLDER}] publié dans « ${label} »`);
   }
   assert.deepEqual(errors, []);
 });
@@ -93,6 +96,7 @@ test('chaque fiche s\'ouvre dans RémiOS et dans la vue jury, sans consignes de 
     assert.ok(boxTitle(document).includes(title), `fiche « ${title} »`);
     assert.ok(document.querySelector('.tui-box-inner .fiche'), `contenu de « ${title} »`);
     assert.ok(!document.querySelector('.tui-stage').innerHTML.includes('<!--'), `commentaire publié dans « ${title} »`);
+    assert.ok(!document.querySelector('.tui-stage').innerHTML.includes(PLACEHOLDER), `repère [${PLACEHOLDER}] publié dans « ${title} »`);
     // #tui : la vue jury, masquée, garde la page affichée juste avant
     for (const badge of document.querySelectorAll('#tui .fiche-meta a.techno')) {
       assert.equal(badge.getAttribute('href'), `#/technos/${badge.dataset.techno}`, `techno « ${badge.textContent} » de « ${title} »`);
@@ -185,6 +189,7 @@ test('vue jury : sommaire et parties', async (t) => {
   const toc = document.querySelectorAll('.jury-toc li');
   assert.ok(toc.length >= 8, 'sommaire complet');
   assert.equal(document.querySelectorAll('.jury-part').length, toc.length, 'une partie par entrée du sommaire');
+  assert.ok(!document.querySelector('#jury').innerHTML.includes(PLACEHOLDER), `repère [${PLACEHOLDER}] publié dans la vue jury`);
   assert.deepEqual(errors, []);
 });
 
@@ -303,6 +308,9 @@ test('terminal : téléchargé à la première ouverture, commandes et textes de
   const source = run(`cat perso/${fiche}`);
   assert.match(source, /^---\ntitre:/, `texte source de ${fiche}`);
   assert.ok(!source.includes('<!--'), `consignes de rédaction affichées par cat ${fiche}`);
+  for (const file of ['../alternance.md', ...run('ls perso').split(/\s+/).filter((name) => name.endsWith('.md')).map((name) => `perso/${name}`)]) {
+    assert.ok(!run(`cat ${file}`).includes(PLACEHOLDER), `repère [${PLACEHOLDER}] affiché par cat ${file}`);
+  }
   assert.match(run('cat /etc/os-release'), /RémiOS/);
   assert.deepEqual(errors, []);
 });

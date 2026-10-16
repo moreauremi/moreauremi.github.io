@@ -8,11 +8,13 @@
 
 import path from 'node:path';
 import { Marked } from 'marked';
-import { escapeHtml, markPlaceholders, frenchSpacing } from '../../src/utils/html.js';
+import { escapeHtml, markPlaceholders, stripPlaceholders, hasPlaceholder, frenchSpacing } from '../../src/utils/html.js';
 
 // Corps Markdown → { html, images }. `images` : chemins des images
 // rencontrées, vérifiés ensuite par le plugin.
-export function renderMarkdown(markdown) {
+// hidePlaceholders : site publié, repères [À COMPLÉTER] retirés au lieu d'être
+// surlignés (voir stripPlaceholders).
+export function renderMarkdown(markdown, { hidePlaceholders = false } = {}) {
   const images = [];
 
   const marked = new Marked({
@@ -57,11 +59,53 @@ export function renderMarkdown(markdown) {
   // Commentaires retirés sans les retours à la ligne qui les entourent : deux
   // paragraphes séparés par un commentaire restent deux paragraphes.
   const html = marked.parse(markdown.replace(/<!--[\s\S]*?-->/g, ''));
-  return { html: frenchSpacing(markPlaceholders(html)), images };
+  return { html: frenchSpacing(hidePlaceholders ? stripPlaceholders(html) : markPlaceholders(html)), images };
 }
 
 // Texte source affiché par `cat` dans le terminal : sans les commentaires
 // ni les lignes vides qui les suivaient
 export function stripComments(source) {
   return source.replace(/<!--[\s\S]*?-->\s*/g, '');
+}
+
+// Texte source du site publié, sans repères [À COMPLÉTER], comme la page :
+// une ligne qui ne contenait qu'un repère disparaît (paragraphe, élément de
+// liste, champ de l'en-tête), puis le titre d'une section restée vide.
+export function stripSourcePlaceholders(source) {
+  const lines = source.split('\n').flatMap((line) => {
+    if (!hasPlaceholder(line)) return [line];
+    const rest = line.replace(/[ \t]*\[À COMPLÉTER[^\]]*\]/g, '').trimEnd();
+    // Rien d'utile autour du repère : puce, guillemets vides, « champ: », commentaire
+    return /^\s*(?:-\s*)?(?:[\w-]+:\s*)?(?:""|'')?\s*(?:#.*)?$/.test(rest) ? [] : [rest];
+  });
+
+  // Un titre retiré peut en vider un autre : on recommence jusqu'à stabilité
+  let kept = lines;
+  let previousLength;
+  do {
+    previousLength = kept.length;
+    kept = withoutEmptySections(kept);
+  } while (kept.length !== previousLength);
+
+  // Plus d'une ligne vide d'affilée : une seule
+  return kept.join('\n').replace(/\n{3,}/g, '\n\n');
+}
+
+// Titres des sections vides, en dehors de l'en-tête et des blocs de code
+function withoutEmptySections(lines) {
+  const frontmatterEnd = lines[0] === '---' ? lines.indexOf('---', 1) : -1;
+  const headingLevel = (index) => (index > frontmatterEnd ? /^(#{1,6})\s/.exec(lines[index])?.[1].length : undefined);
+  let fenced = false;
+  const isCode = lines.map((line) => {
+    if (/^\s*(```|~~~)/.test(line)) fenced = !fenced;
+    return fenced;
+  });
+  return lines.filter((line, index) => {
+    const level = isCode[index] ? undefined : headingLevel(index);
+    if (!level) return true;
+    let next = index + 1;
+    while (next < lines.length && lines[next].trim() === '') next += 1;
+    const nextLevel = next < lines.length && !isCode[next] ? headingLevel(next) : undefined;
+    return next < lines.length && !(nextLevel && nextLevel <= level);
+  });
 }

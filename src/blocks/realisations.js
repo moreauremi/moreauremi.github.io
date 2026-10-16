@@ -6,7 +6,7 @@
 // la vue jury).
 
 import { realisationsOfType, realisationsByTechno, technos, technoSlug, competenceLabel, TYPES } from '../content.js';
-import { escapeHtml, hasPlaceholder, safe } from '../utils/html.js';
+import { escapeHtml, hasPlaceholder, placeholder, safe } from '../utils/html.js';
 import { formatDate } from '../utils/dates.js';
 
 
@@ -55,16 +55,19 @@ function draftBadge(r) {
 
 // Caractéristiques d'une fiche : type, date, statut, technologies.
 // Chaque techno est une étiquette cliquable qui mène à sa page.
+// Une caractéristique vide n'est pas affichée (site publié : ses repères
+// [À COMPLÉTER] ont été retirés au build).
 export function ficheMeta(r, hrefForTechno) {
   const list = r.technos.length
     ? `<ul class="tags" aria-label="Technos">${r.technos.map((nom) => `<li>${technoBadge(nom, hrefForTechno)}</li>`).join('')}</ul>`
-    : '<mark class="ph">[À COMPLÉTER]</mark>';
+    : placeholder('[À COMPLÉTER]');
+  const row = (label, value) => (value ? `<dt>${label}</dt><dd>${value}</dd>` : '');
 
   return `<dl class="fiche-meta">
     <dt>Type</dt><dd>${TYPES[r.type].label}${draftBadge(r)}</dd>
-    <dt>Date</dt><dd>${safe(formatDate(r.date))}</dd>
-    <dt>Statut</dt><dd>${safe(r.statut)}</dd>
-    <dt>Technos</dt><dd>${list}</dd>
+    ${row('Date', safe(formatDate(r.date)))}
+    ${row('Statut', safe(r.statut))}
+    ${row('Technos', list)}
   </dl>`;
 }
 
@@ -101,11 +104,14 @@ export function technoBlock(techno, hrefFor, hrefForTechno) {
   <ul class="tags tags--all" aria-label="Toutes les technos">${all}</ul>`;
 }
 
-// Compétences du référentiel mobilisées par une fiche
+// Compétences du référentiel mobilisées par une fiche. Sans compétence : un
+// repère avec `npm run dev`, rien du tout dans le site publié.
 export function ficheCompetences(r) {
+  const missing = placeholder('[À COMPLÉTER : compétences mobilisées]');
+  if (!r.competences.length && !missing) return '';
   const list = r.competences.length
     ? `<ul>${r.competences.map((code) => `<li><strong>${escapeHtml(code)}</strong> — ${safe(competenceLabel(code))}</li>`).join('')}</ul>`
-    : '<p><mark class="ph">[À COMPLÉTER : compétences mobilisées]</mark></p>';
+    : `<p>${missing}</p>`;
 
   return `<section class="fiche-competences" aria-labelledby="competences-${r.slug}">
     <h2 id="competences-${r.slug}">Compétences du référentiel mobilisées</h2>
@@ -115,9 +121,10 @@ export function ficheCompetences(r) {
 
 // Fiche complète : caractéristiques, texte de la fiche, compétences
 export function ficheBlock(r, hrefForTechno) {
+  const competences = ficheCompetences(r);
   return `<article class="fiche">
     ${ficheMeta(r, hrefForTechno)}
     <div class="prose">${r.html}</div>
-    <div class="prose">${ficheCompetences(r)}</div>
+    ${competences ? `<div class="prose">${competences}</div>` : ''}
   </article>`;
 }

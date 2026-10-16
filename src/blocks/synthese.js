@@ -2,7 +2,7 @@
 // compétences du référentiel.
 
 import { site, realisations } from '../content.js';
-import { escapeHtml, safe } from '../utils/html.js';
+import { escapeHtml, placeholder, safe } from '../utils/html.js';
 import { NEW_TAB } from './shared.js';
 
 
@@ -12,7 +12,7 @@ export function syntheseBlock(hrefFor) {
   const { synthese } = site.documents;
   const pdf = synthese
     ? `<a href="${escapeHtml(synthese)}" ${NEW_TAB}>Ouvrir le tableau de synthèse (PDF)</a>`
-    : '<mark class="ph">[À COMPLÉTER : tableau de synthèse en PDF]</mark>';
+    : placeholder('[À COMPLÉTER : tableau de synthèse en PDF]');
 
   const codes = site.competences;
   const header = codes
@@ -34,7 +34,7 @@ export function syntheseBlock(hrefFor) {
     .join('');
 
   return `<div class="prose">
-    <p>Document officiel : ${pdf}</p>
+    ${pdf ? `<p>Document officiel : ${pdf}</p>` : ''}
     <p>Tableau croisé généré à partir des fiches : chaque ligne est une réalisation, chaque colonne une compétence du référentiel.</p>
   </div>
   <div class="table-scroll" tabindex="0" role="region" aria-label="Tableau croisé des réalisations et des compétences">

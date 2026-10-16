@@ -6,8 +6,9 @@
 //   - content/pages/          présentation, veille
 //   - content/realisations/   une fiche par réalisation
 //
-// Tout texte « [À COMPLÉTER] » s'affiche surligné en jaune sur le site :
-// c'est le signal de ce qui reste à remplir.
+// Tout texte « [À COMPLÉTER] » s'affiche surligné en jaune avec `npm run dev` :
+// c'est le signal de ce qui reste à remplir. Le site publié ne les montre pas
+// (repère retiré, avec le paragraphe ou la section qui ne contenait que lui).
 // =============================================================================
 
 export default {

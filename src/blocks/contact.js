@@ -3,7 +3,7 @@
 
 import { site } from '../content.js';
 import { link } from '../router.js';
-import { escapeHtml, safe } from '../utils/html.js';
+import { escapeHtml, placeholder, safe } from '../utils/html.js';
 import { FORM_ACTION } from '../utils/contact-form.js';
 import { publicBase } from '../utils/url.js';
 import { NEW_TAB, shortUrl } from './shared.js';
@@ -15,7 +15,7 @@ export function contactBlock({ legalHref = link.legal() } = {}) {
   const { cv } = site.documents;
   const cvLink = cv
     ? `<a href="${escapeHtml(cv)}" ${NEW_TAB}>Télécharger mon CV (PDF)</a>`
-    : '<mark class="ph">[À COMPLÉTER : CV en PDF]</mark>';
+    : placeholder('[À COMPLÉTER : CV en PDF]');
 
   return `<dl class="contact">
     ${disponibilite ? `<dt>Disponibilité</dt><dd>${safe(disponibilite)}</dd>` : ''}
@@ -23,7 +23,7 @@ export function contactBlock({ legalHref = link.legal() } = {}) {
     <dt>E-mail</dt><dd><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></dd>
     <dt>GitHub</dt><dd><a href="${escapeHtml(github)}" ${NEW_TAB}>${escapeHtml(shortUrl(github))}</a></dd>
     <dt>LinkedIn</dt><dd><a href="${escapeHtml(linkedin)}" ${NEW_TAB}>${escapeHtml(shortUrl(linkedin))}</a></dd>
-    <dt>CV</dt><dd>${cvLink}</dd>
+    ${cvLink ? `<dt>CV</dt><dd>${cvLink}</dd>` : ''}
   </dl>
   ${contactForm(legalHref)}`;
 }
@@ -37,9 +37,8 @@ function contactForm(legalHref) {
   const { cle } = site.formulaire ?? {};
   if (!cle) {
     // Rappel affiché seulement en développement : sans clé, pas de formulaire
-    return import.meta.env.DEV
-      ? '<p class="form-note"><mark class="ph">[À COMPLÉTER : clé du formulaire de contact, voir « formulaire » dans content/site.config.js]</mark></p>'
-      : '';
+    const note = placeholder('[À COMPLÉTER : clé du formulaire de contact, voir « formulaire » dans content/site.config.js]');
+    return note ? `<p class="form-note">${note}</p>` : '';
   }
 
   const base = publicBase(site.urlPublique);

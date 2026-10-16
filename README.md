@@ -122,7 +122,7 @@ Tout le contenu est dans `content/` : aucune ligne de code à toucher.
 - **Schémas** (architecture…) : déposer le fichier dans `public/schemas/` et l'insérer de la même façon (`![Description](schemas/schema.svg "Légende")`). Ils s'affichent dans la même fenêtre que les captures.
 - **PDF** (CV, tableau de synthèse) : déposer le fichier dans `public/docs/`, puis indiquer son chemin dans `content/site.config.js` (`cv: 'docs/cv.pdf'`).
 
-Les textes `[À COMPLÉTER]` sont surlignés en jaune sur le site. Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, image ou PDF introuvable, compétence inexistante…), `npm run dev` et `npm run build` s'arrêtent avec un message qui indique le fichier et la correction à faire : un site incomplet ne peut pas partir en production par erreur.
+Les textes `[À COMPLÉTER]` sont surlignés en jaune avec `npm run dev`. Le site en ligne ne les montre pas : au build, chaque repère est retiré, avec le paragraphe, l'élément de liste ou la légende qui ne contenait que lui, puis le titre d'une section restée vide (« Bilan personnel » sans texte dessous disparaît). Une techno `[À COMPLÉTER]` sort de la liste, et une information absente de la configuration (CV, photo, tableau de synthèse) n'affiche rien. Une fiche peut donc être publiée avant d'être finie : seul ce qui est rédigé apparaît. Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, image ou PDF introuvable, compétence inexistante…), `npm run dev` et `npm run build` s'arrêtent avec un message qui indique le fichier et la correction à faire : un site incomplet ne peut pas partir en production par erreur.
 
 ## Ce qui reste à compléter
 
@@ -131,7 +131,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [x] **Présentation** : photo professionnelle, projet professionnel (attendu par les consignes de l'épreuve E5).
 - [ ] **Alternance** : présentation de 1Life, missions, outils, bilan personnel, recommandation du tuteur, dates des expériences précédentes.
 - [ ] **Réalisations 1Life** (3 fiches en brouillon) : titres et contenu, après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
-- [ ] **Homelab Jellyfin et NAS** (en brouillon depuis le 13 octobre 2026, retirés du site en ligne) : détails techniques balisés `[À COMPLÉTER]` et captures, puis retirer la ligne `brouillon: true`.
+- [ ] **Homelab Jellyfin et NAS** (publiés le 16 octobre 2026, avec des captures provisoires `a-venir.svg`) : détails techniques balisés `[À COMPLÉTER]`, et les vraies captures à la place des images provisoires (leur légende dit ce que chacune doit montrer).
 - [ ] **Crypto Dashboard Pro** : contexte, tests et difficultés balisés `[À COMPLÉTER]`.
 - [ ] **RMutils** : captures des menus et du QR code en place (vrai code, données d'exemple) ; reste une capture d'un rapport HTML prise sur un vrai PC Windows, et le détail des tests une fois l'outil utilisé en conditions réelles (premiers essais faits sur mon PC et des PC de proches).
 - [x] **Compétences techniques** : niveaux renseignés (octobre 2026). À remonter en cours d'année (Open-Prod, SQL, Docker…), et à relier aux fiches 1Life quand elles seront publiées (SQL et Open-Prod n'ont pas encore de preuve).

@@ -11,15 +11,16 @@ technos:
   - "Tailscale"
   - "[À COMPLÉTER : logiciel du NAS]"
 competences: [B1.1, B1.5, B1.6]  # codes du référentiel, ex. [B1.1, B1.4]
-brouillon: true  # fiche à compléter : visible avec npm run dev, absente du site publié (retirer la ligne une fois remplie)
 ---
 
 <!--
   Guide de rédaction
   - Remplacer chaque [À COMPLÉTER] par le vrai contenu (ou supprimer la ligne).
+    La fiche est publiée : les repères restants n'apparaissent pas sur le site
+    en ligne (seulement avec npm run dev), une section vide non plus.
   - Captures : déposer l'image dans public/captures/nas/, puis écrire
       ![Description de l'image](captures/nas/nom-du-fichier.webp "Légende affichée")
-    et supprimer l'image « a-venir.svg » ci-dessous.
+    à la place de l'image provisoire « a-venir.svg » correspondante, ci-dessous.
   - competences : codes définis dans content/site.config.js, ex. [B1.1, B1.4]
 -->
 
@@ -44,7 +45,9 @@ Disposer d'un espace de stockage centralisé, hébergé chez moi, et accessible 
 
 ## Captures d'écran
 
-![Emplacement réservé : capture d'écran à venir](captures/a-venir.svg "[À COMPLÉTER : légende de la capture]")
+![Emplacement réservé pour une capture de l'interface d'administration du NAS](captures/a-venir.svg "Interface d'administration du NAS (capture à venir)")
+
+![Emplacement réservé pour une capture de l'accès aux fichiers à distance](captures/a-venir.svg "Accès aux fichiers du NAS à distance, par le VPN Tailscale (capture à venir)")
 
 ## Résultats et tests
 

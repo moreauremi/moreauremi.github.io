@@ -2,7 +2,7 @@
 // texte de content/pages/presentation.md.
 
 import { site, pages } from '../content.js';
-import { escapeHtml } from '../utils/html.js';
+import { escapeHtml, placeholder } from '../utils/html.js';
 import { NEW_TAB } from './shared.js';
 
 
@@ -17,9 +17,11 @@ export function presentationBlock() {
 
 function portrait() {
   const { photo, nom } = site.identite;
-  return photo
-    ? `<img class="portrait" src="${escapeHtml(photo)}" alt="Portrait de ${escapeHtml(nom)}" width="128" height="128" decoding="async">`
-    : '<p class="portrait portrait--empty"><mark class="ph">[À COMPLÉTER : photo professionnelle]</mark></p>';
+  if (photo) {
+    return `<img class="portrait" src="${escapeHtml(photo)}" alt="Portrait de ${escapeHtml(nom)}" width="128" height="128" decoding="async">`;
+  }
+  const missing = placeholder('[À COMPLÉTER : photo professionnelle]');
+  return missing ? `<p class="portrait portrait--empty">${missing}</p>` : '';
 }
 
 function profileLinks() {
