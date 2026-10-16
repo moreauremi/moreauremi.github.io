@@ -1,14 +1,15 @@
 ---
-titre: "CAFFEIN — facturation assistée par IA"
+titre: "CAFFEIN — ERP modulaire assisté par IA"
 slug: caffein
 type: perso  # entreprise, formation ou perso
 date: 2026-01/2026-10  # AAAA, AAAA-MM, AAAA-MM-JJ ou période début/fin (ex. 2026-01/2026-08)
-statut: "v2.0 publiée en open source"  # ex. en cours, terminé, en pause
-resume: "Logiciel de gestion pour freelances, micro-entrepreneurs et TPE, où l'IA rédige devis et factures à partir d'une phrase : prototypé avec n8n, puis réécrit en Python (FastAPI, React), libre et auto-hébergé sur un serveur Linux derrière Nginx."
+statut: "v2.0 publiée en open source, ERP modulaire en cours"  # ex. en cours, terminé, en pause
+resume: "Logiciel de gestion libre pour TPE, devenu un ERP modulaire (ventes, achats, stock, production, RH, CRM, projets, qualité, maintenance, comptabilité) : données en tables SQL, calculs en Python, droits réglés module par module, et une IA qui rédige devis et factures à partir d'une phrase. Prototypé avec n8n, réécrit en Python (FastAPI, React), auto-hébergé sur un serveur Linux derrière Nginx."
 technos:
   - "Python"
   - "FastAPI"
   - "SQLite"
+  - "SQL"
   - "React"
   - "API Claude"
   - "n8n"
@@ -41,12 +42,15 @@ Le constat de départ : les freelances, les micro-entrepreneurs et les très pet
 
 Je mène ce projet seul, sur mon temps personnel, avec un budget limité : les API, le serveur et le nom de domaine sont à ma charge.
 
+Une fois la facturation en place, j'ai voulu aller jusqu'au bout de l'idée de départ : faire de CAFFEIN un **ERP** (progiciel de gestion intégré) capable de faire tourner toute une petite entreprise, de l'achat de la matière première à la facture, en passant par le stock, la fabrication, les salariés et les clients.
+
 ## Objectifs
 
 - Créer un devis ou une facture à partir d'une simple phrase, par exemple « Mission logo pour Jean Martin, 800 €, livraison le 15 ».
 - Automatiser les tâches répétitives : génération du PDF, envoi au client, relance des factures impayées, classement des justificatifs.
 - Suivre la TVA à reverser et les cotisations URSSAF sans saisie supplémentaire : tout est déduit des factures et des justificatifs.
 - Mettre le service en ligne sur un serveur Linux, de façon sécurisée et facile à maintenir.
+- En faire un ERP **modulaire** : chaque domaine (RH, achats, production…) est un module qu'on active ou non, avec des droits réglés par utilisateur, et ajouter un module ne doit rien casser.
 
 ## Mise en œuvre
 
@@ -60,6 +64,29 @@ Je mène ce projet seul, sur mon temps personnel, avec un budget limité : les A
 - **Automatisations** : les workflows n8n sont remplacés par **8 scripts Python**, lancés par un planificateur intégré au serveur (toutes les minutes, chaque jour à heure fixe ou sur un événement) : traitement des justificatifs, génération des PDF, envoi des factures, relances d'impayés sur trois niveaux (rappel amical, relance ferme, mise en demeure), alertes TVA, emails d'accueil… Chaque exécution est historisée, et chaque email envoyé reste consultable dans une boîte d'envoi.
 - **Modules** : devis et factures (numérotation continue, mentions légales, transformation d'un devis en facture, page en ligne pour le client), clients, justificatifs, suivi de la TVA, tableau de bord URSSAF (chiffre d'affaires encaissé, cotisations, plafond de la micro-entreprise et seuil de franchise de TVA), gestion des utilisateurs avec deux rôles (administrateur et membre).
 - **Emails** : envoi par **SMTP** ; sans serveur mail configuré, les emails sont simulés.
+
+**Version 3 : un ERP modulaire (octobre 2026).** J'ai réorganisé tout le logiciel en modules :
+
+| Module | Contenu |
+|---|---|
+| Accueil | les chiffres à traiter (retards, ruptures, validations) puis une carte par module, et « Mes vues » |
+| Données techniques | articles, nomenclatures, postes de charge, gammes, coût de revient calculé |
+| RH | salariés, services, absences en jours ouvrés (jours fériés français), soldes de congés, notes de frais |
+| Achats | fournisseurs, commandes, réceptions qui alimentent le stock |
+| Ventes | devis et factures en une phrase, relances, commandes clients |
+| CRM | prospects, opportunités pondérées, actions commerciales, devis en un clic |
+| Production | ordres de fabrication, besoins en composants, charge des postes, coûts |
+| Logistique | entrepôts, mouvements, stock par article, réapprovisionnement |
+| Projets | tâches, temps passés, facturation des temps |
+| Qualité et Maintenance | non-conformités et plans d'actions ; équipements et interventions |
+| Comptabilité | TVA, URSSAF, justificatifs lus et classés automatiquement |
+| Paramètres | utilisateurs, rôles et droits par module, activation des modules |
+
+- **Les données dans des tables SQL**, une par objet (commande, ligne de commande, mouvement de stock…), avec des migrations versionnées par module : une mise à jour ne perd rien, et les lignes des factures, auparavant stockées en bloc, ont été recopiées dans leur propre table.
+- **Les calculs en Python, côté serveur** : totaux, TVA, coûts de revient de proche en proche, jours ouvrés, stock disponible… L'interface ne fait qu'afficher ; même pendant la saisie, c'est le serveur qui recalcule.
+- **Des écrans générés** : un module déclare ses tables, ses champs et ses actions (confirmer, livrer, valider un congé…), et CAFFEIN en déduit l'API et les écrans (liste avec recherche, filtres et export, fiche, vue en colonnes par statut). Un module complet tient en un fichier d'une soixantaine de lignes.
+- **Les droits par module** : chaque utilisateur a un rôle (Commercial, Acheteur, Production, RH, Comptable, Lecture seule…) qui fixe, module par module, un niveau d'accès (aucun, lecture, écriture, gestion), avec des exceptions possibles par personne. Un module désactivé disparaît pour tout le monde, et le serveur refuse ses requêtes ; les salaires ne sont visibles qu'au niveau gestion.
+- **Des modules qui se parlent sans dépendre les uns des autres** : livrer une commande sort le stock, réceptionner un achat l'alimente, terminer une fabrication consomme les composants — seulement si la Logistique est active. Une fiche utilisée par un autre module ne peut pas être supprimée.
 
 **Mise en ligne et sécurité.**
 
@@ -79,17 +106,23 @@ Code source (licence AGPL-3.0) : [github.com/moreauremi/caffein](https://github.
 
 ## Captures d'écran
 
-Captures de la version 2.0, sur l'instance de démonstration (données fictives).
+Captures de l'ERP sur l'instance de démonstration (données fictives d'un studio graphique qui fabrique aussi des kits de papeterie).
 
-![Assistant d'installation, étape 1 sur 3 : formulaire « Votre entreprise » (nom, mention légale, SIRET, adresse, email)](captures/caffein/installation.webp "Premier lancement : l'assistant d'installation crée l'entreprise puis le compte administrateur")
+![Accueil : section « À traiter » (demandes RH à valider, livraisons fournisseurs en retard, factures en retard, ruptures) puis une carte par module avec ses chiffres clés](captures/caffein/accueil.webp "Accueil : ce qui demande une action en tête, puis une carte par module")
 
-![Accueil : documents traités, TVA collectée, balance due, temps économisé, factures à encaisser, prochaines échéances et actualités](captures/caffein/accueil.webp "Accueil : chiffres clés, échéances à venir et ce que Caffein a fait en arrière-plan")
+![Paramètres, page Modules : chaque module avec sa description, ses dépendances et un interrupteur pour l'activer ou le désactiver](captures/caffein/modules.webp "Paramètres → Modules : activer ou désactiver un module pour toute l'entreprise")
 
-![Page Factures et devis : champ « Décrivez, Caffein rédige » avec des exemples de phrases, indicateurs d'encaissement et liste des factures](captures/caffein/factures.webp "Factures et devis : une phrase suffit pour générer le brouillon")
+![Paramètres, page Rôles et droits : grille des rôles (Commercial, Acheteur, Production, RH, Comptable…) avec un niveau d'accès par module](captures/caffein/droits.webp "Rôles et droits : un niveau d'accès par module, rôle par rôle")
 
-![Page Automatisations : état de l'IA, des emails et du planificateur, puis les scripts avec leur fréquence et leur dernière exécution](captures/caffein/automatisations.webp "Les scripts Python qui remplacent les workflows n8n, avec leur dernière exécution")
+![CRM, opportunités en vue Tableau : une colonne par étape (découverte, qualification, proposition, négociation, gagnée) avec le nombre d'affaires et le montant de chaque colonne](captures/caffein/tableau.webp "Vue Tableau : le pipeline commercial, totaux calculés par le serveur")
 
-![Tableau de bord URSSAF : prochaine déclaration, chiffre d'affaires encaissé, cotisations, graphique mensuel et seuils de l'année](captures/caffein/urssaf.webp "Tableau de bord URSSAF : chiffre d'affaires à déclarer, cotisations et seuils de l'année")
+![Fiche d'un ordre de fabrication : article, quantité, besoins en composants avec stock disponible et manques, opérations par poste et coûts](captures/caffein/fabrication.webp "Production : besoins, manques, temps et coûts calculés en Python")
+
+![Page Factures et devis : champ « Décrivez, Caffein rédige » avec des exemples de phrases, indicateurs d'encaissement et liste des factures](captures/caffein/factures.webp "Ventes : une phrase suffit pour générer le brouillon d'une facture")
+
+![Tableau de bord URSSAF : prochaine déclaration, chiffre d'affaires encaissé, cotisations, graphique mensuel et seuils de l'année](captures/caffein/urssaf.webp "Comptabilité : chiffre d'affaires à déclarer, cotisations et seuils de l'année")
+
+![Assistant d'installation : choix des modules utiles à l'entreprise, avec leurs dépendances](captures/caffein/installation.webp "Premier lancement : l'assistant propose de choisir les modules")
 
 ## Résultats et tests
 
