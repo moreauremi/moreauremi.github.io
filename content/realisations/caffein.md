@@ -3,7 +3,7 @@ titre: "CAFFEIN — ERP modulaire assisté par IA"
 slug: caffein
 type: perso  # entreprise, formation ou perso
 date: 2026-01/2026-10  # AAAA, AAAA-MM, AAAA-MM-JJ ou période début/fin (ex. 2026-01/2026-08)
-statut: "v2.0 publiée en open source, ERP modulaire en cours"  # ex. en cours, terminé, en pause
+statut: "ERP modulaire publié en open source"  # ex. en cours, terminé, en pause
 resume: "Logiciel de gestion libre pour TPE, devenu un ERP modulaire (ventes, achats, stock, production, RH, CRM, projets, qualité, maintenance, comptabilité) : données en tables SQL, calculs en Python, droits réglés module par module, et une IA qui rédige devis et factures à partir d'une phrase. Prototypé avec n8n, réécrit en Python (FastAPI, React), auto-hébergé sur un serveur Linux derrière Nginx."
 technos:
   - "Python"
@@ -126,13 +126,15 @@ Captures de l'ERP sur l'instance de démonstration (données fictives d'un studi
 
 ## Résultats et tests
 
-Le code de la version 2.0 a été publié en open source sur GitHub le 7 octobre 2026.
+La version 2.0 a été publiée en open source sur GitHub le 7 octobre 2026. L'ERP modulaire a rejoint la branche principale le 16 octobre 2026.
 
 Les tests se sont révélés complexes : tous les modules fonctionnent ensemble et l'assistant IA agit sur chacun d'eux, donc un problème à un endroit peut faire dysfonctionner l'ensemble. Je les ai donc automatisés :
 
-- **30 tests automatisés** (pytest) couvrent les calculs fiscaux, le chiffrement, l'analyse hors ligne, le cycle de vie d'une facture, les scripts, l'API, l'authentification, les rôles, la protection CSRF, l'assistant d'installation et la sauvegarde avec restauration. Ils passent tous.
-- **Intégration continue** (GitHub Actions) à chaque modification : tests sous Python 3.10 et 3.13, analyse du code (Ruff, ESLint, ShellCheck), build de l'interface, construction de l'image Docker puis démarrage du conteneur.
-- **Test de déploiement** : à chaque modification, la CI installe aussi Caffein sur une machine Ubuntu vierge, vérifie que le service systemd est actif, crée un administrateur, lance une sauvegarde, refait l'installation pour tester la mise à jour, puis désinstalle tout.
+- **351 tests automatisés** (pytest) couvrent les calculs (TVA, coûts de revient, jours ouvrés, stock), les étapes de chaque module (confirmer, livrer, réceptionner, valider…), les droits par rôle, le chiffrement, l'assistant d'installation, la mise à jour d'une base existante et la sauvegarde avec restauration. Ils passent tous, sous Python 3.10 et 3.13.
+- **Un « contrat » commun à tous les modules** : sans écrire de test, chaque module, présent ou futur, est vérifié automatiquement (tables conformes, écrans qui fonctionnent sur les données de démonstration, chiffres calculables sur une base vide, rôle « Lecture seule » qui ne modifie rien) et, surtout, on vérifie qu'on peut le désactiver sans casser les autres.
+- **Un parcours de l'interface dans un vrai navigateur** (Playwright) ouvre chaque page de chaque module, sur ordinateur et sur téléphone, et signale toute erreur ou tout débordement.
+- **Une relecture de sécurité** indépendante, où chaque problème devait être reproduit avant d'être corrigé : elle a trouvé et fait corriger un fichier piégé qui pouvait s'exécuter dans l'application, un compte de démonstration resté ouvert et un contrôle de droits manquant entre la RH et la comptabilité.
+- **Intégration continue** (GitHub Actions) à chaque modification : tests, analyse du code (Ruff, ESLint, ShellCheck), build de l'interface, construction de l'image Docker puis démarrage du conteneur, et installation complète sur une machine Ubuntu vierge.
 
 Le mode hors ligne permet de lancer tous ces tests sans appeler l'API Claude, donc sans coût.
 
@@ -142,8 +144,11 @@ Le mode hors ligne permet de lancer tous ces tests sans appeler l'API Claude, do
 
 **Tester un système où tout est lié.** Dans la version 1, la logique était répartie entre les workflows n8n et plusieurs services en ligne, ce qui rendait les enchaînements difficiles à tester. En la regroupant dans un seul code Python, j'ai pu la couvrir par des tests automatisés et une CI qui réinstalle tout le logiciel à chaque modification.
 
+**Ajouter une dizaine de modules sans rien casser.** Passer d'un logiciel de facturation à un ERP touchait tout : la base, les droits, la navigation. J'ai d'abord construit un socle commun (déclaration des modules, droits, moteur d'écrans), puis fait développer les modules en parallèle, chacun dans sa propre copie du dépôt Git, avant de les intégrer un par un. Le contrat de tests commun et la mise à jour testée d'une base de la version 2 ont permis de vérifier à chaque intégration que l'existant fonctionnait toujours.
+
 ## Pistes d'amélioration
 
+- Relier les comptes utilisateurs aux fiches salariés, pour que chacun saisisse lui-même ses absences et ses notes de frais
 - Dicter ses demandes à l'assistant au lieu de les écrire, avec un modèle de transcription auto-hébergé (Whisper)
 - Factures au format Factur-X et export comptable FEC pour l'expert-comptable
 - Copier automatiquement les sauvegardes hors du serveur, par exemple vers mon NAS
@@ -151,6 +156,8 @@ Le mode hors ligne permet de lancer tous ces tests sans appeler l'API Claude, do
 ## Compétences mises en œuvre
 
 - Développement d'une application web en Python (FastAPI) et React
+- Conception d'un ERP modulaire : modélisation des données en tables SQL, migrations versionnées par module
+- Gestion des habilitations : rôles, niveaux d'accès par module, exceptions par utilisateur
 - Administration d'un serveur Linux : service systemd durci, utilisateur dédié, journaux
 - Reverse proxy Nginx, HTTPS avec Let's Encrypt, nom de domaine et DNS
 - Conteneurisation avec Docker
