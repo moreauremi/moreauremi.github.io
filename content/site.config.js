@@ -365,7 +365,7 @@ export default {
       },
       {
         nom: 'Bases de données',
-        items: [{ nom: 'SQL', niveau: 2, preuves: ['glpi'] }],
+        items: [{ nom: 'SQL', niveau: 2, preuves: ['glpi', 'rapports-qweb'] }],
       },
       {
         nom: 'Outils et frameworks',
@@ -377,7 +377,10 @@ export default {
       },
       {
         nom: 'Logiciels métier',
-        items: [{ nom: 'ERP Open-Prod', niveau: 2, preuves: [] }],
+        items: [
+          { nom: 'ERP Open-Prod', niveau: 2, preuves: ['1life-realisation-1', 'rapports-qweb'] },
+          { nom: 'QWeb (rapports Open-Prod)', niveau: 2, preuves: ['rapports-qweb'] },
+        ],
       },
     ],
   },
@@ -396,7 +399,16 @@ export default {
   //   },
   // N'indiquer que ce qui est réellement obtenu ou en cours.
   // Liste vide = la rubrique affiche « À venir ».
-  certifications: [],
+  certifications: [
+    {
+      titre: 'QWeb : rapports Open-Prod',
+      organisme: '1Life',
+      categorie: 'formation',
+      date: '2026-10-15', // première journée ; la seconde est prévue fin octobre
+      statut: 'en cours', // passer à « obtenue » après la seconde journée
+      detail: 'deux journées, la seconde fin octobre 2026',
+    },
+  ],
 
   // --- Mentions légales (#/mentions-legales) -----------------------------------
   // Obligatoires pour un site publié en France (loi pour la confiance dans

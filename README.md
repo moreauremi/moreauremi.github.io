@@ -130,11 +130,11 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 
 - [x] **Présentation** : photo professionnelle, projet professionnel (attendu par les consignes de l'épreuve E5).
 - [ ] **Alternance** : présentation de 1Life, missions, outils, bilan personnel, recommandation du tuteur, dates des expériences précédentes.
-- [ ] **Réalisations 1Life** (3 fiches en brouillon) : titres et contenu, après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
+- [ ] **Réalisations 1Life** : « Environnement Open-Prod v10 » publiée ; « Rapports Open-Prod avec QWeb » (`rapports-qweb.md`) en brouillon, à compléter après la seconde journée de formation (fin octobre 2026) puis à publier ; `1life-realisation-3` encore vide. Toujours après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
 - [ ] **Homelab Jellyfin et NAS** (publiés le 16 octobre 2026, avec des captures provisoires `a-venir.svg`) : détails techniques balisés `[À COMPLÉTER]`, et les vraies captures à la place des images provisoires (leur légende dit ce que chacune doit montrer).
 - [ ] **Crypto Dashboard Pro** : contexte, tests et difficultés balisés `[À COMPLÉTER]`.
 - [ ] **RMutils** : captures des menus et du QR code en place (vrai code, données d'exemple) ; reste une capture d'un rapport HTML prise sur un vrai PC Windows, et le détail des tests une fois l'outil utilisé en conditions réelles (premiers essais faits sur mon PC et des PC de proches).
-- [x] **Compétences techniques** : niveaux renseignés (octobre 2026). À remonter en cours d'année (Open-Prod, SQL, Docker…), et à relier aux fiches 1Life quand elles seront publiées (SQL et Open-Prod n'ont pas encore de preuve).
+- [x] **Compétences techniques** : niveaux renseignés (octobre 2026). À remonter en cours d'année (Open-Prod, SQL, Docker…), et à relier aux fiches 1Life quand elles seront publiées (Open-Prod renvoie à « Environnement Open-Prod v10 » ; QWeb et SQL renvoient aussi à la fiche QWeb, affichée une fois publiée).
 - [x] **Grille de compétences** : les six compétences du tableau de synthèse officiel (B1.1 à B1.6) sont dans `site.config.js`.
 - [ ] **Compétences des fiches** : renseignées pour les 6 projets personnels ; à faire pour les fiches 1Life et de formation quand elles seront remplies (ex. `[B1.1, B1.5]`). B1.3 est couverte par la fiche « Portfolio RémiOS », B1.2 (incidents et demandes d'assistance) par la fiche « RMutils » ; une fiche 1Life sur l'assistance aux utilisateurs la renforcerait.
 - [ ] **Fiche « Portfolio RémiOS »** (`content/realisations/portfolio-remios.md`) : rédigée d'après ce README, à relire.
@@ -143,7 +143,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [x] **Jeton Copilot** : jeton GitHub « Copilot Requests » rangé dans les secrets du dépôt (`COPILOT_GITHUB_TOKEN`) ; la collecte des trois sujets fonctionne (9 octobre 2026 ; jeton recréé le 12 octobre 2026). À renouveler avant son expiration, un an après sa création (voir [Mise en route](#mise-en-route-une-seule-fois)).
 - [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://dashboard.remim.me, à partir des actualités collectées.
 - [ ] **Veille par e-mail** : créer le jeton du relais et installer le relais Gmail (voir [Veille par e-mail](#mise-en-route-du-relais-gmail-une-seule-fois)).
-- [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif.
+- [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif. Formation QWeb ajoutée (en cours, sans attestation) : passer son statut à « obtenue » après la seconde journée.
 - [ ] **Réalisations en formation** (3 fiches en brouillon) : titres et contenu, au fil des TP et projets de cours. Le groupe affiche « À venir » sur le site tant qu'aucune n'est publiée.
 
 ## Architecture
