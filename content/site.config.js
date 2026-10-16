@@ -378,7 +378,7 @@ export default {
       {
         nom: 'Logiciels métier',
         items: [
-          { nom: 'ERP Open-Prod', niveau: 2, preuves: ['1life-realisation-1', 'rapports-qweb'] },
+          { nom: 'ERP Open-Prod', niveau: 2, preuves: ['1life-realisation-1', 'flux-production-sous-traitance', 'rapports-qweb'] },
           { nom: 'QWeb (rapports Open-Prod)', niveau: 2, preuves: ['rapports-qweb'] },
         ],
       },
