@@ -33,6 +33,7 @@ import matter from 'gray-matter';
 import { renderMarkdown } from './markdown.js';
 import { checkRealisation } from './realisation.js';
 import { contentSecurityPolicy } from './csp.js';
+import { openGraph } from './seo.js';
 import { escapeHtml, hasPlaceholder, withoutPlaceholders } from '../../src/utils/html.js';
 import { formatDate } from '../../src/utils/dates.js';
 
@@ -82,7 +83,7 @@ function readRealisations(root, site) {
       const file = `content/realisations/${name}`;
       const { data, html } = readMarkdown(root, file);
       const meta = withoutMetaPlaceholders(checkRealisation(data, file, site, []));
-      return { ...meta, html };
+      return { ...meta, html, file };
     })
     .filter((r) => !r.brouillon)
     .sort((a, b) => {
@@ -125,9 +126,10 @@ export function describe(html, data = {}, max = 160) {
   return end >= 90 ? text.slice(0, end + 1) : plainText(text, max);
 }
 
-// Toutes les pages à fabriquer : { path, titre, description, html, ecran }
+// Toutes les pages à fabriquer : { path, titre, description, html, ecran, sources }
 // path : dossier de la page (« realisations/rmutils/ ») ; ecran : adresse du
-// même écran dans RémiOS (« #/realisations/rmutils »).
+// même écran dans RémiOS (« #/realisations/rmutils ») ; sources : fichiers
+// Markdown dont la page est faite (date de modification du plan du site).
 export function collectPages(root, site) {
   const pages = [];
   const page = (name) => readMarkdown(root, `content/pages/${name}.md`);
@@ -141,6 +143,7 @@ export function collectPages(root, site) {
       description: describe(presentation.html, presentation.data),
       html: presentation.html,
       ecran: '#/presentation',
+      sources: ['content/pages/presentation.md'],
     });
   }
 
@@ -152,6 +155,7 @@ export function collectPages(root, site) {
       description: describe(alternance.html, alternance.data),
       html: alternance.html,
       ecran: '#/alternance',
+      sources: ['content/pages/alternance.md'],
     });
   }
 
@@ -165,6 +169,7 @@ export function collectPages(root, site) {
       .map((r) => `<li><a href="realisations/${escapeHtml(r.slug)}/">${escapeHtml(r.titre)}</a> <span class="type">${escapeHtml(TYPE_LABELS[r.type])}</span>${r.resume ? `<br>${escapeHtml(r.resume)}` : ''}</li>`)
       .join('')}</ul>`,
     ecran: '#/realisations',
+    sources: realisations.map((r) => r.file),
   });
   for (const r of realisations) {
     const rows = [
@@ -181,6 +186,7 @@ export function collectPages(root, site) {
       resume: r.resume,
       html: `<dl class="fiche">${rows.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join('')}</dl>${r.html}`,
       ecran: `#/realisations/${r.slug}`,
+      sources: [r.file],
       realisation: true,
     });
   }
@@ -196,24 +202,26 @@ export function collectPages(root, site) {
         .map((s) => `<li><a href="veille/${escapeHtml(s.id)}/">${escapeHtml(s.nom)}</a> : ${escapeHtml(s.sujet ?? '')}</li>`)
         .join('')}</ul>`,
       ecran: '#/veille',
+      sources: ['content/pages/veille.md'],
     });
   }
   for (const s of sujets) {
-    const pourquoi = readMarkdown(root, `content/veille/${s.id}/sujet.md`);
-    const syntheses = readMarkdown(root, `content/veille/${s.id}/syntheses.md`);
+    const sources = [`content/veille/${s.id}/sujet.md`, `content/veille/${s.id}/syntheses.md`];
+    const [pourquoi, syntheses] = sources.map((file) => readMarkdown(root, file));
     pages.push({
       path: `veille/${s.id}/`,
       titre: `Veille : ${s.sujet ?? s.nom}`,
       description: pourquoi ? describe(pourquoi.html, pourquoi.data) : s.sujet ?? s.nom,
       html: `${pourquoi?.html ?? ''}<h2>Mes synthèses</h2>${syntheses?.html || '<p>À venir.</p>'}`,
       ecran: `#/veille/${s.id}`,
+      sources,
     });
   }
   return pages;
 }
 
 // Une page complète. `base` : adresse publique du site (pour l'adresse
-// canonique), ou '' si elle n'est pas renseignée.
+// canonique et l'aperçu des liens partagés), ou '' si elle n'est pas renseignée.
 export function renderPage(page, site, base) {
   const depth = page.path.split('/').filter(Boolean).length;
   const toRoot = '../'.repeat(depth) || './';
@@ -227,7 +235,23 @@ export function renderPage(page, site, base) {
   ]
     .map(([href, label]) => `<a href="${href}"${page.path === href ? ' aria-current="page"' : ''}>${label}</a>`)
     .join(' · ');
+  const title = `${page.titre} · ${nom}`;
   const canonical = base ? `\n<link rel="canonical" href="${escapeHtml(base + page.path)}">` : '';
+  // Aperçu quand la page est partagée (LinkedIn…) : titre et description de
+  // la page, image de l'accueil. URL complètes : seulement si l'adresse
+  // publique est connue, comme la canonique.
+  const preview = base
+    ? [
+        { property: 'og:type', content: 'website' },
+        { property: 'og:locale', content: 'fr_FR' },
+        { property: 'og:site_name', content: 'RémiOS' },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: page.description },
+        ...openGraph(base, page.path),
+      ]
+        .map((attrs) => `\n<meta ${Object.entries(attrs).map(([k, v]) => `${k}="${escapeHtml(v)}"`).join(' ')}>`)
+        .join('')
+    : '';
   return `<!doctype html>
 <html lang="fr">
 <head>
@@ -235,8 +259,8 @@ export function renderPage(page, site, base) {
 <base href="${toRoot}">
 <meta http-equiv="Content-Security-Policy" content="${escapeHtml(contentSecurityPolicy(site))}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escapeHtml(`${page.titre} · ${nom}`)}</title>
-<meta name="description" content="${escapeHtml(page.description)}">${canonical}
+<title>${escapeHtml(title)}</title>
+<meta name="description" content="${escapeHtml(page.description)}">${canonical}${preview}
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="${STYLESHEET}">
@@ -305,16 +329,3 @@ dl.fiche dt{color:var(--doux)}dl.fiche dd{margin:0}
 .liste li{margin-bottom:.75rem}.type{color:var(--doux);font-size:.85rem}
 footer{margin-top:3rem;padding:1rem;border-top:1px solid var(--trait);font-size:.9rem;color:var(--doux)}
 `;
-
-// Liens vers les pages statiques, ajoutés à la version sans JavaScript
-// d'index.html : c'est par là que les robots les découvrent depuis l'accueil
-export function noscriptLinks() {
-  return [
-    ['presentation/', 'Présentation'],
-    ['alternance/', 'Alternance et parcours'],
-    ['realisations/', 'Réalisations'],
-    ['veille/', 'Veille technologique'],
-  ]
-    .map(([href, label]) => `<a href="${href}">${label}</a>`)
-    .join(' · ');
-}

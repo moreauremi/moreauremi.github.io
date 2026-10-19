@@ -40,6 +40,10 @@ jobs:
     steps:
       - name: Récupérer le code
         uses: actions/checkout@v7
+        with:
+          # Tout l'historique, pas seulement le dernier commit : le plan du
+          # site (sitemap.xml) date chaque page de son dernier commit
+          fetch-depth: 0
 
       - name: Installer Node.js (version indiquée dans .nvmrc)
         uses: actions/setup-node@v7

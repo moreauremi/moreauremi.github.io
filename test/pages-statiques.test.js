@@ -9,6 +9,7 @@
 // =============================================================================
 
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
@@ -86,6 +87,45 @@ test('plan du site et llms.txt listent toutes les pages', () => {
     if (page.startsWith('realisations/') && page !== 'realisations/') {
       assert.ok(llms.includes(`(${site.urlPublique}${page})`), `llms.txt : ${page} absente`);
     }
+  }
+});
+
+test('dates du plan du site : celles des commits, jamais dans le futur, accueil le plus récent', () => {
+  const sitemap = read('sitemap.xml');
+  const urls = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((m) => ({
+    loc: /<loc>([^<]+)<\/loc>/.exec(m[1])[1],
+    lastmod: /<lastmod>([^<]+)<\/lastmod>/.exec(m[1])?.[1],
+  }));
+  // Avec tout l'historique git (publication), chaque page a sa date ; avec un
+  // historique partiel, aucune (mieux vaut pas de date qu'une date fausse)
+  let complet = false;
+  try {
+    complet = execFileSync('git', ['rev-parse', '--is-shallow-repository'], { cwd: ROOT, encoding: 'utf8' }).trim() === 'false';
+  } catch {
+    // git absent : pas de date attendue
+  }
+  const home = urls.find((u) => u.loc === site.urlPublique);
+  for (const { loc, lastmod } of urls) {
+    if (!complet) {
+      assert.equal(lastmod, undefined, `${loc} : date sans historique complet`);
+      continue;
+    }
+    assert.match(lastmod ?? '', /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$/, `${loc} : date « ${lastmod} »`);
+    assert.ok(new Date(lastmod) <= new Date(), `${loc} : date dans le futur`);
+    // L'accueil montre tout le contenu : aucune page n'est plus récente
+    assert.ok(new Date(lastmod) <= new Date(home.lastmod), `${loc} : plus récente que l'accueil`);
+  }
+});
+
+test("chaque page a son aperçu de partage (LinkedIn…), à sa propre adresse", () => {
+  for (const page of PAGES) {
+    const html = read(`${page}index.html`);
+    const og = (key) => new RegExp(`<meta property="og:${key}" content="([^"]*)">`).exec(html)?.[1];
+    assert.equal(og('url'), `${site.urlPublique}${page}`, `${page} : adresse d'aperçu`);
+    assert.ok(og('title') && og('description'), `${page} : titre ou description d'aperçu absent`);
+    const image = og('image') ?? '';
+    assert.ok(image.startsWith(site.urlPublique), `${page} : image d'aperçu sans adresse complète`);
+    assert.ok(fs.existsSync(path.join(DIST, image.slice(site.urlPublique.length))), `${page} : image d'aperçu absente`);
   }
 });
 

@@ -1,13 +1,13 @@
 // =============================================================================
-// Référencement : titre, description, version sans JavaScript, données
-// structurées, plan du site et consignes aux robots
+// Référencement : titre, description, version sans JavaScript, aperçu des
+// liens partagés, données structurées, plan du site et consignes aux robots
 // -----------------------------------------------------------------------------
 // Tout vient de la rubrique « referencement » de content/site.config.js : une
 // seule source pour tout le site.
 // =============================================================================
 
+import { execFileSync } from 'node:child_process';
 import { escapeHtml } from '../../src/utils/html.js';
-import { noscriptLinks } from './pages-statiques.js';
 
 // Remplace titre, description et version sans JavaScript d'index.html par
 // les valeurs de la configuration (une seule source pour tout le site).
@@ -38,6 +38,35 @@ export function applySeo(html, site) {
     .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${escapeHtml(seo.titre)}$2`)
     .replace(/(<meta\s+property="og:description"\s+content=")[^"]*(")/, `$1${description}$2`)
     .replace(/<noscript data-fallback>[\s\S]*?<\/noscript>/, fallback);
+}
+
+// Liens vers les pages statiques, ajoutés à la version sans JavaScript
+// d'index.html : c'est par là que les robots les découvrent depuis l'accueil
+function noscriptLinks() {
+  return [
+    ['presentation/', 'Présentation'],
+    ['alternance/', 'Alternance et parcours'],
+    ['realisations/', 'Réalisations'],
+    ['veille/', 'Veille technologique'],
+  ]
+    .map(([href, label]) => `<a href="${href}">${label}</a>`)
+    .join(' · ');
+}
+
+// Aperçu d'un lien partagé (LinkedIn, Teams, Discord…) : adresse de la page
+// et image d'aperçu, qui doivent être des URL complètes. Même image pour
+// l'accueil et les pages statiques. `base` : adresse publique, terminée par
+// « / » ; `path` : dossier de la page ('' pour l'accueil). Renvoie les
+// attributs de chaque balise <meta>.
+export function openGraph(base, path = '') {
+  return [
+    { property: 'og:url', content: base + path },
+    { property: 'og:image', content: `${base}og-image.png` },
+    { property: 'og:image:width', content: '1200' },
+    { property: 'og:image:height', content: '630' },
+    { property: 'og:image:alt', content: 'Menu principal de RémiOS, le portfolio de Rémi Moreau' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+  ];
 }
 
 // Données structurées schema.org (JSON-LD) : le site, la page de profil et la
@@ -78,16 +107,38 @@ export function structuredData(site, base) {
 
 // Plan du site : l'accueil (RémiOS, dont les écrans #/… sont dans la même
 // page) et les pages lisibles sans JavaScript (pages-statiques.js).
-// `base` : adresse publique, terminée par « / » ; `paths` : dossiers des pages.
-export function sitemapXml(base, lastmod, paths = []) {
-  const urls = ['', ...paths]
-    .map((p) => `  <url>\n    <loc>${escapeHtml(base + p)}</loc>\n    <lastmod>${lastmod}</lastmod>\n  </url>`)
+// `base` : adresse publique, terminée par « / » ; `urls` : { path, lastmod }
+// de chaque page (path : dossier, '' pour l'accueil ; lastmod : vide si inconnue).
+export function sitemapXml(base, urls) {
+  const entries = urls
+    .map(({ path, lastmod }) => {
+      const date = lastmod ? `\n    <lastmod>${escapeHtml(lastmod)}</lastmod>` : '';
+      return `  <url>\n    <loc>${escapeHtml(base + path)}</loc>${date}\n  </url>`;
+    })
     .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls}
+${entries}
 </urlset>
 `;
+}
+
+// Date de la dernière modification d'une page, pour le plan du site : celle
+// du dernier commit qui a touché ses fichiers sources. Google ne tient compte
+// de <lastmod> que si elle suit les vraies modifications de la page (la date
+// du build changerait à chaque publication). Renvoie une fonction :
+// dateOf(['content/pages/veille.md', …]) → '2026-10-19T09:32:41+02:00'.
+// Sans l'historique complet (dépôt récupéré en partie, image Docker, qui n'a
+// pas .git), la date est vide plutôt que fausse.
+export function commitDates(root) {
+  const git = (...args) =>
+    execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+  try {
+    if (git('rev-parse', '--is-shallow-repository') !== 'false') return () => '';
+  } catch {
+    return () => ''; // git absent, ou dossier hors d'un dépôt
+  }
+  return (files) => git('log', '-1', '--format=%cI', '--', ...files);
 }
 
 // Consignes aux robots. Le CV (docs/) n'est pas proposé aux moteurs de

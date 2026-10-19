@@ -31,7 +31,8 @@
 //   config.js       lecture et vérification de la configuration et de la veille
 //   realisation.js  vérification d'une fiche
 //   markdown.js     conversion Markdown → HTML
-//   seo.js          référencement (titre, données structurées, sitemap, robots)
+//   seo.js          référencement (titre, aperçu des liens, données structurées,
+//                   sitemap, robots)
 //   pages-statiques.js  pages lisibles sans JavaScript (robots, IA) et llms.txt
 //   csp.js          politique de sécurité du contenu
 // =============================================================================
@@ -43,7 +44,7 @@ import { CONFIG_FILE, veilleFile, loadSiteConfig, checkDocuments, checkConfig, c
 import { contentSecurityPolicy, cspHash, inlineStyleHashes, checkNginxPolicy, NGINX_HEADERS_FILE } from './content/csp.js';
 import { renderMarkdown, stripComments, stripSourcePlaceholders } from './content/markdown.js';
 import { checkRealisation, checkImage } from './content/realisation.js';
-import { applySeo, structuredData, sitemapXml, robotsTxt } from './content/seo.js';
+import { applySeo, openGraph, structuredData, sitemapXml, commitDates, robotsTxt } from './content/seo.js';
 import { formatErrors, toPosix } from './content/utils.js';
 import { collectPages, renderPage, llmsTxt, withoutMetaPlaceholders, STYLESHEET, STYLES } from './content/pages-statiques.js';
 
@@ -103,12 +104,7 @@ export default function contentPlugin() {
         jsonLd = structuredData(site, base);
         tags.push(
           { tag: 'link', attrs: { rel: 'canonical', href: base }, injectTo: 'head' },
-          meta({ property: 'og:url', content: base }),
-          meta({ property: 'og:image', content: `${base}og-image.png` }),
-          meta({ property: 'og:image:width', content: '1200' }),
-          meta({ property: 'og:image:height', content: '630' }),
-          meta({ property: 'og:image:alt', content: 'Menu principal de RémiOS, le portfolio de Rémi Moreau' }),
-          meta({ name: 'twitter:card', content: 'summary_large_image' }),
+          ...openGraph(base).map(meta),
           // Données structurées : fiche « personne » lue par les moteurs de recherche
           { tag: 'script', attrs: { type: 'application/ld+json' }, children: jsonLd, injectTo: 'head' },
         );
@@ -152,8 +148,14 @@ export default function contentPlugin() {
       this.emitFile({ type: 'asset', fileName: STYLESHEET, source: STYLES });
       this.emitFile({ type: 'asset', fileName: 'llms.txt', source: llmsTxt(pages, site, base) });
       if (base) {
-        const today = new Date().toISOString().slice(0, 10);
-        this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(base, today, pages.map((p) => p.path)) });
+        // Date de chaque page : dernier commit de ses fichiers sources. L'accueil
+        // (RémiOS) montre tout le dossier content/, actualités de veille comprises.
+        const dateOf = commitDates(root);
+        const urls = [
+          { path: '', lastmod: dateOf(['content']) },
+          ...pages.map((p) => ({ path: p.path, lastmod: dateOf(p.sources) })),
+        ];
+        this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(base, urls) });
       }
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robotsTxt(base) });
     },
