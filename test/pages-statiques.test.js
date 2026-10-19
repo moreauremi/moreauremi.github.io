@@ -45,6 +45,7 @@ test('chaque rubrique, fiche publiée et sujet de veille a sa page, avec du vrai
     const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
     assert.ok(text.length > 400, `${page} : presque pas de texte`);
     assert.ok(!html.includes('<script'), `${page} : la page ne doit pas dépendre de JavaScript`);
+    assert.ok(!html.includes('[agrandir]'), `${page} : barre décorative des captures lue comme du texte`);
     assert.match(html, /<meta name="description" content="[^"]{20,}">/, `${page} : description absente`);
     assert.match(html, /http-equiv="Content-Security-Policy"/, `${page} : CSP absente`);
   }

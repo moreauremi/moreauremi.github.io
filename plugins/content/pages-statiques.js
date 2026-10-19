@@ -59,12 +59,17 @@ export function withoutMetaPlaceholders(meta) {
   );
 }
 
+const SHOT_BAR = /<span class="shot-bar" aria-hidden="true">[\s\S]*?<\/span><\/span>/g;
+
 // Un fichier Markdown → { meta, html }, comme dans le site publié
 function readMarkdown(root, file) {
   const full = path.join(root, file);
   if (!fs.existsSync(full)) return null;
   const { data, content } = matter(fs.readFileSync(full, 'utf8'));
-  return { data, html: renderMarkdown(content, { hidePlaceholders: true }).html };
+  // Sans la barre de titre décorative des captures (nom du fichier,
+  // « [agrandir] ») : un robot la lirait comme du texte
+  const html = renderMarkdown(content, { hidePlaceholders: true }).html.replace(SHOT_BAR, '');
+  return { data, html };
 }
 
 // Fiches publiées (sans les brouillons), les plus récentes d'abord, comme dans RémiOS
@@ -278,7 +283,6 @@ th,td{border:1px solid var(--trait);padding:.3rem .5rem;text-align:left}
 dl.fiche{display:grid;grid-template-columns:max-content 1fr;gap:.25rem 1rem;margin:0 0 1.5rem;font-size:.95rem}
 dl.fiche dt{color:var(--doux)}dl.fiche dd{margin:0}
 .liste li{margin-bottom:.75rem}.type{color:var(--doux);font-size:.85rem}
-[aria-hidden="true"]{display:none}
 footer{margin-top:3rem;padding:1rem;border-top:1px solid var(--trait);font-size:.9rem;color:var(--doux)}
 `;
 
