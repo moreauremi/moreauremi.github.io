@@ -51,6 +51,22 @@ test('chaque rubrique, fiche publiée et sujet de veille a sa page, avec du vrai
   }
 });
 
+test('chaque page a sa propre description, faite de texte et pas de titres', () => {
+  const description = (file) => /<meta name="description" content="([^"]*)"/.exec(read(file))?.[1];
+  const all = ['index.html', ...PAGES.map((p) => `${p}index.html`)].map((file) => [file, description(file)]);
+  const seen = new Map();
+  for (const [file, text] of all) {
+    assert.ok(!seen.has(text), `${file} : même description que ${seen.get(text)}`);
+    seen.set(text, file);
+  }
+  // Un titre de section en tête de description (« Pourquoi ce sujet Les PME… »)
+  for (const page of PAGES) {
+    const html = read(`${page}index.html`);
+    const article = /<h1>[^<]*<\/h1>\s*(?:<dl[\s\S]*?<\/dl>)?\s*<h2>([^<]*)<\/h2>/.exec(html)?.[1];
+    if (article) assert.ok(!description(`${page}index.html`).startsWith(article.trim()), `${page} : la description commence par le titre « ${article} »`);
+  }
+});
+
 test('aucun brouillon ni repère à compléter dans les pages statiques et llms.txt', () => {
   const llms = read('llms.txt');
   assert.ok(!llms.includes(PLACEHOLDER));

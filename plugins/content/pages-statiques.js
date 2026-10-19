@@ -106,6 +106,25 @@ function plainText(html, max = 300) {
   return text.length > max ? `${text.slice(0, max - 1).replace(/\s+\S*$/, '')}…` : text;
 }
 
+// Description d'une page (balise meta, llms.txt) : « description » de
+// l'en-tête du Markdown si elle existe, sinon le début du texte, pris dans
+// les paragraphes seulement. Les titres de section en sont exclus : sinon
+// « L'entreprise : 1Life » se collerait au paragraphe qui suit, et c'est ce
+// texte que Google afficherait dans ses résultats.
+export function describe(html, data = {}, max = 160) {
+  if (typeof data.description === 'string' && data.description.trim()) return data.description.trim();
+  const paragraphs = [...html.matchAll(/<p>([\s\S]*?)<\/p>/g)].map((m) => plainText(m[1], 10000)).filter(Boolean);
+  let text = '';
+  for (const p of paragraphs) {
+    text = text ? `${text} ${p}` : p;
+    if (text.length >= max) break;
+  }
+  if (text.length <= max) return text;
+  // Trop long : couper de préférence à la fin d'une phrase
+  const end = text.slice(0, max).lastIndexOf('. ');
+  return end >= 90 ? text.slice(0, end + 1) : plainText(text, max);
+}
+
 // Toutes les pages à fabriquer : { path, titre, description, html, ecran }
 // path : dossier de la page (« realisations/rmutils/ ») ; ecran : adresse du
 // même écran dans RémiOS (« #/realisations/rmutils »).
@@ -118,7 +137,8 @@ export function collectPages(root, site) {
     pages.push({
       path: 'presentation/',
       titre: presentation.data.titre ?? 'Présentation',
-      description: site.referencement?.description ?? plainText(presentation.html, 160),
+      // Pas la description de l'accueil : Google préfère une description par page
+      description: describe(presentation.html, presentation.data),
       html: presentation.html,
       ecran: '#/presentation',
     });
@@ -129,7 +149,7 @@ export function collectPages(root, site) {
     pages.push({
       path: 'alternance/',
       titre: alternance.data.titre ?? 'Alternance',
-      description: plainText(alternance.html, 160),
+      description: describe(alternance.html, alternance.data),
       html: alternance.html,
       ecran: '#/alternance',
     });
@@ -157,7 +177,7 @@ export function collectPages(root, site) {
     pages.push({
       path: `realisations/${r.slug}/`,
       titre: r.titre,
-      description: r.resume || plainText(r.html, 160),
+      description: r.resume || describe(r.html),
       resume: r.resume,
       html: `<dl class="fiche">${rows.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join('')}</dl>${r.html}`,
       ecran: `#/realisations/${r.slug}`,
@@ -171,7 +191,7 @@ export function collectPages(root, site) {
     pages.push({
       path: 'veille/',
       titre: veille.data.titre ?? 'Veille technologique',
-      description: plainText(veille.html, 160),
+      description: describe(veille.html, veille.data),
       html: `${veille.html}<h2>Sujets suivis</h2><ul class="liste">${sujets
         .map((s) => `<li><a href="veille/${escapeHtml(s.id)}/">${escapeHtml(s.nom)}</a> : ${escapeHtml(s.sujet ?? '')}</li>`)
         .join('')}</ul>`,
@@ -184,7 +204,7 @@ export function collectPages(root, site) {
     pages.push({
       path: `veille/${s.id}/`,
       titre: `Veille : ${s.sujet ?? s.nom}`,
-      description: plainText(pourquoi?.html ?? s.nom, 160),
+      description: pourquoi ? describe(pourquoi.html, pourquoi.data) : s.sujet ?? s.nom,
       html: `${pourquoi?.html ?? ''}<h2>Mes synthèses</h2>${syntheses?.html || '<p>À venir.</p>'}`,
       ecran: `#/veille/${s.id}`,
     });
