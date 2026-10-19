@@ -7,6 +7,7 @@
 // =============================================================================
 
 import { escapeHtml } from '../../src/utils/html.js';
+import { noscriptLinks } from './pages-statiques.js';
 
 // Remplace titre, description et version sans JavaScript d'index.html par
 // les valeurs de la configuration (une seule source pour tout le site).
@@ -27,7 +28,8 @@ export function applySeo(html, site) {
       <div class="noscript">
         <h1>${escapeHtml(seo.titre.replace(' · ', ' — '))}</h1>
         <p>${description}</p>
-        <p>Ce portfolio interactif a besoin de JavaScript pour s'afficher. Contact : ${links.join(' · ')}</p>
+        <p>Ce portfolio interactif a besoin de JavaScript pour s'afficher. Version texte : ${noscriptLinks()}.</p>
+        <p>Contact : ${links.join(' · ')}</p>
       </div>
     </noscript>`;
   return html
@@ -74,15 +76,16 @@ export function structuredData(site, base) {
   return JSON.stringify(data).replaceAll('<', '\\u003c');
 }
 
-// Plan du site : le site n'a qu'une page réelle (les écrans #/… sont dans la
-// même page). `base` : adresse publique, terminée par « / ».
-export function sitemapXml(base, lastmod) {
+// Plan du site : l'accueil (RémiOS, dont les écrans #/… sont dans la même
+// page) et les pages lisibles sans JavaScript (pages-statiques.js).
+// `base` : adresse publique, terminée par « / » ; `paths` : dossiers des pages.
+export function sitemapXml(base, lastmod, paths = []) {
+  const urls = ['', ...paths]
+    .map((p) => `  <url>\n    <loc>${escapeHtml(base + p)}</loc>\n    <lastmod>${lastmod}</lastmod>\n  </url>`)
+    .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${base}</loc>
-    <lastmod>${lastmod}</lastmod>
-  </url>
+${urls}
 </urlset>
 `;
 }

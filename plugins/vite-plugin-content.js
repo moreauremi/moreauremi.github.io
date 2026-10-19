@@ -32,6 +32,7 @@
 //   realisation.js  vérification d'une fiche
 //   markdown.js     conversion Markdown → HTML
 //   seo.js          référencement (titre, données structurées, sitemap, robots)
+//   pages-statiques.js  pages lisibles sans JavaScript (robots, IA) et llms.txt
 //   csp.js          politique de sécurité du contenu
 // =============================================================================
 
@@ -44,7 +45,7 @@ import { renderMarkdown, stripComments, stripSourcePlaceholders } from './conten
 import { checkRealisation, checkImage } from './content/realisation.js';
 import { applySeo, structuredData, sitemapXml, robotsTxt } from './content/seo.js';
 import { formatErrors, toPosix } from './content/utils.js';
-import { hasPlaceholder, withoutPlaceholders } from '../src/utils/html.js';
+import { collectPages, renderPage, llmsTxt, withoutMetaPlaceholders, STYLESHEET, STYLES } from './content/pages-statiques.js';
 
 export default function contentPlugin() {
   let root = process.cwd();
@@ -138,13 +139,21 @@ export default function contentPlugin() {
       return { html, tags };
     },
 
-    // Au build : plan du site (sitemap.xml) et consignes aux robots (robots.txt)
+    // Au build : pages lisibles sans JavaScript (une par rubrique, fiche et
+    // sujet de veille) et llms.txt, plan du site (sitemap.xml) qui les liste
+    // toutes, et consignes aux robots (robots.txt)
     async generateBundle() {
       const site = await loadSiteConfig(root);
       const base = publicBase(site.urlPublique);
+      const pages = collectPages(root, site);
+      for (const page of pages) {
+        this.emitFile({ type: 'asset', fileName: `${page.path}index.html`, source: renderPage(page, site, base) });
+      }
+      this.emitFile({ type: 'asset', fileName: STYLESHEET, source: STYLES });
+      this.emitFile({ type: 'asset', fileName: 'llms.txt', source: llmsTxt(pages, site, base) });
       if (base) {
         const today = new Date().toISOString().slice(0, 10);
-        this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(base, today) });
+        this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(base, today, pages.map((p) => p.path)) });
       }
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robotsTxt(base) });
     },
@@ -190,14 +199,3 @@ export default function contentPlugin() {
   };
 }
 
-// Site publié : en-tête sans repères [À COMPLÉTER]. Une techno « [À COMPLÉTER] »
-// sort de la liste, un statut ou une date à compléter devient vide.
-function withoutMetaPlaceholders(meta) {
-  return Object.fromEntries(
-    Object.entries(meta).map(([key, value]) => {
-      if (typeof value === 'string') return [key, withoutPlaceholders(value)];
-      if (Array.isArray(value)) return [key, value.filter((item) => !hasPlaceholder(item))];
-      return [key, value];
-    }),
-  );
-}
