@@ -2,6 +2,71 @@
   "miseAJour": "2026-10-19",
   "actualites": [
     {
+      "id": "373d9f886f48",
+      "date": "2026-10-17",
+      "titre": "Cyberattaques : des sites français ciblés par des pirates",
+      "source": "ZATAZ",
+      "url": "https://www.zataz.com/cyberattaques-des-sites-francais-cibles-par-des-pirates/",
+      "resume": "Des groupes de pirates revendiquent des attaques contre des administrations, des transports, l’énergie et plusieurs industriels français, notamment par déni de service distribué et exfiltration de données. Pour une PME industrielle, ces campagnes montrent l’exposition des systèmes connectés et des secteurs stratégiques à des perturbations et à des vols d’informations.",
+      "tags": [
+        "systèmes industriels (OT)",
+        "cybercriminalité",
+        "fuite de données"
+      ]
+    },
+    {
+      "id": "62139eb0465e",
+      "date": "2026-10-16",
+      "titre": "Backuply : une faille SQL menace 600 000 WordPress, surtout si vous restaurez votre site web",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/backuply-cve-2026-93953-injection-sql-wordpress/",
+      "resume": "Une injection SQL dans l’extension Backuply permet à un simple abonné WordPress de compromettre un site lors de la restauration d’une sauvegarde. La faille concerne les versions jusqu’à 1.5.8 et un correctif est disponible dans la version 1.5.9, ce qui souligne l’importance de maintenir les outils de sauvegarde à jour.",
+      "tags": [
+        "vulnérabilité",
+        "sauvegarde",
+        "PME"
+      ]
+    },
+    {
+      "id": "675fb7dff8ec",
+      "date": "2026-10-16",
+      "titre": "PwnEscape : une faille Linux permet de s’évader d’une VM KVM",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/pwnescape-cve-2026-99999-faille-noyau-linux-evasion-vm/",
+      "resume": "Une faille critique du noyau Linux a permis, en laboratoire, à un attaquant exécutant du code dans une machine virtuelle KVM de s’évader vers la mémoire de l’hôte. Cette découverte concerne notamment les environnements cloud, les services de CI/CD et les sandbox, utilisés aussi par des PME industrielles.",
+      "tags": [
+        "vulnérabilité",
+        "PME",
+        "intelligence artificielle"
+      ]
+    },
+    {
+      "id": "9bdc5512f294",
+      "date": "2026-10-15",
+      "titre": "Ransomware : comme un retour à la normale en septembre",
+      "source": "LeMagIT",
+      "url": "https://www.lemagit.fr/actualites/366652273/Ransomware-comme-un-retour-a-la-normale-en-septembre",
+      "resume": "Près de 730 attaques par rançongiciel avec extorsion ont été recensées dans le monde en septembre 2026, soit moins qu’en août mais davantage qu’un an auparavant. Pour une PME industrielle, ce recul ponctuel ne doit pas masquer une tendance générale à la hausse de la menace.",
+      "tags": [
+        "rançongiciel",
+        "cybercriminalité",
+        "PME"
+      ]
+    },
+    {
+      "id": "46c421e222ec",
+      "date": "2026-10-15",
+      "titre": "Le risque en matière de cybersécurité diffère selon les professions, révèle une étude Kaspersky",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/reseau-securite/le-risque-en-matiere-de-cybersecurite-differe-selon-les-professions-revele-une-etude-kaspersky.html",
+      "resume": "Une enquête menée auprès de professionnels de 14 secteurs indique qu’une large majorité a déjà rencontré un incident de cybersécurité. Les profils techniques subissent davantage certaines menaces sophistiquées, tandis que les fuites de données figurent parmi les risques les plus redoutés, ce qui renforce l’importance de la sensibilisation en entreprise.",
+      "tags": [
+        "sensibilisation",
+        "fuite de données",
+        "intelligence artificielle"
+      ]
+    },
+    {
       "id": "34c19769196a",
       "date": "2026-10-15",
       "titre": "Infrastructures critiques : en France, la convergence IT/OT reste à la traîne face aux cybermenaces",

@@ -2,6 +2,18 @@
   "miseAJour": "2026-10-19",
   "actualites": [
     {
+      "id": "fe44d008ddc8",
+      "date": "2026-10-19",
+      "titre": "Cartographie P2P dans votre ERP : pourquoi cette première étape n’est pas négociable ?",
+      "source": "Sage, blog",
+      "url": "https://www.sage.com/fr-fr/blog/cartographie-p2p-dans-votre-erp-prealable-indispensable/",
+      "resume": "La facture électronique remet la cartographie du processus Procure-to-Pay au centre des projets d’automatisation dans l’ERP. Pour une PME, cette étape aide à évaluer les flux et le potentiel d’automatisation ; pour un intégrateur, elle conditionne la maîtrise des délais, du budget et l’adoption par les équipes.",
+      "tags": [
+        "ERP",
+        "PME"
+      ]
+    },
+    {
       "id": "1bfc09967980",
       "date": "2026-10-12",
       "titre": "Facturation électronique : trois entreprises sur quatre déjà engagées dans la réforme",
