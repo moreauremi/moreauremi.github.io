@@ -19,6 +19,14 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
+## 19/10/2026 - La virtualisation ne supprime pas les risques de sécurité
+
+Je considère que réussir à sortir d’une VM pour accéder à l’hôte est une situation très dangereuse. À l’intérieur d’une VM, un utilisateur peut se sentir totalement invulnérable, alors que la faille PwnEscape montre qu’une exécution de code dans une VM KVM peut permettre à un attaquant d’accéder à la mémoire de l’hôte. Cette avancée rappelle que les failles de sécurité existent toujours et que le danger reste présent, notamment lorsqu’un code non fiable est exécuté sur des serveurs virtualisés.
+
+**Sources**
+
+- [PwnEscape : une faille Linux permet de s’évader d’une VM KVM](https://www.it-connect.fr/pwnescape-cve-2026-99999-faille-noyau-linux-evasion-vm/) (IT-Connect, 16 octobre 2026)
+
 ## 14/10/2026 - La virtualisation face aux changements du marché VMware
 
 La virtualisation est nécessaire dans les milieux technologiques, mais aussi dès que l’on a besoin de tester certains logiciels. Je constate à quel point les acteurs du secteur ont de l’influence : disposer d’un service de virtualisation stable est donc essentiel.
