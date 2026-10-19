@@ -1,6 +1,83 @@
 {
-  "miseAJour": "2026-10-12",
+  "miseAJour": "2026-10-19",
   "actualites": [
+    {
+      "id": "34c19769196a",
+      "date": "2026-10-15",
+      "titre": "Infrastructures critiques : en France, la convergence IT/OT reste à la traîne face aux cybermenaces",
+      "source": "InCyber",
+      "url": "https://incyber.org/article/infrastructures-critiques-en-france-la-convergence-it-ot-reste-a-la-traine-face-aux-cybermenaces/",
+      "resume": "En France, des organisations d’infrastructures critiques déclarent des incidents ayant affecté leurs opérations, tandis que la sécurité IT/OT reste rarement pleinement intégrée. Cette situation est importante pour une PME industrielle, car une attaque peut perturber la production, entraîner des pertes financières et affecter la sûreté des personnes.",
+      "tags": [
+        "systèmes industriels (OT)",
+        "intelligence artificielle",
+        "PME"
+      ]
+    },
+    {
+      "id": "679094263857",
+      "date": "2026-10-15",
+      "titre": "Ivanti Connect Secure : avancez à la case patch",
+      "source": "LeMagIT",
+      "url": "https://www.lemagit.fr/actualites/366652314/Ivanti-Connect-Secure-avancez-a-la-case-patch",
+      "resume": "Une vulnérabilité critique d’Ivanti Connect Secure, exploitée activement, permet à un tiers non authentifié d’exécuter des commandes et de rechercher des identifiants ou secrets. Une PME utilisant ces équipements doit appliquer les correctifs disponibles et renouveler les secrets potentiellement compromis, car l’attaque peut effacer ses traces.",
+      "tags": [
+        "vulnérabilité",
+        "PME",
+        "sauvegarde"
+      ]
+    },
+    {
+      "id": "a7a9ce124b81",
+      "date": "2026-10-15",
+      "titre": "Nextcloud : des serveurs piratés via une faille critique de l’application Collabora Built-in CODE",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/nextcloud-collabora-built-in-code-faille-webshell-cve-2026-110447/",
+      "resume": "Une faille critique de Collabora Built-in CODE pour Nextcloud est exploitée afin de déposer des webshells et permet une injection de commandes sans authentification dans certaines conditions. Pour une PME, désactiver l’application ne suffit pas : les versions concernées doivent être mises à jour ou supprimées.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
+      ]
+    },
+    {
+      "id": "aa5049464deb",
+      "date": "2026-10-15",
+      "titre": "Microsoft démantèle trois plateformes de phishing chinoises",
+      "source": "InCyber",
+      "url": "https://incyber.org/article/microsoft-demantele-trois-plateformes-phishing-chinoises/",
+      "resume": "Microsoft a engagé des mesures juridiques contre trois plateformes de hameçonnage utilisées pour diffuser des messages frauduleux et usurper l’identité d’organisations. Pour une PME, cette industrialisation des campagnes augmente le risque de compromission des comptes et montre l’importance de la vigilance face aux messages et sites frauduleux.",
+      "tags": [
+        "hameçonnage",
+        "cybercriminalité",
+        "PME"
+      ]
+    },
+    {
+      "id": "33bd29e0f8bb",
+      "date": "2026-10-14",
+      "titre": "Comment construire un programme efficace de sensibilisation à la cybersécurité",
+      "source": "LeMagIT",
+      "url": "https://www.lemagit.fr/conseil/Comment-construire-un-programme-efficace-de-sensibilisation-a-la-cybersecurite",
+      "resume": "L’article recommande de traiter la sensibilisation à la cybersécurité comme une gestion continue du risque humain, fondée sur les rôles, les comportements, la mesure des résultats et l’évolution des menaces. Cette approche est pertinente pour une PME industrielle exposée aux courriels, aux fournisseurs, aux applications et aux systèmes d’authentification.",
+      "tags": [
+        "sensibilisation",
+        "PME",
+        "hameçonnage"
+      ]
+    },
+    {
+      "id": "80c697d61b5c",
+      "date": "2026-10-13",
+      "titre": "Cybersécurité OT : 71 % des industriels ont détecté des intrusions en 2026",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/reseau-securite/cybersecurite-ot-71-des-industriels-ont-detecte-des-intrusions-en-2026.html",
+      "resume": "Une étude sur la cybersécurité OT constate une progression de la maturité des industriels, mais souligne des lacunes persistantes de visibilité, de segmentation et de sécurisation des accès distants. Pour une PME industrielle, l’interconnexion entre systèmes informatiques et industriels élargit la surface d’attaque et renforce l’importance de la préparation aux intrusions et aux rançongiciels.",
+      "tags": [
+        "systèmes industriels (OT)",
+        "rançongiciel",
+        "réglementation"
+      ]
+    },
     {
       "id": "e39fe0d4fbec",
       "date": "2026-10-12",

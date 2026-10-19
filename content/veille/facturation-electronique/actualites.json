@@ -1,6 +1,32 @@
 {
-  "miseAJour": "2026-10-12",
+  "miseAJour": "2026-10-19",
   "actualites": [
+    {
+      "id": "1bfc09967980",
+      "date": "2026-10-12",
+      "titre": "Facturation électronique : trois entreprises sur quatre déjà engagées dans la réforme",
+      "source": "economie.gouv.fr",
+      "url": "https://www.economie.gouv.fr/actualites/facturation-electronique-trois-entreprises-sur-quatre-deja-engagees-dans-la-reforme",
+      "resume": "Un premier comité de suivi de la facturation électronique a réuni administrations, organisations d’entreprises, réseaux consulaires et experts-comptables afin d’établir un bilan et de recenser les besoins. Pour les PME et les intégrateurs d’ERP, cette concertation vise à faciliter la mise en œuvre de la réforme et l’accompagnement des entreprises.",
+      "tags": [
+        "administration",
+        "PME",
+        "expert-comptable"
+      ]
+    },
+    {
+      "id": "54c7b8424258",
+      "date": "2026-10-12",
+      "titre": "Facturation électronique : de la mise en conformité à la mise en pratique",
+      "source": "DAF Magazine",
+      "url": "https://www.daf-mag.fr/bi-1244/transformation-processus-2133/facturation-electronique-de-la-mise-en-conformite-a-la-mise-en-pratique-27692",
+      "resume": "La réforme entre dans une phase opérationnelle avec les premiers flux, après le choix des plateformes et le paramétrage des outils ; 70 % des entreprises déclarantes à la TVA auraient déjà désigné leur solution de réception. Les PME doivent préparer leurs équipes et leurs processus, tandis qu’un intégrateur d’ERP doit tenir compte des exigences techniques, organisationnelles et commerciales des clients et partenaires.",
+      "tags": [
+        "ERP",
+        "plateformes agréées",
+        "PME"
+      ]
+    },
     {
       "id": "5b3022539fd7",
       "date": "2026-10-12",
@@ -12,6 +38,19 @@
         "calendrier",
         "PME",
         "Factur-X"
+      ]
+    },
+    {
+      "id": "e00de937bfa9",
+      "date": "2026-10-09",
+      "titre": "Délais de paiement : la trésorerie des entreprises toujours prise en étau, malgré l’arsenal réglementaire",
+      "source": "DAF Magazine",
+      "url": "https://www.daf-mag.fr/tresorerie-1239/gestion-des-depenses-2120/delais-de-paiement-la-tresorerie-des-entreprises-toujours-prise-en-etau-malgre-larsenal-reglementaire-27655",
+      "resume": "Malgré les contrôles et les sanctions, les retards de paiement continuent de peser sur la trésorerie des PME et des ETI, tandis que la facturation électronique doit améliorer la visibilité sur ces retards. Pour les intégrateurs d’ERP, les flux de facturation constituent donc un enjeu de suivi financier et de conformité pour les clients.",
+      "tags": [
+        "PME",
+        "sanctions",
+        "administration"
       ]
     },
     {

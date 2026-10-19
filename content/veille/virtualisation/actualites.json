@@ -1,6 +1,30 @@
 {
-  "miseAJour": "2026-10-12",
+  "miseAJour": "2026-10-19",
   "actualites": [
+    {
+      "id": "675fb7dff8ec",
+      "date": "2026-10-16",
+      "titre": "PwnEscape : une faille Linux permet de s’évader d’une VM KVM",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/pwnescape-cve-2026-99999-faille-noyau-linux-evasion-vm/",
+      "resume": "Une faille critique du noyau Linux peut permettre à un attaquant exécutant du code dans une VM KVM de s’évader et d’accéder à la mémoire de l’hôte, selon une exploitation réalisée en laboratoire. Pour une PME, cela souligne le risque que représente l’exécution de code non fiable dans des serveurs virtualisés et l’importance de surveiller l’isolation des VM.",
+      "tags": [
+        "sécurité",
+        "KVM"
+      ]
+    },
+    {
+      "id": "39a834b98157",
+      "date": "2026-10-13",
+      "titre": "October 2026 Security Updates #2 for XCP-ng 8.3 LTS",
+      "source": "XCP-ng",
+      "url": "https://xcp-ng.org/blog/2026/10/13/october-2026-security-updates-2-for-xcp-ng-8-3-lts/",
+      "resume": "XCP-ng publie une mise à jour de sécurité pour XCP-ng 8.3 LTS, corrigeant plusieurs vulnérabilités du hyperviseur Xen et de tapdisk, dont certaines peuvent provoquer une élévation de privilèges ou un déni de service. Pour une PME, l’installation nécessite de planifier un redémarrage des hôtes afin de réduire les risques sur les VM et le domaine de contrôle.",
+      "tags": [
+        "sécurité",
+        "nouvelle version"
+      ]
+    },
     {
       "id": "1006614d5c42",
       "date": "2026-10-09",
