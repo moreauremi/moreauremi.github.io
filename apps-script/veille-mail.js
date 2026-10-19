@@ -11,6 +11,10 @@
 //   3. étape « attente » : si j'ai répondu dans le fil, range ma réponse dans
 //      le brouillon et lance le workflow veille-mail.yml, qui la traite.
 //
+// Chaque lundi vers 7 h (heure de Paris), collect() lance aussi la collecte
+// (workflow veille.yml) : la tâche programmée de GitHub part souvent avec des
+// heures de retard, et peut même sauter. Elle reste en place, en secours.
+//
 // Le relais ne fait rien d'autre : la lecture de ma réponse, l'IA et la
 // publication se font dans GitHub Actions (scripts/veille-mail.mjs). Il ne lit
 // que les fils qu'il a lui-même ouverts, et seulement mes propres messages.
@@ -21,26 +25,44 @@
 //   REPOSITORY    (facultatif) dépôt du site, moreauremi/moreauremi.github.io par défaut
 // =============================================================================
 
-/* exported install, check */
+/* exported install, check, collect */
 
 const PREFIX = 'veille-mail-';
 const NAME = 'Veille par e-mail du ';
 const WORKFLOW = 'veille-mail.yml';
+const COLLECT_WORKFLOW = 'veille.yml'; // collecte du lundi
+const COLLECT_HOUR = 7; // heure de Paris, à 15 minutes près (déclencheur Google)
 const LABEL = 'Veille RémiOS'; // libellé Gmail des fils de la veille
 const SENDER_NAME = 'RémiOS veille';
 const STUCK_MINUTES = 45; // une tâche plus longue a échoué sans prévenir
 const MAX_REPLY = 50000; // caractères gardés d'une réponse (citation comprise)
 
-// À lancer une fois, à la main : vérifie le jeton, crée le déclencheur
-// (toutes les 10 minutes) et fait une première vérification
+// À lancer une fois, à la main : vérifie le jeton, crée les déclencheurs
+// (toutes les 10 minutes, et le lundi matin) et fait une première vérification
 function install() {
   const repository = github('GET', '');
   ScriptApp.getProjectTriggers()
-    .filter((trigger) => trigger.getHandlerFunction() === 'check')
+    .filter((trigger) => ['check', 'collect'].indexOf(trigger.getHandlerFunction()) !== -1)
     .forEach((trigger) => ScriptApp.deleteTrigger(trigger));
   ScriptApp.newTrigger('check').timeBased().everyMinutes(10).create();
-  console.log(`Relais installé pour ${repository.full_name} : vérification toutes les 10 minutes.`);
+  ScriptApp.newTrigger('collect').timeBased().onWeekDay(ScriptApp.WeekDay.MONDAY).atHour(COLLECT_HOUR).inTimezone('Europe/Paris').create();
+  console.log(`Relais installé pour ${repository.full_name} : vérification toutes les 10 minutes, collecte le lundi vers ${COLLECT_HOUR} h.`);
   check();
+}
+
+// Lancé le lundi matin : lance la collecte, sauf si elle a déjà tourné
+// (ou tourne) depuis 6 jours. La tâche programmée de GitHub qui arrive après
+// ne trouve alors rien de nouveau et n'envoie pas de deuxième e-mail.
+function collect() {
+  const since = new Date(Date.now() - 6 * 24 * 3600 * 1000).toISOString().slice(0, 10);
+  const runs = github('GET', `/actions/workflows/${COLLECT_WORKFLOW}/runs?created=%3E%3D${since}&per_page=20`).workflow_runs;
+  const done = runs.filter((run) => run.status !== 'completed' || run.conclusion === 'success');
+  if (done.length > 0) {
+    console.log(`Collecte déjà lancée cette semaine (${done[0].created_at}) : rien à faire.`);
+    return;
+  }
+  github('POST', `/actions/workflows/${COLLECT_WORKFLOW}/dispatches`, { ref: 'main' });
+  console.log('Collecte du lundi lancée (workflow « Veille automatique »).');
 }
 
 // Lancé toutes les 10 minutes

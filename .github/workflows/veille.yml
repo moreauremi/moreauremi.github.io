@@ -28,6 +28,9 @@ on:
   schedule:
     # Chaque lundi à 5 h 17 UTC (7 h 17 à Paris l'été, 6 h 17 l'hiver).
     # Une minute « au hasard » : à l'heure pile, GitHub retarde souvent les tâches.
+    # GitHub ne garantit pas l'heure (parfois des heures de retard) : le relais
+    # Gmail (apps-script/veille-mail.js, collect) lance aussi ce workflow le
+    # lundi vers 7 h. Ceci reste en secours.
     - cron: '17 5 * * 1'
   workflow_dispatch:
 

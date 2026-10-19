@@ -414,6 +414,7 @@ Lundi       veille.yml ──► scripts/veille-mail.mjs --annonce ──► ver
                                                                  actualités numérotées, e-mail à envoyer
                                                                                │
 Toutes les  relais Gmail (apps-script/veille-mail.js, dans mon compte Google) ◄┘
+            (le relais lance aussi veille.yml le lundi vers 7 h, voir ci-dessous)
 10 minutes  envoie l'e-mail ──► je réponds ──► il range ma réponse dans le brouillon et lance veille-mail.yml
                                                                                │
             scripts/veille-mail.mjs ◄──────────────────────────────────────────┘
@@ -442,23 +443,24 @@ Le site n'a pas de serveur pour recevoir des e-mails, et GitHub Actions non plus
 - **Confidentialité** : mon avis et les brouillons restent dans la version brouillon, visible seulement des personnes qui peuvent écrire dans le dépôt, et ne sont jamais écrits dans les journaux du workflow (publics).
 - **Sécurité** : le relais ne lit que les fils qu'il a ouverts, et seulement mes propres messages. Son jeton GitHub est limité à ce dépôt (versions et lancement des workflows) et rangé dans les propriétés du script, jamais dans le code. Le workflow refuse toute version qui n'est pas un brouillon d'échange (tag `veille-mail-…` ou titre « Veille par e-mail du … » : GitHub remplace le tag d'un brouillon modifié par `untagged-…`), Copilot travaille sans aucun outil et n'hérite pas du jeton du dépôt, et le texte des flux, de l'IA et de mes réponses est échappé dans les e-mails.
 - **Ménage** : un échange encore ouvert 21 jours après son e-mail est abandonné, et son brouillon supprimé le lundi suivant.
+- **Collecte lancée par le relais** : la tâche programmée de GitHub (`schedule`) n'est pas garantie : le 12 octobre 2026, la collecte prévue à 7 h 17 est partie à 15 h 16, et le 19 octobre elle n'était pas partie à 8 h 45. Le relais lance donc lui-même `veille.yml` chaque lundi vers 7 h (déclencheur `collect`, fiable à 15 minutes près), sauf si une collecte a déjà réussi ou tourne depuis 6 jours. La tâche programmée reste en secours ; si elle passe après, elle ne trouve rien de nouveau et n'envoie pas de deuxième e-mail.
 
 ### Mise en route du relais Gmail (une seule fois)
 
 1. **Jeton GitHub du relais** : https://github.com/settings/personal-access-tokens/new (jeton *fine-grained*, à part de celui du tableau de bord : chacun se révoque séparément). Propriétaire : son compte personnel. Expiration : 1 an. **Repository access** : *Only select repositories* → `moreauremi.github.io`. **Repository permissions** : **Contents** et **Actions** en *Read and write*, rien d'autre. **Generate token**, puis copier le jeton.
 2. **Projet Apps Script** : https://script.google.com → **Nouveau projet**, le nommer « Relais veille RémiOS ». Remplacer tout le contenu de `Code.gs` par celui de `apps-script/veille-mail.js`, puis enregistrer.
 3. **Jeton dans le projet** : **Paramètres du projet** (roue dentée) → **Propriétés du script** → **Ajouter une propriété** : nom `GITHUB_TOKEN`, valeur : le jeton. Enregistrer.
-4. **Installation** : retour à l'**Éditeur**, choisir la fonction `install` dans la liste en haut, puis **Exécuter**. Google demande l'autorisation de lire et d'envoyer des e-mails et de contacter un service externe (GitHub). L'avertissement « Google n'a pas validé cette application » est normal pour un script personnel : **Paramètres avancés → Accéder à Relais veille RémiOS (non sécurisé) → Autoriser**. Le journal affiche « Relais installé… » : le relais vérifie désormais toutes les 10 minutes.
+4. **Installation** : retour à l'**Éditeur**, choisir la fonction `install` dans la liste en haut, puis **Exécuter**. Google demande l'autorisation de lire et d'envoyer des e-mails et de contacter un service externe (GitHub). L'avertissement « Google n'a pas validé cette application » est normal pour un script personnel : **Paramètres avancés → Accéder à Relais veille RémiOS (non sécurisé) → Autoriser**. Le journal affiche « Relais installé… » : le relais vérifie désormais toutes les 10 minutes, et lance la collecte le lundi vers 7 h. Après chaque mise à jour du code du relais, relancer `install`.
 5. **Essai sans attendre lundi** : sur GitHub, onglet **Actions → Veille par e-mail → Run workflow**, avec `essai`. Un e-mail des 3 dernières actualités de chaque sujet arrive dans les 10 minutes. Pour ne rien publier, répondre ensuite « annule ».
 
 Les e-mails partent de mon propre compte, expéditeur « RémiOS veille » : ils arrivent non lus dans la boîte de réception, sous le libellé « Veille RémiOS ».
 
 ### Dépannage
 
-- **Pas d'e-mail le lundi** : sans nouvelle actualité, pas d'e-mail. Sinon, vérifier sur GitHub qu'un brouillon « Veille par e-mail du … » existe (**Releases**), puis l'onglet **Exécutions** du projet Apps Script.
+- **Pas d'e-mail le lundi** : sans nouvelle actualité, pas d'e-mail. Sinon, vérifier que la collecte a tourné (**Actions → Veille automatique**), qu'un brouillon « Veille par e-mail du … » existe (**Releases**), puis l'onglet **Exécutions** du projet Apps Script (fonction `collect` vers 7 h, puis `check`). Pour ne pas attendre : **Actions → Veille automatique → Run workflow**.
 - **Erreurs du relais** : elles sont dans **Exécutions** du projet Apps Script, et Google envoie un résumé par e-mail. « GitHub a répondu 401 » : jeton expiré ou révoqué, en créer un nouveau et remplacer la propriété `GITHUB_TOKEN`.
 - **Erreur de la tâche** (IA indisponible, quota…) : un e-mail le signale, le détail est dans **Actions → Veille par e-mail**. Une tâche qui ne répond pas en 45 minutes est aussi signalée par le relais.
-- **Mettre le relais en pause** : projet Apps Script → **Déclencheurs** → supprimer le déclencheur `check`. Relancer `install` pour le remettre.
+- **Mettre le relais en pause** : projet Apps Script → **Déclencheurs** → supprimer les déclencheurs `check` et `collect`. Relancer `install` pour les remettre.
 
 ## Tableau de bord des synthèses
 
