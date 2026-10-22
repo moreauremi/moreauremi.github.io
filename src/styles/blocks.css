@@ -659,3 +659,8 @@ a.tag:focus-visible {
   padding: 0;
   list-style: none;
 }
+
+/* « [ouvrir →] » : seulement dans l'interface RémiOS (voir tui.css) */
+.fiche-link-open {
+  display: none;
+}
