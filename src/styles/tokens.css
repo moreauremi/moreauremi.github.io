@@ -35,6 +35,8 @@
   --tui-sel-ink: #ffffff;     /* texte de l'élément sélectionné */
   --tui-sel-key: #ffd76a;     /* numéro de l'élément sélectionné */
   --tui-hover: rgb(30 60 140 / 0.12); /* survol d'une rubrique : bleu de sélection, très léger */
+  --tui-card: #bebebe;        /* fond des fiches cliquables (réalisations) : un ton sous la boîte
+                                 (titre bleu 5,4:1, texte 10:1) */
   --tui-title: #8a1c1c;       /* titre des boîtes et numéros de rubriques */
   --tui-bar-ink: #e8ecf5;     /* texte de la barre du haut */
   --tui-bar-rule: rgb(255 255 255 / 0.25); /* filet sous la barre du haut */

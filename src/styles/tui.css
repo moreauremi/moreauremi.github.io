@@ -266,13 +266,15 @@ html[data-view='tui'] body {
   margin-top: 1.4em;
 }
 
-/* Même fin cadre que les rubriques : sans lui, le titre bleu d'une fiche se
-   confondrait avec les titres de groupes, qui ne sont pas cliquables. */
+/* Fond un ton plus sombre que la boîte et cadre foncé : on voit d'un coup
+   d'œil que la fiche est cliquable, et son titre bleu ne se confond pas avec
+   les titres de groupes, qui ne le sont pas. */
 .tui .fiche-link {
   display: flex;
   flex-direction: column;
   padding: 6px 10px;
-  border: 1px solid var(--tui-inner-border);
+  border: 1px solid var(--tui-bevel-dark);
+  background: var(--tui-card);
   color: inherit;
   text-decoration: none;
 }
