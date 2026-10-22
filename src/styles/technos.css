@@ -47,6 +47,8 @@
 .techno[data-techno="linux"] { --techno-bg: #fcc624; --techno-ink: #000000; }
 .techno[data-techno="ubuntu"] { --techno-bg: #e95420; --techno-ink: #000000; }
 .techno[data-techno="debian"] { --techno-bg: #a81d33; }
+.techno[data-techno="linux-mint"] { --techno-bg: #86be43; --techno-ink: #000000; }
+.techno[data-techno="kali-linux"] { --techno-bg: #557c94; --techno-ink: #000000; }
 .techno[data-techno="systemd"] { --techno-bg: #201a26; }
 .techno[data-techno="windows"] { --techno-bg: #0078d4; }
 .techno[data-techno="winget"] { --techno-bg: #0078d4; }
@@ -61,6 +63,7 @@
 .techno[data-techno="nginx"] { --techno-bg: #009639; --techno-ink: #000000; }
 .techno[data-techno="apache"] { --techno-bg: #d22128; }
 .techno[data-techno="tailscale"] { --techno-bg: #242424; }
+.techno[data-techno="nmap"] { --techno-bg: #4682b4; --techno-ink: #000000; }
 .techno[data-techno="jellyfin"] { --techno-bg: #00a4dc; --techno-ink: #000000; }
 .techno[data-techno="hostinger"] { --techno-bg: #673de6; }
 

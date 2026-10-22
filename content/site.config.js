@@ -343,7 +343,7 @@ export default {
       {
         nom: 'Systèmes et virtualisation',
         items: [
-          { nom: 'Linux', niveau: 3, preuves: ['homelab-jellyfin', 'nas', 'caffein', 'glpi'] },
+          { nom: 'Linux', niveau: 3, preuves: ['homelab-jellyfin', 'nas', 'caffein', 'glpi', 'reseau-vm-virtualbox'] },
           { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab-jellyfin', 'nas'] },
           { nom: 'Docker', niveau: 2, preuves: ['homelab-jellyfin', 'caffein'] },
         ],

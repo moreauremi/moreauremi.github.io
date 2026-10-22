@@ -67,6 +67,15 @@ html[data-view='tui'] body {
   padding: 40px var(--gutter) 32px;
 }
 
+/* Écran peu haut (portable, barres du navigateur comprises) : marges
+   réduites, pour qu'une rubrique courte comme la présentation tienne
+   sans défiler */
+@media (max-height: 860px) {
+  .tui-stage {
+    padding-block: 16px;
+  }
+}
+
 /* --- Boîte de dialogue ------------------------------------------------------ */
 
 .tui-box {
@@ -78,6 +87,8 @@ html[data-view='tui'] body {
   border: 2px solid;
   border-color: var(--tui-bevel-light) var(--tui-bevel-dark) var(--tui-bevel-dark) var(--tui-bevel-light);
   box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--tui-shadow);
+  font-size: var(--font-size-reading);
+  line-height: var(--line-height-reading);
   /* Sur fond gris, le contour de focus jaune ne se verrait pas : noir ici */
   --focus-ring: 2px solid var(--tui-ink);
 }
@@ -88,7 +99,7 @@ html[data-view='tui'] body {
 .tui-box-title {
   width: fit-content;
   max-width: 100%;
-  margin: calc(-1 * var(--box-pad) - 1px - 0.725em) auto 12px;
+  margin: calc(-1 * var(--box-pad) - 1px - var(--line-height-reading) * 0.5em) auto 12px;
   padding: 0 10px;
   background: var(--tui-box);
   color: var(--tui-title);
@@ -288,6 +299,27 @@ html[data-view='tui'] body {
   outline-offset: -4px;
 }
 
+/* --- Présentation : photo et liens en colonne, à gauche du texte ----------- */
+
+/* La rubrique tient ainsi sur un écran, sans défiler. Sur petit écran (voir
+   plus bas) et dans la vue jury, la photo reste au-dessus du texte. */
+.tui .presentation {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0 28px;
+  align-items: start;
+}
+
+.tui .presentation .profile {
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0;
+}
+
+.tui .presentation .profile-links {
+  flex-direction: column;
+}
+
 /* --- Aide clavier ----------------------------------------------------------- */
 
 .tui-hints {
@@ -314,6 +346,12 @@ html[data-view='tui'] body {
   color: var(--tui-bar-ink);
 }
 
+@media (max-height: 860px) {
+  .tui-footer {
+    padding-bottom: 10px;
+  }
+}
+
 /* Appareils sans survol (téléphones, tablettes) : pas de clavier, pas d'aide clavier */
 @media (hover: none) {
   .tui-hints {
@@ -330,9 +368,19 @@ html[data-view='tui'] body {
     display: none;
   }
 
-  .home {
+  .home,
+  .tui .presentation {
     grid-template-columns: minmax(0, 1fr);
     gap: 20px;
+  }
+
+  .tui .presentation .profile {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .tui .presentation .profile-links {
+    flex-direction: row;
   }
 
   .tui-stage {

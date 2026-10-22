@@ -6,13 +6,17 @@ import { escapeHtml, placeholder } from '../utils/html.js';
 import { NEW_TAB } from './shared.js';
 
 
-// Photo, liens vers les profils et le CV, puis le texte de présentation
+// Photo, liens vers les profils et le CV, puis le texte de présentation.
+// Dans RémiOS, la photo et les liens forment une colonne à gauche du texte
+// (blocks.css) : la rubrique tient sur un écran, sans défiler.
 export function presentationBlock() {
-  return `<div class="profile">
-    ${portrait()}
-    <ul class="profile-links">${profileLinks()}</ul>
-  </div>
-  <div class="prose">${pages.presentation.html}</div>`;
+  return `<div class="presentation">
+    <div class="profile">
+      ${portrait()}
+      <ul class="profile-links">${profileLinks()}</ul>
+    </div>
+    <div class="prose">${pages.presentation.html}</div>
+  </div>`;
 }
 
 function portrait() {

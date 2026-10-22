@@ -78,6 +78,10 @@
   --font-size: 0.875rem;       /* 14px */
   --font-size-small: 0.8125rem;/* 13px */
   --line-height: 1.45;
+  /* Texte des boîtes RémiOS (rubriques, fiches) : un cran au-dessus du reste
+     de l'interface, et des lignes plus aérées, plus faciles à suivre */
+  --font-size-reading: 0.9375rem; /* 15px */
+  --line-height-reading: 1.6;
 
   /* --- Espacements et effets --- */
   --gutter: 16px;             /* marge latérale minimale (mobile) */
@@ -91,6 +95,7 @@
 @media (max-width: 720px) {
   :root {
     --font-size: 0.8125rem;
+    --font-size-reading: 0.875rem;
     --shadow-offset: 8px;
     --system-bar-width: 170px;
   }

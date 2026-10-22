@@ -23,14 +23,13 @@
   margin-bottom: 0;
 }
 
+/* Lignes de 75 caractères au plus : au-delà, l'œil peine à retrouver le
+   début de la ligne suivante */
 .prose p,
 .prose ul,
 .prose ol {
-  margin: 0 0 0.8em;
-}
-
-.prose p {
   max-width: 75ch;
+  margin: 0 0 0.8em;
 }
 
 .prose ul,
@@ -40,6 +39,42 @@
 
 .prose li {
   margin-bottom: 0.25em;
+}
+
+/* Tableaux des fiches : même fin quadrillage que les tableaux de compétences.
+   Trop large pour un petit écran, le tableau défile dans son cadre. */
+.prose table {
+  display: block;
+  max-width: 100%;
+  margin: 0 0 1em;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.prose th,
+.prose td {
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose thead th {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Première colonne : un identifiant (nom de VM, de compte…), qui ne doit pas
+   être coupé à ses tirets */
+.prose tbody td:first-child {
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .prose th,
+  .prose td {
+    padding: 4px 6px;
+  }
 }
 
 .prose a,
