@@ -14,7 +14,7 @@ import { noscriptLinks } from './pages-statiques.js';
 export function applySeo(html, site) {
   const seo = site.referencement;
   if (!seo) return html;
-  const title = escapeHtml(`RémiOS — ${seo.titre}`);
+  const title = escapeHtml(seo.titre);
   const description = escapeHtml(seo.description);
   const { email, github, linkedin } = site.contact;
   const cv = site.documents.cv;
@@ -67,7 +67,7 @@ export function structuredData(site, base) {
   const data = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'WebSite', '@id': `${base}#site`, url: base, name: `RémiOS — portfolio de ${site.identite.nom}`, inLanguage: 'fr-FR' },
+      { '@type': 'WebSite', '@id': `${base}#site`, url: base, name: `Portfolio de ${site.identite.nom}`, inLanguage: 'fr-FR' },
       { '@type': 'ProfilePage', '@id': `${base}#page`, url: base, name: seo.titre, inLanguage: 'fr-FR', isPartOf: { '@id': `${base}#site` }, mainEntity: { '@id': `${base}#personne` } },
       person,
     ],

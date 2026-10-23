@@ -83,7 +83,7 @@ export function ficheMeta(r, hrefForTechno) {
 //   current  : techno de la page affichée (non cliquable, mise en évidence)
 //   count    : nombre de réalisations, affiché à droite de l'étiquette
 // Un repère [À COMPLÉTER] reste un texte surligné, sans lien.
-function technoBadge(nom, hrefForTechno, { link = true, current = false, count = null } = {}) {
+export function technoBadge(nom, hrefForTechno, { link = true, current = false, count = null } = {}) {
   if (hasPlaceholder(nom)) return safe(nom);
   const slug = technoSlug(nom);
   const number =

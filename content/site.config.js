@@ -35,6 +35,21 @@ export default {
     ['Base', 'Nantes'],
   ],
 
+  // --- Page d'accueil ---------------------------------------------------------
+  // Phrase d'accueil en deux temps : `intro` s'affiche en noir, `introSuite`
+  // en gris, juste après.
+  // `aLaUne` : réalisations présentées en grand (l'une après l'autre, avec des
+  // points pour passer à la suivante), dans cet ordre. Pour chacune : le nom
+  // de sa fiche (slug) et l'image à montrer, chemin sans « public/ ».
+  accueil: {
+    intro: 'Bonjour 👋 — je suis étudiant en BTS SIO option SISR à MyDigitalSchool Nantes, en alternance comme consultant ERP chez 1Life.',
+    introSuite: "J'aime faire le lien entre les besoins des utilisateurs et les outils techniques qui y répondent.",
+    aLaUne: [
+      { fiche: 'homelab', image: 'schemas/homelab-architecture.svg' },
+      { fiche: 'glpi', image: 'captures/glpi/tableau-de-bord.webp' },
+    ],
+  },
+
   // --- Adresse publique du site -----------------------------------------------
   // URL complète, terminée par « / » (ex. 'https://portfolio.exemple.fr/').
   // Laisser vide tant qu'il n'y a pas de nom de domaine. Elle sert aux aperçus
@@ -46,8 +61,9 @@ export default {
   // informations lues par les moteurs pour comprendre qui est derrière le site
   // (« données structurées » schema.org). Tout doit rester exact.
   referencement: {
-    // Titre de la page (onglet et résultats de recherche) : « RémiOS — <titre> »
-    titre: 'Rémi Moreau · Portfolio BTS SIO SISR',
+    // Titre de la page (onglet et résultats de recherche). Sur les autres
+    // pages du site : « Présentation — <titre> »
+    titre: 'Rémi MOREAU - Portfolio',
     // Description sous le titre dans les résultats (idéalement moins de 160 caractères)
     description:
       "Portfolio de Rémi Moreau, étudiant en BTS SIO option SISR à MyDigitalSchool Nantes et consultant ERP en alternance chez 1Life : réalisations, homelab, veille.",
@@ -95,7 +111,7 @@ export default {
   // GoatCounter (https://www.goatcounter.com : gratuit pour un site personnel,
   // open source, sans cookie) compte les écrans consultés. Le script de
   // GoatCounter n'est pas chargé : src/utils/audience.js envoie lui-même une
-  // requête par écran affiché (#/veille, #/realisations/nas…), et le site
+  // requête par écran affiché (#/veille, #/realisations/homelab…), et le site
   // garde sa règle « aucun script extérieur ». Statistiques : sur
   // https://remim.goatcounter.com et dans le tableau de bord des synthèses.
   // Pour ne pas compter ses propres visites : ouvrir une fois
@@ -343,24 +359,24 @@ export default {
       {
         nom: 'Systèmes et virtualisation',
         items: [
-          { nom: 'Linux', niveau: 3, preuves: ['homelab-jellyfin', 'nas', 'caffein', 'glpi', 'reseau-vm-virtualbox'] },
-          { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab-jellyfin', 'nas'] },
-          { nom: 'Docker', niveau: 2, preuves: ['homelab-jellyfin', 'caffein'] },
+          { nom: 'Linux', niveau: 3, preuves: ['homelab', 'glpi', 'reseau-vm-virtualbox'] },
+          { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab'] },
+          { nom: 'Docker', niveau: 2, preuves: ['homelab'] },
         ],
       },
       {
         nom: 'Réseaux et sécurité',
         items: [
-          { nom: 'VPN (Tailscale)', niveau: 3, preuves: ['homelab-jellyfin', 'nas'] },
-          { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['caffein', 'portfolio-remios'] },
-          { nom: 'Serveur web, reverse proxy (Nginx)', niveau: 2, preuves: ['caffein'] },
+          { nom: 'VPN (Tailscale)', niveau: 3, preuves: ['homelab'] },
+          { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['portfolio'] },
+          { nom: 'Serveur web, reverse proxy (Nginx)', niveau: 2, preuves: [] },
         ],
       },
       {
         nom: 'Langages de programmation',
         items: [
-          { nom: 'Python', niveau: 3.5, preuves: ['crypto-dashboard-pro', 'caffein'] },
-          { nom: 'HTML', niveau: 2, preuves: ['portfolio-remios'] },
+          { nom: 'Python', niveau: 3.5, preuves: ['crypto-dashboard-pro'] },
+          { nom: 'HTML', niveau: 2, preuves: ['portfolio'] },
         ],
       },
       {
@@ -370,9 +386,9 @@ export default {
       {
         nom: 'Outils et frameworks',
         items: [
-          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'caffein', 'portfolio-remios'] },
+          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'portfolio'] },
           { nom: 'Streamlit, Pandas, Plotly', niveau: 3, preuves: ['crypto-dashboard-pro'] },
-          { nom: 'n8n (automatisation)', niveau: 2, preuves: ['caffein'] },
+          { nom: 'n8n (automatisation)', niveau: 2, preuves: [] },
         ],
       },
       {
@@ -437,6 +453,5 @@ export default {
     { action: 'Started', unite: 'alternance@1life.service', description: 'consultant ERP Open-Prod' },
     { action: 'Mounted', unite: '/srv/nas', description: 'stockage réseau' },
     { action: 'Started', unite: 'jellyfin.service', description: 'serveur multimédia' },
-    { action: 'Started', unite: 'caffein.service', description: 'facturation assistée par IA' },
   ],
 };

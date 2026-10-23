@@ -27,3 +27,14 @@
   font-display: swap;
   src: url('../assets/fonts/ibm-plex-mono-600.woff2') format('woff2');
 }
+
+/* Police Inter (texte de la vue page, façon Notion), auto-hébergée elle aussi.
+   Un seul fichier « variable » couvre toutes les graisses de 400 à 700.
+   Sous-ensemble « latin », comme Plex Mono. Licence : src/assets/fonts/OFL-Inter.txt. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../assets/fonts/inter-latin.woff2') format('woff2');
+}

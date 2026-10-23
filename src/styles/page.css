@@ -1,0 +1,1868 @@
+/* ==========================================================================
+   Vue page, façon Notion (src/page/)
+   --------------------------------------------------------------------------
+   Accueil en une colonne centrée, pages façon Notion pour les rubriques et
+   les fiches. Thème clair ou sombre : couleurs --pg-* dans tokens.css.
+   ========================================================================== */
+
+html[data-view='page'] {
+  color-scheme: light;
+}
+
+html[data-view='page'][data-theme='dark'] {
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-view='page']:not([data-theme='light']) {
+    color-scheme: dark;
+  }
+}
+
+html[data-view='page'] body {
+  background: var(--pg-bg);
+}
+
+.pg {
+  position: relative;
+  min-height: 100vh;
+  background: var(--pg-bg);
+  color: var(--pg-ink);
+  font-family: var(--font-page);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  /* Couleurs des blocs de contenu partagés (voir blocks.css) */
+  --accent: var(--pg-link);
+  --heading: var(--pg-ink);
+  --rule: var(--pg-line);
+  --field-bg: var(--pg-bg);
+  --field-ink: var(--pg-ink);
+  --field-border: var(--pg-muted);
+  --on-accent: var(--pg-bg);
+  --focus-ring: 2px solid var(--pg-link);
+  --font-size-small: 0.875rem;
+}
+
+.pg a {
+  color: inherit;
+}
+
+.pg-muted {
+  color: var(--pg-muted);
+}
+
+.pg-icon {
+  display: block;
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+/* --- Boutons, pastilles et étiquettes ---------------------------------------- */
+
+.pg-btn-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: var(--pg-card);
+  color: var(--pg-ink);
+  cursor: pointer;
+}
+
+.pg-btn-icon:hover {
+  background: var(--pg-line);
+}
+
+/* Bouton thème : une lune en thème clair, un soleil en thème sombre */
+.pg-btn-icon[aria-pressed='false'] .pg-icon--sun,
+.pg-btn-icon[aria-pressed='true'] .pg-icon--moon {
+  display: none;
+}
+
+.pg-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: var(--pg-card);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.pg-chip .pg-icon {
+  width: 13px;
+  height: 13px;
+}
+
+.pg-live {
+  color: var(--pg-ok);
+}
+
+.pg-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 7px;
+  border-radius: 4px;
+  background: var(--pg-tag-gray);
+  color: var(--pg-tag-ink);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+a.pg-tag:hover {
+  text-decoration: underline;
+}
+
+.pg-tag--orange { background: var(--pg-tag-orange); }
+.pg-tag--yellow { background: var(--pg-tag-yellow); }
+.pg-tag--green { background: var(--pg-tag-green); }
+.pg-tag--blue { background: var(--pg-tag-blue); }
+.pg-tag--purple { background: var(--pg-tag-purple); }
+.pg-tag--red { background: var(--pg-tag-red); }
+
+.pg-tag-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.pg-tag--green .pg-tag-dot {
+  background: var(--pg-ok);
+}
+
+.pg-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 7px;
+  border-radius: 5px;
+  background: var(--pg-ok-bg);
+  color: var(--pg-ok-ink);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.pg-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pg-ok);
+}
+
+/* Titre de partie de l'accueil, en pastille (« RÉALISATIONS ») */
+.pg-label {
+  width: fit-content;
+  margin: 64px 0 14px;
+  padding: 1px 7px;
+  border: 1.5px solid var(--pg-ink);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.pg-label--solid {
+  background: var(--pg-ink);
+  color: var(--pg-bg);
+}
+
+/* ==========================================================================
+   Accueil
+   ========================================================================== */
+
+/* Coin droit : lieu, fuseau, heure, en haut de page (il défile avec elle) */
+.pg-corner {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pg-col {
+  width: min(600px, 100% - 32px);
+  margin: 0 auto;
+  padding: 128px 0 64px;
+}
+
+.pg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pg-name {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.pg-name:focus,
+.pg-doc-title:focus {
+  outline: none;
+}
+
+.pg-role {
+  margin: 0;
+  color: var(--pg-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.pg-avatar {
+  position: relative;
+  flex: none;
+  width: 56px;
+  height: 56px;
+}
+
+.pg-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.pg-avatar-dot {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 15px;
+  height: 15px;
+  border: 3px solid var(--pg-bg);
+  border-radius: 50%;
+  background: var(--pg-ok);
+}
+
+.pg-intro {
+  margin: 52px 0 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.38;
+  letter-spacing: -0.01em;
+}
+
+.pg-intro-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin: 18px 0 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.pg-intro-links a {
+  color: var(--pg-link);
+  text-underline-offset: 3px;
+}
+
+/* --- Réalisations à la une ----------------------------------------------------- */
+
+.pg-feature {
+  --feature-height: 340px;
+  position: relative;
+}
+
+.pg-feature-slide {
+  display: block;
+  text-decoration: none;
+}
+
+.pg-feature-slide[data-off] {
+  display: none;
+}
+
+.pg-feature-media {
+  position: relative;
+  display: block;
+  height: var(--feature-height);
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--pg-feature-entreprise);
+}
+
+.pg-feature-media--formation {
+  background: var(--pg-feature-formation);
+}
+
+.pg-feature-media--perso {
+  background: var(--pg-feature-perso);
+}
+
+/* Capture posée sur le dégradé, coupée par le bas comme une fenêtre qui dépasse */
+.pg-feature-media img {
+  position: absolute;
+  top: 52px;
+  left: 50%;
+  width: 80%;
+  transform: translateX(-50%);
+  border-radius: 8px;
+  background: var(--pg-paper);
+  box-shadow: 0 20px 50px rgb(0 0 0 / 0.45);
+  transition: transform 0.3s;
+}
+
+.pg-feature-slide:hover .pg-feature-media img {
+  transform: translateX(-50%) translateY(-6px);
+}
+
+.pg-feature-meta {
+  display: block;
+  margin-top: 12px;
+  padding-right: 90px; /* place des points, à droite */
+}
+
+.pg-feature-title {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.pg-feature-slide:hover .pg-feature-title {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.pg-feature-sub {
+  display: block;
+  color: var(--pg-muted);
+  font-size: 0.875rem;
+}
+
+/* Points : une cible de 24 px, un point dessiné au milieu */
+.pg-dots {
+  position: absolute;
+  top: calc(var(--feature-height) + 10px);
+  right: -6px;
+  display: flex;
+}
+
+.pg-dot {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.pg-dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--pg-line);
+  transition: width 0.2s;
+}
+
+.pg-dot[aria-pressed='true']::before {
+  width: 18px;
+  background: var(--pg-ink);
+}
+
+/* --- Projet professionnel -------------------------------------------------------- */
+
+.pg-quote {
+  margin: 48px 0 0;
+  text-align: center;
+}
+
+.pg-quote-mark {
+  width: 30px;
+  height: 22px;
+  margin: 0 auto 14px;
+  color: var(--pg-muted);
+}
+
+.pg-quote blockquote {
+  margin: 0;
+}
+
+.pg-quote p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.pg-quote figcaption {
+  margin-top: 10px;
+  color: var(--pg-muted);
+  font-size: 0.8125rem;
+}
+
+/* --- Réalisations : liste façon base Notion -------------------------------------- */
+
+.pg-db-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 18px;
+  border-bottom: 1px solid var(--pg-line);
+}
+
+.pg-db-tab {
+  padding: 6px 0;
+  border: 0;
+  background: transparent;
+  color: var(--pg-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pg-db-tab:hover {
+  color: var(--pg-ink);
+}
+
+.pg-db-tab[aria-pressed='true'] {
+  color: var(--pg-ink);
+  box-shadow: inset 0 -2px 0 var(--pg-ink);
+}
+
+.pg-db-count {
+  color: var(--pg-muted);
+  font-weight: 400;
+}
+
+.pg-rows {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pg-row {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto 72px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 8px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.pg-row:hover {
+  background: var(--pg-card);
+}
+
+.pg-row-icon {
+  font-size: 1.0625rem;
+  text-align: center;
+}
+
+.pg-row-title {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.pg-row-sub {
+  display: block;
+  overflow: hidden;
+  color: var(--pg-muted);
+  font-size: 0.84375rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pg-row-date {
+  color: var(--pg-muted);
+  font-size: 0.8125rem;
+  text-align: right;
+}
+
+.pg-link-out {
+  display: inline-block;
+  margin: 12px 8px 0;
+  text-decoration: none;
+}
+
+.pg-hint {
+  margin: -4px 0 10px;
+  color: var(--pg-muted);
+  font-size: 0.875rem;
+}
+
+/* --- Cartes grises (épreuve E5, veille) ------------------------------------------- */
+
+.pg-cards {
+  display: grid;
+  gap: 8px;
+}
+
+.pg-card {
+  display: block;
+  padding: 16px 18px;
+  border: 1px solid var(--pg-line);
+  border-radius: 10px;
+  background: var(--pg-card);
+  text-decoration: none;
+}
+
+.pg-card--link:hover {
+  border-color: var(--pg-muted);
+}
+
+.pg-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.pg-card-text {
+  display: block;
+  color: var(--pg-muted);
+}
+
+/* --- Veille : sujets, puis cartes empilées ------------------------------------- */
+
+.pg-vtop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 26px;
+}
+
+.pg-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pg-vtop-update {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--pg-muted);
+  font-size: 0.8125rem;
+}
+
+.pg-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pg-ok);
+}
+
+/* Deux cartes dessinées derrière celle du dessus, comme une pile */
+.pg-stack {
+  position: relative;
+}
+
+.pg-stack::before,
+.pg-stack::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  height: 40px;
+  border: 1px solid var(--pg-line);
+  border-radius: 10px;
+  background: var(--pg-card);
+  transform: translateX(-50%);
+}
+
+.pg-stack::before {
+  top: -16px;
+  width: 88%;
+  opacity: 0.6;
+}
+
+.pg-stack::after {
+  top: -8px;
+  width: 94%;
+}
+
+.pg-stack-card {
+  position: relative;
+  z-index: 1;
+  padding: 20px 22px;
+}
+
+.pg-stack-card[data-off] {
+  display: none;
+}
+
+.pg-stack-when {
+  margin: 0;
+  color: var(--pg-muted);
+  font-size: 0.8125rem;
+}
+
+.pg-stack-title {
+  margin: 2px 0 6px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.pg-stack-text {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--pg-muted);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
+
+.pg-stack-link {
+  margin: 10px 0 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.pg-stack-link a {
+  color: var(--pg-link);
+  text-underline-offset: 3px;
+}
+
+.pg-stack-next {
+  display: block;
+  margin: 10px 0 0 auto;
+  padding: 4px 10px;
+  border: 1px solid var(--pg-line);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--pg-muted);
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.pg-stack-next:hover {
+  border-color: var(--pg-muted);
+  color: var(--pg-ink);
+}
+
+/* --- Pied de page --------------------------------------------------------------- */
+
+.pg-foot {
+  margin-top: 120px;
+  text-align: center;
+}
+
+.pg-foot-title {
+  margin: 0 0 8px;
+  font-size: 1.875rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.pg-foot-text {
+  max-width: 30em;
+  margin: 0 auto;
+  color: var(--pg-muted);
+}
+
+/* « Écrivez-moi. » : lien vers la page contact, jamais coupé en deux */
+.pg .pg-foot-cta {
+  color: var(--pg-link);
+  font-weight: 500;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+.pg-foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: 8px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pg-foot-links li + li {
+  border-left: 1px solid var(--pg-line);
+}
+
+.pg-foot-links a {
+  padding: 0 14px;
+  text-decoration: none;
+}
+
+.pg-foot-links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Signature manuscrite, au centre, comme au bas d'une lettre. L'image sert
+   de masque : l'encre prend la couleur du thème (claire en thème sombre). */
+.pg-signature {
+  width: 180px;
+  aspect-ratio: 720 / 511;
+  margin: 36px auto 0;
+  background: var(--pg-signature);
+  -webkit-mask: url('../assets/signature.webp') center / contain no-repeat;
+  mask: url('../assets/signature.webp') center / contain no-repeat;
+}
+
+.pg-copy {
+  margin: 10px 0 0;
+  color: var(--pg-muted);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.pg-copy a {
+  text-underline-offset: 2px;
+}
+
+.pg-domain {
+  margin: 6px 0 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Pages façon Notion (rubriques, fiches)
+   ========================================================================== */
+
+.pg-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 6px 12px 6px 14px;
+  background: var(--pg-bg);
+  font-size: 0.875rem;
+}
+
+.pg-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.pg-crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 3px 6px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.pg-crumb > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+a.pg-crumb:hover {
+  background: var(--pg-card);
+}
+
+.pg-crumb-sep {
+  color: var(--pg-muted);
+}
+
+.pg-topbar-tools {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.pg-cover {
+  height: 200px;
+  background: var(--pg-cover-entreprise);
+}
+
+.pg-cover--formation {
+  background: var(--pg-cover-formation);
+}
+
+.pg-cover--perso {
+  background: var(--pg-cover-perso);
+}
+
+.pg-doc {
+  width: min(708px, 100% - 40px);
+  margin: 0 auto;
+  padding: 56px 0 96px;
+}
+
+.pg-doc--wide {
+  width: min(960px, 100% - 40px);
+}
+
+.pg-doc--cover {
+  padding-top: 0;
+}
+
+.pg-doc-icon {
+  font-size: 4rem;
+  line-height: 1;
+}
+
+.pg-doc--cover .pg-doc-icon {
+  margin-top: -38px;
+}
+
+.pg-doc-title {
+  margin: 14px 0 22px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* --- Propriétés d'une fiche ------------------------------------------------------ */
+
+.pg-props {
+  margin: 0 0 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--pg-line);
+}
+
+.pg-prop {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  align-items: start;
+  min-height: 34px;
+  font-size: 0.90625rem;
+}
+
+.pg-prop dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  color: var(--pg-muted);
+}
+
+.pg-prop dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  padding: 5px 0;
+}
+
+/* Documents PDF : un par ligne */
+.pg-prop-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pg-prop-links a {
+  text-decoration: underline;
+  text-decoration-color: var(--pg-line);
+  text-underline-offset: 3px;
+}
+
+.pg-prop-links a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* Étiquettes des technos : couleurs de leur marque (technos.css), coins
+   arrondis comme les étiquettes Notion */
+.pg .techno {
+  padding: 0 7px;
+  border: 0;
+  border-radius: 4px;
+  color: var(--techno-ink);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.pg .tags {
+  gap: 5px;
+}
+
+/* --- Encadré de résumé -------------------------------------------------------- */
+
+.pg-callout {
+  display: flex;
+  gap: 12px;
+  margin: 0 0 8px;
+  padding: 16px 18px;
+  border-radius: 6px;
+  background: var(--pg-card);
+}
+
+.pg-callout-icon {
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.pg-callout p {
+  margin: 0;
+}
+
+/* --- Réalisations voisines (bas de fiche) -------------------------------------- */
+
+.pg-neighbours {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 56px;
+}
+
+.pg-neighbour {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border: 1px solid var(--pg-line);
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.pg-neighbour:hover {
+  background: var(--pg-card);
+}
+
+.pg-neighbour--next {
+  text-align: right;
+}
+
+.pg-neighbour-label {
+  color: var(--pg-muted);
+  font-size: 0.8125rem;
+}
+
+.pg-neighbour-title {
+  font-weight: 500;
+}
+
+/* --- Sommaire d'une fiche, à droite sur grand écran ---------------------------- */
+
+/* Centré en hauteur : sous la couverture en haut de fiche, toujours visible
+   ensuite */
+.pg-toc {
+  position: fixed;
+  top: 50%;
+  right: 24px;
+  width: 210px;
+  max-height: 70vh;
+  overflow-y: auto;
+  transform: translateY(-50%);
+  font-size: 0.8125rem;
+}
+
+.pg-toc-title {
+  margin: 0 0 8px;
+  color: var(--pg-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pg-toc ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pg-toc a {
+  display: block;
+  padding: 3px 0 3px 12px;
+  border-left: 2px solid var(--pg-line);
+  color: var(--pg-muted);
+  text-decoration: none;
+}
+
+.pg-toc a:hover {
+  border-left-color: var(--pg-ink);
+  color: var(--pg-ink);
+}
+
+@media (max-width: 1279px) {
+  .pg-toc {
+    display: none;
+  }
+}
+
+@media (min-width: 1280px) {
+  .pg-has-toc .pg-doc-wrap {
+    padding-right: 240px;
+  }
+}
+
+/* ==========================================================================
+   Contenus partagés (src/blocks/), habillés façon Notion
+   ========================================================================== */
+
+.pg .prose h2,
+.pg .block-title {
+  margin: 1.9em 0 0.45em;
+  color: var(--pg-ink);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.pg .prose h3 {
+  margin: 1.5em 0 0.4em;
+  font-size: 1.1875rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.pg .prose p,
+.pg .prose ul,
+.pg .prose ol {
+  max-width: none;
+}
+
+.pg .prose a,
+.pg .contact a,
+.pg .matrix a,
+.pg .skills a,
+.pg .certif-links a,
+.pg .veille-sources a,
+.pg .field-check a {
+  color: var(--pg-link);
+  font-weight: 500;
+  text-underline-offset: 3px;
+}
+
+.pg strong,
+.pg b {
+  font-weight: 600;
+}
+
+/* Commandes et noms de fichiers : rouge sur gris, comme dans Notion */
+.pg code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--pg-code-bg);
+  color: var(--pg-code);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.pg pre {
+  padding: 14px 16px;
+  overflow-x: auto;
+  border-radius: 6px;
+  background: var(--pg-card);
+  font-family: var(--font-mono);
+  font-size: 0.84375rem;
+  line-height: 1.6;
+}
+
+.pg pre code {
+  padding: 0;
+  background: none;
+  color: inherit;
+}
+
+.pg .prose blockquote {
+  margin: 0 0 1em;
+  padding-left: 14px;
+  border-left: 3px solid var(--pg-ink);
+}
+
+.pg .prose th,
+.pg .prose td,
+.pg .skills th,
+.pg .skills td,
+.pg .matrix th,
+.pg .matrix td {
+  padding: 7px 10px;
+  border-color: var(--pg-line);
+}
+
+.pg .prose thead th,
+.pg .skills thead th,
+.pg .matrix thead th {
+  background: var(--pg-card);
+  color: var(--pg-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.pg .intro {
+  color: var(--pg-muted);
+}
+
+/* Niveau de compétence : une barre de progression à la place de [####----]
+   (le texte est masqué, le nom du niveau reste écrit à côté) */
+.pg .level-bar {
+  --fill: 0%;
+  display: inline-block;
+  width: 64px;
+  height: 6px;
+  margin-right: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--pg-ink) var(--fill), var(--pg-line) var(--fill));
+  font-size: 0;
+  vertical-align: middle;
+}
+
+.pg .level-bar[data-fill='1'] { --fill: 12.5%; }
+.pg .level-bar[data-fill='2'] { --fill: 25%; }
+.pg .level-bar[data-fill='3'] { --fill: 37.5%; }
+.pg .level-bar[data-fill='4'] { --fill: 50%; }
+.pg .level-bar[data-fill='5'] { --fill: 62.5%; }
+.pg .level-bar[data-fill='6'] { --fill: 75%; }
+.pg .level-bar[data-fill='7'] { --fill: 87.5%; }
+.pg .level-bar[data-fill='8'] { --fill: 100%; }
+
+/* Tableau de synthèse : cases à cocher façon Notion à la place de [X] et [ ] */
+.pg .matrix-mark {
+  position: relative;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--pg-line);
+  border-radius: 4px;
+  font-size: 0;
+  vertical-align: middle;
+}
+
+.pg .matrix-mark--yes {
+  border-color: var(--pg-link);
+  background: var(--pg-link);
+}
+
+/* Coche : un « L » tourné, posé au centre de la case (le texte [X], masqué,
+   ne compte pas). Remontée de 1 px : le trait du bas alourdit le dessin. */
+.pg .matrix-mark--yes::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9px;
+  height: 5px;
+  border-bottom: 2px solid var(--pg-bg);
+  border-left: 2px solid var(--pg-bg);
+  transform: translate(-50%, -50%) translateY(-1px) rotate(-45deg);
+}
+
+.pg .legend {
+  color: var(--pg-muted);
+}
+
+.pg .legend dt {
+  color: var(--pg-ink);
+}
+
+/* Captures : coins arrondis, fin cadre, légende grise */
+.pg .shot {
+  display: block;
+}
+
+.pg .shot img {
+  border-color: var(--pg-line);
+  border-radius: 6px;
+}
+
+.pg .shot-figure {
+  margin: 1.4em 0;
+}
+
+.pg .shot-figure figcaption {
+  margin-top: 8px;
+  color: var(--pg-muted);
+}
+
+/* Présentation : photo ronde, liens en pastilles */
+.pg .portrait {
+  border: 0;
+  border-radius: 50%;
+}
+
+.pg .profile-links a {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--pg-card);
+  color: var(--pg-ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.pg .profile-links a:hover {
+  background: var(--pg-line);
+}
+
+/* Listes de fiches (rubrique « Réalisations », technos) : lignes façon Notion */
+.pg .fiche-list {
+  gap: 0;
+}
+
+.pg .fiche-list > li + li {
+  border-top: 1px solid var(--pg-line);
+}
+
+.pg .fiche-link {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.pg .fiche-link:hover {
+  background: var(--pg-card);
+}
+
+.pg .fiche-link-title {
+  font-weight: 600;
+}
+
+.pg .fiche-link:hover .fiche-link-title {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.pg .fiche-link-summary {
+  color: var(--pg-muted);
+  font-size: 0.9375rem;
+}
+
+/* Onglets : soulignés, comme les vues d'une base Notion */
+.pg .tab-list {
+  gap: 4px 14px;
+  margin: 1.6em 0 16px;
+  border-bottom: 1px solid var(--pg-line);
+}
+
+.pg .tab {
+  min-height: 34px;
+  padding: 6px 2px;
+  border: 0;
+  background: transparent;
+  color: var(--pg-muted);
+  font-weight: 500;
+}
+
+.pg .tab:hover:not([aria-selected='true']) {
+  color: var(--pg-ink);
+  text-decoration: none;
+}
+
+.pg .tab[aria-selected='true'] {
+  background: transparent;
+  color: var(--pg-ink);
+  box-shadow: inset 0 -2px 0 var(--pg-ink);
+}
+
+/* Sujets de la veille : pastilles, au-dessus de leur contenu */
+.pg .tabs--main > .tab-list {
+  gap: 6px;
+  border-bottom: 0;
+}
+
+.pg .tabs--main > .tab-list > .tab {
+  min-height: 34px;
+  padding: 4px 14px;
+  border: 1px solid var(--pg-line);
+  border-radius: 999px;
+  color: var(--pg-ink);
+  box-shadow: none;
+}
+
+.pg .tabs--main > .tab-list > .tab[aria-selected='true'] {
+  border-color: var(--pg-ink);
+  background: var(--pg-ink);
+  color: var(--pg-bg);
+}
+
+.pg .tabs--main > .tab-panels {
+  padding: 4px 0 0;
+  border: 0;
+}
+
+/* Actualités de la veille : cartes grises */
+.pg .news-item {
+  padding: 14px 16px;
+  border-color: var(--pg-line);
+  border-radius: 10px;
+  background: var(--pg-card);
+}
+
+.pg .news-meta {
+  color: var(--pg-muted);
+  font-size: 0.8125rem;
+}
+
+.pg .news-title {
+  font-weight: 600;
+}
+
+.pg .news-title a {
+  color: var(--pg-ink);
+}
+
+.pg .news-summary {
+  max-width: none;
+  color: var(--pg-muted);
+}
+
+.pg .tag {
+  border: 0;
+  border-radius: 4px;
+  background: var(--pg-tag-gray);
+  color: var(--pg-tag-ink);
+  font-size: 0.8125rem;
+}
+
+.pg a.tag:hover,
+.pg a.tag:focus-visible {
+  color: var(--pg-tag-ink);
+}
+
+.pg .tag.is-current {
+  background: var(--pg-ink);
+  color: var(--pg-bg);
+}
+
+.pg .veille-sources {
+  columns: 2 16rem;
+}
+
+.pg .pager-btn {
+  border-color: var(--pg-line);
+  border-radius: 6px;
+}
+
+.pg .pager-btn[aria-current='page'] {
+  border-color: var(--pg-ink);
+  background: var(--pg-ink);
+  color: var(--pg-bg);
+}
+
+/* Certifications : cartes */
+.pg .certifs li {
+  padding: 12px 14px;
+  border: 1px solid var(--pg-line);
+  border-radius: 10px;
+}
+
+.pg .certif-meta {
+  color: var(--pg-muted);
+}
+
+/* Contact : propriétés façon Notion, formulaire arrondi */
+.pg .contact dt {
+  color: var(--pg-muted);
+  font-weight: 500;
+}
+
+.pg .contact-form {
+  color-scheme: inherit;
+}
+
+.pg .field > span {
+  color: var(--pg-ink);
+  font-weight: 500;
+}
+
+.pg .field input,
+.pg .field textarea {
+  padding: 8px 10px;
+  border-color: var(--pg-line);
+  border-radius: 8px;
+}
+
+.pg .field input:focus,
+.pg .field textarea:focus {
+  border-color: var(--pg-link);
+}
+
+.pg .form-submit {
+  border-radius: 8px;
+  background: var(--pg-ink);
+  color: var(--pg-bg);
+}
+
+/* ==========================================================================
+   Menu latéral, « ← Retour », liens qui disent où ils mènent
+   ========================================================================== */
+
+/* Menu à gauche, contenu à droite */
+.pg-screen {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.pg-content {
+  position: relative;
+  min-width: 0;
+}
+
+.pg-side {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 100vh;
+  padding: 10px 8px 12px;
+  overflow-y: auto;
+  border-right: 1px solid var(--pg-line);
+  background: var(--pg-side-bg);
+  font-size: 0.875rem;
+}
+
+.pg-side-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.pg-side-head:hover {
+  background: var(--pg-line);
+}
+
+.pg-side-name {
+  display: block;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.pg-side-sub-title {
+  display: block;
+  color: var(--pg-muted);
+  font-size: 0.75rem;
+}
+
+.pg-mini-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--pg-card);
+  font-size: 0.625rem;
+  object-fit: cover;
+}
+
+/* minmax(0, 1fr) : un titre trop long est coupé avec « … » au lieu
+   d'élargir le menu */
+.pg-side-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Vue jury et mentions légales : en bas, séparées du reste */
+.pg-side-list--bottom {
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid var(--pg-line);
+}
+
+.pg-side-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 32px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  color: var(--pg-muted);
+  text-decoration: none;
+}
+
+a.pg-side-link:hover {
+  background: var(--pg-line);
+  color: var(--pg-ink);
+}
+
+.pg-side-icon {
+  flex: none;
+  width: 20px;
+  text-align: center;
+}
+
+.pg-side-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Page affichée : surlignée. Rubrique d'une fiche ouverte : en gras, avec la
+   fiche en retrait dessous. */
+.pg-side-link.is-active {
+  color: var(--pg-ink);
+  font-weight: 600;
+}
+
+.pg-side-link[aria-current='page'] {
+  background: var(--pg-line);
+}
+
+.pg-side-sub {
+  margin: 1px 0 2px;
+  padding: 0 0 0 18px;
+  list-style: none;
+}
+
+.pg-side-link--sub {
+  color: var(--pg-ink);
+  font-weight: 500;
+}
+
+/* Thème sombre : un interrupteur */
+.pg-side-theme {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 32px;
+  margin-top: 4px;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--pg-muted);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pg-side-theme:hover {
+  background: var(--pg-line);
+  color: var(--pg-ink);
+}
+
+.pg-side-theme .pg-icon {
+  margin: 0 2px;
+}
+
+.pg-switch {
+  position: relative;
+  flex: none;
+  width: 28px;
+  height: 16px;
+  margin-left: auto;
+  border-radius: 8px;
+  background: var(--pg-line);
+  transition: background 0.2s;
+}
+
+.pg-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--pg-bg);
+  transition: transform 0.2s;
+}
+
+.pg-side-theme[aria-pressed='true'] .pg-switch {
+  background: var(--pg-link);
+}
+
+.pg-side-theme[aria-pressed='true'] .pg-switch::after {
+  transform: translateX(12px);
+}
+
+/* Boutons « Menu » et thème des barres du haut : seulement sur petit écran,
+   où le menu latéral est replié */
+.pg-menu-btn,
+.pg-mobilebar,
+.pg-topbar-tools {
+  display: none;
+}
+
+.pg-menu-btn {
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  height: 32px;
+  padding: 0 12px 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--pg-card);
+  color: var(--pg-ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pg-menu-btn:hover {
+  background: var(--pg-line);
+}
+
+.pg-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 19;
+  background: var(--pg-backdrop);
+}
+
+/* « ← Retour », suivi du nom de la page où il mène */
+.pg-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  max-width: 45%;
+  padding: 3px 10px;
+  border: 1px solid var(--pg-line);
+  border-radius: 6px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.pg-back:hover {
+  background: var(--pg-card);
+}
+
+.pg-back-dest {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--pg-muted);
+  font-weight: 400;
+  text-overflow: ellipsis;
+}
+
+.pg-back-dest::before {
+  content: '·';
+  margin-right: 6px;
+}
+
+/* Destination d'un lien ou d'une carte, écrite en clair : « Lire la fiche → » */
+.pg-goto {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--pg-link);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+a:hover > .pg-goto,
+a:hover .pg-goto {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.pg-feature-meta .pg-goto,
+.pg-card .pg-goto {
+  margin-top: 6px;
+}
+
+.pg-card .pg-goto {
+  display: flex;
+  width: fit-content;
+}
+
+/* ↗ : le lien ouvre un autre site, dans un nouvel onglet */
+.pg-ext {
+  color: var(--pg-muted);
+}
+
+/* ==========================================================================
+   Tablette et téléphone : menu replié, ouvert par le bouton « Menu »
+   ========================================================================== */
+
+@media (max-width: 1023px) {
+  .pg-screen {
+    display: block;
+  }
+
+  .pg-side {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 20;
+    width: min(300px, 85vw);
+    height: 100%;
+    visibility: hidden;
+    transform: translateX(-105%);
+    transition: transform 0.2s, visibility 0.2s;
+    box-shadow: var(--pg-shadow);
+  }
+
+  .pg--menu-open .pg-side {
+    visibility: visible;
+    transform: none;
+  }
+
+  .pg-menu-btn {
+    display: inline-flex;
+  }
+
+  .pg-topbar-tools {
+    display: flex;
+  }
+
+  .pg-mobilebar {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 2;
+    display: flex;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .pg-corner {
+    top: 14px;
+    right: 14px;
+  }
+
+  /* Coin droit réduit à l'heure */
+  .pg-corner > .pg-chip:not(:last-child) {
+    display: none;
+  }
+
+  .pg-col {
+    padding-top: 84px;
+  }
+
+  .pg-intro {
+    margin-top: 36px;
+    font-size: 1.3125rem;
+  }
+
+  .pg-label {
+    margin-top: 52px;
+  }
+
+  .pg-feature {
+    --feature-height: 230px;
+  }
+
+  .pg-feature-media img {
+    top: 34px;
+    width: 86%;
+  }
+
+  .pg-row {
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+  }
+
+  .pg-row-date {
+    display: none;
+  }
+
+  .pg-foot-links a {
+    padding: 0 10px;
+  }
+
+  .pg-foot-title {
+    font-size: 1.625rem;
+  }
+
+  /* Barre du haut : Menu, Retour, thème ; le menu dit où l'on est */
+  .pg-crumbs {
+    display: none;
+  }
+
+  .pg-back {
+    max-width: none;
+    min-width: 0;
+  }
+
+  .pg-cover {
+    height: 130px;
+  }
+
+  .pg-doc {
+    padding-top: 36px;
+  }
+
+  .pg-doc-icon {
+    font-size: 3.25rem;
+  }
+
+  .pg-doc--cover .pg-doc-icon {
+    margin-top: -30px;
+  }
+
+  .pg-doc-title {
+    font-size: 1.875rem;
+  }
+
+  .pg-prop {
+    grid-template-columns: 128px minmax(0, 1fr);
+    font-size: 0.875rem;
+  }
+
+  .pg .prose h2,
+  .pg .block-title {
+    font-size: 1.3125rem;
+  }
+
+  .pg-neighbours {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* --- Impression : sans menu, boutons, coins ni sommaire --------------------------- */
+
+@media print {
+  .pg-side,
+  .pg-backdrop,
+  .pg-mobilebar,
+  .pg-corner,
+  .pg-topbar,
+  .pg-toc,
+  .pg-dots,
+  .pg-stack-next,
+  .pg-db-tabs,
+  .pg-neighbours {
+    display: none !important;
+  }
+
+  .pg-screen {
+    display: block;
+  }
+
+  .pg {
+    background: #ffffff;
+    color: #000000;
+  }
+}

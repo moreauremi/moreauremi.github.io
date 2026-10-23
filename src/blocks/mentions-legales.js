@@ -31,7 +31,8 @@ export function mentionsLegalesBlock() {
     <h2>Crédits</h2>
     <ul>
       <li>Police IBM Plex Mono : © IBM Corp., licence SIL Open Font License 1.1, hébergée par le site lui-même.</li>
-      <li>Logo, icônes et image d'aperçu : créations originales.</li>
+      <li>Police Inter : © The Inter Project Authors, licence SIL Open Font License 1.1, hébergée par le site lui-même.</li>
+      <li>Icône du site : monogramme RM tracé d'après la police Helvetica Bold. Autres icônes et image d'aperçu : créations originales.</li>
       <li>Générique caché du terminal : parodie originale (texte et musique), qui ne reprend aucune œuvre protégée.</li>
       <li>Outils de fabrication du site, non envoyés aux visiteurs : Vite, marked et gray-matter, sous licence MIT.</li>
     </ul>

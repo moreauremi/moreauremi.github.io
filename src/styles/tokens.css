@@ -58,6 +58,43 @@
   --jury-accent: #1e3c8c;      /* titres et liens : le bleu de RémiOS */
   --jury-rule: #d5d9e0;        /* filets et bordures */
 
+  /* --- Vue page, façon Notion : thème clair (le thème sombre est plus bas) --- */
+  --pg-bg: #ffffff;
+  --pg-ink: #111318;           /* texte (contraste 18:1) */
+  --pg-muted: #5f6672;         /* textes secondaires (contraste 5,9:1) */
+  --pg-card: #f6f6f7;          /* cartes, encadrés, survol */
+  --pg-line: #e4e4e8;          /* filets et bordures */
+  --pg-link: #1d5bd8;          /* liens (contraste 5,9:1) */
+  --pg-ok: #22a35a;            /* pastille « disponible », statut terminé */
+  --pg-ok-bg: #dcfce7;
+  --pg-ok-ink: #166534;
+  --pg-code: #c4314b;          /* `commandes` dans le texte, comme Notion */
+  --pg-code-bg: rgb(135 131 120 / 0.15);
+  --pg-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 10px 30px rgb(0 0 0 / 0.1);
+  --pg-side-bg: #f7f7f5;       /* menu latéral, comme Notion */
+  --pg-backdrop: rgb(0 0 0 / 0.35); /* voile derrière le menu ouvert (téléphone) */
+  --pg-signature: #2b1d18;     /* encre de la signature */
+  /* Étiquettes, avec les couleurs de Notion */
+  --pg-tag-ink: #32302c;
+  --pg-tag-gray: #e3e2e0;
+  --pg-tag-orange: #fadec9;
+  --pg-tag-yellow: #fdecc8;
+  --pg-tag-green: #dbeddb;
+  --pg-tag-blue: #d3e5ef;
+  --pg-tag-purple: #e8deee;
+  --pg-tag-red: #ffe2dd;
+  /* Couvertures des fiches : un dégradé doux par type de réalisation */
+  --pg-cover-entreprise: radial-gradient(60% 130% at 12% 20%, #fbd5b5 0%, transparent 60%), radial-gradient(55% 130% at 88% 80%, #f9c7cf 0%, transparent 60%), #f6efe8;
+  --pg-cover-formation: radial-gradient(60% 130% at 12% 20%, #c9dcf5 0%, transparent 60%), radial-gradient(55% 130% at 88% 80%, #e2d4f5 0%, transparent 60%), #eef1f7;
+  --pg-cover-perso: radial-gradient(60% 130% at 12% 20%, #c8ecd6 0%, transparent 60%), radial-gradient(55% 130% at 88% 80%, #fde7b0 0%, transparent 60%), #eff4ee;
+  /* Réalisations à la une : fond vif sous la capture (identique dans les deux
+     thèmes), capture posée sur du blanc (schémas à fond transparent) */
+  --pg-feature-entreprise: radial-gradient(120% 90% at 20% 10%, #ffd7b0 0%, #f6893b 38%, #8a3412 75%, #3b1607 100%);
+  --pg-feature-formation: radial-gradient(120% 90% at 20% 10%, #cfe0ff 0%, #5b8def 40%, #233f9c 75%, #0f1a45 100%);
+  --pg-feature-perso: radial-gradient(120% 90% at 20% 10%, #d4f5df 0%, #3fbf7f 40%, #17633f 75%, #08291a 100%);
+  --pg-paper: #ffffff;
+  --font-page: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
   /* --- Texte posé sur la couleur d'accent (onglet actif, page courante,
      bouton « Envoyer », bouton principal de la vue jury) --- */
   --on-accent: #ffffff;
@@ -89,6 +126,65 @@
   --focus-ring: 2px solid var(--warn);
   /* Largeur réservée en haut à droite pour les boutons fixes (son, vue jury) */
   --system-bar-width: 230px;
+}
+
+/* Vue page, thème sombre : réglage du système (sauf si le visiteur a choisi
+   le thème clair avec le bouton soleil), ou choix du visiteur. Les deux blocs
+   sont identiques : une règle @media ne peut pas se combiner avec un attribut. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --pg-bg: #141416;
+    --pg-ink: #ececef;
+    --pg-muted: #a5a8b0;
+    --pg-card: #1d1d21;
+    --pg-line: #2e2e34;
+    --pg-link: #79aefc;
+    --pg-ok-bg: #14532d;
+    --pg-ok-ink: #bbf7d0;
+    --pg-code: #ff8a98;
+    --pg-code-bg: rgb(255 255 255 / 0.08);
+    --pg-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px rgb(0 0 0 / 0.5);
+    --pg-side-bg: #1a1a1d;
+    --pg-signature: #ece6e0;
+    --pg-tag-ink: rgb(255 255 255 / 0.87);
+    --pg-tag-gray: #46464a;
+    --pg-tag-orange: #854c1d;
+    --pg-tag-yellow: #7a5a24;
+    --pg-tag-green: #2b593f;
+    --pg-tag-blue: #28456c;
+    --pg-tag-purple: #492f64;
+    --pg-tag-red: #6e3630;
+    --pg-cover-entreprise: radial-gradient(60% 130% at 12% 20%, #5c3518 0%, transparent 60%), radial-gradient(55% 130% at 88% 80%, #5a2630 0%, transparent 60%), #1e1a18;
+    --pg-cover-formation: radial-gradient(60% 130% at 12% 20%, #1f3a5c 0%, transparent 60%), radial-gradient(55% 130% at 88% 80%, #3a2a5c 0%, transparent 60%), #17191e;
+    --pg-cover-perso: radial-gradient(60% 130% at 12% 20%, #1e4a33 0%, transparent 60%), radial-gradient(55% 130% at 88% 80%, #5c4a1e 0%, transparent 60%), #171b18;
+  }
+}
+
+:root[data-theme='dark'] {
+  --pg-bg: #141416;
+  --pg-ink: #ececef;
+  --pg-muted: #a5a8b0;
+  --pg-card: #1d1d21;
+  --pg-line: #2e2e34;
+  --pg-link: #79aefc;
+  --pg-ok-bg: #14532d;
+  --pg-ok-ink: #bbf7d0;
+  --pg-code: #ff8a98;
+  --pg-code-bg: rgb(255 255 255 / 0.08);
+  --pg-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px rgb(0 0 0 / 0.5);
+  --pg-side-bg: #1a1a1d;
+  --pg-signature: #ece6e0;
+  --pg-tag-ink: rgb(255 255 255 / 0.87);
+  --pg-tag-gray: #46464a;
+  --pg-tag-orange: #854c1d;
+  --pg-tag-yellow: #7a5a24;
+  --pg-tag-green: #2b593f;
+  --pg-tag-blue: #28456c;
+  --pg-tag-purple: #492f64;
+  --pg-tag-red: #6e3630;
+  --pg-cover-entreprise: radial-gradient(60% 130% at 12% 20%, #5c3518 0%, transparent 60%), radial-gradient(55% 130% at 88% 80%, #5a2630 0%, transparent 60%), #1e1a18;
+  --pg-cover-formation: radial-gradient(60% 130% at 12% 20%, #1f3a5c 0%, transparent 60%), radial-gradient(55% 130% at 88% 80%, #3a2a5c 0%, transparent 60%), #17191e;
+  --pg-cover-perso: radial-gradient(60% 130% at 12% 20%, #1e4a33 0%, transparent 60%), radial-gradient(55% 130% at 88% 80%, #5c4a1e 0%, transparent 60%), #171b18;
 }
 
 /* Petits écrans : texte et ombre un peu plus petits (comme dans la maquette) */

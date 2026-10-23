@@ -123,7 +123,7 @@ export function checkConfig(site, root) {
         errors.push(`${label} : « niveau » doit être un nombre de 1 à ${niveaux.length} (demi-niveaux permis, ex. 3.5), ou null.`);
       }
       if (!isTextList(item.preuves ?? [])) {
-        errors.push(`${label} : « preuves » doit être une liste de slugs de fiches (ex. ['nas']).`);
+        errors.push(`${label} : « preuves » doit être une liste de slugs de fiches (ex. ['homelab']).`);
         continue;
       }
       for (const slug of item.preuves ?? []) {

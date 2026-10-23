@@ -134,7 +134,7 @@ function mainPage() {
         .join(' · ')}</p>
       <div class="jury-actions">
         <button type="button" class="jury-btn jury-btn--primary" data-action="print">Imprimer</button>
-        <a class="jury-btn" href="${link.home()}">Ouvrir la version RémiOS</a>
+        <a class="jury-btn" href="${link.home()}">Revenir au portfolio</a>
       </div>
       <nav class="jury-toc" aria-label="Sommaire">
         <ol>${toc}</ol>
@@ -144,7 +144,7 @@ function mainPage() {
     ${parts}
 
     <footer class="jury-footer">
-      <p>Page générée le ${BUILD_DATE}. Version interactive : <a href="${link.home()}">RémiOS</a>. <a href="${link.juryLegal()}">Mentions légales</a>.</p>
+      <p>Page générée le ${BUILD_DATE}. Version complète : <a href="${link.home()}">le portfolio</a>. <a href="${link.juryLegal()}">Mentions légales</a>.</p>
     </footer>
   </div>`;
 }
@@ -206,7 +206,7 @@ function fichePage(r) {
   return subPage({
     title: safe(r.titre),
     body: ficheBlock(r, link.juryTechno),
-    remios: `<a href="${link.fiche(r.slug)}">Voir cette fiche dans RémiOS</a>`,
+    remios: `<a href="${link.fiche(r.slug)}">Voir cette fiche dans le portfolio</a>`,
   });
 }
 
@@ -215,7 +215,7 @@ function technoPage(techno) {
   return subPage({
     title: `Réalisations : ${escapeHtml(techno.nom)}`,
     body: technoBlock(techno, link.juryFiche, link.juryTechno),
-    remios: `<a href="${link.techno(techno.slug)}">Voir cette techno dans RémiOS</a>`,
+    remios: `<a href="${link.techno(techno.slug)}">Voir cette techno dans le portfolio</a>`,
   });
 }
 
@@ -224,7 +224,7 @@ function tagPage(veille, slug, tag) {
   return subPage({
     title: `Veille ${escapeHtml(veille.nom)} : ${escapeHtml(tag.nom)}`,
     body: veilleTagBlock(veille, slug, link.juryVeilleTag),
-    remios: `<a href="${link.veilleTag(veille.id, slug)}">Voir ce tag dans RémiOS</a>`,
+    remios: `<a href="${link.veilleTag(veille.id, slug)}">Voir ce tag dans le portfolio</a>`,
   });
 }
 

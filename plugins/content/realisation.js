@@ -66,6 +66,12 @@ export function checkRealisation(data, file, site, errors) {
     errors.push('« resume » doit être un texte.');
   }
 
+  // Adresses d'anciennes fiches réunies dans celle-ci (ou d'un ancien nom)
+  meta.anciennesAdresses = data.anciennesAdresses ?? [];
+  if (!isTextList(meta.anciennesAdresses) || !meta.anciennesAdresses.every((s) => SLUG_PATTERN.test(s))) {
+    errors.push('« anciennesAdresses » doit être une liste de noms de fiches (ex. : [nas, homelab-jellyfin]).');
+  }
+
   return meta;
 }
 

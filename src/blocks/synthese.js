@@ -25,8 +25,8 @@ export function syntheseBlock(hrefFor) {
         ${codes
           .map((c) =>
             r.competences.includes(c.code)
-              ? '<td><span aria-hidden="true">[X]</span><span class="visually-hidden">oui</span></td>'
-              : '<td><span aria-hidden="true">[ ]</span><span class="visually-hidden">non</span></td>',
+              ? '<td><span class="matrix-mark matrix-mark--yes" aria-hidden="true">[X]</span><span class="visually-hidden">oui</span></td>'
+              : '<td><span class="matrix-mark" aria-hidden="true">[ ]</span><span class="visually-hidden">non</span></td>',
           )
           .join('')}
       </tr>`,

@@ -21,3 +21,17 @@ export function formatDate(value) {
   const monthName = MONTHS[Number(month) - 1];
   return day ? `${Number(day)} ${monthName} ${year}` : `${monthName} ${year}`;
 }
+
+// Version courte, pour les listes : '2026-10' → 'oct. 2026'. Pour une
+// période, seule la fin compte ('2026-01/2026-08' → 'août 2026').
+const MONTHS_SHORT = [
+  'janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin',
+  'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.',
+];
+
+export function formatShortDate(value) {
+  const match = /^(\d{4})(?:-(\d{2}))?/.exec(value.split('/').pop());
+  if (!match) return value;
+  const [, year, month] = match;
+  return month ? `${MONTHS_SHORT[Number(month) - 1]} ${year}` : year;
+}

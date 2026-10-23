@@ -32,7 +32,7 @@ const HELP = [
   ['ls [dossier]', "liste le contenu d'un dossier"],
   ['cd <dossier>', 'change de dossier (cd .. pour remonter)'],
   ['pwd', 'affiche le dossier courant'],
-  ['cat <fichier>', 'affiche un fichier (ex. cat realisations/perso/nas.md)'],
+  ['cat <fichier>', 'affiche un fichier (ex. cat realisations/perso/homelab.md)'],
   ['open <nom>', 'ouvre une fiche ou une rubrique (ex. open nas)'],
   ['jury', 'ouvre la vue rapide jury'],
   ['history', 'commandes déjà tapées'],
@@ -178,7 +178,7 @@ export const COMMANDS = {
 
 // --- Aides pour « open » ---------------------------------------------------------
 
-// Ce que `open` accepte : un chemin (nas.md, realisations/perso), le slug d'une
+// Ce que `open` accepte : un chemin (homelab.md, realisations/perso), le slug d'une
 // fiche (nas) ou l'identifiant d'une rubrique (veille, contact, mentions-legales…).
 function findRoute(name, ctx) {
   const node = getNode(ctx.fs, resolvePath(ctx.cwd, name));

@@ -14,7 +14,7 @@
 
 export { presentationBlock } from './presentation.js';
 export { alternanceBlock } from './alternance.js';
-export { realisationsBlock, realisationList, ficheMeta, ficheCompetences, ficheBlock, technoBlock } from './realisations.js';
+export { realisationsBlock, realisationList, ficheMeta, ficheCompetences, ficheBlock, technoBlock, technoBadge } from './realisations.js';
 export { competencesBlock } from './competences.js';
 export { syntheseBlock } from './synthese.js';
 export { veilleBlock, veilleTagBlock } from './veille.js';

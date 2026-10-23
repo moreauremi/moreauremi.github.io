@@ -10,14 +10,16 @@
     >
     <!-- Titre et description : remplacés au build par ceux de
          content/site.config.js (rubrique « referencement ») -->
-    <title>RémiOS — Rémi Moreau · Portfolio BTS SIO SISR</title>
+    <title>Rémi MOREAU - Portfolio</title>
     <meta
       name="description"
       content="Portfolio de Rémi Moreau, étudiant en BTS SIO option SISR à MyDigitalSchool Nantes."
     >
     <meta name="author" content="Rémi Moreau">
-    <!-- Couleur de la barre du navigateur sur mobile : noir, comme l'écran de boot -->
-    <meta name="theme-color" content="#000000">
+    <!-- Couleur de la barre du navigateur sur mobile : celle du fond de page,
+         en thème clair comme en thème sombre -->
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#141416" media="(prefers-color-scheme: dark)">
 
     <!-- Icônes (fichiers copiés tels quels depuis public/) :
          - favicon.svg : onglet des navigateurs récents ;
@@ -37,8 +39,8 @@
          dès que « urlPublique » est renseignée dans content/site.config.js. -->
     <meta property="og:type" content="website">
     <meta property="og:locale" content="fr_FR">
-    <meta property="og:site_name" content="RémiOS">
-    <meta property="og:title" content="Rémi Moreau · Portfolio BTS SIO SISR">
+    <meta property="og:site_name" content="Rémi Moreau">
+    <meta property="og:title" content="Rémi MOREAU - Portfolio">
     <meta
       property="og:description"
       content="Portfolio de Rémi Moreau, étudiant en BTS SIO option SISR à MyDigitalSchool Nantes."

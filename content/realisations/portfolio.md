@@ -1,10 +1,10 @@
 ---
-titre: "Portfolio RémiOS — présence en ligne"
-slug: portfolio-remios
+titre: "Portfolio — présence en ligne"
+slug: portfolio
 type: perso  # entreprise, formation ou perso
 date: 2026-09/2026-10  # AAAA, AAAA-MM, AAAA-MM-JJ ou période début/fin (ex. 2026-01/2026-08)
 statut: "en ligne, en évolution"  # ex. en cours, terminé, en pause
-resume: "Ce portfolio, pensé comme un système Linux : un site statique publié sur GitHub Pages avec son propre nom de domaine, référencé et mesuré sans cookie, avec une veille technologique automatisée et un tableau de bord pour écrire mes synthèses."
+resume: "Ce portfolio : un site statique clair, façon Notion, publié sur GitHub Pages avec son propre nom de domaine, référencé et mesuré sans cookie, avec une veille technologique automatisée et un tableau de bord pour écrire mes synthèses."
 technos:
   - "JavaScript"
   - "HTML"
@@ -21,12 +21,14 @@ technos:
   - "Nginx"
   - "Claude Code"
 competences: [B1.3, B1.4, B1.5, B1.6]  # codes du référentiel, ex. [B1.1, B1.4]
+# Ancienne adresse de la fiche (« Portfolio RémiOS »), avant la refonte
+anciennesAdresses: [portfolio-remios]
 ---
 
 <!--
   Guide de rédaction
-  - Captures : déposer l'image dans public/captures/portfolio-remios/, puis écrire
-      ![Description de l'image](captures/portfolio-remios/nom-du-fichier.webp "Légende affichée")
+  - Captures : déposer l'image dans public/captures/portfolio/, puis écrire
+      ![Description de l'image](captures/portfolio/nom-du-fichier.webp "Légende affichée")
   - competences : codes définis dans content/site.config.js, ex. [B1.1, B1.4]
   - Contenu rédigé d'après le README du dépôt (choix techniques, qualité mesurée,
     veille, tableau de bord) : c'est la référence.
@@ -34,13 +36,13 @@ competences: [B1.3, B1.4, B1.5, B1.6]  # codes du référentiel, ex. [B1.1, B1.4
 
 ## Contexte
 
-L'épreuve E5 du BTS SIO demande un portfolio qui présente mes réalisations et les compétences du référentiel. Plutôt qu'un modèle tout fait, j'ai voulu un site qui reflète l'option SISR : RémiOS imite le démarrage d'un système Linux (écran GRUB, journal systemd), puis affiche un menu façon whiptail, avec un terminal caché.
+L'épreuve E5 du BTS SIO demande un portfolio qui présente mes réalisations et les compétences du référentiel. Plutôt qu'un modèle tout fait, j'ai construit mon propre site. Sa première version, RémiOS, imitait le démarrage d'un système Linux, avec un menu façon terminal : originale, mais peu lisible. Je l'ai refaite façon Notion : une colonne de texte claire, un menu toujours visible, et chaque réalisation présentée comme une page, avec ses propriétés (type, date, technos, compétences).
 
 C'est aussi ma présence en ligne de candidat : le jury, les recruteurs et mes contacts LinkedIn y arrivent par mon propre nom de domaine, remim.me.
 
 ## Objectifs
 
-- Présenter mon parcours, mes réalisations et mes compétences, avec une vue rapide, sobre et imprimable, pour le jury.
+- Présenter mon parcours, mes réalisations et mes compétences dans un site lisible, où l'on sait toujours où l'on est et où mène chaque lien, avec une vue rapide, sobre et imprimable, pour le jury.
 - Publier un site public rapide, accessible, sécurisé et bien référencé, sans serveur à administrer.
 - Le mettre à jour facilement : chaque page est un fichier Markdown, publié automatiquement.
 - Tenir une veille technologique régulière sur trois sujets, et mesurer la fréquentation du site dans le respect du RGPD.
@@ -48,6 +50,8 @@ C'est aussi ma présence en ligne de candidat : le jury, les recruteurs et mes c
 ## Mise en œuvre
 
 **Le site.** Il est statique et construit avec Vite. Un plugin que j'ai écrit convertit les fiches Markdown en HTML au moment de la construction, et vérifie chacune d'elles (champs obligatoires, compétences existantes, images présentes) : une fiche mal remplie bloque la publication. Le navigateur ne reçoit que du HTML, du CSS et un peu de JavaScript, sans bibliothèque extérieure ni police chargée chez un tiers.
+
+**L'interface.** Elle reprend les codes de Notion : un menu latéral où la page affichée est surlignée, un fil d'Ariane, un bouton « Retour » qui ramène à la page précédente (comme la touche Échap), des liens qui disent où ils mènent, et un thème clair ou sombre. Le texte est en Inter, une police conçue pour l'écran, et les polices sont hébergées par le site lui-même. En bas de l'accueil, ma signature manuscrite clôt la page.
 
 **L'hébergement et le nom de domaine.**
 
@@ -58,7 +62,7 @@ C'est aussi ma présence en ligne de candidat : le jury, les recruteurs et mes c
 
 **La sécurité et le RGPD.** Une politique de sécurité du contenu (CSP) stricte empêche tout script extérieur de s'exécuter. Le site ne dépose aucun cookie, et ses mentions légales décrivent l'éditeur, l'hébergeur et le traitement des données (formulaire de contact, mesure d'audience).
 
-**Le référencement.** Titre et description travaillés, données structurées schema.org (une fiche « personne » avec mon poste, mon école, mes liens GitHub et LinkedIn), plan du site (sitemap.xml), robots.txt qui écarte mon CV des moteurs de recherche (il contient mon numéro de téléphone), image d'aperçu pour les partages sur LinkedIn, et une icône aux formats demandés par Google.
+**Le référencement.** Titre et description travaillés, données structurées schema.org (une fiche « personne » avec mon poste, mon école, mes liens GitHub et LinkedIn), plan du site (sitemap.xml), robots.txt qui écarte mon CV des moteurs de recherche (il contient mon numéro de téléphone), image d'aperçu pour les partages sur LinkedIn, et une icône (mon monogramme RM) aux formats demandés par Google.
 
 **La mesure d'audience.** GoatCounter, un outil open source sans cookie, compte chaque page consultée. Pour garder la règle « aucun script extérieur », j'ai écrit l'envoi des pages vues moi-même au lieu de charger le script officiel. Rien n'est compté pour les robots, ni pour les navigateurs qui demandent à ne pas être suivis.
 
@@ -83,28 +87,34 @@ Code source (licence MIT) : [le site](https://github.com/moreauremi/moreauremi.g
 
 ## Captures d'écran
 
-![Menu principal de RémiOS : boîte grise sur fond bleu façon whiptail, avec le logo, mes informations et les rubriques numérotées de 1 à 8](captures/portfolio-remios/menu.webp "Menu principal, après le démarrage façon Linux")
+![Accueil du portfolio : menu latéral à gauche avec toutes les rubriques, mon nom et ma photo, la phrase de présentation, puis la réalisation à la une](captures/portfolio/accueil.webp "L'accueil : une colonne centrée, le menu toujours visible à gauche")
 
-![Rubrique Veille technologique : trois onglets de sujets, et dans le sujet Cybersécurité, les onglets « Dernières actualités » et « Mes synthèses », puis les actualités résumées avec leurs tags](captures/portfolio-remios/veille.webp "Veille technologique : un onglet par sujet, les actualités résumées chaque lundi")
+![Fiche GLPI : bouton Retour et fil d'Ariane en haut, couverture, propriétés (type, date, statut, technos, compétences, documents), résumé encadré, et sommaire de la fiche à droite](captures/portfolio/fiche.webp "Une fiche de réalisation, présentée comme une page Notion")
 
-![Vue rapide pour le jury : page sobre sur fond blanc, avec le sommaire des rubriques](captures/portfolio-remios/jury.webp "Vue rapide jury : sobre, imprimable, sans animation")
+![Rubrique Veille technologique : présentation des trois sujets, méthode de veille, puis un onglet par sujet](captures/portfolio/veille.webp "Veille technologique : la méthode, puis un onglet par sujet")
 
-![Terminal caché : les commandes ls et cat affichent les fichiers du site, dont le dossier de chaque sujet de veille](captures/portfolio-remios/terminal.webp "Terminal caché : le site parcouru comme un système de fichiers")
+![Fiche Homelab en thème sombre : schéma d'architecture du homelab, et sommaire de la fiche à droite](captures/portfolio/sombre.webp "Le thème sombre, au choix du visiteur ou selon son système")
 
-![Vue d'ensemble du tableau de bord : état des trois veilles avec l'ancienneté de la dernière synthèse, état de la publication et de la collecte façon journal de démarrage, accès rapides, et boîte des visites du site](captures/portfolio-remios/tableau-de-bord.webp "Tableau de bord dashboard.remim.me : la vue d'ensemble")
+![Vue rapide pour le jury : page sobre sur fond blanc, avec le sommaire des rubriques](captures/portfolio/jury.webp "Vue rapide jury : sobre, imprimable, sans animation")
 
-![Vue Synthèses du tableau de bord : barre des sujets, liste des synthèses publiées, éditeur, et actualités du sujet à cocher pour les citer en sources](captures/portfolio-remios/syntheses.webp "Tableau de bord : écrire une synthèse et citer ses sources")
+![Vue d'ensemble du tableau de bord : état des trois veilles avec l'ancienneté de la dernière synthèse, état de la publication et de la collecte façon journal de démarrage, accès rapides, et boîte des visites du site](captures/portfolio/tableau-de-bord.webp "Tableau de bord dashboard.remim.me : la vue d'ensemble")
+
+![Vue Synthèses du tableau de bord : barre des sujets, liste des synthèses publiées, éditeur, et actualités du sujet à cocher pour les citer en sources](captures/portfolio/syntheses.webp "Tableau de bord : écrire une synthèse et citer ses sources")
 
 ## Résultats et tests
 
-- **Audit Lighthouse** du site en ligne (26 septembre 2026) : 100/100 en performance, accessibilité, bonnes pratiques et référencement, sur mobile comme sur ordinateur.
-- **Accessibilité** : règles WCAG 2.2 AA vérifiées avec axe-core sur chaque écran, navigation complète au clavier, aucune page qui défile horizontalement, même sur un écran de 320 px.
+- **Audit Lighthouse** de la première version (26 septembre 2026) : 100/100 en performance, accessibilité, bonnes pratiques et référencement, sur mobile comme sur ordinateur.
+- **Accessibilité** (première version) : règles WCAG 2.2 AA vérifiées avec axe-core sur chaque écran, navigation complète au clavier, aucune page qui défile horizontalement, même sur un écran de 320 px.
 - **Validation HTML** : les pages passent le validateur du W3C sans erreur.
-- **Tests automatisés**, lancés avant chaque mise en ligne : 24 pour le site (politique de sécurité, chaque rubrique et chaque fiche, vue jury, onglets de la veille, mesure d'audience, terminal, rappel des synthèses, lecture des réponses et échange complet de la veille par e-mail) et 19 pour le tableau de bord (format des synthèses, échanges simulés avec GitHub et GoatCounter, graphique des visites).
+- **Tests automatisés**, lancés avant chaque mise en ligne : pour le site (politique de sécurité, chaque rubrique et chaque fiche, vue jury, onglets de la veille, mesure d'audience, rappel des synthèses, lecture des réponses et échange complet de la veille par e-mail) et 19 pour le tableau de bord (format des synthèses, échanges simulés avec GitHub et GoatCounter, graphique des visites).
 
 Le site est en ligne depuis septembre 2026, et sa fréquentation est mesurée depuis le 9 octobre 2026.
 
+[À COMPLÉTER : nombre de tests du site une fois adaptés à la nouvelle interface, et date de sa mise en ligne]
+
 ## Difficultés rencontrées
+
+**Un site original, mais peu lisible.** La première version, RémiOS, mettait tout le texte en police à chasse fixe dans des boîtes imbriquées, et l'on ne savait pas toujours où menait un lien, ni où ramenait la touche Échap. Je l'ai refaite façon Notion : un texte en police lisible, un menu latéral qui montre la page affichée, des liens qui disent où ils mènent, et un bouton « Retour » qui ramène vraiment à la page précédente.
 
 **Pas de serveur sur GitHub Pages.** Le tableau de bord devait écrire dans le dépôt et faire appel à une IA, sans exposer de secret. Solution : l'API GitHub appelée depuis le navigateur, avec un jeton personnel aux droits minimaux, et l'IA lancée par GitHub Actions, où reste son secret.
 
@@ -118,7 +128,8 @@ Le site est en ligne depuis septembre 2026, et sa fréquentation est mesurée de
 
 ## Pistes d'amélioration
 
-- Refaire l'audit Lighthouse après les derniers ajouts (veille à trois sujets, mesure d'audience).
+- Refaire l'audit Lighthouse et les vérifications d'accessibilité sur la nouvelle interface.
+- Donner au tableau de bord le même style que le portfolio.
 - Ajouter les tests d'accessibilité (axe-core) à la publication automatique.
 - Être prévenu avant l'expiration des jetons GitHub, valables un an.
 - Héberger la version Docker sur mon homelab, derrière son reverse proxy.

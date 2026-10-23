@@ -1,7 +1,7 @@
 // =============================================================================
 // Mesure d'audience (GoatCounter), sans script extérieur
 // -----------------------------------------------------------------------------
-// Chaque écran affiché (#/, #/veille, #/realisations/nas…) est compté une
+// Chaque écran affiché (#/, #/veille, #/realisations/homelab…) est compté une
 // fois, par une requête vers le point de comptage de GoatCounter (adresse :
 // audience.goatcounter dans content/site.config.js). C'est ce que fait le
 // script officiel de GoatCounter, qui n'est pas chargé : le site ne charge

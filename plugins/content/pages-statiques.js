@@ -243,7 +243,7 @@ export function renderPage(page, site, base) {
 </head>
 <body>
 <header>
-<p class="bandeau">Version texte du portfolio de <a href="presentation/">${escapeHtml(nom)}</a>, étudiant en BTS SIO SISR. <a href="${escapeHtml(page.ecran)}">Ouvrir dans RémiOS, la version interactive →</a></p>
+<p class="bandeau">Version texte du portfolio de <a href="presentation/">${escapeHtml(nom)}</a>, étudiant en BTS SIO SISR. <a href="${escapeHtml(page.ecran)}">Ouvrir la version complète du portfolio →</a></p>
 <nav>${nav}</nav>
 </header>
 <main>

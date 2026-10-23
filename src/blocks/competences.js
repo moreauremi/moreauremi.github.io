@@ -46,8 +46,11 @@ export function competencesBlock(hrefFor) {
 
 // Barre de niveau en caractères, façon terminal : [####----] pour 2 sur 4,
 // [#######-] pour 3,5. Purement visuelle : le nom du niveau est écrit à côté.
+// data-fill : remplissage en huitièmes, pour la vue page qui dessine une
+// vraie barre de progression à la place du texte (page.css).
 function levelBar(value) {
-  return `<span class="level-bar" aria-hidden="true">${levelBarText(value, site.savoirFaire.niveaux.length)}</span>`;
+  const max = site.savoirFaire.niveaux.length;
+  return `<span class="level-bar" data-fill="${Math.round((value / max) * 8)}" aria-hidden="true">${levelBarText(value, max)}</span>`;
 }
 
 function level(value) {
