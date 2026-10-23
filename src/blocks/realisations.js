@@ -32,15 +32,17 @@ export function realisationList(type, hrefFor) {
 }
 
 // Liste de fiches : titre (lien vers la fiche) et résumé.
-// « [ouvrir →] » rappelle dans RémiOS que la fiche est cliquable, comme
-// « [agrandir] » sur les captures ; la vue jury ne l'affiche pas, et les
-// lecteurs d'écran l'ignorent (le lien est déjà annoncé comme tel).
+// « > » devant le titre et « [ouvrir →] » rappellent dans RémiOS que la fiche
+// est cliquable, comme « [agrandir] » sur les captures ; la vue jury ne les
+// affiche pas, et les lecteurs d'écran les ignorent (le lien est déjà annoncé
+// comme tel).
 function ficheLinks(items, hrefFor) {
   return `<ul class="fiche-list" data-nav-list>${items
     .map(
       (r) => `
     <li>
       <a class="fiche-link" href="${hrefFor(r.slug)}">
+        <span class="fiche-link-mark" aria-hidden="true">&gt;</span>
         <span class="fiche-link-title">${safe(r.titre)}${draftBadge(r)}</span>
         <span class="fiche-link-open" aria-hidden="true">[ouvrir →]</span>
         ${r.resume ? `<span class="fiche-link-summary">${safe(r.resume)}</span>` : ''}

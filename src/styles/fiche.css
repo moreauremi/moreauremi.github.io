@@ -1,6 +1,6 @@
 /* ==========================================================================
    Fiches de réalisation et visionneuse d'images
-   (couleurs --accent et --rule fournies par le conteneur : RémiOS ou jury)
+   (couleurs --accent, --heading et --rule fournies par le conteneur : RémiOS ou jury)
    ========================================================================== */
 
 /* --- En-tête de fiche : type, date, statut, technos -------------------------- */
@@ -15,7 +15,7 @@
 }
 
 .fiche-meta dt {
-  color: var(--accent);
+  color: var(--heading);
   font-weight: 600;
 }
 

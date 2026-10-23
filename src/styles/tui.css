@@ -15,8 +15,11 @@ html[data-view='tui'] body {
   min-height: 100dvh; /* hauteur réelle de l'écran, barres du navigateur mobiles comprises */
   background: var(--tui-bg);
   color: var(--tui-ink);
-  /* Couleurs des blocs de contenu partagés (voir blocks.css) */
+  /* Couleurs des blocs de contenu partagés (voir blocks.css). Le bleu est
+     réservé à ce qui se clique : titres et étiquettes prennent le rouge du
+     titre des boîtes. */
   --accent: var(--tui-sel);
+  --heading: var(--tui-title);
   --rule: var(--tui-inner-border);
   --field-bg: var(--tui-field-bg);
   --field-ink: var(--tui-ink);
@@ -143,7 +146,7 @@ html[data-view='tui'] body {
 }
 
 .home-facts dt {
-  color: var(--tui-sel);
+  color: var(--heading);
   font-weight: 600;
 }
 
@@ -254,8 +257,15 @@ html[data-view='tui'] body {
    style que les titres des textes Markdown */
 .tui .block-title {
   margin: 1.4em 0 0.5em;
-  color: var(--accent);
+  color: var(--heading);
   font-size: 1em;
+}
+
+/* Barres de niveau et en-têtes de tableaux : en noir, puisqu'ils ne se
+   cliquent pas (dans la vue jury, ils gardent la couleur d'accent) */
+.tui .level-bar,
+.tui .prose thead th {
+  color: var(--tui-ink);
 }
 
 .tui .fiche-group > .block-title {
@@ -266,60 +276,58 @@ html[data-view='tui'] body {
   margin-top: 1.4em;
 }
 
-/* Chaque fiche est un bouton en relief : cadre noir et ombre franche, comme
-   les boîtes et les captures, et « [ouvrir →] » à droite du titre, comme
-   « [agrandir] » sur les captures. On voit qu'elle est cliquable sans la
-   survoler, ce qui compte surtout sur téléphone. Au survol, elle passe en
-   bleu et s'enfonce à moitié ; au clic, jusqu'au fond. */
-.tui .fiche-list {
-  gap: 12px;
-}
-
+/* Même fin cadre que les rubriques et les boutons, « > » devant le titre
+   souligné, comme tous les liens, et « [ouvrir →] » à droite, comme
+   « [agrandir] » sur les captures : on voit que la fiche est cliquable sans
+   la survoler, ce qui compte surtout sur téléphone. Le résumé s'aligne sur
+   le titre, sous le « > ». */
 .tui .fiche-link {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: baseline;
-  gap: 0 16px;
+  gap: 0 1ch;
   padding: 6px 10px;
-  border: 1px solid var(--tui-ink);
-  box-shadow: 4px 4px 0 var(--tui-shadow);
+  border: 1px solid var(--tui-inner-border);
   color: inherit;
   text-decoration: none;
-  transition:
-    transform 80ms,
-    box-shadow 80ms;
 }
 
+.tui .fiche-link-mark,
 .tui .fiche-link-title {
   color: var(--tui-sel);
   font-weight: 600;
 }
 
+.tui .fiche-link-mark {
+  display: block;
+}
+
+.tui .fiche-link-title {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .tui .fiche-link-open {
   display: block;
+  margin-left: 16px;
   color: var(--tui-sel);
   font-size: var(--font-size-small);
   white-space: nowrap;
 }
 
 .tui .fiche-link-summary {
-  grid-column: 1 / -1;
+  grid-column: 2 / -1;
 }
 
 .tui .fiche-link:hover,
 .tui .fiche-link:focus-visible {
   border-color: var(--tui-sel);
   background: var(--tui-sel);
-  box-shadow: 2px 2px 0 var(--tui-shadow);
   color: var(--tui-sel-ink);
-  transform: translate(2px, 2px);
 }
 
-.tui .fiche-link:active {
-  box-shadow: none;
-  transform: translate(4px, 4px);
-}
-
+.tui .fiche-link:hover .fiche-link-mark,
+.tui .fiche-link:focus-visible .fiche-link-mark,
 .tui .fiche-link:hover .fiche-link-title,
 .tui .fiche-link:focus-visible .fiche-link-title,
 .tui .fiche-link:hover .fiche-link-open,

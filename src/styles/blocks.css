@@ -2,7 +2,8 @@
    Blocs de contenu partagés par RémiOS et la vue jury (voir src/blocks/)
    --------------------------------------------------------------------------
    Les couleurs viennent de variables définies par le conteneur :
-     --accent        titres et liens
+     --accent        liens et éléments actifs (onglets, pages)
+     --heading       titres et étiquettes
      --rule          filets et bordures
      --field-bg, --field-ink, --field-border   champs du formulaire
    ========================================================================== */
@@ -11,7 +12,7 @@
 
 .prose h2 {
   margin: 1.4em 0 0.5em;
-  color: var(--accent);
+  color: var(--heading);
   font-size: 1em;
 }
 
@@ -222,7 +223,7 @@
   .skills td::before {
     content: attr(data-label) ' : ';
     content: attr(data-label) ' : ' / '';
-    color: var(--accent);
+    color: var(--heading);
     font-weight: 600;
   }
 }
@@ -559,7 +560,7 @@ a.tag:focus-visible {
 }
 
 .contact dt {
-  color: var(--accent);
+  color: var(--heading);
   font-weight: 600;
 }
 
@@ -585,7 +586,7 @@ a.tag:focus-visible {
 }
 
 .field > span {
-  color: var(--accent);
+  color: var(--heading);
   font-weight: 600;
 }
 
@@ -660,7 +661,8 @@ a.tag:focus-visible {
   list-style: none;
 }
 
-/* « [ouvrir →] » : seulement dans l'interface RémiOS (voir tui.css) */
+/* « > » et « [ouvrir →] » : seulement dans l'interface RémiOS (voir tui.css) */
+.fiche-link-mark,
 .fiche-link-open {
   display: none;
 }

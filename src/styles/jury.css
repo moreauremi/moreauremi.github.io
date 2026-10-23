@@ -19,6 +19,7 @@ html[data-view='jury'] body {
   line-height: 1.6;
   /* Couleurs des blocs de contenu partagés (voir blocks.css) */
   --accent: var(--jury-accent);
+  --heading: var(--jury-accent);
   --rule: var(--jury-rule);
   --field-bg: var(--jury-bg);
   --field-ink: var(--jury-ink);
