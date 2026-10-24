@@ -115,7 +115,7 @@ function reboot() {
 
 // Premier affichage : l'écran demandé est rendu tout de suite (sous le boot),
 // sans déplacer le focus. Le boot ne se joue qu'à l'arrivée sur l'accueil :
-// un lien direct (#/jury, #/realisations/nas…) affiche la page sans attendre.
+// un lien direct (#/jury, #/realisations/homelab…) affiche la page sans attendre.
 handleCountingToggle(); // #toggle-goatcounter : ne plus compter ses propres visites
 const firstRoute = parseRoute();
 render(firstRoute, { focus: false });

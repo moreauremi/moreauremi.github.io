@@ -95,7 +95,7 @@ export default {
   // GoatCounter (https://www.goatcounter.com : gratuit pour un site personnel,
   // open source, sans cookie) compte les écrans consultés. Le script de
   // GoatCounter n'est pas chargé : src/utils/audience.js envoie lui-même une
-  // requête par écran affiché (#/veille, #/realisations/nas…), et le site
+  // requête par écran affiché (#/veille, #/realisations/homelab…), et le site
   // garde sa règle « aucun script extérieur ». Statistiques : sur
   // https://remim.goatcounter.com et dans le tableau de bord des synthèses.
   // Pour ne pas compter ses propres visites : ouvrir une fois
@@ -343,23 +343,23 @@ export default {
       {
         nom: 'Systèmes et virtualisation',
         items: [
-          { nom: 'Linux', niveau: 3, preuves: ['homelab-jellyfin', 'nas', 'caffein', 'glpi', 'reseau-vm-virtualbox'] },
-          { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab-jellyfin', 'nas'] },
-          { nom: 'Docker', niveau: 2, preuves: ['homelab-jellyfin', 'caffein'] },
+          { nom: 'Linux', niveau: 3, preuves: ['homelab', 'glpi', 'reseau-vm-virtualbox'] },
+          { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab'] },
+          { nom: 'Docker', niveau: 2, preuves: ['homelab'] },
         ],
       },
       {
         nom: 'Réseaux et sécurité',
         items: [
-          { nom: 'VPN (Tailscale)', niveau: 3, preuves: ['homelab-jellyfin', 'nas'] },
-          { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['caffein', 'portfolio-remios'] },
-          { nom: 'Serveur web, reverse proxy (Nginx)', niveau: 2, preuves: ['caffein'] },
+          { nom: 'VPN (Tailscale)', niveau: 3, preuves: ['homelab'] },
+          { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['portfolio-remios'] },
+          { nom: 'Serveur web, reverse proxy (Nginx)', niveau: 2, preuves: [] },
         ],
       },
       {
         nom: 'Langages de programmation',
         items: [
-          { nom: 'Python', niveau: 3.5, preuves: ['crypto-dashboard-pro', 'caffein'] },
+          { nom: 'Python', niveau: 3.5, preuves: ['crypto-dashboard-pro'] },
           { nom: 'HTML', niveau: 2, preuves: ['portfolio-remios'] },
         ],
       },
@@ -370,9 +370,9 @@ export default {
       {
         nom: 'Outils et frameworks',
         items: [
-          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'caffein', 'portfolio-remios'] },
+          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'portfolio-remios'] },
           { nom: 'Streamlit, Pandas, Plotly', niveau: 3, preuves: ['crypto-dashboard-pro'] },
-          { nom: 'n8n (automatisation)', niveau: 2, preuves: ['caffein'] },
+          { nom: 'n8n (automatisation)', niveau: 2, preuves: [] },
         ],
       },
       {
@@ -437,6 +437,5 @@ export default {
     { action: 'Started', unite: 'alternance@1life.service', description: 'consultant ERP Open-Prod' },
     { action: 'Mounted', unite: '/srv/nas', description: 'stockage réseau' },
     { action: 'Started', unite: 'jellyfin.service', description: 'serveur multimédia' },
-    { action: 'Started', unite: 'caffein.service', description: 'facturation assistée par IA' },
   ],
 };

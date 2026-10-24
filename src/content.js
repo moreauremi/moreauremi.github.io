@@ -63,8 +63,15 @@ export const realisations = Object.values(ficheModules)
     return a.titre.localeCompare(b.titre, 'fr');
   });
 
+// Une fiche se retrouve aussi par ses anciennes adresses (champ
+// anciennesAdresses : fiches réunies ou renommées), pour que les liens déjà
+// partagés restent valides.
 export function getRealisation(slug) {
-  return realisations.find((r) => r.slug === slug) ?? null;
+  return (
+    realisations.find((r) => r.slug === slug) ??
+    realisations.find((r) => r.anciennesAdresses?.includes(slug)) ??
+    null
+  );
 }
 
 export function realisationsOfType(type) {

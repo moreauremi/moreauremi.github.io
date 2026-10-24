@@ -9,7 +9,7 @@ export default defineConfig({
   // Le site fonctionne ainsi aussi bien à la racine d'un domaine que dans un
   // sous-dossier derrière le reverse proxy (ex. http://192.168.1.10/portfolio/).
   // C'est possible parce que tout le site tient dans une seule page index.html :
-  // la navigation passe par le « hash » de l'URL (#/jury, #/realisations/nas…).
+  // la navigation passe par le « hash » de l'URL (#/jury, #/realisations/homelab…).
   base: './',
 
   // Plugins maison : recopie dans 503.html de son style et de son icône

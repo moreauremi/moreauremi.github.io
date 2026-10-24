@@ -45,6 +45,11 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
   // focus clavier ? (non au premier affichage, caché sous le boot)
   function show(route, { focus = true } = {}) {
     view = resolve(route);
+    // Ancienne adresse d'une fiche (anciennesAdresses) : l'adresse affichée
+    // devient la nouvelle, sans créer d'entrée dans l'historique
+    if (view.canonical && window.location.hash !== view.canonical) {
+      window.history.replaceState(window.history.state, '', view.canonical);
+    }
     stage.innerHTML = view.html;
     setPromptTitle(view.title); // « RémiOS_ » ou « Présentation — RémiOS_ », curseur clignotant
     window.scrollTo(0, 0);
@@ -91,6 +96,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
           title: fiche.titre,
           html: box({ title: safe(fiche.titre), body: ficheBlock(fiche, link.techno), actions: backButton(link.section(section.id)) }),
           parent: link.section(section.id),
+          canonical: link.fiche(fiche.slug),
         };
       }
     }

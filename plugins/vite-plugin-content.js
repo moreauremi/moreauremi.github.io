@@ -3,8 +3,8 @@
 // -----------------------------------------------------------------------------
 // Chaque fichier .md de content/ devient, au moment du build, un module :
 //
-//   content/realisations/nas.md          →  export default { meta, html }
-//   content/realisations/nas.md?source   →  export default '…texte source…'
+//   content/realisations/homelab.md      →  export default { meta, html }
+//   content/realisations/homelab.md?source →  export default '…texte source…'
 //
 //   - meta   : le frontmatter (bloc entre --- en tête de fichier), vérifié ;
 //   - html   : le corps du fichier converti en HTML ;

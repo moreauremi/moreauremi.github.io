@@ -77,7 +77,7 @@ Sur mobile, le terminal s'ouvre avec le bouton `[tty2]` de la barre du haut.
 | `#/` | menu principal (avec le démarrage) |
 | `#/presentation`, `#/alternance`, `#/realisations`, `#/competences`, `#/synthese`, `#/veille`, `#/certifications`, `#/contact` | une rubrique |
 | `#/mentions-legales` | mentions légales |
-| `#/realisations/<slug>` | une fiche, style RémiOS (ex. `#/realisations/nas`) |
+| `#/realisations/<slug>` | une fiche, style RémiOS (ex. `#/realisations/homelab`) |
 | `#/technos/<techno>` | les réalisations qui utilisent une techno, puis toutes les technos (ex. `#/technos/python`) |
 | `#/veille/<sujet>` | la veille, onglet de ce sujet ouvert (ex. `#/veille/virtualisation`) |
 | `#/veille/<sujet>/<tag>` | les actualités d'un sujet qui portent ce tag (ex. `#/veille/cybersecurite/rancongiciel`) ; l'ancienne forme `#/veille/<tag>` mène au premier sujet qui a ce tag |
@@ -98,7 +98,7 @@ Tout le contenu est dans `content/` : aucune ligne de code à toucher.
 - **Présentation, alternance et veille** : `content/pages/presentation.md`, `content/pages/alternance.md`, `content/pages/veille.md` (méthode, commune aux trois sujets de veille).
 - **Veille** : un dossier par sujet, `content/veille/<sujet>/` : `sujet.md` (pourquoi ce sujet) et `syntheses.md` (mes synthèses, à écrire de préférence depuis le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses)). Les sujets, leurs mots-clés et leurs sources sont dans `veille.sujets` de `content/site.config.js`.
 - **Photo** : déposer le portrait dans `public/photo/` (`.webp` carré, environ 400 × 400 px), puis indiquer son chemin dans `identite.photo` (`photo: 'photo/remi-moreau.webp'`).
-- **Compétences techniques** (rubrique « Compétences ») : `savoirFaire` dans `content/site.config.js`. Pour chaque compétence, un niveau de 1 à 4 (Notions, Guidé, Autonome, Maîtrise), demi-niveaux permis (`3.5` s'affiche « Entre autonome et maîtrise ») et les fiches qui la prouvent (`preuves: ['nas']`).
+- **Compétences techniques** (rubrique « Compétences ») : `savoirFaire` dans `content/site.config.js`. Pour chaque compétence, un niveau de 1 à 4 (Notions, Guidé, Autonome, Maîtrise), demi-niveaux permis (`3.5` s'affiche « Entre autonome et maîtrise ») et les fiches qui la prouvent (`preuves: ['homelab']`).
 - **Certifications** (certifications, langues, formations, badges) : `certifications` dans `content/site.config.js`, un exemple commenté y montre tous les champs. Le justificatif se dépose dans `public/docs/certifications/`.
 - **Couleur d'une techno** (étiquettes des fiches) : une ligne dans `src/styles/technos.css`, par exemple `.techno[data-techno="python"] { --techno-bg: #3776ab; }`. L'identifiant est le nom en minuscules, sans accents, avec des tirets (« GitHub Actions » → `github-actions`). Texte blanc par défaut ; ajouter `--techno-ink: #000000;` sur une couleur claire. `npm test` vérifie que chaque couleur se lit bien. Une techno sans ligne reste grise.
 - **Formulaire de contact** : la clé Web3Forms est dans `formulaire.cle` ; les messages arrivent à l'adresse associée à cette clé. Pour changer d'adresse, créer une nouvelle clé gratuite sur [web3forms.com](https://web3forms.com) et la remplacer. Clé vide = pas de formulaire, seul le lien e-mail est affiché. La politique de sécurité (CSP) et les mentions légales s'adaptent toutes seules.
@@ -131,12 +131,12 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [x] **Présentation** : photo professionnelle, projet professionnel (attendu par les consignes de l'épreuve E5).
 - [ ] **Alternance** : présentation de 1Life, missions, outils, bilan personnel, recommandation du tuteur, dates des expériences précédentes.
 - [ ] **Réalisations 1Life** : « Environnement Open-Prod v10 » publiée ; « Rapports Open-Prod avec QWeb » (`rapports-qweb.md`) en brouillon, à compléter après la seconde journée de formation (fin octobre 2026) puis à publier ; « Flux de production avec sous-traitance » (`flux-production-sous-traitance.md`, présentation du 16 octobre 2026) publiée avec des captures provisoires, il reste la préparation, les retours reçus et les difficultés. Toujours après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
-- [ ] **Homelab Jellyfin et NAS** (publiés le 16 octobre 2026, avec des captures provisoires `a-venir.svg`) : détails techniques balisés `[À COMPLÉTER]`, et les vraies captures à la place des images provisoires (leur légende dit ce que chacune doit montrer).
+- [ ] **Homelab sous Proxmox** (fiche `homelab`, qui réunit depuis le 24 octobre 2026 les anciennes fiches Homelab Jellyfin et NAS Homelab, et présente la VM de projet partagée avec les camarades de classe ; les anciennes adresses mènent à cette fiche) : détails techniques balisés `[À COMPLÉTER]` (dont ceux de la VM partagée), et les vraies captures à la place des images provisoires `a-venir.svg` (leur légende dit ce que chacune doit montrer).
 - [ ] **Crypto Dashboard Pro** : contexte, tests et difficultés balisés `[À COMPLÉTER]`.
 - [ ] **RMutils** : captures des menus et du QR code en place (vrai code, données d'exemple) ; reste une capture d'un rapport HTML prise sur un vrai PC Windows, et le détail des tests une fois l'outil utilisé en conditions réelles (premiers essais faits sur mon PC et des PC de proches).
 - [x] **Compétences techniques** : niveaux renseignés (octobre 2026). À remonter en cours d'année (Open-Prod, SQL, Docker…), et à relier aux fiches 1Life quand elles seront publiées (Open-Prod renvoie à « Environnement Open-Prod v10 » ; QWeb et SQL renvoient aussi à la fiche QWeb, affichée une fois publiée).
 - [x] **Grille de compétences** : les six compétences du tableau de synthèse officiel (B1.1 à B1.6) sont dans `site.config.js`.
-- [ ] **Compétences des fiches** : renseignées pour les 6 projets personnels ; à faire pour les fiches 1Life et de formation quand elles seront remplies (ex. `[B1.1, B1.5]`). B1.3 est couverte par la fiche « Portfolio RémiOS », B1.2 (incidents et demandes d'assistance) par la fiche « RMutils » ; une fiche 1Life sur l'assistance aux utilisateurs la renforcerait.
+- [ ] **Compétences des fiches** : renseignées pour les 4 projets personnels ; à faire pour les fiches 1Life et de formation quand elles seront remplies (ex. `[B1.1, B1.5]`). B1.3 est couverte par la fiche « Portfolio RémiOS », B1.2 (incidents et demandes d'assistance) par la fiche « RMutils » ; une fiche 1Life sur l'assistance aux utilisateurs la renforcerait.
 - [ ] **Fiche « Portfolio RémiOS »** (`content/realisations/portfolio-remios.md`) : rédigée d'après ce README, à relire.
 - [ ] **PDF** : tableau de synthèse.
 - [x] **Veille** : trois sujets (cybersécurité des PME industrielles, virtualisation, facturation électronique) et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
@@ -200,7 +200,7 @@ plugins/                 plugins Vite maison : Markdown → HTML au build, véri
 public/                  copié tel quel dans dist/ : icônes, image d'aperçu, robots.txt, captures, PDF
 src/main.js              point d'entrée : assemble les modules, clavier global
 src/app.html             structure de la page : barre fixe, interface RémiOS, vue jury, calque du boot
-src/router.js            routage par hash (#/presentation, #/realisations/nas…)
+src/router.js            routage par hash (#/presentation, #/realisations/homelab…)
 src/content.js           accès au contenu (configuration + fiches) pour le reste du code
 src/blocks/              blocs de contenu communs à RémiOS et à la vue jury, un fichier par rubrique
                          (index.js les rassemble)
@@ -251,7 +251,7 @@ reference/               maquette validée au départ du projet (hors build) : m
 
 - **Boot en calque, par-dessus le menu.** Le menu est affiché dès le chargement ; le boot est un calque posé dessus pendant 5 secondes au maximum. « Passer » retire simplement le calque. Pendant le boot, le menu est rendu « inerte » (attribut `inert`) pour que la touche Tab ne s'y perde pas.
 - **Boot seulement à l'accueil.** Un lien direct affiche la page sans attendre. Le service `veille-techno.service` passe de `[ WARN ]` à `[  OK  ]` dès qu'un sujet de veille est renseigné.
-- **Terminal entièrement simulé.** L'arborescence (`~/realisations/perso/nas.md`…) est construite en mémoire à partir du contenu. Aucune commande n'est exécutée, rien n'est envoyé à un serveur.
+- **Terminal entièrement simulé.** L'arborescence (`~/realisations/perso/homelab.md`…) est construite en mémoire à partir du contenu. Aucune commande n'est exécutée, rien n'est envoyé à un serveur.
 - **Easter egg du terminal.** La commande cachée `starwars` (ou `telnet towel.blinkenlights.nl`, clin d'œil au célèbre film en ASCII) joue pendant 30 secondes un générique façon Star Wars : intro, titre qui s'éloigne, texte en perspective. Le texte est une parodie originale, et la fanfare (si le son est activé) une composition originale : ni le film, ni son texte, ni sa musique, protégés par le droit d'auteur, ne sont reproduits. Rendu rétro : le générique est dessiné dans un `<canvas>` en basse résolution (un « pixel rétro » = 3 pixels d'écran), agrandi sans lissage (`image-rendering: pixelated`) pour un effet pixelisé qui reste à 60 images/s, avec un filtre CSS de contraste et une couche d'écran cathodique (lignes de balayage, coins assombris, scintillement discret). Un filtre SVG de pixelisation avait d'abord été essayé : il faisait tomber l'animation à 25 images/s. Échap, `q` ou le bouton « Arrêter » l'interrompent ; en animations réduites, le texte s'affiche simplement.
 - **Sons synthétisés.** Bip POST (oscillateur carré à 1 000 Hz), clics de disque (bruit filtré) et bip de validation sont fabriqués par la Web Audio API : aucun fichier audio. Les navigateurs interdisent le son avant une interaction : le contexte audio n'est créé qu'au premier clic ou à la première touche. Au tout premier chargement, le bip POST ne peut donc pas sonner ; il sonne sur `<Redémarrer>`, ou dès que le son est activé pendant le boot.
 - **Titre d'onglet façon invite de commande.** L'onglet affiche « RémiOS_ », et le « _ » clignote comme un curseur de terminal (toutes les 530 ms). Sur une rubrique ou une fiche, le nom de la page reste devant (« Présentation — RémiOS_ ») pour l'historique, les favoris et les lecteurs d'écran. La vue jury garde un titre fixe, et le curseur ne clignote pas si le système demande de réduire les animations.
@@ -309,7 +309,7 @@ reference/               maquette validée au départ du projet (hors build) : m
 
 ### Mesure d'audience
 
-- **GoatCounter** (gratuit pour un site personnel, open source) compte les écrans consultés : `#/`, `#/veille/virtualisation`, `#/realisations/caffein`, `#/jury`… Statistiques sur https://remim.goatcounter.com et dans le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses).
+- **GoatCounter** (gratuit pour un site personnel, open source) compte les écrans consultés : `#/`, `#/veille/virtualisation`, `#/realisations/glpi`, `#/jury`… Statistiques sur https://remim.goatcounter.com et dans le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses).
 - **Sans le script de GoatCounter** : `src/utils/audience.js` envoie lui-même une requête par écran affiché (`navigator.sendBeacon`, comme le script officiel), avec seulement la page, le site d'origine à l'arrivée et la largeur de l'écran. Le site garde sa règle « aucun script extérieur », et son poids ne change pas.
 - **Rien n'est compté** en dehors de https://remim.me (développement, tests, homelab), pour un navigateur piloté par un programme (tests, robots), ni quand le navigateur demande à ne pas être suivi (Do Not Track, Global Privacy Control).
 - **Ne pas compter ses propres visites** : ouvrir une fois https://remim.me/#toggle-goatcounter sur chaque appareil (Mac, téléphone). Un message confirme ; la même adresse réactive le comptage.
