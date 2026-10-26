@@ -19,6 +19,14 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
+## 26/10/2026 - La facturation électronique, une nouvelle étape pour les entreprises
+
+Je constate qu’il est encore difficile pour les entreprises de prendre l’habitude de fonctionner avec la facture électronique, car cela ajoute des étapes à la comptabilité. Un mois après l’entrée en vigueur de l’obligation pour les grandes entreprises et les ETI, les retours signalent notamment des points de vigilance lors des clôtures mensuelles, dans l’intégration des ERP, le traitement des factures refusées et l’échange des statuts de paiement.
+
+**Sources**
+
+- [Facturation électronique : la clôture mensuelle, le test grandeur nature à l’épreuve](https://www.daf-mag.fr/bi-1244/transformation-processus-2133/facturation-electronique-la-cloture-mensuelle-le-test-grandeur-nature-a-lepreuve-27838) (DAF Magazine, 20 octobre 2026)
+
 ## 19/10/2026 - La facturation électronique, une réforme qui ralentit les entreprises
 
 Je constate que la facturation électronique est difficile à mettre en place et que cela prend du temps. La réforme entre désormais dans une phase opérationnelle : les entreprises choisissent leurs plateformes, paramètrent leurs outils et commencent à préparer leurs équipes et leurs processus. Les intégrateurs d’ERP doivent également prendre en compte les exigences techniques, organisationnelles et commerciales de leurs clients et partenaires.
