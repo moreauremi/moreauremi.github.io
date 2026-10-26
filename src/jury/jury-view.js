@@ -126,8 +126,8 @@ function mainPage() {
   const parts = PARTS.map(([id, label, body]) => part(id, label, body())).join('');
 
   return `<div class="jury-page">
+    ${breadcrumb([['Vue jury']])}
     <header class="jury-header">
-      ${breadcrumb([['Vue jury']])}
       <p class="jury-kicker">Portfolio BTS SIO option SISR · épreuve E5 · vue rapide jury</p>
       <h1 tabindex="-1">${escapeHtml(site.identite.nom)}</h1>
       <p class="jury-sub">${site.neofetch

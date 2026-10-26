@@ -134,10 +134,21 @@ html[data-view='jury'] body {
   padding: 0;
 }
 
-.jury .crumbs ol {
-  margin-bottom: 1.5em;
-  font-size: 0.9375rem;
+.jury .crumbs {
+  margin: -40px 0 1.5em;
+  padding-right: 0;
+  background: var(--jury-bg);
+  border-bottom: 1px solid var(--jury-rule);
   --crumbs-sep: var(--jury-muted);
+}
+
+.jury .crumbs ol {
+  font-size: 1rem;
+}
+
+/* Une section atteinte par le sommaire ne passe pas sous le fil d'Ariane */
+.jury-part h2 {
+  scroll-margin-top: 64px;
 }
 
 /* --- Liste des réalisations -------------------------------------------------- */

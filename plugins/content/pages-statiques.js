@@ -303,7 +303,9 @@ a{color:var(--lien)}
 .bandeau{margin:0;padding:.75rem 0;border-bottom:1px solid var(--trait);font-size:.9rem;color:var(--doux)}
 nav{padding:.6rem 0;font-size:.95rem}
 nav a[aria-current]{font-weight:600;text-decoration:none}
-.ariane ol{display:flex;flex-wrap:wrap;margin:1rem 0 0;padding:0;list-style:none;font-size:.9rem;color:var(--doux)}
+.ariane{position:sticky;top:0;z-index:1;background:var(--fond);border-bottom:1px solid var(--trait)}
+.ariane ol{display:flex;margin:0;padding:0;list-style:none;font-size:1rem;color:var(--doux);white-space:nowrap}
+.ariane li:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .ariane li+li::before{content:"/";content:"/"/"";margin:0 .5ch}
 h1{font-size:1.8rem;line-height:1.25;margin:1.5rem 0 1rem}
 h2{font-size:1.3rem;margin-top:2rem;border-bottom:1px solid var(--trait);padding-bottom:.25rem}

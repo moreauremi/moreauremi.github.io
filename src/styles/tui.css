@@ -83,8 +83,9 @@ html[data-view='tui'] body {
 
 .tui-box {
   --box-pad: 22px;
+  --box-pad-x: 26px;
   width: min(900px, 100%);
-  padding: var(--box-pad) 26px 20px;
+  padding: var(--box-pad) var(--box-pad-x) 20px;
   background: var(--tui-box);
   /* Relief : bords clairs en haut à gauche, sombres en bas à droite */
   border: 2px solid;
@@ -121,14 +122,45 @@ html[data-view='tui'] body {
 
 /* Façon chemin : RémiOS / Réalisations / GLPI. Dans RémiOS, au-dessus du cadre
    intérieur de la boîte ; dans la vue jury, en haut de page. Ici plutôt que dans
-   blocks.css : les pages d'erreur (errors.css) n'importent que tui.css. */
+   blocks.css : les pages d'erreur (errors.css) n'importent que tui.css.
+   Toujours visible : il reste collé en haut de l'écran quand la page défile,
+   sur toute la largeur de la boîte, avec son fond pour masquer le texte dessous. */
+.crumbs {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  min-height: 48px; /* hauteur de la barre fixe (son, vue jury) */
+  margin: -10px calc(-1 * var(--box-pad-x, 0px)) 6px;
+  padding-inline: var(--box-pad-x, 0px);
+  background: var(--tui-box);
+}
+
+/* Tant que la boîte n'est pas plus étroite que l'écran de la largeur des
+   boutons fixes, le fil d'Ariane leur laisse la place à droite */
+@media (max-width: 1360px) {
+  .crumbs {
+    padding-right: calc(var(--system-bar-width, 0px) - var(--gutter));
+  }
+}
+
+/* Une seule ligne : le dernier élément (souvent un long titre de fiche) est
+   coupé par « … » plutôt que de faire grandir la bande collée en haut */
 .crumbs ol {
   display: flex;
-  flex-wrap: wrap;
-  margin: 0 0 10px;
+  min-width: 0;
+  margin: 0;
   padding: 0;
   list-style: none;
-  font-size: var(--font-size-small);
+  font-size: var(--font-size-reading);
+  white-space: nowrap;
+}
+
+.crumbs li:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Séparateur décoratif : le texte après « / » (vide) est ce que lisent les
@@ -462,7 +494,7 @@ html[data-view='tui'] body {
 
   .tui-box {
     --box-pad: 18px;
-    padding-inline: 12px;
+    --box-pad-x: 12px;
   }
 
   .tui-box-inner {
