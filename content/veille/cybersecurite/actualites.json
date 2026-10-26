@@ -14,6 +14,19 @@
       ]
     },
     {
+      "id": "e1d82cf4d398",
+      "date": "2026-10-23",
+      "titre": "L’infostealer Aokigahara cible ChatGPT, Claude, Copilot : identifiants IA, mdp, accès cloud ciblés ciblés",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/malwares-virus-antivirus/linfostealer-aokigahara-cible-chatgpt-claude-copilot-identifiants-ia-mdp-acces-cloud-cibles-cibles.html",
+      "resume": "Check Point Research décrit Aokigahara, un infostealer qui recherche notamment les identifiants, cookies et données de session associés aux outils d’IA, de développement et de cloud. Pour une PME industrielle, le vol de ces informations depuis un poste peut donner accès à plusieurs services et informations sensibles de l’entreprise.",
+      "tags": [
+        "intelligence artificielle",
+        "fuite de données",
+        "cybercriminalité"
+      ]
+    },
+    {
       "id": "3341d0f7b5a8",
       "date": "2026-10-23",
       "titre": "VeloCloud : Arista corrige une vulnérabilité déjà exploitée",
@@ -23,6 +36,43 @@
       "tags": [
         "vulnérabilité",
         "PME"
+      ]
+    },
+    {
+      "id": "ebd51cdc80e6",
+      "date": "2026-10-22",
+      "titre": "GitLab corrige la CVE-2026-110264, une faille critique qui touche toutes les versions depuis 2014",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/gitlab-cve-2026-110264-faille-critique-regex-onigmo/",
+      "resume": "GitLab a corrigé une vulnérabilité critique exploitable sans authentification, susceptible de permettre l’exécution de code arbitraire sur les instances concernées. Les PME qui hébergent elles-mêmes GitLab doivent vérifier leur version et appliquer le correctif, y compris après certaines mises à jour précédentes devenues vulnérables.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
+      ]
+    },
+    {
+      "id": "42ae80758aad",
+      "date": "2026-10-22",
+      "titre": "LiteLLM PyPI Attack : Décryptage et commentaires de JFrog",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/reseau-securite/litellm-pypi-attack-decryptage-et-commentaires-de-jfrog.html",
+      "resume": "JFrog a découvert du code malveillant dans la version 1.107.0 de LiteLLM distribuée sur PyPI. Cette compromission peut voler des identifiants et permettre l’exécution de code à distance, ce qui expose les environnements de développement, d’intégration continue et cloud d’une PME à un risque de propagation par la chaîne logicielle.",
+      "tags": [
+        "chaîne d'approvisionnement",
+        "fuite de données",
+        "intelligence artificielle"
+      ]
+    },
+    {
+      "id": "d4e471d74255",
+      "date": "2026-10-21",
+      "titre": "Contrôle d’accès : investir selon le risque, pas selon l’âge des équipements",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/authentification-biometrie/controle-dacces-investir-selon-le-risque-pas-selon-lage-des-equipements.html",
+      "resume": "Un exemple montre qu’un badge peut rester actif après le départ d’un prestataire, alors que son compte informatique a été désactivé. Pour une PME industrielle, le bon fonctionnement d’un contrôle d’accès ne suffit donc pas : les droits physiques et numériques doivent être régulièrement vérifiés et adaptés aux fonctions.",
+      "tags": [
+        "PME",
+        "contrôle d’accès"
       ]
     },
     {
@@ -63,6 +113,19 @@
       ]
     },
     {
+      "id": "b20c0d635fe2",
+      "date": "2026-10-20",
+      "titre": "Japon : l’outil d’IA chinois ARTEX détourné pour cibler des entreprises",
+      "source": "InCyber",
+      "url": "https://incyber.org/article/japon-loutil-dia-chinois-artex-detourne-pour-cibler-des-entreprises/",
+      "resume": "Une enquête décrit l’utilisation détournée d’ARTEX, un outil d’automatisation des tests d’intrusion, dans des campagnes visant plusieurs entreprises japonaises, dont certaines ont signalé des fuites de données. Pour une PME industrielle, cet incident montre que des outils conçus pour la sécurité peuvent aussi accroître l’automatisation et l’ampleur des attaques.",
+      "tags": [
+        "intelligence artificielle",
+        "fuite de données",
+        "cybercriminalité"
+      ]
+    },
+    {
       "id": "cebf94aa8b2f",
       "date": "2026-10-20",
       "titre": "Logistique : Kaspersky découvre une vulnérabilité dans les lecteurs de codes-barres",
@@ -73,6 +136,18 @@
         "vulnérabilité",
         "systèmes industriels (OT)",
         "chaîne d'approvisionnement"
+      ]
+    },
+    {
+      "id": "af654ae56bc8",
+      "date": "2026-10-19",
+      "titre": "Bulletin d'actualité CERTFR-2026-ACT-044 (19 octobre 2026)",
+      "source": "CERT-FR (ANSSI)",
+      "url": "https://www.cert.ssi.gouv.fr/actualite/CERTFR-2026-ACT-044/",
+      "resume": "Le CERT-FR publie un bulletin recensant les vulnérabilités significatives de la semaine et rappelle qu’elles doivent être évaluées dans une analyse de risques, puis intégrées à un plan d’action lorsqu’elles concernent le système d’information d’une PME.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
       ]
     },
     {

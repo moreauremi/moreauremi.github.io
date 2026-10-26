@@ -2,6 +2,32 @@
   "miseAJour": "2026-10-26",
   "actualites": [
     {
+      "id": "616526afd4bd",
+      "date": "2026-10-26",
+      "titre": "Facturation électronique : après la réception, comment préparer votre TPE pour les échéances de 2027 ?",
+      "source": "Sage, blog",
+      "url": "https://www.sage.com/fr-fr/blog/facturation-electronique-apres-reception-emission-e-reporting/",
+      "resume": "Le texte présente la préparation des TPE et PME à l’émission de factures électroniques et à l’e-reporting prévus en 2027, notamment la vérification des données clients et l’adaptation des outils. Ces éléments sont importants pour les PME et pour les intégrateurs d’ERP, qui doivent sécuriser les informations et l’intégration avec une plateforme agréée.",
+      "tags": [
+        "calendrier",
+        "e-reporting",
+        "plateformes agréées"
+      ]
+    },
+    {
+      "id": "d0e7f546c3f0",
+      "date": "2026-10-26",
+      "titre": "E-invoicing : derrière l’échéance de 2026, un chantier de transformation bien plus large",
+      "source": "DAF Magazine",
+      "url": "https://www.daf-mag.fr/bi-1244/transformation-processus-2133/e-invoicing-derriere-lecheance-de-2026-un-chantier-de-transformation-bien-plus-large-27896",
+      "resume": "Le texte souligne que la réforme dépasse l’échéance de réception de 2026 et impose de fiabiliser les données et les flux entre ERP, CRM, facturation et encaissement, avant l’extension aux PME en 2027. Cette transformation est importante pour les PME et pour les intégrateurs d’ERP, qui doivent traiter les identifiants, les adresses et la distinction des flux.",
+      "tags": [
+        "ERP",
+        "PME",
+        "calendrier"
+      ]
+    },
+    {
       "id": "e5fae2a1d0f2",
       "date": "2026-10-20",
       "titre": "Facturation électronique : la clôture mensuelle, le test grandeur nature à l’épreuve",
