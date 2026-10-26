@@ -13,8 +13,8 @@ titre: Veille technologique
   Ce fichier contient ce qui est commun aux trois sujets : la méthode.
 -->
 
-Je suis trois sujets, liés à mon alternance et à mes projets : la sécurité des entreprises industrielles, la virtualisation qui fait tourner leurs serveurs, et la réforme de la facturation électronique, qui change leurs logiciels de gestion.
+Je suis trois sujets, liés à mon alternance et à mes projets : la **sécurité des entreprises industrielles**, la **virtualisation** qui fait tourner leurs serveurs, et la réforme de la **facturation électronique**, qui change leurs logiciels de gestion.
 
 ## Méthode
 
-Chaque lundi, un outil que j'ai développé pour ce portfolio lit une trentaine de sources spécialisées (dont le CERT-FR de l'ANSSI), puis une IA (GitHub Copilot) choisit pour chaque sujet les articles les plus utiles, les résume et leur attribue des tags. Je reçois ces actualités par e-mail, je lis les articles retenus, puis j'écris mes synthèses : ce que j'en retiens, ce que ça change pour les entreprises, ce que j'en fais. Je les écris dans mon tableau de bord, ou directement en répondant à l'e-mail : l'IA met alors mon avis en forme, sans rien y ajouter, et je relis la synthèse avant de la publier.
+**Chaque lundi**, un **outil que j'ai développé** pour ce portfolio lit une **trentaine de sources spécialisées** (dont le **CERT-FR de l'ANSSI**), puis une **IA** (GitHub Copilot) choisit pour chaque sujet les articles les plus utiles, les résume et leur attribue des tags. Je reçois ces actualités **par e-mail**, je **lis les articles retenus**, puis j'**écris mes synthèses** : ce que j'en retiens, ce que ça change pour les entreprises, ce que j'en fais. Je les écris dans mon tableau de bord, ou directement en répondant à l'e-mail : l'IA met alors mon avis en forme, sans rien y ajouter, et je **relis la synthèse avant de la publier**.

@@ -12,15 +12,15 @@ titre: Présentation
 
 ## Qui je suis
 
-Je m'appelle Rémi Moreau. Je prépare un BTS SIO option SISR à MyDigitalSchool Nantes (promotion 2026-2028), en alternance comme consultant ERP chez 1Life. J'aime faire le lien entre les besoins des utilisateurs et les outils techniques qui y répondent.
+Je m'appelle Rémi Moreau. Je prépare un **BTS SIO option SISR** à **MyDigitalSchool Nantes** (promotion 2026-2028), en alternance comme **consultant ERP** chez **1Life**. J'aime faire le lien entre les **besoins des utilisateurs** et les **outils techniques** qui y répondent.
 
 ## Mon parcours
 
-Bac général en 2024, deux ans en commerce (BBA à Audencia, BTS NDRC) et des emplois en restauration et en grande distribution : j'y ai découvert que ce qui me plaît, c'est le contact client.
+Bac général en 2024, deux ans en **commerce** (BBA à Audencia, BTS NDRC) et des emplois en restauration et en grande distribution : j'y ai découvert que ce qui me plaît, c'est le **contact client**.
 
 ## Ce qui m'attire dans l'infrastructure
 
-Interconnecter des machines, et rester autonome plutôt que de payer des services en ligne : mon homelab Proxmox héberge un serveur multimédia Jellyfin et un NAS, accessibles à distance par VPN.
+**Interconnecter des machines**, et **rester autonome** plutôt que de payer des services en ligne : mon **homelab Proxmox** héberge un serveur multimédia **Jellyfin** et un **NAS**, accessibles à distance par **VPN**.
 
 ## Mon projet professionnel
 
@@ -29,4 +29,4 @@ Interconnecter des machines, et rester autonome plutôt que de payer des service
   projet professionnel ») : deux ou trois phrases sincères suffisent.
 -->
 
-Confirmer mon profil de consultant ERP chez 1Life : un métier qui allie contact client et technique, et qui me fait découvrir l'industrie française à travers des entreprises aux métiers très différents.
+Confirmer mon profil de **consultant ERP** chez 1Life : un métier qui allie **contact client** et **technique**, et qui me fait découvrir l'**industrie française** à travers des entreprises aux métiers très différents.

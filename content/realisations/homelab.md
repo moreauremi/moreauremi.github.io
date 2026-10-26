@@ -38,7 +38,7 @@ anciennesAdresses: [homelab-jellyfin, nas]
 
 ## Contexte
 
-Je voulais centraliser mes propres vidéos et mes fichiers, et pouvoir y accéder depuis n'importe où, sans dépendre d'un service en ligne payant. Point de départ : un vieux PC récupéré gratuitement, et un budget nul. Principale contrainte : ce matériel ancien limitait les capacités de virtualisation.
+Je voulais centraliser mes propres vidéos et mes fichiers, et pouvoir y accéder depuis n'importe où, sans dépendre d'un service en ligne payant. Point de départ : un **vieux PC récupéré** gratuitement, et un **budget nul**. Principale contrainte : ce matériel ancien limitait les capacités de virtualisation.
 
 Le homelab sert aussi à mes cours : pour les projets de groupe du BTS, j'y ai créé une machine virtuelle à laquelle mes camarades de classe peuvent se connecter.
 
@@ -46,16 +46,16 @@ Le homelab sert aussi à mes cours : pour les projets de groupe du BTS, j'y ai c
 
 ## Objectifs
 
-- Construire un serveur multimédia personnel, une sorte de « Netflix fait maison » pour mes propres vidéos, consultable depuis n'importe quel appareil, chez moi comme à distance.
-- Disposer d'un espace de stockage centralisé (NAS), hébergé chez moi et accessible depuis n'importe où.
-- Mettre à disposition de mes camarades de classe une machine virtuelle commune, pour travailler ensemble sur nos projets.
-- Rendre tout cela accessible à distance sans exposer le serveur sur Internet.
+- Construire un **serveur multimédia personnel**, une sorte de « Netflix fait maison » pour mes propres vidéos, consultable depuis n'importe quel appareil, chez moi comme à distance.
+- Disposer d'un **espace de stockage centralisé** (NAS), hébergé chez moi et accessible depuis n'importe où.
+- Mettre à disposition de mes camarades de classe une **machine virtuelle commune**, pour travailler ensemble sur nos projets.
+- Rendre tout cela accessible à distance **sans exposer le serveur sur Internet**.
 
 ## Mise en œuvre
 
 J'ai d'abord découpé le projet en étapes clés, puis choisi l'architecture. Le serveur tourne sous **Proxmox**, un hyperviseur qui permet de faire fonctionner plusieurs services isolés sur une même machine : les services du homelab y sont répartis entre des **conteneurs Docker** et des **machines virtuelles**.
 
-L'accès à distance passe par **Tailscale**, un VPN : il crée un réseau privé chiffré entre les appareils autorisés et le homelab. Les services sont joignables comme s'ils se trouvaient sur le réseau local, sans être exposés sur Internet.
+L'accès à distance passe par **Tailscale**, un VPN : il crée un **réseau privé chiffré** entre les appareils autorisés et le homelab. Les services sont joignables comme s'ils se trouvaient sur le réseau local, sans être exposés sur Internet.
 
 ![Schéma d'architecture du homelab : mes appareils (navigateur web, application Swiftfin), chez moi comme à distance, et les ordinateurs de mes camarades de classe rejoignent le homelab par le VPN Tailscale, un réseau privé chiffré, sans que le serveur soit exposé sur Internet. Le homelab est un vieux PC récupéré sous Proxmox VE, qui fait tourner Jellyfin (bibliothèque de vidéos), le NAS (stockage de fichiers) et une machine virtuelle de projet partagée avec mes camarades.](schemas/homelab-architecture.svg "Architecture du homelab")
 
@@ -93,7 +93,7 @@ Pour les projets en groupe du BTS SIO, j'ai mis en place sur le homelab une **ma
 
 ## Résultats et tests
 
-Le serveur multimédia est terminé et opérationnel. Le NAS est en cours de mise en place.
+Le serveur multimédia est **terminé et opérationnel**. Le NAS est **en cours de mise en place**.
 
 [À COMPLÉTER : ce qui a été vérifié pour Jellyfin (lecture à distance par Tailscale, appareils testés, fluidité, transcodage…) et pour le NAS (accès depuis l'extérieur, débits, droits d'accès…), et avec quel résultat]
 

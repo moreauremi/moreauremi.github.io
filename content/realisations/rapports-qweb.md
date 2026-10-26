@@ -35,7 +35,7 @@ brouillon: true  # visible avec npm run dev, absente du site publié : à retire
 
 ## Contexte
 
-Les clients de 1Life produisent chaque jour avec Open-Prod des documents imprimables : devis, factures, bons de livraison… Ce sont des **rapports**, mis en page par **QWeb**, le moteur de modèles d'Odoo, sur lequel Open-Prod est construit. Savoir créer un rapport ou adapter un modèle existant permet de répondre aux besoins d'un client sans attendre un développeur : c'est l'objet de cette formation de deux journées, la première le 15 octobre 2026, la seconde fin octobre.
+Les clients de 1Life produisent chaque jour avec Open-Prod des documents imprimables : devis, factures, bons de livraison… Ce sont des **rapports**, mis en page par **QWeb**, le moteur de modèles d'Odoo, sur lequel Open-Prod est construit. Savoir créer un rapport ou adapter un modèle existant permet de répondre aux **besoins d'un client** sans attendre un développeur : c'est l'objet de cette **formation de deux journées**, la première le 15 octobre 2026, la seconde fin octobre.
 
 [À COMPLÉTER : qui a donné la formation, sur quelle base (démonstration ?), avec quels outils]
 
@@ -48,7 +48,7 @@ Les clients de 1Life produisent chaque jour avec Open-Prod des documents imprima
 
 ## Mise en œuvre
 
-Un rapport QWeb est un modèle écrit en XML : il décrit la mise en page du document et indique, par des instructions propres à QWeb (boucles, conditions, champs à afficher), où placer les données de l'ERP.
+Un rapport QWeb est un **modèle écrit en XML** : il décrit la mise en page du document et indique, par des instructions propres à QWeb (**boucles**, **conditions**, **champs à afficher**), où placer les données de l'ERP.
 
 ### Création d'un rapport
 

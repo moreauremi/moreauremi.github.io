@@ -117,6 +117,38 @@ html[data-view='tui'] body {
   outline: none;
 }
 
+/* --- Fil d'Ariane ------------------------------------------------------------ */
+
+/* Façon chemin : RémiOS / Réalisations / GLPI. Dans RémiOS, au-dessus du cadre
+   intérieur de la boîte ; dans la vue jury, en haut de page. Ici plutôt que dans
+   blocks.css : les pages d'erreur (errors.css) n'importent que tui.css. */
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  font-size: var(--font-size-small);
+}
+
+/* Séparateur décoratif : le texte après « / » (vide) est ce que lisent les
+   lecteurs d'écran, qui annoncent déjà une liste */
+.crumbs li + li::before {
+  content: '/';
+  content: '/' / '';
+  margin-inline: 0.6ch;
+  color: var(--crumbs-sep, var(--tui-bevel-dark));
+}
+
+.crumbs a {
+  color: var(--accent);
+  text-underline-offset: 2px;
+}
+
+.crumbs [aria-current] {
+  font-weight: 600;
+}
+
 .tui-box-inner {
   padding: 18px;
   border: 1px solid var(--tui-inner-border);

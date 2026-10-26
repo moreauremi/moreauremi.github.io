@@ -149,6 +149,14 @@
   min-width: 34rem;
   border-collapse: collapse;
   table-layout: fixed;
+  /* Même ombre portée que les boîtes de RémiOS (tui.css) */
+  background: var(--tui-box);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--tui-shadow);
+}
+
+/* Le cadre défilant couperait l'ombre : il lui laisse la place */
+.table-scroll:has(> .skills) {
+  padding: 0 var(--shadow-offset) var(--shadow-offset) 0;
 }
 
 .skills thead th:nth-child(1) {

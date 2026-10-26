@@ -28,6 +28,7 @@ export function homeBox() {
 
   return box({
     title: 'Bienvenue sur RémiOS',
+    crumbs: [['RémiOS']],
     body: `<div class="home">
       <div class="home-id">
         <pre class="home-logo" aria-hidden="true">${escapeHtml(LOGO)}</pre>

@@ -32,6 +32,7 @@ import { escapeHtml, safe } from '../utils/html.js';
 import { formatDate } from '../utils/dates.js';
 import { hasModifier } from '../utils/keyboard.js';
 import { setPlainTitle } from '../ui/tab-title.js';
+import { breadcrumb } from '../tui/box.js';
 
 // Date du build, injectée par Vite (voir vite.config.js)
 const BUILD_DATE = formatDate(__BUILD_DATE__);
@@ -126,6 +127,7 @@ function mainPage() {
 
   return `<div class="jury-page">
     <header class="jury-header">
+      ${breadcrumb([['Vue jury']])}
       <p class="jury-kicker">Portfolio BTS SIO option SISR · épreuve E5 · vue rapide jury</p>
       <h1 tabindex="-1">${escapeHtml(site.identite.nom)}</h1>
       <p class="jury-sub">${site.neofetch
@@ -186,14 +188,13 @@ function item(r) {
 
 // --- Pages secondaires en style sobre (fiche, tag, mentions légales) ----------
 
-// Squelette commun : lien de retour, titre, contenu, pied de page.
+// Squelette commun : fil d'Ariane, titre, contenu, pied de page.
+// `crumbs` : rubriques entre la vue jury et la page ([libellé, adresse]).
 // `remios` : lien facultatif vers le même écran dans RémiOS.
-function subPage({ title, body, remios = '' }) {
+function subPage({ title, body, crumbs = [], remios = '' }) {
   const back = `<a href="${link.jury()}">← Retour à la vue jury</a>`;
   return `<div class="jury-page">
-    <nav class="jury-back" aria-label="Navigation">
-      ${back}
-    </nav>
+    ${breadcrumb([['Vue jury', link.jury()], ...crumbs, [title]])}
     <h1 tabindex="-1">${title}</h1>
     ${body}
     <footer class="jury-footer">
@@ -206,6 +207,7 @@ function fichePage(r) {
   return subPage({
     title: safe(r.titre),
     body: ficheBlock(r, link.juryTechno),
+    crumbs: [['Réalisations', link.jury()]],
     remios: `<a href="${link.fiche(r.slug)}">Voir cette fiche dans RémiOS</a>`,
   });
 }
@@ -215,6 +217,7 @@ function technoPage(techno) {
   return subPage({
     title: `Réalisations : ${escapeHtml(techno.nom)}`,
     body: technoBlock(techno, link.juryFiche, link.juryTechno),
+    crumbs: [['Réalisations', link.jury()]],
     remios: `<a href="${link.techno(techno.slug)}">Voir cette techno dans RémiOS</a>`,
   });
 }
@@ -224,6 +227,7 @@ function tagPage(veille, slug, tag) {
   return subPage({
     title: `Veille ${escapeHtml(veille.nom)} : ${escapeHtml(tag.nom)}`,
     body: veilleTagBlock(veille, slug, link.juryVeilleTag),
+    crumbs: [['Veille technologique', link.jury()], [escapeHtml(veille.nom), link.jury()]],
     remios: `<a href="${link.veilleTag(veille.id, slug)}">Voir ce tag dans RémiOS</a>`,
   });
 }
@@ -234,6 +238,7 @@ function legalPage() {
 
 function missingPage(title = 'Fiche introuvable', text = "Cette réalisation n'existe pas, ou plus.") {
   return `<div class="jury-page">
+    ${breadcrumb([['Vue jury', link.jury()], [title]])}
     <h1 tabindex="-1">${title}</h1>
     <p>${text}</p>
     <p><a href="${link.jury()}">← Retour à la vue jury</a></p>

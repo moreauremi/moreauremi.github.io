@@ -227,6 +227,15 @@ export function renderPage(page, site, base) {
   ]
     .map(([href, label]) => `<a href="${href}"${page.path === href ? ' aria-current="page"' : ''}>${label}</a>`)
     .join(' · ');
+  // Fil d'Ariane : RémiOS, puis la rubrique (« realisations/ ») pour une page
+  // de second niveau, puis la page elle-même
+  const parent = page.path.split('/').filter(Boolean).length > 1 ? `${page.path.split('/')[0]}/` : null;
+  const parentLabel = { realisations: 'Réalisations', veille: 'Veille' }[parent?.slice(0, -1)];
+  const crumbs = [
+    '<li><a href="./">RémiOS</a></li>',
+    parent ? `<li><a href="${parent}">${parentLabel}</a></li>` : '',
+    `<li><span aria-current="page">${escapeHtml(page.titre)}</span></li>`,
+  ].join('');
   const canonical = base ? `\n<link rel="canonical" href="${escapeHtml(base + page.path)}">` : '';
   return `<!doctype html>
 <html lang="fr">
@@ -247,6 +256,7 @@ export function renderPage(page, site, base) {
 <nav>${nav}</nav>
 </header>
 <main>
+<nav class="ariane" aria-label="Fil d'Ariane"><ol>${crumbs}</ol></nav>
 <article>
 <h1>${escapeHtml(page.titre)}</h1>
 ${page.html}
@@ -293,6 +303,8 @@ a{color:var(--lien)}
 .bandeau{margin:0;padding:.75rem 0;border-bottom:1px solid var(--trait);font-size:.9rem;color:var(--doux)}
 nav{padding:.6rem 0;font-size:.95rem}
 nav a[aria-current]{font-weight:600;text-decoration:none}
+.ariane ol{display:flex;flex-wrap:wrap;margin:1rem 0 0;padding:0;list-style:none;font-size:.9rem;color:var(--doux)}
+.ariane li+li::before{content:"/";content:"/"/"";margin:0 .5ch}
 h1{font-size:1.8rem;line-height:1.25;margin:1.5rem 0 1rem}
 h2{font-size:1.3rem;margin-top:2rem;border-bottom:1px solid var(--trait);padding-bottom:.25rem}
 img{max-width:100%;height:auto}

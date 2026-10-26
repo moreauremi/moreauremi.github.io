@@ -124,8 +124,20 @@ html[data-view='jury'] body {
   text-underline-offset: 2px;
 }
 
-.jury-back {
+/* Vue sobre : pas d'ombre portée sous le tableau des compétences */
+.jury .skills {
+  background: none;
+  box-shadow: none;
+}
+
+.jury .table-scroll:has(> .skills) {
+  padding: 0;
+}
+
+.jury .crumbs ol {
   margin-bottom: 1.5em;
+  font-size: 0.9375rem;
+  --crumbs-sep: var(--jury-muted);
 }
 
 /* --- Liste des réalisations -------------------------------------------------- */

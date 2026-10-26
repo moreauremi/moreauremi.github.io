@@ -24,6 +24,9 @@ import { homeBox } from './home.js';
 import { SECTIONS, findSection } from './sections.js';
 import tuiHtml from './tui.html?raw';
 
+// Premier élément du fil d'Ariane de chaque écran : le menu principal
+const HOME = ['RémiOS', link.home()];
+
 export function createTui(root, { onReboot, onOpenTerminal }) {
   // Cadre de l'interface (tui.html) : barre du haut, zone centrale, aide
   // clavier, pied de page. Seuls le nom, le nombre de rubriques et le lien
@@ -79,7 +82,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
         return {
           kind: 'section',
           title: section.label,
-          html: box({ title: section.label, body: section.render(), actions: backButton(link.home()) }),
+          html: box({ title: section.label, body: section.render(), actions: backButton(link.home()), crumbs: [HOME, [section.label]] }),
           parent: link.home(),
         };
       }
@@ -94,7 +97,12 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
         return {
           kind: 'fiche',
           title: fiche.titre,
-          html: box({ title: safe(fiche.titre), body: ficheBlock(fiche, link.techno), actions: backButton(link.section(section.id)) }),
+          html: box({
+            title: safe(fiche.titre),
+            body: ficheBlock(fiche, link.techno),
+            actions: backButton(link.section(section.id)),
+            crumbs: [HOME, [section.label, link.section(section.id)], [safe(fiche.titre)]],
+          }),
           parent: link.section(section.id),
           canonical: link.fiche(fiche.slug),
         };
@@ -112,7 +120,12 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
         return {
           kind: 'techno',
           title,
-          html: box({ title: safe(title), body: technoBlock(techno, link.fiche, link.techno), actions: backButton(link.section(section.id)) }),
+          html: box({
+            title: safe(title),
+            body: technoBlock(techno, link.fiche, link.techno),
+            actions: backButton(link.section(section.id)),
+            crumbs: [HOME, [section.label, link.section(section.id)], [safe(techno.nom)]],
+          }),
           parent: link.section(section.id),
         };
       }
@@ -128,7 +141,12 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
         return {
           kind: 'section',
           title: section.label,
-          html: box({ title: section.label, body: veilleBlock(link.veilleTag, { sujet: veille.id }), actions: backButton(link.home()) }),
+          html: box({
+            title: section.label,
+            body: veilleBlock(link.veilleTag, { sujet: veille.id }),
+            actions: backButton(link.home()),
+            crumbs: [HOME, [section.label, link.section(section.id)], [safe(veille.nom)]],
+          }),
           parent: link.home(),
         };
       }
@@ -147,7 +165,12 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
         return {
           kind: 'tag',
           title,
-          html: box({ title: safe(title), body: veilleTagBlock(veille, route.tag, link.veilleTag), actions: backButton(link.veille(veille.id)) }),
+          html: box({
+            title: safe(title),
+            body: veilleTagBlock(veille, route.tag, link.veilleTag),
+            actions: backButton(link.veille(veille.id)),
+            crumbs: [HOME, [section.label, link.section(section.id)], [safe(veille.nom), link.veille(veille.id)], [safe(tag.nom)]],
+          }),
           parent: link.veille(veille.id),
         };
       }
@@ -165,6 +188,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
         body: `<p>bash: ${safe(window.location.hash)} : aucun fichier ou dossier de ce nom</p>
           <p>Cette page n'existe pas, ou plus.</p>`,
         actions: backButton(link.home()),
+        crumbs: [HOME, ['Erreur']],
       }),
       parent: link.home(),
     };
