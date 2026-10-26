@@ -1,6 +1,41 @@
 {
-  "miseAJour": "2026-10-19",
+  "miseAJour": "2026-10-26",
   "actualites": [
+    {
+      "id": "5d419a9a90ba",
+      "date": "2026-10-25",
+      "titre": "Reading temperature of Intel CPUs by (carefully) making a hole in the Matrix",
+      "source": "XCP-ng",
+      "url": "https://xcp-ng.org/blog/2026/10/25/intel-cpu-temperature-xcp-ng/",
+      "resume": "XCP-ng ajoute une méthode contrôlée pour lire la température des processeurs Intel sous Xen, via un hyperappel et l’outil xenpm get-core-temp. Cette fonction peut aider une PME à surveiller l’échauffement de ses hôtes virtualisés, alors que les outils habituels ne fonctionnent pas directement dans Dom0.",
+      "tags": [
+        "supervision"
+      ]
+    },
+    {
+      "id": "6d2cb5c80d40",
+      "date": "2026-10-23",
+      "titre": "XCP-ng and Xen Orchestra on RISC-V: a progress report from the emulator",
+      "source": "XCP-ng",
+      "url": "https://xcp-ng.org/blog/2026/10/23/xcp-ng-and-xen-orchestra-on-risc-v-a-progress-report-from-the-emulator/",
+      "resume": "XCP-ng et Xen Orchestra fonctionnent sur une architecture RISC-V émulée par QEMU, avec gestion des machines virtuelles et exécution de conteneurs Docker et K3s. Le projet reste un prototype de recherche et n’a pas encore été exécuté sur une carte RISC-V réelle, ce qui limite son intérêt immédiat pour une PME.",
+      "tags": [
+        "conteneurs",
+        "nouvelle architecture"
+      ]
+    },
+    {
+      "id": "ab91939b04d8",
+      "date": "2026-10-22",
+      "titre": "October 2026 Security Updates #3 for XCP-ng 8.3 LTS",
+      "source": "XCP-ng",
+      "url": "https://xcp-ng.org/blog/2026/10/22/october-2026-security-updates-3-for-xcp-ng-8-3-lts/",
+      "resume": "Une mise à jour de sécurité de XCP-ng 8.3 LTS retire du magasin de confiance des certificats intermédiaires eMudhra dont les clés privées ont été compromises. Cette correction réduit le risque d’usurpation de sites et d’interception ou de modification du trafic pour une PME hébergeant ses propres serveurs.",
+      "tags": [
+        "sécurité",
+        "nouvelle version"
+      ]
+    },
     {
       "id": "675fb7dff8ec",
       "date": "2026-10-16",

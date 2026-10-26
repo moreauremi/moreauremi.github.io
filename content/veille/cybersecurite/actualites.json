@@ -1,6 +1,80 @@
 {
-  "miseAJour": "2026-10-19",
+  "miseAJour": "2026-10-26",
   "actualites": [
+    {
+      "id": "ab63e76fc781",
+      "date": "2026-10-24",
+      "titre": "Arnaques en ligne : comment les pirates détournent Google Drive pour vous piéger",
+      "source": "01net, sécurité",
+      "url": "https://www.01net.com/actualites/arnaques-ligne-comment-pirates-detournent-google-drive-vous-pieger.html",
+      "resume": "Des cybercriminels utilisent des services légitimes comme Google Drive, DocuSign ou QuickBooks pour diffuser des courriels malveillants et contourner les filtres de sécurité. Cette technique de hameçonnage rend les messages plus crédibles et renforce l’importance de la sensibilisation des salariés des PME.",
+      "tags": [
+        "hameçonnage",
+        "sensibilisation"
+      ]
+    },
+    {
+      "id": "3341d0f7b5a8",
+      "date": "2026-10-23",
+      "titre": "VeloCloud : Arista corrige une vulnérabilité déjà exploitée",
+      "source": "LeMagIT",
+      "url": "https://www.lemagit.fr/actualites/366652615/VeloCloud-Arista-corrige-une-vulnerabilite-deja-exploitee",
+      "resume": "Une vulnérabilité critique de VeloCloud Orchestrator permet à des attaquants authentifiés d’élever leurs privilèges par injection SQL, et elle est déjà exploitée. Les PME utilisant cet équipement doivent appliquer les versions corrigées, examiner les journaux d’administration et restreindre l’accès aux interfaces Web.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
+      ]
+    },
+    {
+      "id": "04f40d50aa39",
+      "date": "2026-10-21",
+      "titre": "[Màj] Multiples vulnérabilités dans PHP (21 octobre 2026)",
+      "source": "CERT-FR, alertes",
+      "url": "https://www.cert.ssi.gouv.fr/alerte/CERTFR-2026-ALE-014/",
+      "resume": "Le CERT-FR signale deux vulnérabilités critiques de PHP permettant une exécution de code arbitraire à distance, avec des preuves de concept disponibles pour certaines configurations. Les PME doivent isoler les équipements concernés, appliquer les correctifs et migrer les versions non maintenues afin de réduire le risque de compromission.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
+      ]
+    },
+    {
+      "id": "90bdf4139305",
+      "date": "2026-10-21",
+      "titre": "SafePay, une enseigne plus redoutable qu’il n’y paraît ?",
+      "source": "LeMagIT",
+      "url": "https://www.lemagit.fr/actualites/366652391/SafePay-une-enseigne-bien-plus-redoutable-quil-ny-parait",
+      "resume": "La CISA estime que le rançongiciel SafePay a fait plus de 600 victimes dans plusieurs secteurs d’importance vitale et qu’il utilise parfois OneDrive pour l’exfiltration de données. Cette activité montre que les PME peuvent subir à la fois une interruption de leurs systèmes et une fuite d’informations.",
+      "tags": [
+        "rançongiciel",
+        "fuite de données",
+        "PME"
+      ]
+    },
+    {
+      "id": "5c04ab6f74d6",
+      "date": "2026-10-21",
+      "titre": "LibreOffice et OpenOffice piégés par des tableurs",
+      "source": "ZATAZ",
+      "url": "https://www.zataz.com/libreoffice-et-openoffice-pieges-par-des-tableurs/",
+      "resume": "Des tableurs spécialement préparés pour LibreOffice ou OpenOffice peuvent charger un composant Java distant et exécuter du code malveillant lors de leur ouverture, si Java est activé. Cette vulnérabilité expose les postes bureautiques des PME à une compromission déclenchée par un fichier apparemment ordinaire.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
+      ]
+    },
+    {
+      "id": "cebf94aa8b2f",
+      "date": "2026-10-20",
+      "titre": "Logistique : Kaspersky découvre une vulnérabilité dans les lecteurs de codes-barres",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/alertes-securite/logistique-kaspersky-decouvre-une-vulnerabilite-dans-les-lecteurs-de-codes-barres.html",
+      "resume": "Kaspersky a découvert une vulnérabilité dans un modèle de lecteur de codes-barres largement utilisé, liée à l’absence d’authentification entre le scanner et sa base. Un attaquant à portée pourrait injecter des frappes et potentiellement exécuter du code à distance, ce qui expose les réseaux OT et les chaînes logistiques des PME industrielles.",
+      "tags": [
+        "vulnérabilité",
+        "systèmes industriels (OT)",
+        "chaîne d'approvisionnement"
+      ]
+    },
     {
       "id": "373d9f886f48",
       "date": "2026-10-17",

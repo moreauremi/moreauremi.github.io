@@ -1,6 +1,19 @@
 {
-  "miseAJour": "2026-10-19",
+  "miseAJour": "2026-10-26",
   "actualites": [
+    {
+      "id": "e5fae2a1d0f2",
+      "date": "2026-10-20",
+      "titre": "Facturation électronique : la clôture mensuelle, le test grandeur nature à l’épreuve",
+      "source": "DAF Magazine",
+      "url": "https://www.daf-mag.fr/bi-1244/transformation-processus-2133/facturation-electronique-la-cloture-mensuelle-le-test-grandeur-nature-a-lepreuve-27838",
+      "resume": "Un mois après l’entrée en vigueur de l’obligation pour les grandes entreprises et les ETI, Agicap relève des points de vigilance liés aux pics de clôture mensuelle, à l’intégration des ERP, aux refus de factures et à l’échange encore limité des statuts de paiement. Ces retours aident les PME à préparer leurs flux et les intégrateurs d’ERP à fiabiliser les données et les interfaces.",
+      "tags": [
+        "ERP",
+        "PME",
+        "plateformes agréées"
+      ]
+    },
     {
       "id": "fe44d008ddc8",
       "date": "2026-10-19",
