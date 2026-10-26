@@ -3,7 +3,7 @@
 
 import { site } from '../content.js';
 import { link } from '../router.js';
-import { escapeHtml } from '../utils/html.js';
+import { escapeHtml, safe } from '../utils/html.js';
 import { SECTIONS } from '../tui/sections.js';
 import { ICONS } from './icons.js';
 
@@ -91,11 +91,28 @@ export function sidebar({ current, child = null }) {
       ${item('jury', link.jury(), 'Vue jury, imprimable')}
       ${item('mentions-legales', link.legal(), 'Mentions légales')}
     </ul>
+    <button type="button" class="pg-side-theme pg-side-keys" data-action="keys" aria-haspopup="dialog">
+      ${ICONS.keyboard}<span>Raccourcis clavier</span><kbd class="pg-kbd" aria-hidden="true">?</kbd>
+    </button>
     <button type="button" class="pg-side-theme" data-action="theme" aria-pressed="false">
       ${ICONS.moon}<span>Thème sombre</span><span class="pg-switch" aria-hidden="true"></span>
     </button>
   </nav>
   <div class="pg-backdrop" data-action="close-menu" hidden></div>`;
+}
+
+// Page précédente et page suivante au même niveau, en bas de page (← → au
+// clavier). `around` : { prev, next }, chacun { href, label, icon } ou absent.
+export function siblingsNav({ prev, next } = {}, label = 'Pages voisines') {
+  if (!prev && !next) return '';
+  const card = (page, direction) =>
+    page
+      ? `<a class="pg-neighbour pg-neighbour--${direction}" href="${page.href}">
+          <span class="pg-neighbour-label">${direction === 'prev' ? '<kbd class="pg-kbd" aria-hidden="true">←</kbd> Précédent' : 'Suivant <kbd class="pg-kbd" aria-hidden="true">→</kbd>'}</span>
+          <span class="pg-neighbour-title"><span aria-hidden="true">${page.icon ?? ''}</span> ${safe(page.label)}</span>
+        </a>`
+      : '<span></span>';
+  return `<nav class="pg-neighbours" aria-label="${label}">${card(prev, 'prev')}${card(next, 'next')}</nav>`;
 }
 
 // Bouton « Menu » (téléphone) et bouton thème sans texte, pour les barres du haut

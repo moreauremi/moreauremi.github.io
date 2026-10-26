@@ -7,14 +7,14 @@
 // (src/blocks/), comme dans la vue jury.
 // =============================================================================
 
-import { realisations, competenceLabel } from '../content.js';
+import { competenceLabel } from '../content.js';
 import { link } from '../router.js';
 import { ficheCompetences, technoBadge } from '../blocks/index.js';
 import { NEW_TAB } from '../blocks/shared.js';
 import { escapeHtml, safe } from '../utils/html.js';
 import { formatDate } from '../utils/dates.js';
 import { ICONS } from './icons.js';
-import { SECTION_ICONS, ficheIcon, typeTag, statusTag, tag, menuButton, themeButton } from './parts.js';
+import { SECTION_ICONS, ficheIcon, typeTag, statusTag, tag, menuButton, themeButton, siblingsNav } from './parts.js';
 
 // `crumbs` : [{ label, href, icon }] après l'accueil (le dernier est la page
 // affichée, sans lien) ; `back` : { href, label } de la page précédente ;
@@ -44,11 +44,11 @@ function topbar(crumbs, back) {
       : `<span class="pg-crumb pg-crumb--current" aria-current="page">${content}</span>`;
   });
   const separator = '<span class="pg-crumb-sep" aria-hidden="true">/</span>';
-  // « ← Retour » mène à la page d'où l'on vient (même effet que Échap) ;
-  // son nom est écrit à côté pour qu'on sache où l'on va.
+  // « ← <page parente> » remonte d'un niveau (même effet que Échap) : on lit
+  // directement où l'on va.
   const backLink = back
-    ? `<a class="pg-back" href="${back.href}" data-back title="Revenir à la page précédente (Échap)">
-        <span aria-hidden="true">←</span><span>Retour</span><span class="pg-back-dest"><span class="visually-hidden"> à </span>${escapeHtml(back.label)}</span>
+    ? `<a class="pg-back" href="${back.href}" data-back title="Remonter à « ${escapeHtml(back.label)} » (Échap)">
+        <span aria-hidden="true">←</span><span class="visually-hidden">Remonter à </span><span class="pg-back-dest">${escapeHtml(back.label)}</span><kbd class="pg-kbd" aria-hidden="true">Échap</kbd>
       </a>`
     : '';
   return `<header class="pg-topbar">
@@ -63,8 +63,9 @@ function topbar(crumbs, back) {
 
 // Propriétés (type, date, statut, technos, compétences, documents), résumé
 // dans un encadré, texte de la fiche, compétences du référentiel, puis les
-// réalisations voisines. Le sommaire est rempli par page-view.js.
-export function fichePage(r, back) {
+// réalisations voisines (`around`, voir siblingsNav). Le sommaire est rempli
+// par page-view.js.
+export function fichePage(r, back, around) {
   const technos = r.technos.length
     ? `<ul class="tags" aria-label="Technos">${r.technos.map((nom) => `<li>${technoBadge(nom, link.techno)}</li>`).join('')}</ul>`
     : '';
@@ -90,7 +91,7 @@ export function fichePage(r, back) {
     ${r.resume ? `<aside class="pg-callout" aria-label="Résumé"><span class="pg-callout-icon" aria-hidden="true">💡</span><p>${safe(r.resume)}</p></aside>` : ''}
     <div class="prose pg-prose">${r.html}</div>
     ${competencesHtml ? `<div class="prose pg-prose">${competencesHtml}</div>` : ''}
-    ${neighbours(r)}`;
+    ${siblingsNav(around, 'Autres réalisations')}`;
 
   return docPage({
     crumbs: [
@@ -115,19 +116,4 @@ function pdfLinks(html) {
     (a) => `<li><a href="${escapeHtml(a.getAttribute('href'))}" ${NEW_TAB}>${escapeHtml(a.textContent)}</a></li>`,
   );
   return links.length ? `<ul class="pg-prop-links">${links.join('')}</ul>` : '';
-}
-
-// Réalisation plus récente et plus ancienne, en bas de fiche
-function neighbours(r) {
-  const index = realisations.indexOf(r);
-  const card = (other, direction) =>
-    other
-      ? `<a class="pg-neighbour pg-neighbour--${direction}" href="${link.fiche(other.slug)}">
-          <span class="pg-neighbour-label">${direction === 'prev' ? '← Réalisation plus récente' : 'Réalisation plus ancienne →'}</span>
-          <span class="pg-neighbour-title"><span aria-hidden="true">${ficheIcon(other)}</span> ${safe(other.titre)}</span>
-        </a>`
-      : '<span></span>';
-  return `<nav class="pg-neighbours" aria-label="Autres réalisations">
-    ${card(realisations[index - 1], 'prev')}${card(realisations[index + 1], 'next')}
-  </nav>`;
 }

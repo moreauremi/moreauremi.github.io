@@ -57,7 +57,7 @@ function corner() {
 function header() {
   const { nom, photo } = site.identite;
   const { disponibilite } = site.contact;
-  const role = [fact('Formation'), fact('Poste')].filter(Boolean).map(safe).join(' &lt;&gt; ');
+  const role = [fact('Formation'), fact('Poste')].filter(Boolean).map(safe).join(' · ');
   const avatar = photo
     ? `<span class="pg-avatar">
         <img src="${escapeHtml(photo)}" alt="Portrait de ${escapeHtml(nom)}" width="56" height="56" decoding="async">

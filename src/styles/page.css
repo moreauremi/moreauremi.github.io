@@ -955,8 +955,15 @@ a.pg-crumb:hover {
 }
 
 .pg-neighbour-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: var(--pg-muted);
   font-size: 0.8125rem;
+}
+
+.pg-neighbour--next .pg-neighbour-label {
+  justify-content: flex-end;
 }
 
 .pg-neighbour-title {
@@ -1662,14 +1669,108 @@ a.pg-side-link:hover {
 .pg-back-dest {
   min-width: 0;
   overflow: hidden;
-  color: var(--pg-muted);
-  font-weight: 400;
   text-overflow: ellipsis;
 }
 
-.pg-back-dest::before {
-  content: '·';
-  margin-right: 6px;
+/* --- Touches du clavier : « Échap », « ← »… ---------------------------------------
+   Rappelées à côté des boutons qu'elles remplacent. Sans clavier (écran
+   tactile), elles ne servent à rien : masquées. */
+
+.pg-kbd {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0 5px;
+  border: 1px solid var(--pg-line);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--pg-bg);
+  color: var(--pg-muted);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  vertical-align: 1px;
+}
+
+@media (hover: none) {
+  .pg-kbd,
+  .pg-side-keys {
+    display: none;
+  }
+}
+
+.pg-side-keys .pg-kbd {
+  margin-left: auto;
+}
+
+/* --- Aide : raccourcis clavier (touche ?) ------------------------------------------ */
+
+.pg-keys {
+  width: min(520px, calc(100vw - 32px));
+  padding: 24px;
+  border: 1px solid var(--pg-line);
+  border-radius: 12px;
+  background: var(--pg-bg);
+  color: var(--pg-ink);
+  box-shadow: var(--pg-shadow);
+}
+
+.pg-keys::backdrop {
+  background: var(--pg-backdrop);
+}
+
+.pg-keys h2 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
+
+.pg-keys-intro {
+  margin: 0 0 16px;
+  color: var(--pg-muted);
+  font-size: 0.875rem;
+}
+
+.pg-keys dl {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 20px;
+}
+
+.pg-keys dl > div {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+}
+
+.pg-keys dt {
+  white-space: nowrap;
+}
+
+.pg-keys .pg-kbd {
+  font-size: 0.8125rem;
+}
+
+.pg-keys dd {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.pg-keys-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--pg-line);
+  border-radius: 8px;
+  background: var(--pg-card);
+  color: var(--pg-ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.pg-keys-close:hover {
+  background: var(--pg-line);
 }
 
 /* Destination d'un lien ou d'une carte, écrite en clair : « Lire la fiche → » */
