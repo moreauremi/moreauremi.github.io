@@ -19,6 +19,16 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
+## 26/10/2026 - Une faille PHP qui interroge le rôle de l’IA
+
+Les vulnérabilités critiques signalées par le CERT-FR dans PHP permettent une exécution de code arbitraire à distance. Des preuves de concept existent pour certaines configurations, ce qui rappelle aux PME industrielles l’importance d’isoler les équipements concernés, d’appliquer les correctifs et de migrer les versions qui ne sont plus maintenues.
+
+Cette faille a fait trembler toute la planète, étant donné qu’une grande majorité des sites utilisent PHP. Cela m’amène à me poser la question suivante : puisque l’IA est de plus en plus puissante, n’aurait-elle pas joué un rôle dans la découverte de cette faille, pourtant ancienne ?
+
+**Sources**
+
+- [\[Màj\] Multiples vulnérabilités dans PHP (21 octobre 2026)](https://www.cert.ssi.gouv.fr/alerte/CERTFR-2026-ALE-014/) (CERT-FR, alertes, 21 octobre 2026)
+
 ## 19/10/2026 - L’IA intensifie les défis de cybersécurité des PME industrielles
 
 L’arrivée de l’IA et son avancement fulgurant montrent à quel point la cybersécurité est de plus en plus challengée. Les IA sont maintenant capables d’exécuter du code et de réaliser des intrusions d’elles-mêmes, ce qui augmente les risques pour les PME industrielles.
