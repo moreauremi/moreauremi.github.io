@@ -408,6 +408,14 @@ export default {
       statut: 'en cours', // passer à « obtenue » après la seconde journée
       detail: 'deux journées, la seconde fin octobre 2026',
     },
+    {
+      titre: 'Indicateurs et tableaux de bord Open-Prod',
+      organisme: '1Life',
+      categorie: 'formation',
+      date: '2026-10',
+      statut: 'en cours', // passer à « obtenue » à la fin de la formation
+      detail: 'KPI, création d’indicateurs et de tableaux de bord',
+    },
   ],
 
   // --- Mentions légales (#/mentions-legales) -----------------------------------

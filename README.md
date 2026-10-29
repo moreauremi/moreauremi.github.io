@@ -143,7 +143,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [x] **Jeton Copilot** : jeton GitHub « Copilot Requests » rangé dans les secrets du dépôt (`COPILOT_GITHUB_TOKEN`) ; la collecte des trois sujets fonctionne (9 octobre 2026 ; jeton recréé le 12 octobre 2026). À renouveler avant son expiration, un an après sa création (voir [Mise en route](#mise-en-route-une-seule-fois)).
 - [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://dashboard.remim.me, à partir des actualités collectées.
 - [ ] **Veille par e-mail** : créer le jeton du relais et installer le relais Gmail (voir [Veille par e-mail](#mise-en-route-du-relais-gmail-une-seule-fois)).
-- [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif. Formation QWeb ajoutée (en cours, sans attestation) : passer son statut à « obtenue » après la seconde journée.
+- [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif. Formations QWeb et « Indicateurs et tableaux de bord Open-Prod » ajoutées (en cours, sans attestation) : passer leur statut à « obtenue » une fois terminées.
 - [ ] **Réalisations en formation** : « GLPI » et « Réseau de six machines virtuelles sous VirtualBox » (`reseau-vm-virtualbox.md`, octobre 2026) publiées ; une fiche en brouillon (`formation-realisation-3.md`) à remplir au fil des TP et projets de cours.
 
 ## Architecture
