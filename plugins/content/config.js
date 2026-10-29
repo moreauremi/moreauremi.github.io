@@ -139,8 +139,9 @@ export function checkConfig(site, root) {
     if (!CERTIFICATION_CATEGORIES.includes(certif.categorie)) {
       errors.push(`${label} : « categorie » doit valoir ${CERTIFICATION_CATEGORIES.join(', ')}.`);
     }
-    if (!CERTIFICATION_STATUSES.includes(certif.statut)) {
-      errors.push(`${label} : « statut » doit valoir ${CERTIFICATION_STATUSES.join(' ou ')}.`);
+    // « statut » est facultatif : sans lui, ni « en cours » ni « obtenue » n'est affiché
+    if (certif.statut !== undefined && !CERTIFICATION_STATUSES.includes(certif.statut)) {
+      errors.push(`${label} : « statut », s'il est indiqué, doit valoir ${CERTIFICATION_STATUSES.join(' ou ')}.`);
     }
     if (!SINGLE_DATE_PATTERN.test(String(certif.date ?? ''))) {
       errors.push(`${label} : « date » doit être au format AAAA, AAAA-MM ou AAAA-MM-JJ, entre guillemets.`);

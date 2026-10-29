@@ -392,7 +392,7 @@ export default {
   //     organisme: 'ANSSI',
   //     categorie: 'certification',  // certification, langue, formation ou badge
   //     date: '2026-11',             // AAAA, AAAA-MM ou AAAA-MM-JJ
-  //     statut: 'obtenue',           // obtenue ou en cours
+  //     statut: 'obtenue',           // facultatif : obtenue ou en cours (absent = rien d'affiché)
   //     detail: '',                  // facultatif : score, niveau…
   //     justificatif: 'docs/certifications/secnumacademie.pdf', // facultatif, fichier dans public/
   //     lien: '',                    // facultatif : page de vérification ou badge en ligne
@@ -413,7 +413,6 @@ export default {
       organisme: '1Life',
       categorie: 'formation',
       date: '2026-10',
-      statut: 'en cours', // passer à « obtenue » à la fin de la formation
       detail: 'KPI, création d’indicateurs et de tableaux de bord',
     },
   ],
