@@ -429,6 +429,7 @@ export default {
       date: '2026-10',
       detail: 'modèle conceptuel de données, import de données dans l’ERP',
       description: 'Lecture du modèle conceptuel de données (MCD) d’Open-Prod pour savoir où va chaque information, puis préparation des imports Excel de reprise de données : fichiers mis en correspondance entre eux avec RECHERCHEV et RECHERCHEX, avant import dans Open-Prod.',
+      fiche: 'reprise-donnees-open-prod',
     },
   ],
 
