@@ -68,7 +68,9 @@ Pour le tri des articles, je me suis appuyé sur leur **statut** dans le fichier
 
 Les données de départ sont réparties dans plusieurs fichiers Excel. Pour les relier, j'ai utilisé **RECHERCHEV** et **RECHERCHEX** : ces fonctions cherchent une valeur (un code client, une référence article…) dans un autre fichier et ramènent l'information correspondante.
 
-[À COMPLÉTER : un exemple concret de correspondance (quel fichier, quelle colonne, quelle formule)]
+Dans le fichier de départ, les informations d'un même article étaient **réparties sur plusieurs feuilles** : ses fournisseurs sur une feuille, les correspondances avec ses gammes et nomenclatures sur une autre. Or l'outil d'import attend une ligne complète par article.
+
+J'ai donc créé une **feuille finale** dans le fichier. Pour chaque article, une formule RECHERCHEV ou RECHERCHEX va chercher sa référence dans chacune des autres feuilles et ramène l'information correspondante : le fournisseur depuis la feuille des fournisseurs, la gamme et la nomenclature depuis celle des correspondances. La feuille finale rassemble ainsi tout ce qu'il faut importer, sans recopier une seule donnée à la main.
 
 ### Import dans Open-Prod
 
@@ -97,7 +99,7 @@ Ce problème montre qu'un fichier client lisible par un humain n'est pas forcém
 ## Compétences mises en œuvre
 
 - Lecture d'un modèle conceptuel de données (MCD)
-- Préparation et mise en correspondance de données dans Excel (RECHERCHEV, RECHERCHEX)
+- Consolidation de données réparties sur plusieurs feuilles Excel en une feuille d'import (RECHERCHEV, RECHERCHEX)
 - Tri des données à reprendre selon leur statut (articles obsolètes écartés)
 - Mise au format attendu par l'ERP (valeurs techniques des champs)
 - Import de données dans un ERP avec mappage des colonnes, dans l'ordre imposé par les liens entre les données
