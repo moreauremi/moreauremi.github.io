@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>dashu v0.0.1</title>
+  <meta name="description" content="Maquette cliquable de dashu, le tableau de bord qui réunit équipe, perso et maison. Fausses données, rien n'est enregistré.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600&amp;display=swap">
+  <link rel="stylesheet" href="css/dashu.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <a class="logo" href="#generale" aria-label="dashu, vue générale">dashu</a>
+        <span class="demo-pill" title="Fausses données : rien n'est enregistré">démo v0.0.1</span>
+      </div>
+
+      <nav class="tabs" id="tabs" aria-label="Vues"></nav>
+      <p class="edit-hint">
+        <span class="hint-desktop">Glisse un widget pour le déplacer, tire son coin pour le redimensionner.</span>
+        <span class="hint-phone">Touche ⋯ sur un widget pour le configurer ou le retirer.</span>
+      </p>
+
+      <div class="actions">
+        <button type="button" class="btn btn-icon" id="btn-search" aria-label="Rechercher">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+        <button type="button" class="btn btn-icon" id="btn-undo" aria-label="Annuler la dernière action (Ctrl+Z)" hidden>
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+        </button>
+        <button type="button" class="btn btn-icon" id="btn-redo" aria-label="Rétablir (Ctrl+Maj+Z)" hidden>
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
+        </button>
+        <button type="button" class="btn" id="btn-edit">Modifier</button>
+        <button type="button" class="btn" id="btn-cancel" hidden>Annuler</button>
+        <button type="button" class="btn btn-primary" id="btn-add" aria-label="Ajouter un widget">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          <span class="btn-label">Widget</span>
+        </button>
+        <button type="button" class="btn btn-primary" id="btn-done" hidden>Terminer</button>
+        <div class="account">
+          <button type="button" class="avatar" id="btn-account" aria-label="Compte et réglages" aria-expanded="false" aria-controls="account-pop">RM</button>
+          <div class="popover" id="account-pop" role="dialog" aria-labelledby="account-name" hidden>
+            <p class="pop-name" id="account-name">Rémi Moreau</p>
+            <p class="row-sub">Compte de démonstration</p>
+            <fieldset class="segmented">
+              <legend>Thème</legend>
+              <label><input type="radio" name="theme" value="auto" checked><span>Auto</span></label>
+              <label><input type="radio" name="theme" value="light"><span>Clair</span></label>
+              <label><input type="radio" name="theme" value="dark"><span>Sombre</span></label>
+            </fieldset>
+            <button type="button" class="btn btn-block" id="btn-reset">Remettre la démo à zéro</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="board">
+      <h1 class="visually-hidden" id="view-title">Vue générale</h1>
+      <div class="grid" id="grid"></div>
+    </main>
+  </div>
+
+  <!-- Menu d'un widget en mode édition -->
+  <div class="menu" id="widget-menu" role="menu" aria-label="Options du widget" hidden>
+    <button type="button" role="menuitem" data-cmd="configure">
+      <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+      Configurer
+    </button>
+    <button type="button" role="menuitem" data-cmd="duplicate">
+      <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M4 16V5a1 1 0 0 1 1-1h11"/></svg>
+      Dupliquer
+    </button>
+    <button type="button" role="menuitem" data-cmd="delete" class="is-danger">
+      <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+      Supprimer
+    </button>
+  </div>
+
+  <!-- Bibliothèque de widgets -->
+  <dialog class="drawer" id="library" aria-labelledby="library-title">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <h2 class="drawer-title" id="library-title">Ajouter un widget</h2>
+        <button type="button" class="btn btn-icon" id="library-close" aria-label="Fermer la bibliothèque">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="drawer-body" id="library-content"></div>
+    </div>
+  </dialog>
+
+  <!-- Configuration d'un widget -->
+  <dialog class="modal" id="config" aria-labelledby="config-title">
+    <form class="modal-body" id="config-form" novalidate>
+      <h2 class="drawer-title" id="config-title">Configurer le widget</h2>
+      <div class="field">
+        <label for="cfg-title">Titre</label>
+        <input id="cfg-title" class="input" name="title" maxlength="40" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="cfg-source">Source</label>
+        <select id="cfg-source" class="input" name="source"></select>
+      </div>
+      <div class="field">
+        <label for="cfg-refresh">Rafraîchissement</label>
+        <select id="cfg-refresh" class="input" name="refresh" aria-describedby="cfg-refresh-hint">
+          <option value="1">Toutes les minutes</option>
+          <option value="5">Toutes les 5 minutes</option>
+          <option value="15">Toutes les 15 minutes</option>
+          <option value="60">Toutes les heures</option>
+        </select>
+        <p class="hint" id="cfg-refresh-hint"></p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn" id="cfg-cancel">Annuler</button>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <p class="visually-hidden" id="sr-status" aria-live="polite"></p>
+</body>
+</html>

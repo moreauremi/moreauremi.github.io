@@ -21,6 +21,12 @@ export default [
     },
   },
 
+  // dashu : maquette du tableau de bord, exécutée dans le navigateur
+  {
+    files: ['dashu/**/*.js'],
+    languageOptions: { globals: globals.browser },
+  },
+
   // Code exécuté par Node : configuration, plugins, scripts, tests
   {
     files: ['*.js', 'plugins/**/*.js', 'scripts/**/*.mjs', 'content/**/*.js', 'test/**/*.js'],
