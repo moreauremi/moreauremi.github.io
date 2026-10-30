@@ -39,7 +39,7 @@ Après une formation sur le sujet chez 1Life, j'ai refait une reprise complète 
 
 J'ai repris les données de base d'une entreprise industrielle : catégories d'articles, articles, gammes, nomenclatures, clients, prospects et fournisseurs, soit environ **1 100 lignes** au total.
 
-[À COMPLÉTER : d'où venaient les fichiers de départ (fournis par 1Life, créés pour l'exercice…)]
+Les fichiers de départ sont ceux d'une **base école** fournie pour la formation : des données fictives qui reproduisent celles d'un vrai client.
 
 ## Objectifs
 
@@ -62,7 +62,7 @@ L'ordre d'import suit les liens entre les données :
 4. **Nomenclatures** : la liste des composants nécessaires pour fabriquer un article. Elles relient des articles entre eux, donc tous doivent déjà être importés.
 5. **Clients, prospects et fournisseurs**.
 
-[À COMPLÉTER : si l'ordre ou le tri des obsolètes a posé une question particulière (comment repérer un article obsolète ?)]
+Pour le tri des articles, je me suis appuyé sur leur **statut** dans le fichier de départ : *en développement*, *en vie* ou *obsolète*. J'ai choisi de reprendre tous les articles sauf les obsolètes : ceux en développement seront bientôt fabriqués, il faut donc qu'ils existent dans le nouvel ERP.
 
 ### Préparation et mise en correspondance des fichiers
 
@@ -74,7 +74,7 @@ Les données de départ sont réparties dans plusieurs fichiers Excel. Pour les 
 
 L'import se fait avec l'**outil d'import d'Open-Prod** : on lui donne le fichier Excel, puis on associe chaque colonne du fichier au champ correspondant dans l'ERP (par exemple, la colonne « Référence » au champ référence de l'article). Cette étape s'appelle le **mappage des colonnes** : si une colonne est associée au mauvais champ, la donnée est importée au mauvais endroit.
 
-[À COMPLÉTER : les erreurs signalées au premier essai et comment elles ont été corrigées]
+Avant l'import, j'ai corrigé dans les fichiers les valeurs qui ne correspondaient pas à celles attendues par Open-Prod (voir les difficultés rencontrées). L'import n'a ensuite signalé **aucune erreur**.
 
 ## Captures d'écran
 
@@ -86,15 +86,19 @@ L'import se fait avec l'**outil d'import d'Open-Prod** : on lui donne le fichier
 
 Environ **1 100 lignes** importées au total.
 
-[À COMPLÉTER : comment le résultat a été contrôlé (nombre de fiches créées comparé au fichier, vérification de quelques articles et nomenclatures dans l'ERP…)]
+Un import sans erreur ne prouve pas que les données sont **utilisables** : un article peut être créé avec une nomenclature ou une gamme incomplète. Pour vérifier plus loin, nous avons choisi un article importé au hasard et **lancé sa production** dans Open-Prod. L'ordre de fabrication s'est créé avec ses composants (nomenclature) et ses opérations (gamme) : les données reprises fonctionnent ensemble, pas seulement chacune de leur côté.
 
 ## Difficultés rencontrées
 
-[À COMPLÉTER : problèmes rencontrés (formats, doublons, références introuvables…) et solutions trouvées]
+**Valeurs en français, attendues en anglais.** Dans les catégories de ressources (les moyens utilisés par les gammes), le fichier de départ indiquait « Humaine » et « Machine », alors qu'Open-Prod attend les valeurs techniques anglaises `human` et `machine`. Importées telles quelles, ces lignes auraient été refusées ou mal classées. J'ai remplacé toutes les valeurs dans le fichier avec **Rechercher et remplacer** (Ctrl + H) dans Excel, avant l'import.
+
+Ce problème montre qu'un fichier client lisible par un humain n'est pas forcément au format attendu par l'ERP : il faut comparer les valeurs du fichier avec celles qu'accepte chaque champ avant d'importer.
 
 ## Compétences mises en œuvre
 
 - Lecture d'un modèle conceptuel de données (MCD)
 - Préparation et mise en correspondance de données dans Excel (RECHERCHEV, RECHERCHEX)
-- Tri des données à reprendre (articles obsolètes écartés)
+- Tri des données à reprendre selon leur statut (articles obsolètes écartés)
+- Mise au format attendu par l'ERP (valeurs techniques des champs)
 - Import de données dans un ERP avec mappage des colonnes, dans l'ordre imposé par les liens entre les données
+- Contrôle fonctionnel du résultat : lancement d'une production sur un article importé
