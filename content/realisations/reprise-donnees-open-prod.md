@@ -11,7 +11,6 @@ technos:
   - "Excel"
   - "MCD"
 competences: [B1.5, B1.6]  # codes du référentiel, ex. [B1.1, B1.4]
-brouillon: true  # visible avec npm run dev, absente du site publié : à retirer une fois la fiche complétée et relue par le tuteur
 ---
 
 <!--
