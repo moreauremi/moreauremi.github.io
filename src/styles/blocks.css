@@ -494,6 +494,10 @@ a.tag:focus-visible {
   font-size: var(--font-size-small);
 }
 
+.certif-description {
+  margin-top: 4px;
+}
+
 /* --- Tableau croisé réalisations × compétences ------------------------------ */
 
 /* Sur petit écran, le tableau défile horizontalement dans son cadre au lieu

@@ -18,6 +18,6 @@ export { realisationsBlock, realisationList, ficheMeta, ficheCompetences, ficheB
 export { competencesBlock } from './competences.js';
 export { syntheseBlock } from './synthese.js';
 export { veilleBlock, veilleTagBlock } from './veille.js';
-export { certificationsBlock } from './certifications.js';
+export { certificationsBlock, formationsBlock } from './certifications.js';
 export { contactBlock, messageSentBlock } from './contact.js';
 export { mentionsLegalesBlock } from './mentions-legales.js';

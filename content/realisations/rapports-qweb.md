@@ -50,6 +50,8 @@ Les clients de 1Life produisent chaque jour avec Open-Prod des documents imprima
 
 Un rapport QWeb est un **modèle écrit en XML** : il décrit la mise en page du document et indique, par des instructions propres à QWeb (**boucles**, **conditions**, **champs à afficher**), où placer les données de l'ERP.
 
+Il se modifie de deux façons : en **vue graphique**, en assemblant des blocs imbriqués les uns dans les autres, sans écrire de code ; ou en **vue XML**, directement dans le code du modèle, pour aller plus loin que ce que permet l'éditeur graphique.
+
 ### Création d'un rapport
 
 [À COMPLÉTER : quel rapport, pour quel document, quelles informations il affiche]

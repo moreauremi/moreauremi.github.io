@@ -149,6 +149,12 @@ export function checkConfig(site, root) {
     if (certif.justificatif && !inPublic(certif.justificatif)) {
       errors.push(`${label} : le justificatif public/${certif.justificatif} n'existe pas.`);
     }
+    if (certif.description !== undefined && !isFilled(certif.description)) {
+      errors.push(`${label} : « description », si elle est indiquée, doit être un texte non vide.`);
+    }
+    if (certif.fiche !== undefined && !slugs.includes(certif.fiche)) {
+      errors.push(`${label} : la fiche « ${certif.fiche} » n'existe pas dans content/realisations/.`);
+    }
     if (certif.lien && !/^https?:\/\//.test(certif.lien)) {
       errors.push(`${label} : « lien » doit commencer par http:// ou https://.`);
     }

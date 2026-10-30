@@ -385,8 +385,10 @@ export default {
     ],
   },
 
-  // --- Certifications (rubrique « Certifications ») ---------------------------
-  // Une entrée par certification, score de langue, formation ou badge. Exemple :
+  // --- Certifications et formations (rubriques « Certifications » et « Formations ») ---
+  // Une entrée par certification, score de langue, formation ou badge. Les
+  // entrées de catégorie « formation » s'affichent dans la rubrique Formations,
+  // les autres dans la rubrique Certifications. Exemple :
   //   {
   //     titre: 'SecNumacadémie',
   //     organisme: 'ANSSI',
@@ -394,6 +396,8 @@ export default {
   //     date: '2026-11',             // AAAA, AAAA-MM ou AAAA-MM-JJ
   //     statut: 'obtenue',           // facultatif : obtenue ou en cours (absent = rien d'affiché)
   //     detail: '',                  // facultatif : score, niveau…
+  //     description: '',             // facultatif : une ou deux phrases sur le contenu
+  //     fiche: '',                   // facultatif : slug de la réalisation liée (lien affiché une fois publiée)
   //     justificatif: 'docs/certifications/secnumacademie.pdf', // facultatif, fichier dans public/
   //     lien: '',                    // facultatif : page de vérification ou badge en ligne
   //   },
@@ -407,6 +411,8 @@ export default {
       date: '2026-10-15', // première journée ; la seconde est prévue fin octobre
       statut: 'en cours', // passer à « obtenue » après la seconde journée
       detail: 'deux journées, la seconde fin octobre 2026',
+      description: 'Création et modification de rapports Open-Prod (devis, factures…) avec QWeb, le moteur de modèles d’Odoo : en vue graphique, en assemblant des blocs imbriqués, puis en vue XML pour aller plus loin que ce que permet l’éditeur.',
+      fiche: 'rapports-qweb',
     },
     {
       titre: 'Indicateurs et tableaux de bord Open-Prod',
@@ -414,6 +420,7 @@ export default {
       categorie: 'formation',
       date: '2026-10',
       detail: 'KPI, création d’indicateurs et de tableaux de bord',
+      description: 'Extraction de données PostgreSQL dans Excel par une connexion ODBC et création de graphiques, puis tableaux de bord dans le tableur intégré d’Open-Prod : feuilles liées entre elles et accessibles depuis les menus de l’ERP.',
     },
   ],
 

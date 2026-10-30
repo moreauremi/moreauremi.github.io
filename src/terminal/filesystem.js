@@ -12,6 +12,7 @@
 //   ├── veille/
 //   │   ├── cybersecurite/   sujet.md, syntheses.md
 //   │   └── …                (un dossier par sujet de veille)
+//   ├── formations.txt
 //   ├── certifications.txt
 //   ├── contact.txt
 //   ├── mentions-legales.txt
@@ -87,6 +88,7 @@ export function buildFilesystem() {
     'competences.txt': file(competencesText(), { route: link.section('competences') }),
     'veille.md': file(pageSource('veille'), { route: link.section('veille') }),
     veille: veilleDir,
+    'formations.txt': file(formationsText(), { route: link.section('formations') }),
     'certifications.txt': file(certificationsText(), { route: link.section('certifications') }),
     'contact.txt': file(contactText(), { route: link.section('contact') }),
     'mentions-legales.txt': file(mentionsText(), { route: link.legal() }),
@@ -165,12 +167,26 @@ function competencesText() {
   return lines.join('\n').trimStart();
 }
 
-function certificationsText() {
-  const certifications = site.certifications ?? [];
-  if (certifications.length === 0) return 'Aucune certification pour le moment : à venir.';
-  return certifications
-    .map((c) => `${c.titre} (${c.organisme}) — ${formatDate(String(c.date))}${c.statut === 'en cours' ? ', en cours' : ''}`)
+// Une entrée par ligne, les plus récentes d'abord ; la description en retrait
+function entriesText(entries, empty) {
+  if (entries.length === 0) return empty;
+  return [...entries]
+    .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+    .map((c) => [
+      `${c.titre} (${c.organisme}) — ${formatDate(String(c.date))}${c.statut === 'en cours' ? ', en cours' : ''}`,
+      ...(c.description ? [`  ${c.description}`] : []),
+    ].join('\n'))
     .join('\n');
+}
+
+function formationsText() {
+  const formations = (site.certifications ?? []).filter((c) => c.categorie === 'formation');
+  return entriesText(formations, 'Aucune formation pour le moment : à venir.');
+}
+
+function certificationsText() {
+  const certifications = (site.certifications ?? []).filter((c) => c.categorie !== 'formation');
+  return entriesText(certifications, 'Aucune certification pour le moment : à venir.');
 }
 
 function mentionsText() {

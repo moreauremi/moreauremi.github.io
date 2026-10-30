@@ -25,6 +25,7 @@ import {
   veilleBlock,
   veilleTagBlock,
   certificationsBlock,
+  formationsBlock,
   contactBlock,
   mentionsLegalesBlock,
 } from '../blocks/index.js';
@@ -46,6 +47,7 @@ const PARTS = [
   ['competences', 'Compétences', () => demoteHeadings(competencesBlock(link.juryFiche))],
   ['synthese', 'Tableau de synthèse E5', () => syntheseBlock(link.juryFiche)],
   ['veille', 'Veille technologique', () => demoteHeadings(veilleBlock(link.juryVeilleTag))],
+  ['formations', 'Formations', () => demoteHeadings(formationsBlock(link.juryFiche))],
   ['certifications', 'Certifications', () => demoteHeadings(certificationsBlock())],
   ['contact', 'CV et contact', () => demoteHeadings(contactBlock({ legalHref: link.juryLegal() }))],
 ];

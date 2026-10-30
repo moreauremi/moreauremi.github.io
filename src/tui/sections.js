@@ -1,4 +1,4 @@
-// Les huit rubriques du menu principal : numéro, libellé, identifiant d'URL
+// Les neuf rubriques du menu principal : numéro, libellé, identifiant d'URL
 // (#/presentation…) et contenu. Pour réordonner le menu, il suffit de
 // réordonner cette liste (les touches 1 à 9 suivent l'ordre).
 
@@ -11,6 +11,7 @@ import {
   syntheseBlock,
   veilleBlock,
   certificationsBlock,
+  formationsBlock,
   contactBlock,
   mentionsLegalesBlock,
   messageSentBlock,
@@ -46,6 +47,11 @@ export const SECTIONS = [
     id: 'veille',
     label: 'Veille technologique',
     render: () => veilleBlock(link.veilleTag),
+  },
+  {
+    id: 'formations',
+    label: 'Formations',
+    render: () => formationsBlock(link.fiche),
   },
   {
     id: 'certifications',
