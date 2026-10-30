@@ -4,7 +4,7 @@ slug: reprise-donnees-open-prod
 type: entreprise  # entreprise, formation ou perso
 date: 2026-10  # AAAA, AAAA-MM, AAAA-MM-JJ ou période début/fin (ex. 2026-01/2026-08)
 statut: "terminé"  # ex. en cours, terminé, en pause
-resume: "Reprise de données sur ma base de test Open-Prod, après la formation MCD et reprise de données chez 1Life : préparation de fichiers Excel, mise en correspondance des fichiers entre eux avec RECHERCHEV et RECHERCHEX, puis import dans l'ERP."
+resume: "Reprise de données sur ma base de test Open-Prod, après la formation MCD et reprise de données chez 1Life : catégories d'articles, articles (sans les obsolètes), gammes, nomenclatures, clients, prospects et fournisseurs, soit environ 1 100 lignes préparées dans Excel avec RECHERCHEV et RECHERCHEX, puis importées avec l'outil d'import d'Open-Prod."
 technos:
   - "Open-Prod 10"
   - "Odoo"
@@ -37,7 +37,9 @@ Quand une entreprise passe à Open-Prod, ses données existantes (clients, fourn
 
 Après une formation sur le sujet chez 1Life, j'ai refait une reprise complète sur ma base de test Open-Prod.
 
-[À COMPLÉTER : quelles données ont été reprises (clients, articles, nomenclatures…), d'où venaient les fichiers de départ]
+J'ai repris les données de base d'une entreprise industrielle : catégories d'articles, articles, gammes, nomenclatures, clients, prospects et fournisseurs, soit environ **1 100 lignes** au total.
+
+[À COMPLÉTER : d'où venaient les fichiers de départ (fournis par 1Life, créés pour l'exercice…)]
 
 ## Objectifs
 
@@ -52,7 +54,15 @@ Après une formation sur le sujet chez 1Life, j'ai refait une reprise complète 
 
 Le **MCD** représente les informations d'un système et les liens entre elles : par exemple, un article appartient à une catégorie, une commande est liée à un client. Le lire permet de savoir quelles données importer, et dans quel ordre : un article qui fait référence à une catégorie ne peut être importé qu'une fois la catégorie créée.
 
-[À COMPLÉTER : quelles parties du MCD ont servi, et l'ordre d'import retenu]
+L'ordre d'import suit les liens entre les données :
+
+1. **Catégories d'articles** : chaque article est rangé dans une catégorie, elle doit donc exister avant lui.
+2. **Articles** : triés au préalable pour **ne pas reprendre les articles obsolètes**, qui ne servent plus et encombreraient la nouvelle base.
+3. **Gammes** : la liste des opérations de fabrication d'un article (étapes, postes de travail, temps). Elles font référence aux articles.
+4. **Nomenclatures** : la liste des composants nécessaires pour fabriquer un article. Elles relient des articles entre eux, donc tous doivent déjà être importés.
+5. **Clients, prospects et fournisseurs**.
+
+[À COMPLÉTER : si l'ordre ou le tri des obsolètes a posé une question particulière (comment repérer un article obsolète ?)]
 
 ### Préparation et mise en correspondance des fichiers
 
@@ -62,7 +72,9 @@ Les données de départ sont réparties dans plusieurs fichiers Excel. Pour les 
 
 ### Import dans Open-Prod
 
-[À COMPLÉTER : comment l'import a été fait dans Open-Prod, et les erreurs signalées au premier essai]
+L'import se fait avec l'**outil d'import d'Open-Prod** : on lui donne le fichier Excel, puis on associe chaque colonne du fichier au champ correspondant dans l'ERP (par exemple, la colonne « Référence » au champ référence de l'article). Cette étape s'appelle le **mappage des colonnes** : si une colonne est associée au mauvais champ, la donnée est importée au mauvais endroit.
+
+[À COMPLÉTER : les erreurs signalées au premier essai et comment elles ont été corrigées]
 
 ## Captures d'écran
 
@@ -72,7 +84,9 @@ Les données de départ sont réparties dans plusieurs fichiers Excel. Pour les 
 
 ## Résultats et tests
 
-[À COMPLÉTER : combien de lignes importées, comment le résultat a été contrôlé (comptage, vérification de quelques fiches dans l'ERP…), et avec quel résultat]
+Environ **1 100 lignes** importées au total.
+
+[À COMPLÉTER : comment le résultat a été contrôlé (nombre de fiches créées comparé au fichier, vérification de quelques articles et nomenclatures dans l'ERP…)]
 
 ## Difficultés rencontrées
 
@@ -82,4 +96,5 @@ Les données de départ sont réparties dans plusieurs fichiers Excel. Pour les 
 
 - Lecture d'un modèle conceptuel de données (MCD)
 - Préparation et mise en correspondance de données dans Excel (RECHERCHEV, RECHERCHEX)
-- Import de données dans un ERP et contrôle du résultat
+- Tri des données à reprendre (articles obsolètes écartés)
+- Import de données dans un ERP avec mappage des colonnes, dans l'ordre imposé par les liens entre les données
