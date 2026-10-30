@@ -422,6 +422,14 @@ export default {
       detail: 'KPI, création d’indicateurs et de tableaux de bord',
       description: 'Extraction de données PostgreSQL dans Excel par une connexion ODBC et création de graphiques, puis tableaux de bord dans le tableur intégré d’Open-Prod : feuilles liées entre elles et accessibles depuis les menus de l’ERP.',
     },
+    {
+      titre: 'MCD et reprise de données Open-Prod',
+      organisme: '1Life',
+      categorie: 'formation',
+      date: '2026-10',
+      detail: 'modèle conceptuel de données, import de données dans l’ERP',
+      description: 'Lecture du modèle conceptuel de données (MCD) d’Open-Prod pour savoir où va chaque information, puis préparation des imports Excel de reprise de données : fichiers mis en correspondance entre eux avec RECHERCHEV et RECHERCHEX, avant import dans Open-Prod.',
+    },
   ],
 
   // --- Mentions légales (#/mentions-legales) -----------------------------------
