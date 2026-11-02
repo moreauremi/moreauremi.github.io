@@ -1,6 +1,19 @@
 {
-  "miseAJour": "2026-10-26",
+  "miseAJour": "2026-11-02",
   "actualites": [
+    {
+      "id": "f516831bef7f",
+      "date": "2026-11-02",
+      "titre": "Facturation électronique : à force d'exceptions, la France risque de perdre les bénéfices de l'interopérabilité",
+      "source": "Journal du Net",
+      "url": "https://www.journaldunet.com/management/direction-generale/1557361-facturation-electronique-a-force-d-exceptions-la-france-risque-de-perdre-les-benefices-de-l-interoperabilite/",
+      "resume": "L’article alerte sur la complexité du modèle français, liée à la multiplication des formats et des exceptions, qui pourrait compliquer les échanges et réduire l’interopérabilité. Pour une PME, les offres et outils sont plus difficiles à comparer et à intégrer ; pour un intégrateur ERP, l’accompagnement devra tenir compte des problèmes d’échange entre plateformes.",
+      "tags": [
+        "ERP",
+        "plateformes agréées",
+        "Peppol"
+      ]
+    },
     {
       "id": "616526afd4bd",
       "date": "2026-10-26",

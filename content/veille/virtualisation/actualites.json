@@ -2,6 +2,18 @@
   "miseAJour": "2026-11-02",
   "actualites": [
     {
+      "id": "e0586ded1f7b",
+      "date": "2026-11-02",
+      "titre": "CVE-2026-98432 : la faille critique du noyau Linux qui peut offrir un accès root à distance",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/cve-2026-98432-faille-noyau-linux-tcp-root-distance/",
+      "resume": "Une faille critique du noyau Linux permettrait l'exécution de commandes à distance avec les privilèges root sans authentification, via les connexions TCP IPv4. RHEL, Debian, SUSE et Proxmox sont patchés, tandis qu'Ubuntu ne l'est pas encore ; une PME doit donc vérifier les noyaux de ses serveurs et appliquer le correctif approprié.",
+      "tags": [
+        "sécurité",
+        "Proxmox"
+      ]
+    },
+    {
       "id": "9eb49a25e907",
       "date": "2026-10-28",
       "titre": "Accusé d’acculer les clouders européens, Broadcom garde le cap",

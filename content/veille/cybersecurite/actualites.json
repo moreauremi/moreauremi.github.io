@@ -2,6 +2,55 @@
   "miseAJour": "2026-11-02",
   "actualites": [
     {
+      "id": "e0586ded1f7b",
+      "date": "2026-11-02",
+      "titre": "CVE-2026-98432 : la faille critique du noyau Linux qui peut offrir un accès root à distance",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/cve-2026-98432-faille-noyau-linux-tcp-root-distance/",
+      "resume": "Une vulnérabilité critique du noyau Linux, affectant les connexions TCP IPv4, pourrait permettre l’exécution distante de commandes avec les privilèges root sans authentification. Des correctifs sont intégrés à plusieurs versions, mais Ubuntu n’est pas indiqué comme corrigé dans le texte, ce qui souligne l’importance de vérifier et mettre à jour les serveurs d’une PME.",
+      "tags": [
+        "vulnérabilité",
+        "systèmes industriels (OT)"
+      ]
+    },
+    {
+      "id": "f8dad12bcc4d",
+      "date": "2026-11-02",
+      "titre": "Cyberespionnage : les groupes APT rapprochent leurs opérations, selon ESET",
+      "source": "InCyber",
+      "url": "https://incyber.org/article/cyberespionnage-les-groupes-apt-rapprochent-leurs-operations-selon-eset/",
+      "resume": "ESET observe, entre avril et septembre 2026, un rapprochement opérationnel entre des groupes APT russes et biélorusses, une reprise d’activités iraniennes et un recours croissant à l’intelligence artificielle. Les opérations ciblent notamment des gouvernements, la défense, les technologies et les semi-conducteurs, rappelant aux PME industrielles qu’elles peuvent être exposées indirectement dans des secteurs stratégiques.",
+      "tags": [
+        "intelligence artificielle",
+        "cybercriminalité",
+        "systèmes industriels (OT)"
+      ]
+    },
+    {
+      "id": "5ab1b8941ea3",
+      "date": "2026-11-01",
+      "titre": "« À la vitesse de la machine » : 4 gangs de pirates ont confié leurs cyberattaques à l’IA",
+      "source": "01net, sécurité",
+      "url": "https://www.01net.com/actualites/a-la-vitesse-de-la-machine-4-gangs-de-pirates-ont-confie-leurs-cyberattaques-a-lia.html",
+      "resume": "CrowdStrike décrit quatre groupes criminels ayant utilisé des agents d’intelligence artificielle pour automatiser des intrusions entre mai et août 2026, notamment contre des établissements de santé. Cette évolution montre aux PME que l’IA peut accélérer les attaques et faciliter le vol d’identifiants ou les déplacements dans un réseau.",
+      "tags": [
+        "intelligence artificielle",
+        "cybercriminalité"
+      ]
+    },
+    {
+      "id": "1975285541fe",
+      "date": "2026-10-31",
+      "titre": "Une mise à jour malveillante de Claude Code sur Cursor",
+      "source": "InCyber",
+      "url": "https://incyber.org/article/mise-jour-malveillante-claude-code-sur-cursor/",
+      "resume": "La boutique d’extensions de Cursor a distribué pendant plus de onze heures une fausse mise à jour de Claude Code contenant du code malveillant. Une clé SSH devait permettre un accès distant, même si des erreurs ont limité son fonctionnement ; les ordinateurs concernés doivent néanmoins être nettoyés, ce qui souligne le risque des mises à jour et extensions compromises.",
+      "tags": [
+        "chaîne d'approvisionnement",
+        "contrôle d’accès"
+      ]
+    },
+    {
       "id": "67b14fc94fa8",
       "date": "2026-10-30",
       "titre": "Rapport SOTI « Fraud and Abuse » 2026 Akamai : des attaques ciblées sur les entreprises et des campagnes de phishing plus courtes et démultipliées – l’IA fait évoluer l’arnaque en ligne au rang d’industrie",
@@ -12,6 +61,19 @@
         "intelligence artificielle",
         "hameçonnage",
         "cybercriminalité"
+      ]
+    },
+    {
+      "id": "4b3f853c5d4c",
+      "date": "2026-10-29",
+      "titre": "Une cyberattaque expose les données personnelles de clients d'Engie",
+      "source": "Le Monde Informatique, sécurité",
+      "url": "https://www.lemondeinformatique.fr/actualites/lire-une-cyberattaque-expose-les-donnees-personnelles-de-clients-d-engie-100888.html",
+      "resume": "Un outil utilisé par des partenaires commerciaux d’Engie a été consulté sans autorisation, exposant des données personnelles et des références contractuelles, sans compromission annoncée du système interne ni des données bancaires. Pour une PME, cet incident montre qu’un prestataire ou une plateforme externe peut favoriser des campagnes d’hameçonnage ciblées.",
+      "tags": [
+        "fuite de données",
+        "hameçonnage",
+        "chaîne d'approvisionnement"
       ]
     },
     {
@@ -61,6 +123,19 @@
       "tags": [
         "chaîne d'approvisionnement",
         "vulnérabilité"
+      ]
+    },
+    {
+      "id": "fea76eb6ffa1",
+      "date": "2026-10-26",
+      "titre": "Dette technique et cybersécurité : le coût croissant de l’inaction",
+      "source": "Silicon",
+      "url": "https://www.silicon.fr/cybersecurite-1371/dette-technique-et-cybersecurite-le-cout-croissant-de-linaction-229891",
+      "resume": "Le texte présente la dette technique, les systèmes obsolètes et les correctifs reportés comme des facteurs qui augmentent l’exposition aux cybermenaces et compliquent la protection des services essentiels. Pour une PME industrielle, la mise à jour des environnements, la gestion des dépendances et le test de la reprise doivent être intégrés à la gestion des risques.",
+      "tags": [
+        "vulnérabilité",
+        "sauvegarde",
+        "intelligence artificielle"
       ]
     },
     {
