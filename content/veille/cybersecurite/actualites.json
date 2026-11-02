@@ -1,6 +1,80 @@
 {
-  "miseAJour": "2026-10-26",
+  "miseAJour": "2026-11-02",
   "actualites": [
+    {
+      "id": "67b14fc94fa8",
+      "date": "2026-10-30",
+      "titre": "Rapport SOTI « Fraud and Abuse » 2026 Akamai : des attaques ciblées sur les entreprises et des campagnes de phishing plus courtes et démultipliées – l’IA fait évoluer l’arnaque en ligne au rang d’industrie",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/reseau-securite/rapport-soti-fraud-and-abuse-2026-akamai-des-attaques-ciblees-sur-les-entreprises-et-des-campagnes-de-phishing-plus-courtes-et-demultipliees-lia-fait-evoluer-larnaque-en-ligne-au-rang-di.html",
+      "resume": "Le rapport d’Akamai décrit une évolution des fraudes numériques, avec un recours accru à l’intelligence artificielle et à l’automatisation. Les arnaques en ligne ont dépassé le phishing traditionnel au premier trimestre 2026, tandis que les campagnes de phishing sont devenues plus courtes, ce qui complique leur détection par les entreprises.",
+      "tags": [
+        "intelligence artificielle",
+        "hameçonnage",
+        "cybercriminalité"
+      ]
+    },
+    {
+      "id": "e17fe10c781d",
+      "date": "2026-10-29",
+      "titre": "Baromètre fuites de données 2025",
+      "source": "InCyber",
+      "url": "https://incyber.org/article/barometre-fuites-de-donnees/",
+      "resume": "Le baromètre indique qu’en 2025, des brèches ont touché notamment la santé, les télécommunications et des administrations publiques, parfois via des prestataires tiers. Cette multiplication souligne l’importance de surveiller les partenaires et les échanges de données d’une PME industrielle.",
+      "tags": [
+        "fuite de données",
+        "chaîne d'approvisionnement"
+      ]
+    },
+    {
+      "id": "0f6e932c4bf3",
+      "date": "2026-10-28",
+      "titre": "IoT : les vulnérabilités persistent sur les équipements connectés",
+      "source": "Le Monde Informatique, sécurité",
+      "url": "https://www.lemondeinformatique.fr/actualites/lire-iot-les-vulnerabilites-persistent-sur-les-equipements-connectes-100884.html",
+      "resume": "Un rapport de Bitdefender et Netgear indique que les équipements connectés restent une surface d’attaque persistante, notamment les téléviseurs, prises intelligentes et systèmes de stockage réseau. Pour une PME industrielle, des appareils insuffisamment mis à jour peuvent servir de relais ou de point d’entrée vers le réseau.",
+      "tags": [
+        "vulnérabilité",
+        "systèmes industriels (OT)",
+        "cybercriminalité"
+      ]
+    },
+    {
+      "id": "495146f55bd1",
+      "date": "2026-10-27",
+      "titre": "Rapport Hornetsecurity : les entreprises sont mieux protégées contre les ransomwares, mais 45% n’ont pas confiance en leurs défenses",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/reseau-securite/rapport-hornetsecurity-les-entreprises-sont-mieux-protegees-contre-les-ransomwares-mais-45-nont-pas-confiance-en-leurs-defenses.html",
+      "resume": "Le rapport de Hornetsecurity indique que les organisations se déclarent mieux préparées contre les rançongiciels, mais qu’une part importante d’entre elles reste peu confiante dans l’efficacité de leurs défenses.",
+      "tags": [
+        "rançongiciel",
+        "PME"
+      ]
+    },
+    {
+      "id": "d73b37295f3c",
+      "date": "2026-10-27",
+      "titre": "Pourquoi la vulnérabilité Brotli2Shell crée une surface d’attaque massive que de nombreuses organisations ne voient pas",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/hacking-hacktivisme/pourquoi-la-vulnerabilite-brotli2shell-cree-une-surface-dattaque-massive-que-de-nombreuses-organisations-ne-voient-pas.html",
+      "resume": "Des chercheurs de JFrog présentent Brotli2Shell comme un risque étendu de chaîne d’approvisionnement, car la dépendance vulnérable peut être intégrée indirectement dans de nombreux projets. Une PME industrielle doit donc cartographier ses dépendances et rechercher les composants non corrigés au-delà de ses applications principales.",
+      "tags": [
+        "chaîne d'approvisionnement",
+        "vulnérabilité"
+      ]
+    },
+    {
+      "id": "70bed82b60e0",
+      "date": "2026-10-26",
+      "titre": "Bulletin d'actualité CERTFR-2026-ACT-045 (26 octobre 2026)",
+      "source": "CERT-FR (ANSSI)",
+      "url": "https://www.cert.cyber.gouv.fr/actualite/CERTFR-2026-ACT-045/",
+      "resume": "Le CERT-FR signale plusieurs vulnérabilités affectant PHP, dont deux font l’objet de preuves de concept et de tentatives d’exploitation dans certains déploiements. Les PME doivent intégrer ces alertes à leur analyse de risques et planifier rapidement l’application des correctifs concernés.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
+      ]
+    },
     {
       "id": "ab63e76fc781",
       "date": "2026-10-24",

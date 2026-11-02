@@ -1,6 +1,19 @@
 {
-  "miseAJour": "2026-10-26",
+  "miseAJour": "2026-11-02",
   "actualites": [
+    {
+      "id": "9eb49a25e907",
+      "date": "2026-10-28",
+      "titre": "Accusé d’acculer les clouders européens, Broadcom garde le cap",
+      "source": "Silicon",
+      "url": "https://www.silicon.fr/cloud-1370/broadcom-clouders-229976",
+      "resume": "CISPE estime que Broadcom a renforcé les restrictions autour des licences VMware, notamment avec la fermeture du programme VCSP et des limitations du modèle « bring your own license ». Pour une PME hébergeant ses propres serveurs, ces évolutions peuvent compliquer la portabilité des licences et rendre une migration nécessaire à moyen terme.",
+      "tags": [
+        "Broadcom",
+        "VMware",
+        "licences"
+      ]
+    },
     {
       "id": "5d419a9a90ba",
       "date": "2026-10-25",
