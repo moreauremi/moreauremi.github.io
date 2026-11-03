@@ -19,6 +19,18 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
+## 03/11/2026 - L’IA accélère les cyberattaques contre les PME industrielles
+
+On remarque encore une fois que l’IA joue un rôle majeur dans les cyberattaques, que ce soit pour hacker ou pour entrer chez les utilisateurs. Des groupes de cyberespionnage et des groupes criminels l’utilisent de plus en plus pour rapprocher ou automatiser leurs opérations, notamment lors d’intrusions, de vols d’identifiants et de déplacements dans les réseaux. Les PME industrielles peuvent être exposées indirectement lorsqu’elles travaillent dans des secteurs stratégiques comme la défense, les technologies ou les semi-conducteurs.
+
+L’IA n’est toutefois pas le seul risque : une fausse mise à jour de Claude Code distribuée sur la boutique d’extensions de Cursor contenait du code malveillant et devait permettre un accès distant par une clé SSH. Même si des erreurs ont limité son fonctionnement, les ordinateurs concernés doivent être nettoyés. Cela montre aussi l’importance du risque lié aux mises à jour et aux extensions compromises.
+
+**Sources**
+
+- [Cyberespionnage : les groupes APT rapprochent leurs opérations, selon ESET](https://incyber.org/article/cyberespionnage-les-groupes-apt-rapprochent-leurs-operations-selon-eset/) (InCyber, 2 novembre 2026)
+- [« À la vitesse de la machine » : 4 gangs de pirates ont confié leurs cyberattaques à l’IA](https://www.01net.com/actualites/a-la-vitesse-de-la-machine-4-gangs-de-pirates-ont-confie-leurs-cyberattaques-a-lia.html) (01net, sécurité, 1 novembre 2026)
+- [Une mise à jour malveillante de Claude Code sur Cursor](https://incyber.org/article/mise-jour-malveillante-claude-code-sur-cursor/) (InCyber, 31 octobre 2026)
+
 ## 26/10/2026 - Une faille PHP qui interroge le rôle de l’IA
 
 Les vulnérabilités critiques signalées par le CERT-FR dans PHP permettent une exécution de code arbitraire à distance. Des preuves de concept existent pour certaines configurations, ce qui rappelle aux PME industrielles l’importance d’isoler les équipements concernés, d’appliquer les correctifs et de migrer les versions qui ne sont plus maintenues.
