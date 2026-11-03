@@ -129,14 +129,15 @@
   list-style: none;
 }
 
-/* Signature manuscrite en pied de rubrique, alignée à droite. Le SVG est
-   dessiné en currentColor : il prend la couleur du texte autour. Petite
-   taille pour que la rubrique tienne toujours sur un écran. */
+/* Signature manuscrite en pied de rubrique, centrée (dans l'axe du bouton
+   « Retour ») et un peu détachée du texte. Le SVG est dessiné en
+   currentColor : il prend la couleur du texte autour. Petite taille pour
+   limiter la hauteur ajoutée à la rubrique. */
 .presentation-signature {
   grid-column: 1 / -1;
   display: flex;
-  justify-content: flex-end;
-  margin-top: 0.6em;
+  justify-content: center;
+  margin-top: 2rem;
 }
 
 .presentation-signature svg {
