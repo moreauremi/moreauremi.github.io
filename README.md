@@ -222,6 +222,7 @@ src/styles/              un fichier CSS par partie (tokens.css = toutes les coul
                          maintenance.css = page 503)
 src/assets/fonts/        IBM Plex Mono en woff2 (400 et 600) + licence OFL
 src/assets/icons/        icônes SVG du bouton son (affichées dans la page, couleur du texte)
+src/assets/signature.svg signature manuscrite vectorisée, en pied de la rubrique Présentation (couleur du texte)
 test/                    tests du site construit (npm test), dans un navigateur simulé (jsdom)
 eslint.config.js,        règles de vérification du code (npm run lint) et du HTML construit (npm test)
   stylelint.config.js,

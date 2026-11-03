@@ -129,6 +129,22 @@
   list-style: none;
 }
 
+/* Signature manuscrite en pied de rubrique, alignée à droite. Le SVG est
+   dessiné en currentColor : il prend la couleur du texte autour. Petite
+   taille pour que la rubrique tienne toujours sur un écran. */
+.presentation-signature {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.6em;
+}
+
+.presentation-signature svg {
+  display: block;
+  width: 6rem;
+  height: auto;
+}
+
 /* --- Repère « brouillon » (visible seulement avec npm run dev) ---------------- */
 
 .draft-badge {
