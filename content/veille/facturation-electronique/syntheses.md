@@ -19,6 +19,14 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
+## 03/11/2026 - La complexité, limite de la facturation électronique
+
+La facturation électronique montre ses limites en raison de sa complexité, ce qui rend sa mise en place compliquée. La multiplication des formats et des exceptions dans le modèle français pourrait compliquer les échanges et réduire l’interopérabilité entre les plateformes. Pour une PME, les offres et les outils sont plus difficiles à comparer et à intégrer. Cette situation représente également une difficulté pour l’accompagnement par un intégrateur ERP, qui devra tenir compte des problèmes d’échange entre les différentes plateformes.
+
+**Sources**
+
+- [Facturation électronique : à force d'exceptions, la France risque de perdre les bénéfices de l'interopérabilité](https://www.journaldunet.com/management/direction-generale/1557361-facturation-electronique-a-force-d-exceptions-la-france-risque-de-perdre-les-benefices-de-l-interoperabilite/) (Journal du Net, 2 novembre 2026)
+
 ## 26/10/2026 - La facturation électronique, une nouvelle étape pour les entreprises
 
 Je constate qu’il est encore difficile pour les entreprises de prendre l’habitude de fonctionner avec la facture électronique, car cela ajoute des étapes à la comptabilité. Un mois après l’entrée en vigueur de l’obligation pour les grandes entreprises et les ETI, les retours signalent notamment des points de vigilance lors des clôtures mensuelles, dans l’intégration des ERP, le traitement des factures refusées et l’échange des statuts de paiement.
