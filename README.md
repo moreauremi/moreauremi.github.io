@@ -144,7 +144,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://dashboard.remim.me, à partir des actualités collectées.
 - [ ] **Veille par e-mail** : créer le jeton du relais et installer le relais Gmail (voir [Veille par e-mail](#mise-en-route-du-relais-gmail-une-seule-fois)).
 - [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif. Formation QWeb ajoutée (en cours, sans attestation) : passer son statut à « obtenue » après la seconde journée. Formation « Indicateurs et tableaux de bord Open-Prod » ajoutée sans statut (ni « en cours » ni « obtenue », le champ est facultatif).
-- [ ] **Réalisations en formation** : « GLPI », « Réseau de six machines virtuelles sous VirtualBox » (`reseau-vm-virtualbox.md`, octobre 2026) et « Dépannage des serveurs Proxmox de la salle de TP » (`depannage-serveurs-tp.md`, 4 novembre 2026, à la place de l'ancien brouillon `formation-realisation-3.md`) publiées. Pour le dépannage, il reste à confirmer l'accès à l'interface web de Proxmox et le résultat du script sur POD01 et POD03 (repères `[À COMPLÉTER]`).
+- [ ] **Réalisations en formation** : « GLPI », « Réseau de six machines virtuelles sous VirtualBox » (`reseau-vm-virtualbox.md`, octobre 2026) et « Dépannage des serveurs Proxmox de la salle de TP » (`depannage-serveurs-tp.md`, 4 novembre 2026, à la place de l'ancien brouillon `formation-realisation-3.md`) publiées. Pour le dépannage, il reste le résultat du script sur POD01 et POD03, à lancer plus tard (repère `[À COMPLÉTER]`).
 
 ## Architecture
 

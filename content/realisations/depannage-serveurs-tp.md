@@ -72,7 +72,7 @@ Le réseau du POD est isolé : pas de box ni de serveur DHCP, donc aucune adress
 
 **Pour POD01 et POD03.** Un script PowerShell, [Get-InfosPod.ps1](docs/depannage-serveurs-tp/Get-InfosPod.ps1), refait toute la démarche depuis le PC Windows : il trouve la carte Ethernet, découvre le serveur en IPv6, lit sa configuration en SSH, interroge le switch par la console (option -Cisco), met le poste dans le bon sous-réseau (option -ConfigurerPC) et écrit un rapport.
 
-Documentation complète : [Accès sans écran au serveur Proxmox du POD02](docs/depannage-serveurs-tp/documentation-acces-serveur-pod02.pdf) (PDF, 13 pages, avec un lexique et le récapitulatif des commandes).
+Documentation complète : [Accès sans écran au serveur Proxmox du POD02](docs/depannage-serveurs-tp/documentation-acces-serveur-pod02.pdf) (PDF, 14 pages). Elle sert aussi de procédure si le problème revient : elle commence par une procédure rapide et un tableau « symptôme, cause, que faire », et se termine par un lexique et le récapitulatif des commandes.
 
 Dépannage mené avec l'aide de **Claude** (IA), qui a aussi écrit le script et mis en forme la documentation. Mon rôle : faire les manipulations sur le matériel, faire les choix et tester.
 
@@ -80,8 +80,8 @@ Dépannage mené avec l'aide de **Claude** (IA), qui a aussi écrit le script et
 
 - **Switch** : démarré, ports actifs, tous dans le VLAN 1.
 - **Serveur** : joint en IPv6 (`ping -6`), puis connexion SSH réussie (root@POD02). Son adresse, 10.2.0.253/16, est maintenant connue et notée.
-- [À COMPLÉTER : **Interface web** : accès à https://10.2.0.253:8006 vérifié depuis un poste en 10.2.0.100/16]
-- **Script** : vérifié en simulation (sans le matériel). [À COMPLÉTER : résultat du script sur POD01 et POD03]
+- **Interface web** : accès vérifié à https://10.2.0.253:8006, depuis un poste en 10.2.0.100/16.
+- **Script** : vérifié en simulation (sans le matériel), à lancer plus tard sur POD01 et POD03. [À COMPLÉTER : résultat du script sur POD01 et POD03]
 
 ## Difficultés rencontrées
 
@@ -105,4 +105,4 @@ Dépannage mené avec l'aide de **Claude** (IA), qui a aussi écrit le script et
 - Capture et filtrage du trafic avec Wireshark
 - Accès SSH à un serveur Proxmox (Debian) et lecture de sa configuration réseau
 - Automatisation d'une procédure avec PowerShell
-- Rédaction d'une documentation technique
+- Rédaction d'une documentation technique et d'une procédure de dépannage réutilisable
