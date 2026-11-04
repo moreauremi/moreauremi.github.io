@@ -1,6 +1,6 @@
 ---
 titre: "Environnement Open-Prod v10 : architecture et maintenance"
-slug: 1life-realisation-1
+slug: environnement-open-prod
 type: entreprise  # entreprise, formation ou perso
 date: 2026-09/2026-10  # AAAA, AAAA-MM, AAAA-MM-JJ ou période début/fin (ex. 2026-01/2026-08)
 statut: "en cours"  # ex. en cours, terminé, en pause
@@ -18,13 +18,16 @@ technos:
   - "JasperReports"
   - "SSH"
 competences: [B1.1, B1.5, B1.6]  # codes du référentiel, ex. [B1.1, B1.4]
+# Ancien nom de la fiche (1life-realisation-1) : les liens déjà partagés vers
+# #/realisations/1life-realisation-1 mènent à cette fiche.
+anciennesAdresses: [1life-realisation-1]
 ---
 
 <!--
   Guide de rédaction
-  - Captures : déposer l'image dans public/captures/1life-realisation-1/, puis ajouter
+  - Captures : déposer l'image dans public/captures/environnement-open-prod/, puis ajouter
     une section « ## Captures d'écran » (après « Mise en œuvre ») avec
-      ![Description de l'image](captures/1life-realisation-1/nom-du-fichier.webp "Légende affichée")
+      ![Description de l'image](captures/environnement-open-prod/nom-du-fichier.webp "Légende affichée")
     Idées (avec l'accord du tuteur, sans adresse interne ni mot de passe) : la sortie
     d'openprod-info, le menu d'app-manager, l'interface web de gestion des bases.
   - competences : codes définis dans content/site.config.js, ex. [B1.1, B1.4]

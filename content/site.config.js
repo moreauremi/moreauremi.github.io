@@ -343,7 +343,7 @@ export default {
       {
         nom: 'Systèmes et virtualisation',
         items: [
-          { nom: 'Linux', niveau: 3, preuves: ['homelab', '1life-realisation-1', 'glpi', 'reseau-vm-virtualbox'] },
+          { nom: 'Linux', niveau: 3, preuves: ['homelab', 'environnement-open-prod', 'glpi', 'reseau-vm-virtualbox'] },
           { nom: 'Windows (poste et serveur)', niveau: 2, preuves: ['reseau-vm-virtualbox', 'rmutils'] },
           { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab'] },
           { nom: 'VirtualBox', niveau: 3, preuves: ['reseau-vm-virtualbox', 'glpi'] },
@@ -371,14 +371,14 @@ export default {
         nom: 'Bases de données',
         items: [
           { nom: 'SQL', niveau: 2, preuves: ['glpi', 'rapports-qweb'] },
-          { nom: 'PostgreSQL, MariaDB (administration)', niveau: 3, preuves: ['1life-realisation-1', 'glpi'] },
+          { nom: 'PostgreSQL, MariaDB (administration)', niveau: 3, preuves: ['environnement-open-prod', 'glpi'] },
           { nom: 'Modèle conceptuel de données (MCD)', niveau: 3, preuves: ['reprise-donnees-open-prod'] },
         ],
       },
       {
         nom: 'Outils et frameworks',
         items: [
-          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'portfolio-remios', 'rmutils', '1life-realisation-1'] },
+          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'portfolio-remios', 'rmutils', 'environnement-open-prod'] },
           { nom: 'Excel (RECHERCHEV, RECHERCHEX)', niveau: 3, preuves: ['reprise-donnees-open-prod'] },
           { nom: 'Streamlit, Pandas, Plotly', niveau: 3, preuves: ['crypto-dashboard-pro'] },
           { nom: 'n8n (automatisation)', niveau: 2, preuves: [] },
@@ -387,7 +387,7 @@ export default {
       {
         nom: 'Logiciels métier',
         items: [
-          { nom: 'ERP Open-Prod', niveau: 2, preuves: ['1life-realisation-1', 'flux-production-sous-traitance', 'reprise-donnees-open-prod', 'rapports-qweb'] },
+          { nom: 'ERP Open-Prod', niveau: 2, preuves: ['environnement-open-prod', 'flux-production-sous-traitance', 'reprise-donnees-open-prod', 'rapports-qweb'] },
           { nom: 'QWeb (rapports Open-Prod)', niveau: 2, preuves: ['rapports-qweb'] },
           { nom: 'GLPI (gestion des tickets)', niveau: 2, preuves: ['glpi'] },
         ],
