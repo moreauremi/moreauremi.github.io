@@ -19,6 +19,9 @@ competences: [B1.1, B1.4, B1.5, B1.6]  # codes du référentiel, ex. [B1.1, B1.4
 # Adresses des deux fiches réunies ici (Homelab Jellyfin, NAS Homelab) : les
 # liens déjà partagés vers elles mènent à cette fiche.
 anciennesAdresses: [homelab-jellyfin, nas]
+# Retirer cette ligne quand Proxmox est réinstallé et que les vraies captures
+# remplacent les images provisoires : la fiche repart alors en ligne.
+brouillon: true
 ---
 
 <!--
@@ -26,8 +29,10 @@ anciennesAdresses: [homelab-jellyfin, nas]
   - Fiche qui réunit les anciennes fiches « Homelab Jellyfin » et « NAS Homelab »,
     avec la machine virtuelle de projet partagée avec les camarades de classe.
   - Remplacer chaque [À COMPLÉTER] par le vrai contenu (ou supprimer la ligne).
-    La fiche est publiée : les repères restants n'apparaissent pas sur le site
-    en ligne (seulement avec npm run dev), une section vide non plus.
+    Fiche en brouillon depuis le 4 novembre 2026, le temps de réinstaller Proxmox
+    et de faire les captures. Une fois republiée, les repères restants
+    n'apparaissent pas sur le site en ligne (seulement avec npm run dev), une
+    section vide non plus.
   - Captures : déposer l'image dans public/captures/homelab/, puis écrire
       ![Description de l'image](captures/homelab/nom-du-fichier.webp "Légende affichée")
     à la place de l'image provisoire « a-venir.svg » correspondante, ci-dessous.
