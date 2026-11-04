@@ -34,7 +34,7 @@ competences: [B1.1, B1.2, B1.5]  # codes du référentiel, ex. [B1.1, B1.4]
 
 TP de BTS SIO. Pour ce TP, nous avions besoin des serveurs installés dans la baie de la salle : un par POD (POD01, POD02 et POD03), chacun relié à son propre switch Cisco. Les serveurs venaient d'être mis en place, mais ils ne fonctionnaient pas : reliés à aucun réseau, sans écran, et personne ne connaissait leur adresse IP. Impossible de s'y connecter pour commencer le TP.
 
-Comme j'avais de l'avance sur le TP, j'ai essayé de régler le problème sur le POD02, puis j'ai préparé de quoi refaire la démarche sur les deux autres POD.
+Comme j'avais de l'avance sur le TP, j'ai proposé au professeur de m'en occuper. Avec son accord, j'ai essayé de régler le problème sur le POD02, interventions sur le switch comprises, puis j'ai préparé de quoi refaire la démarche sur les deux autres POD.
 
 ## Objectifs
 
