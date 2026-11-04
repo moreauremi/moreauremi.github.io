@@ -343,34 +343,43 @@ export default {
       {
         nom: 'Systèmes et virtualisation',
         items: [
-          { nom: 'Linux', niveau: 3, preuves: ['homelab', 'glpi', 'reseau-vm-virtualbox'] },
+          { nom: 'Linux', niveau: 3, preuves: ['homelab', '1life-realisation-1', 'glpi', 'reseau-vm-virtualbox'] },
+          { nom: 'Windows (poste et serveur)', niveau: 2, preuves: ['reseau-vm-virtualbox', 'rmutils'] },
           { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab'] },
-          { nom: 'Docker', niveau: 2, preuves: ['homelab'] },
+          { nom: 'VirtualBox', niveau: 3, preuves: ['reseau-vm-virtualbox', 'glpi'] },
+          { nom: 'Docker', niveau: 2, preuves: ['homelab', 'portfolio-remios'] },
         ],
       },
       {
         nom: 'Réseaux et sécurité',
         items: [
+          { nom: 'Adressage IP, DHCP et diagnostic réseau', niveau: 2, preuves: ['reseau-vm-virtualbox', 'rmutils'] },
           { nom: 'VPN (Tailscale)', niveau: 3, preuves: ['homelab'] },
           { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['portfolio-remios'] },
-          { nom: 'Serveur web, reverse proxy (Nginx)', niveau: 2, preuves: [] },
+          { nom: 'Serveur web (Apache, Nginx), reverse proxy', niveau: 2, preuves: ['glpi', 'portfolio-remios'] },
         ],
       },
       {
         nom: 'Langages de programmation',
         items: [
           { nom: 'Python', niveau: 3.5, preuves: ['crypto-dashboard-pro'] },
+          { nom: 'PowerShell et batch', niveau: 3, preuves: ['rmutils', 'reseau-vm-virtualbox'] },
           { nom: 'HTML', niveau: 2, preuves: ['portfolio-remios'] },
         ],
       },
       {
         nom: 'Bases de données',
-        items: [{ nom: 'SQL', niveau: 2, preuves: ['glpi', 'rapports-qweb'] }],
+        items: [
+          { nom: 'SQL', niveau: 2, preuves: ['glpi', 'rapports-qweb'] },
+          { nom: 'PostgreSQL, MariaDB (administration)', niveau: 3, preuves: ['1life-realisation-1', 'glpi'] },
+          { nom: 'Modèle conceptuel de données (MCD)', niveau: 3, preuves: ['reprise-donnees-open-prod'] },
+        ],
       },
       {
         nom: 'Outils et frameworks',
         items: [
-          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'portfolio-remios'] },
+          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'portfolio-remios', 'rmutils', '1life-realisation-1'] },
+          { nom: 'Excel (RECHERCHEV, RECHERCHEX)', niveau: 3, preuves: ['reprise-donnees-open-prod'] },
           { nom: 'Streamlit, Pandas, Plotly', niveau: 3, preuves: ['crypto-dashboard-pro'] },
           { nom: 'n8n (automatisation)', niveau: 2, preuves: [] },
         ],
@@ -378,8 +387,9 @@ export default {
       {
         nom: 'Logiciels métier',
         items: [
-          { nom: 'ERP Open-Prod', niveau: 2, preuves: ['1life-realisation-1', 'flux-production-sous-traitance', 'rapports-qweb'] },
+          { nom: 'ERP Open-Prod', niveau: 2, preuves: ['1life-realisation-1', 'flux-production-sous-traitance', 'reprise-donnees-open-prod', 'rapports-qweb'] },
           { nom: 'QWeb (rapports Open-Prod)', niveau: 2, preuves: ['rapports-qweb'] },
+          { nom: 'GLPI (gestion des tickets)', niveau: 2, preuves: ['glpi'] },
         ],
       },
     ],
