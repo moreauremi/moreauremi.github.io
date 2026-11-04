@@ -10,10 +10,18 @@ import path from 'node:path';
 import { Marked } from 'marked';
 import { escapeHtml, markPlaceholders, stripPlaceholders, hasPlaceholder, frenchSpacing } from '../../src/utils/html.js';
 
+// Capture provisoire : image qui réserve la place d'une capture pas encore
+// faite. Comme un repère [À COMPLÉTER], elle reste visible avec `npm run dev`
+// et disparaît du site publié, avec sa légende ; une section « Captures
+// d'écran » qui ne contenait qu'elles disparaît aussi.
+export const PENDING_SHOT = 'captures/a-venir.svg';
+// Ligne Markdown qui ne contient qu'une capture provisoire
+const PENDING_SHOT_LINE = /^\s*!\[[^\]]*\]\(captures\/a-venir\.svg(?:\s+"[^"]*")?\)\s*$/;
+
 // Corps Markdown → { html, images }. `images` : chemins des images
 // rencontrées, vérifiés ensuite par le plugin.
-// hidePlaceholders : site publié, repères [À COMPLÉTER] retirés au lieu d'être
-// surlignés (voir stripPlaceholders).
+// hidePlaceholders : site publié, repères [À COMPLÉTER] et captures
+// provisoires retirés au lieu d'être affichés (voir stripPlaceholders).
 export function renderMarkdown(markdown, { hidePlaceholders = false } = {}) {
   const images = [];
 
@@ -38,6 +46,7 @@ export function renderMarkdown(markdown, { hidePlaceholders = false } = {}) {
       paragraph({ tokens }) {
         const inner = this.parser.parseInline(tokens);
         if (tokens.length === 1 && tokens[0].type === 'image') {
+          if (hidePlaceholders && tokens[0].href === PENDING_SHOT) return '';
           const caption = tokens[0].title;
           return `<figure class="shot-figure">${inner}${caption ? `<figcaption>${escapeHtml(caption)}</figcaption>` : ''}</figure>\n`;
         }
@@ -68,11 +77,13 @@ export function stripComments(source) {
   return source.replace(/<!--[\s\S]*?-->\s*/g, '');
 }
 
-// Texte source du site publié, sans repères [À COMPLÉTER], comme la page :
-// une ligne qui ne contenait qu'un repère disparaît (paragraphe, élément de
-// liste, champ de l'en-tête), puis le titre d'une section restée vide.
+// Texte source du site publié, sans repères [À COMPLÉTER] ni captures
+// provisoires, comme la page : une ligne qui ne contenait qu'un repère
+// disparaît (paragraphe, élément de liste, champ de l'en-tête), puis le titre
+// d'une section restée vide.
 export function stripSourcePlaceholders(source) {
   const lines = source.split('\n').flatMap((line) => {
+    if (PENDING_SHOT_LINE.test(line)) return [];
     if (!hasPlaceholder(line)) return [line];
     const rest = line.replace(/[ \t]*\[À COMPLÉTER[^\]]*\]/g, '').trimEnd();
     // Rien d'utile autour du repère : puce, guillemets vides, « champ: », commentaire

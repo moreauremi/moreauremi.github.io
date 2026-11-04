@@ -77,6 +77,15 @@ test('aucun brouillon ni repère à compléter dans les pages statiques et llms.
   for (const page of PAGES) assert.ok(!read(`${page}index.html`).includes(PLACEHOLDER), `${page} : repère [À COMPLÉTER] publié`);
 });
 
+test('aucune capture provisoire (a-venir.svg) dans le site publié : pages statiques, RémiOS et terminal', () => {
+  const PENDING = 'a-venir.svg';
+  for (const page of PAGES) assert.ok(!read(`${page}index.html`).includes(PENDING), `${page} : capture provisoire publiée`);
+  // Fiches, vue jury et textes du terminal sont dans les fichiers JavaScript du site
+  for (const file of fs.readdirSync(path.join(DIST, 'assets')).filter((name) => name.endsWith('.js'))) {
+    assert.ok(!read(`assets/${file}`).includes(PENDING), `assets/${file} : capture provisoire publiée`);
+  }
+});
+
 test('plan du site et llms.txt listent toutes les pages', () => {
   const sitemap = read('sitemap.xml');
   const llms = read('llms.txt');
