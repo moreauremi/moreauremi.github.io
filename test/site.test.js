@@ -465,7 +465,7 @@ test('mode sombre : bascule depuis RémiOS et la vue jury, choix mémorisé', as
   assert.deepEqual(errors, []);
 });
 
-test('mode sombre : chaque couleur de texte se lit bien dans les deux thèmes (contraste d\'au moins 4,5:1)', () => {
+test('mode sombre : chaque couleur se lit bien dans les deux thèmes (texte 4,5:1, bords et sélection 3:1)', () => {
   const css = fs.readFileSync(path.resolve(import.meta.dirname, '../src/styles/tokens.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   const tokens = (block) => Object.fromEntries([...block.matchAll(/--([a-z0-9-]+):\s*(#[0-9a-f]{6})\s*;/gi)].map((m) => [m[1], m[2]]));
   const light = tokens(/:root\s*\{([\s\S]*?)\}/.exec(css)[1]);
@@ -480,18 +480,23 @@ test('mode sombre : chaque couleur de texte se lit bien dans les deux thèmes (c
     const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
     return (hi + 0.05) / (lo + 0.05);
   };
-  // [texte, fond] : chaque couple utilisé dans les feuilles de style
+  // [texte ou bord, fond, minimum] : chaque couple utilisé dans les feuilles de
+  // style. 4,5:1 pour du texte ; 3:1 pour ce qui permet de repérer un élément
+  // cliquable ou sélectionné (bords, barre de sélection), selon les règles WCAG.
   const PAIRS = [
-    ['tui-ink', 'tui-box'], ['tui-title', 'tui-box'], ['tui-link', 'tui-box'], ['on-accent', 'tui-link'],
-    ['tui-sel-ink', 'tui-sel'], ['tui-sel-key', 'tui-sel'], ['tui-ink', 'tui-field-bg'],
-    ['tui-bar-ink', 'tui-bg'], ['tui-hint', 'tui-bg'], ['text-bright', 'tui-bg'], ['on-key', 'tui-sel-key'],
-    ['jury-ink', 'jury-bg'], ['jury-muted', 'jury-bg'], ['jury-accent', 'jury-bg'], ['on-accent', 'jury-accent'],
+    ['tui-ink', 'tui-box', 4.5], ['tui-title', 'tui-box', 4.5], ['tui-link', 'tui-box', 4.5], ['on-accent', 'tui-link', 4.5],
+    ['tui-sel-ink', 'tui-sel', 4.5], ['tui-sel-key', 'tui-sel', 4.5], ['tui-ink', 'tui-field-bg', 4.5],
+    ['tui-bar-ink', 'tui-bg', 4.5], ['tui-hint', 'tui-bg', 4.5], ['text-bright', 'tui-bg', 4.5], ['on-key', 'quick-bg', 4.5],
+    ['jury-ink', 'jury-bg', 4.5], ['jury-muted', 'jury-bg', 4.5], ['jury-accent', 'jury-bg', 4.5], ['on-accent', 'jury-accent', 4.5],
+    ['tui-sel', 'tui-box', 3], ['tui-inner-border', 'tui-box', 3], ['tui-field-border', 'tui-box', 3],
   ];
-  for (const [name, theme] of [['clair', light], ['sombre', dark]]) {
-    for (const [ink, bg] of PAIRS) {
+  // Couleurs propres au thème sombre (libellés, voir dark.css)
+  const DARK_PAIRS = [['tui-muted', 'tui-box', 4.5]];
+  for (const [name, theme, pairs] of [['clair', light, PAIRS], ['sombre', dark, [...PAIRS, ...DARK_PAIRS]]]) {
+    for (const [ink, bg, min] of pairs) {
       assert.ok(theme[ink] && theme[bg], `thème ${name} : --${ink} et --${bg} au format #rrvvbb`);
       const ratio = contrast(theme[ink], theme[bg]);
-      assert.ok(ratio >= 4.5, `thème ${name} : --${ink} sur --${bg}, contraste ${ratio.toFixed(2)}:1`);
+      assert.ok(ratio >= min, `thème ${name} : --${ink} sur --${bg}, contraste ${ratio.toFixed(2)}:1 (minimum ${min}:1)`);
     }
   }
 });

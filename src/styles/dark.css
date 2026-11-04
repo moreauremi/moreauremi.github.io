@@ -1,0 +1,65 @@
+/* ==========================================================================
+   Thème sombre : ce qui change en plus des couleurs (voir tokens.css)
+   --------------------------------------------------------------------------
+   Sur fond sombre, le relief de whiptail (bords clair et foncé, ombre dure)
+   ne se voit plus. Comme chez Apple ou Linear, la profondeur vient donc de
+   la lumière : la boîte est plus claire que l'écran, cerclée d'un filet,
+   avec un reflet en haut et une ombre douce. Les gris prennent chacun un
+   rôle (titres en texte principal, libellés en gris secondaire), et le rouge
+   de whiptail se limite aux crochets du titre.
+
+   À l'écran seulement : l'impression reste celle du thème clair.
+   ========================================================================== */
+
+@media screen {
+  /* --- Relief --------------------------------------------------------------- */
+
+  :root[data-theme='dark'] .tui-box {
+    border: 1px solid var(--tui-line);
+    box-shadow:
+      inset 0 1px 0 var(--tui-highlight),
+      var(--tui-lift);
+  }
+
+  :root[data-theme='dark'] .tui-box-inner {
+    border-color: var(--tui-line);
+  }
+
+  :root[data-theme='dark'] .tui .shot--window {
+    border-color: var(--tui-line);
+    box-shadow: var(--tui-lift-small);
+  }
+
+  :root[data-theme='dark'] .skills {
+    box-shadow: var(--tui-lift-small);
+  }
+
+  :root[data-theme='dark'] .system-bar-jury {
+    box-shadow: none;
+  }
+
+  /* --- Rôles des gris : titres en texte principal, libellés en secondaire ---- */
+
+  :root[data-theme='dark'] .tui {
+    --heading: var(--tui-ink);
+  }
+
+  :root[data-theme='dark'] .tui :is(.home-facts, .fiche-meta, .contact) dt,
+  :root[data-theme='dark'] .tui .field > span {
+    color: var(--tui-muted);
+  }
+
+  :root[data-theme='dark'] .menu-item:not(.is-selected):not(:focus-visible) .menu-key {
+    color: var(--tui-muted);
+  }
+
+  /* --- Titre des boîtes : texte principal, crochets rouges ---------------------- */
+
+  :root[data-theme='dark'] .tui-box-title {
+    color: var(--tui-ink);
+  }
+
+  :root[data-theme='dark'] .tui-box-title > [aria-hidden='true'] {
+    color: var(--tui-title);
+  }
+}

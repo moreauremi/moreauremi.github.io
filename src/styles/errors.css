@@ -11,6 +11,7 @@
 @import './tokens.css';
 @import './base.css';
 @import './tui.css';
+@import './dark.css';
 
 /* Pas de boutons fixes (son, vue jury) sur ces pages : la barre du haut n'a
    pas à leur réserver de place à droite. */

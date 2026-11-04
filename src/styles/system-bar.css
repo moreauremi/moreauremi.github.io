@@ -23,7 +23,7 @@
   align-items: center;
   min-height: 36px;
   padding: 4px 12px;
-  background: var(--tui-sel-key);
+  background: var(--quick-bg);
   color: var(--on-key);
   font-weight: 600;
   text-decoration: none;
