@@ -55,12 +55,18 @@ export function renderMarkdown(markdown, { hidePlaceholders = false } = {}) {
 
       // Liens externes et documents PDF : ouverts dans un nouvel onglet, sans
       // que la page ouverte puisse agir sur celle-ci (rel="noopener noreferrer").
+      // Lien de téléchargement : un fichier du site avec le titre « Télécharger »,
+      // [télécharger](docs/doc.pdf "Télécharger"), reçoit l'attribut download :
+      // le navigateur enregistre le fichier au lieu de l'ouvrir.
       link({ href, title, tokens }) {
         const label = this.parser.parseInline(tokens);
-        const external = /^https?:\/\//.test(href) || /\.pdf(?:[?#]|$)/i.test(href);
+        const local = !/^([a-z]+:)?\/\//i.test(href);
+        const download = local && title === 'Télécharger';
+        const external = !download && (/^https?:\/\//.test(href) || /\.pdf(?:[?#]|$)/i.test(href));
         const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
         const target = external ? ' target="_blank" rel="noopener noreferrer"' : '';
-        return `<a href="${escapeHtml(href)}"${titleAttr}${target}>${label}</a>`;
+        const downloadAttr = download ? ' download' : '';
+        return `<a href="${escapeHtml(href)}"${titleAttr}${target}${downloadAttr}>${label}</a>`;
       },
     },
   });

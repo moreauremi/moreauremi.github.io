@@ -42,6 +42,13 @@ Comme j'avais de l'avance sur le TP, j'ai essayé de régler le problème sur le
 - Retrouver sa configuration réseau : adresse IP, masque, port du switch.
 - Documenter la démarche et la rendre reproductible pour POD01 et POD03.
 
+## Documentation à télécharger
+
+La documentation sert aussi de procédure si le problème revient : elle commence par une procédure rapide et un tableau « symptôme, cause, que faire », raconte ensuite le dépannage étape par étape, et se termine par un lexique et le récapitulatif des commandes.
+
+- **Accès sans écran au serveur Proxmox du POD02** (PDF, 14 pages) : [ouvrir](docs/depannage-serveurs-tp/documentation-acces-serveur-pod02.pdf) ou [télécharger](docs/depannage-serveurs-tp/documentation-acces-serveur-pod02.pdf "Télécharger")
+- **Get-InfosPod.ps1** (script PowerShell, pour POD01 et POD03) : [télécharger](docs/depannage-serveurs-tp/Get-InfosPod.ps1 "Télécharger")
+
 ## Le matériel
 
 | Élément | Modèle | Rôle |
@@ -70,9 +77,7 @@ Le réseau du POD est isolé : pas de box ni de serveur DHCP, donc aucune adress
 
 ![Terminal SSH connecté au serveur POD02 : ip a affiche vmbr0 en 10.2.0.253/16 et l'adresse IPv6 fe80::6600:6aff:fe69:1330](captures/depannage-serveurs-tp/ssh-ip-a.webp "Connecté en SSH au serveur : son IP est 10.2.0.253/16")
 
-**Pour POD01 et POD03.** Un script PowerShell, [Get-InfosPod.ps1](docs/depannage-serveurs-tp/Get-InfosPod.ps1), refait toute la démarche depuis le PC Windows : il trouve la carte Ethernet, découvre le serveur en IPv6, lit sa configuration en SSH, interroge le switch par la console (option -Cisco), met le poste dans le bon sous-réseau (option -ConfigurerPC) et écrit un rapport.
-
-Documentation complète : [Accès sans écran au serveur Proxmox du POD02](docs/depannage-serveurs-tp/documentation-acces-serveur-pod02.pdf) (PDF, 14 pages). Elle sert aussi de procédure si le problème revient : elle commence par une procédure rapide et un tableau « symptôme, cause, que faire », et se termine par un lexique et le récapitulatif des commandes.
+**Pour POD01 et POD03.** Un script PowerShell, Get-InfosPod.ps1 (à télécharger plus haut), refait toute la démarche depuis le PC Windows : il trouve la carte Ethernet, découvre le serveur en IPv6, lit sa configuration en SSH, interroge le switch par la console (option -Cisco), met le poste dans le bon sous-réseau (option -ConfigurerPC) et écrit un rapport.
 
 Dépannage mené avec l'aide de **Claude** (IA), qui a aussi écrit le script et mis en forme la documentation. Mon rôle : faire les manipulations sur le matériel, faire les choix et tester.
 

@@ -116,3 +116,14 @@ test('les liens et images des pages statiques mènent à des fichiers publiés',
     }
   }
 });
+
+test('les liens de téléchargement enregistrent un fichier publié, sans nouvel onglet', () => {
+  for (const page of PAGES) {
+    const html = read(path.join(page, 'index.html'));
+    for (const [tag] of html.matchAll(/<a\b[^>]*\sdownload\b[^>]*>/g)) {
+      assert.doesNotMatch(tag, /target=/, `${page} : un lien de téléchargement ne s'ouvre pas dans un nouvel onglet`);
+      const href = /href="([^"]+)"/.exec(tag)?.[1];
+      assert.ok(href && !/^([a-z]+:)?\/\//i.test(href), `${page} : lien de téléchargement vers un fichier du site`);
+    }
+  }
+});
