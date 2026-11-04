@@ -91,19 +91,80 @@
   text-underline-offset: 2px;
 }
 
-/* --- Présentation : photo et liens vers les profils ------------------------- */
+/* --- Présentation : lettre de présentation ---------------------------------- */
+
+/* En-tête : expéditeur (photo, nom, formation, liens) à gauche, destinataire
+   et date à droite. Sur petit écran, les deux blocs passent l'un sous l'autre. */
+.lettre-entete {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px 24px;
+}
 
 .profile {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 20px;
-  margin: 0 0 1.2em;
+  align-items: flex-start;
+  gap: 12px 16px;
+}
+
+.profile-id p,
+.lettre-destinataire p {
+  margin: 0;
+}
+
+.profile-name {
+  color: var(--heading);
+  font-weight: 600;
+}
+
+.lettre-destinataire {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+  margin-left: auto;
+  text-align: right;
+}
+
+/* Objet : séparé de l'en-tête par un filet pointillé */
+.lettre-objet {
+  margin: 14px 0 0.8em;
+  padding-top: 12px;
+  border-top: 1px dashed var(--rule);
+}
+
+.lettre-objet strong {
+  color: var(--heading);
+}
+
+/* Pied : formule de fin à gauche, signature à droite, sur la même ligne */
+.lettre-pied {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 8px 24px;
+  margin-top: 0.8em;
+}
+
+.lettre-pied p {
+  flex: 1 1 24ch;
+  margin: 0;
+}
+
+/* Exception à la limite de 75 caractères par ligne (début de ce fichier) :
+   la lettre prend toute la largeur de la boîte, soit une petite dizaine de
+   caractères de plus par ligne, pour que la rubrique tienne sur un écran de
+   portable sans défiler. */
+.lettre .prose p {
+  max-width: none;
 }
 
 .portrait {
-  width: 128px;
-  height: 128px;
+  width: 96px;
+  height: 96px;
   margin: 0;
   border: 1px solid var(--rule);
   object-fit: cover;
@@ -124,26 +185,29 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px 16px;
-  margin: 0;
+  margin: 2px 0 0;
   padding: 0;
   list-style: none;
 }
 
-/* Signature manuscrite en pied de rubrique, centrée (dans l'axe du bouton
-   « Retour ») et un peu détachée du texte. Le SVG est dessiné en
-   currentColor : il prend la couleur du texte autour. Petite taille pour
-   limiter la hauteur ajoutée à la rubrique. */
+/* Signature manuscrite, en bas à droite comme sur une lettre. Le SVG est
+   dessiné en currentColor : il prend la couleur du texte autour. Petite
+   taille pour limiter la hauteur ajoutée à la rubrique. */
 .presentation-signature {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
+  margin-left: auto;
 }
 
 .presentation-signature svg {
   display: block;
-  width: 6rem;
+  width: 5.5rem;
   height: auto;
+}
+
+@media (max-width: 720px) {
+  .lettre-destinataire {
+    margin-left: 0;
+    text-align: left;
+  }
 }
 
 /* --- Repère « brouillon » (visible seulement avec npm run dev) ---------------- */

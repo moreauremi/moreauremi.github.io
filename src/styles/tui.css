@@ -404,27 +404,6 @@ html[data-view='tui'] body {
   outline-offset: -4px;
 }
 
-/* --- Présentation : photo et liens en colonne, à gauche du texte ----------- */
-
-/* La rubrique tient ainsi sur un écran, sans défiler. Sur petit écran (voir
-   plus bas) et dans la vue jury, la photo reste au-dessus du texte. */
-.tui .presentation {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  gap: 0 28px;
-  align-items: start;
-}
-
-.tui .presentation .profile {
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 0;
-}
-
-.tui .presentation .profile-links {
-  flex-direction: column;
-}
-
 /* --- Aide clavier ----------------------------------------------------------- */
 
 .tui-hints {
@@ -473,19 +452,9 @@ html[data-view='tui'] body {
     display: none;
   }
 
-  .home,
-  .tui .presentation {
+  .home {
     grid-template-columns: minmax(0, 1fr);
     gap: 20px;
-  }
-
-  .tui .presentation .profile {
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .tui .presentation .profile-links {
-    flex-direction: row;
   }
 
   .tui-stage {
