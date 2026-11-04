@@ -20,7 +20,7 @@ Bac général en 2024, deux ans en **commerce** (BBA à Audencia, BTS NDRC) et d
 
 ## Ce qui m'attire dans l'infrastructure
 
-**Interconnecter des machines**, et **rester autonome** plutôt que de payer des services en ligne : mon **homelab Proxmox** héberge un serveur multimédia **Jellyfin** et un **NAS**, accessibles à distance par **VPN**.
+**Interconnecter des machines**, et **rester autonome** plutôt que de payer des services en ligne : c'est ce que je construis avec mon **homelab Proxmox**, un serveur multimédia **Jellyfin** et un **NAS** accessibles à distance par **VPN**.
 
 ## Mon projet professionnel
 
