@@ -22,8 +22,11 @@ const PENDING_SHOT_LINE = /^\s*!\[[^\]]*\]\(captures\/a-venir\.svg(?:\s+"[^"]*")
 // rencontrées, vérifiés ensuite par le plugin.
 // hidePlaceholders : site publié, repères [À COMPLÉTER] et captures
 // provisoires retirés au lieu d'être affichés (voir stripPlaceholders).
-export function renderMarkdown(markdown, { hidePlaceholders = false } = {}) {
+// lang : langue du texte ('fr' ou 'en'). La typographie française (espaces
+// insécables avant « : ») ne s'applique qu'au français.
+export function renderMarkdown(markdown, { hidePlaceholders = false, lang = 'fr' } = {}) {
   const images = [];
+  const zoom = lang === 'en' ? '[enlarge]' : '[agrandir]';
 
   const marked = new Marked({
     gfm: true, // Markdown « GitHub » : tableaux, listes de tâches…
@@ -37,7 +40,7 @@ export function renderMarkdown(markdown, { hidePlaceholders = false } = {}) {
       image({ href, text }) {
         images.push(href);
         const src = escapeHtml(href);
-        const bar = `<span class="shot-bar" aria-hidden="true"><span class="shot-bar-name">${escapeHtml(path.posix.basename(href))}</span><span class="shot-bar-zoom">[agrandir]</span></span>`;
+        const bar = `<span class="shot-bar" aria-hidden="true"><span class="shot-bar-name">${escapeHtml(path.posix.basename(href))}</span><span class="shot-bar-zoom">${zoom}</span></span>`;
         return `<a class="shot shot--window" href="${src}">${bar}<img src="${src}" alt="${escapeHtml(text)}" loading="lazy" decoding="async"></a>`;
       },
 
@@ -55,13 +58,14 @@ export function renderMarkdown(markdown, { hidePlaceholders = false } = {}) {
 
       // Liens externes et documents PDF : ouverts dans un nouvel onglet, sans
       // que la page ouverte puisse agir sur celle-ci (rel="noopener noreferrer").
-      // Lien de téléchargement : un fichier du site avec le titre « Télécharger »,
-      // [télécharger](docs/doc.pdf "Télécharger"), reçoit l'attribut download :
-      // le navigateur enregistre le fichier au lieu de l'ouvrir.
+      // Lien de téléchargement : un fichier du site avec le titre « Télécharger »
+      // (« Download » dans une traduction), [télécharger](docs/doc.pdf "Télécharger"),
+      // reçoit l'attribut download : le navigateur enregistre le fichier au
+      // lieu de l'ouvrir.
       link({ href, title, tokens }) {
         const label = this.parser.parseInline(tokens);
         const local = !/^([a-z]+:)?\/\//i.test(href);
-        const download = local && title === 'Télécharger';
+        const download = local && DOWNLOAD_TITLES.includes(title);
         const external = !download && (/^https?:\/\//.test(href) || /\.pdf(?:[?#]|$)/i.test(href));
         const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
         const target = external ? ' target="_blank" rel="noopener noreferrer"' : '';
@@ -74,8 +78,12 @@ export function renderMarkdown(markdown, { hidePlaceholders = false } = {}) {
   // Commentaires retirés sans les retours à la ligne qui les entourent : deux
   // paragraphes séparés par un commentaire restent deux paragraphes.
   const html = marked.parse(markdown.replace(/<!--[\s\S]*?-->/g, ''));
-  return { html: frenchSpacing(hidePlaceholders ? stripPlaceholders(html) : markPlaceholders(html)), images };
+  const cleaned = hidePlaceholders ? stripPlaceholders(html) : markPlaceholders(html);
+  return { html: lang === 'fr' ? frenchSpacing(cleaned) : cleaned, images };
 }
+
+// Titre d'un lien de téléchargement, dans chaque langue
+const DOWNLOAD_TITLES = ['Télécharger', 'Download'];
 
 // Texte source affiché par `cat` dans le terminal : sans les commentaires
 // ni les lignes vides qui les suivaient

@@ -23,12 +23,17 @@
 //   /etc/os-release
 //
 // Chaque élément peut porter une `route` : l'écran que `open` affiche.
+//
+// Les noms des fichiers restent les mêmes dans les deux langues (ce sont
+// ceux des adresses) ; leur contenu suit la langue du site : terminal.js
+// reconstruit l'arborescence quand elle change.
 // =============================================================================
 
 import { site, realisations, getRealisation, veilles, TYPES } from '../content.js';
 import { link } from '../router.js';
 import { formatDate } from '../utils/dates.js';
 import { levelBarText, levelName } from '../utils/levels.js';
+import { currentLang, tr } from '../utils/lang.js';
 
 export const HOME = `/home/${site.identite.utilisateur}`;
 
@@ -37,25 +42,30 @@ const file = (content, extra = {}) => ({ type: 'file', content, ...extra });
 
 // Textes sources des fiches et des pages (Markdown sans les commentaires),
 // affichés par `cat`. Ils ne sont téléchargés qu'avec le terminal (voir
-// plugins/vite-plugin-content.js, modules « ?source »).
-const ficheSources = import.meta.glob('../../content/realisations/*.md', {
+// plugins/vite-plugin-content.js, modules « ?source »). Les traductions
+// anglaises forment un fichier à part (sources-en.js), téléchargé seulement
+// sur le site en anglais.
+const FRENCH_SOURCES = import.meta.glob(['../../content/**/*.md', '!../../content/**/*.en.md'], {
   query: '?source',
   import: 'default',
   eager: true,
 });
-const pageSources = import.meta.glob('../../content/pages/*.md', {
-  query: '?source',
-  import: 'default',
-  eager: true,
-});
-const veilleSources = import.meta.glob('../../content/veille/*/*.md', {
-  query: '?source',
-  import: 'default',
-  eager: true,
-});
-const ficheSource = (slug) => ficheSources[`../../content/realisations/${slug}.md`];
-const pageSource = (name) => pageSources[`../../content/pages/${name}.md`];
-const veilleSource = (id, name) => veilleSources[`../../content/veille/${id}/${name}.md`];
+let englishSources = null;
+
+// À appeler avant buildFilesystem() : télécharge les textes anglais si besoin
+export async function loadSources(lang) {
+  if (lang === 'en' && !englishSources) englishSources = (await import('./sources-en.js')).default;
+}
+
+// Texte source d'un fichier de content/ (« realisations/homelab ») : la
+// traduction sur le site en anglais si elle existe, sinon le français
+function source(file) {
+  const english = currentLang() === 'en' ? englishSources?.[`../../content/${file}.en.md`] : null;
+  return english ?? FRENCH_SOURCES[`../../content/${file}.md`];
+}
+const ficheSource = (slug) => source(`realisations/${slug}`);
+const pageSource = (name) => source(`pages/${name}`);
+const veilleSource = (id, name) => source(`veille/${id}/${name}`);
 
 export function buildFilesystem() {
   // Un sous-dossier par type de réalisation, une fiche = un fichier .md
@@ -134,15 +144,17 @@ export function displayPath(absolutePath) {
 
 function contactText() {
   const { email, github, linkedin, localisation, disponibilite } = site.contact;
+  // Libellés alignés, comme dans un fichier texte : « Statut   : … »
+  const line = (fr, en, value) => `${tr(`${fr.padEnd(8)} :`, `${en.padEnd(8)}:`)} ${value}`;
   return [
     site.identite.nom,
-    disponibilite ? `Statut   : ${disponibilite}` : '',
-    localisation ? `Lieu     : ${localisation}` : '',
-    `E-mail   : ${email}`,
-    `GitHub   : ${github}`,
-    `LinkedIn : ${linkedin}`,
+    disponibilite ? line('Statut', 'Status', disponibilite) : '',
+    localisation ? line('Lieu', 'Location', localisation) : '',
+    line('E-mail', 'E-mail', email),
+    line('GitHub', 'GitHub', github),
+    line('LinkedIn', 'LinkedIn', linkedin),
     // CV absent : repère avec `npm run dev`, ligne retirée du site publié
-    site.documents.cv || import.meta.env.DEV ? `CV       : ${site.documents.cv || '[À COMPLÉTER : CV en PDF]'}` : '',
+    site.documents.cv || import.meta.env.DEV ? line('CV', 'CV', site.documents.cv || '[À COMPLÉTER : CV en PDF]') : '',
   ]
     .filter(Boolean)
     .join('\n');
@@ -163,7 +175,7 @@ function competencesText() {
       lines.push(`${item.nom.padEnd(width)}  ${level}${fiches.length ? `  → ${fiches.join(', ')}` : ''}`);
     }
   }
-  lines.push('', 'Niveaux :', ...niveaux.map((n, i) => `  ${i + 1}. ${n.nom} : ${n.description}`));
+  lines.push('', tr('Niveaux :', 'Levels:'), ...niveaux.map((n, i) => `  ${i + 1}. ${n.nom}${tr(' :', ':')} ${n.description}`));
   return lines.join('\n').trimStart();
 }
 
@@ -173,7 +185,7 @@ function entriesText(entries, empty) {
   return [...entries]
     .sort((a, b) => String(b.date).localeCompare(String(a.date)))
     .map((c) => [
-      `${c.titre} (${c.organisme}) — ${formatDate(String(c.date))}${c.statut === 'en cours' ? ', en cours' : ''}`,
+      `${c.titre} (${c.organisme}) — ${formatDate(String(c.date))}${c.statut === 'en cours' ? tr(', en cours', ', in progress') : ''}`,
       ...(c.description ? [`  ${c.description}`] : []),
     ].join('\n'))
     .join('\n');
@@ -181,25 +193,37 @@ function entriesText(entries, empty) {
 
 function formationsText() {
   const formations = (site.certifications ?? []).filter((c) => c.categorie === 'formation');
-  return entriesText(formations, 'Aucune formation pour le moment : à venir.');
+  return entriesText(formations, tr('Aucune formation pour le moment : à venir.', 'No training yet: coming soon.'));
 }
 
 function certificationsText() {
   const certifications = (site.certifications ?? []).filter((c) => c.categorie !== 'formation');
-  return entriesText(certifications, 'Aucune certification pour le moment : à venir.');
+  return entriesText(certifications, tr('Aucune certification pour le moment : à venir.', 'No certification yet: coming soon.'));
 }
 
 function mentionsText() {
   const { hebergeur } = site.mentionsLegales;
-  return [
-    `Éditeur      : ${site.identite.nom} (site personnel, non professionnel)`,
-    `Contact      : ${site.contact.email}`,
-    `Hébergeur    : ${hebergeur.nom}`,
-    `               ${hebergeur.adresse}`,
-    'Cookies      : aucun. Aucune mesure d\'audience.',
-    '',
-    'Version complète : open mentions-legales',
-  ].join('\n');
+  const audience = Boolean(site.audience?.goatcounter);
+  return tr(
+    [
+      `Éditeur      : ${site.identite.nom} (site personnel, non professionnel)`,
+      `Contact      : ${site.contact.email}`,
+      `Hébergeur    : ${hebergeur.nom}`,
+      `               ${hebergeur.adresse}`,
+      `Cookies      : aucun.${audience ? ' Audience mesurée sans cookie (GoatCounter).' : " Aucune mesure d'audience."}`,
+      '',
+      'Version complète : open mentions-legales',
+    ],
+    [
+      `Publisher    : ${site.identite.nom} (personal, non-professional website)`,
+      `Contact      : ${site.contact.email}`,
+      `Host         : ${hebergeur.nom}`,
+      `               ${hebergeur.adresse}`,
+      `Cookies      : none.${audience ? ' Cookie-free audience measurement (GoatCounter).' : ' No audience measurement.'}`,
+      '',
+      'Full version : open mentions-legales',
+    ],
+  ).join('\n');
 }
 
 function osRelease() {

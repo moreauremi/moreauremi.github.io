@@ -18,26 +18,49 @@ import { site, getRealisation, getTechno, getVeille, getVeilleTag, findVeilleOfT
 import { ficheBlock, technoBlock, veilleBlock, veilleTagBlock } from '../blocks/index.js';
 import { safe } from '../utils/html.js';
 import { hasModifier, isTypingTarget } from '../utils/keyboard.js';
+import { tr } from '../utils/lang.js';
+import { currentTheme, onThemeChange, toggleTheme } from '../utils/theme.js';
 import { setPromptTitle } from '../ui/tab-title.js';
 import { box, backButton } from './box.js';
 import { homeBox } from './home.js';
 import { SECTIONS, findSection } from './sections.js';
 import tuiHtml from './tui.html?raw';
 
-// Premier élément du fil d'Ariane de chaque écran : le menu principal
-const HOME = ['RémiOS', link.home()];
+// Premier élément du fil d'Ariane de chaque écran : le menu principal, dans
+// la langue affichée
+const home = () => ['RémiOS', link.home()];
 
 export function createTui(root, { onReboot, onOpenTerminal }) {
   // Cadre de l'interface (tui.html) : barre du haut, zone centrale, aide
-  // clavier, pied de page. Seuls le nom, le nombre de rubriques et le lien
-  // des mentions légales dépendent du contenu.
+  // clavier, pied de page (mentions légales, mode sombre). Ses textes sont
+  // écrits par renderFrame(), à chaque affichage : ils suivent la langue.
   root.innerHTML = tuiHtml;
-  root.querySelector('[data-slot="nom"]').textContent = site.identite.nom;
-  root.querySelector('[data-slot="sections"]').textContent = SECTIONS.length;
-  root.querySelector('[data-slot="mentions-legales"]').href = link.legal();
+  const slot = (name) => root.querySelector(`[data-slot="${name}"]`);
 
   const stage = root.querySelector('.tui-stage');
   const announcer = root.querySelector('[data-announcer]');
+  const themeButton = root.querySelector('[data-action="theme"]');
+
+  function renderFrame() {
+    slot('nom').textContent = site.identite.nom;
+    slot('terminal').setAttribute('aria-label', tr('Ouvrir le terminal', 'Open the terminal'));
+    slot('hints').textContent = tr(
+      `↑ ↓ naviguer · Entrée ouvrir · Échap revenir · 1 à ${SECTIONS.length} accès direct`,
+      `↑ ↓ move · Enter open · Esc back · 1 to ${SECTIONS.length} jump to section`,
+    );
+    slot('mentions-legales').textContent = tr('Mentions légales', 'Legal notice');
+    slot('mentions-legales').href = link.legal();
+    slot('theme').textContent = tr('Mode sombre', 'Dark mode');
+    renderTheme(currentTheme());
+  }
+
+  // Case à cocher façon terminal : « [x] Mode sombre » quand il est actif
+  function renderTheme(theme) {
+    themeButton.setAttribute('aria-pressed', String(theme === 'dark'));
+    slot('theme-box').textContent = theme === 'dark' ? '[x]' : '[ ]';
+  }
+  themeButton.addEventListener('click', toggleTheme);
+  onThemeChange(renderTheme);
 
   let view = { kind: 'home' }; // écran affiché
   let selected = 0; // rubrique sélectionnée dans le menu
@@ -47,6 +70,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
   // Affiche l'écran correspondant à la route. `focus` : faut-il déplacer le
   // focus clavier ? (non au premier affichage, caché sous le boot)
   function show(route, { focus = true } = {}) {
+    renderFrame();
     view = resolve(route);
     // Ancienne adresse d'une fiche (anciennesAdresses) : l'adresse affichée
     // devient la nouvelle, sans créer d'entrée dans l'historique
@@ -63,7 +87,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
       // Le titre de la boîte reçoit le focus : les lecteurs d'écran l'annoncent,
       // et Tab mène ensuite au contenu de la boîte.
       stage.querySelector('.tui-box-title').focus({ preventScroll: true });
-      announce(`${view.title} : ouvert.`);
+      announce(tr(`${view.title} : ouvert.`, `${view.title}: opened.`));
     }
   }
 
@@ -82,7 +106,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
         return {
           kind: 'section',
           title: section.label,
-          html: box({ title: section.label, body: section.render(), actions: backButton(link.home()), crumbs: [HOME, [section.label]] }),
+          html: box({ title: section.label, body: section.render(), actions: backButton(link.home()), crumbs: [home(), [section.label]] }),
           parent: link.home(),
         };
       }
@@ -101,7 +125,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
             title: safe(fiche.titre),
             body: ficheBlock(fiche, link.techno),
             actions: backButton(link.section(section.id)),
-            crumbs: [HOME, [section.label, link.section(section.id)], [safe(fiche.titre)]],
+            crumbs: [home(), [section.label, link.section(section.id)], [safe(fiche.titre)]],
           }),
           parent: link.section(section.id),
           canonical: link.fiche(fiche.slug),
@@ -116,7 +140,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
         // Parent : la rubrique « Réalisations »
         const section = findSection('realisations');
         selected = SECTIONS.indexOf(section);
-        const title = `Réalisations : ${techno.nom}`;
+        const title = tr(`Réalisations : ${techno.nom}`, `Projects: ${techno.nom}`);
         return {
           kind: 'techno',
           title,
@@ -124,7 +148,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
             title: safe(title),
             body: technoBlock(techno, link.fiche, link.techno),
             actions: backButton(link.section(section.id)),
-            crumbs: [HOME, [section.label, link.section(section.id)], [safe(techno.nom)]],
+            crumbs: [home(), [section.label, link.section(section.id)], [safe(techno.nom)]],
           }),
           parent: link.section(section.id),
         };
@@ -145,7 +169,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
             title: section.label,
             body: veilleBlock(link.veilleTag, { sujet: veille.id }),
             actions: backButton(link.home()),
-            crumbs: [HOME, [section.label, link.section(section.id)], [safe(veille.nom)]],
+            crumbs: [home(), [section.label, link.section(section.id)], [safe(veille.nom)]],
           }),
           parent: link.home(),
         };
@@ -161,7 +185,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
         // Parent du tag : la rubrique « Veille technologique », onglet du sujet
         const section = findSection('veille');
         selected = SECTIONS.indexOf(section);
-        const title = `Veille ${veille.nom} : ${tag.nom}`;
+        const title = tr(`Veille ${veille.nom} : ${tag.nom}`, `${veille.nom} watch: ${tag.nom}`);
         return {
           kind: 'tag',
           title,
@@ -169,7 +193,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
             title: safe(title),
             body: veilleTagBlock(veille, route.tag, link.veilleTag),
             actions: backButton(link.veille(veille.id)),
-            crumbs: [HOME, [section.label, link.section(section.id)], [safe(veille.nom), link.veille(veille.id)], [safe(tag.nom)]],
+            crumbs: [home(), [section.label, link.section(section.id)], [safe(veille.nom), link.veille(veille.id)], [safe(tag.nom)]],
           }),
           parent: link.veille(veille.id),
         };
@@ -180,15 +204,16 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
   }
 
   function notFound() {
+    const title = tr('Erreur', 'Error');
     return {
       kind: 'not-found',
-      title: 'Erreur',
+      title,
       html: box({
-        title: 'Erreur',
-        body: `<p>bash: ${safe(window.location.hash)} : aucun fichier ou dossier de ce nom</p>
-          <p>Cette page n'existe pas, ou plus.</p>`,
+        title,
+        body: `<p>bash: ${safe(window.location.hash)}${tr(' : aucun fichier ou dossier de ce nom', ': No such file or directory')}</p>
+          <p>${tr("Cette page n'existe pas, ou plus.", 'This page does not exist, or no longer exists.')}</p>`,
         actions: backButton(link.home()),
-        crumbs: [HOME, ['Erreur']],
+        crumbs: [home(), [title]],
       }),
       parent: link.home(),
     };

@@ -12,7 +12,10 @@
 
    Palette reprise de la maquette validée (reference/maquette.html).
    Les contrastes texte/fond respectent le niveau AA des règles d'accessibilité
-   (rapport d'au moins 4,5:1).
+   (rapport d'au moins 4,5:1), dans les deux thèmes.
+
+   Thème sombre : en fin de fichier, les mêmes variables redéfinies quand
+   <html> porte data-theme="dark" (voir src/utils/theme.js).
    ========================================================================== */
 
 :root {
@@ -34,6 +37,8 @@
   --tui-sel: #1e3c8c;         /* fond de l'élément sélectionné */
   --tui-sel-ink: #ffffff;     /* texte de l'élément sélectionné */
   --tui-sel-key: #ffd76a;     /* numéro de l'élément sélectionné */
+  --tui-link: #1e3c8c;        /* liens dans la boîte : le bleu de la sélection */
+  --on-key: #101010;          /* texte posé sur le jaune (bouton « Vue rapide jury ») */
   --tui-hover: rgb(30 60 140 / 0.12); /* survol d'une rubrique : bleu de sélection, très léger */
   --tui-title: #8a1c1c;       /* titre des boîtes et numéros de rubriques */
   --tui-bar-ink: #e8ecf5;     /* texte de la barre du haut */
@@ -46,6 +51,7 @@
   --tui-shadow: #000000;      /* ombre portée */
   --tui-field-bg: #ffffff;    /* champs du formulaire */
   --tui-field-border: #5a5a5a;/* bord des champs (contraste 4,6:1 sur la boîte) */
+  --tui-separator: #5a5a5a;   /* « / » du fil d'Ariane */
 
   /* --- Repères de contenu à compléter : [À COMPLÉTER] --- */
   --placeholder-ink: #5a4a00;
@@ -87,8 +93,9 @@
   --gutter: 16px;             /* marge latérale minimale (mobile) */
   --shadow-offset: 14px;      /* décalage de l'ombre portée des boîtes */
   --focus-ring: 2px solid var(--warn);
-  /* Largeur réservée en haut à droite pour les boutons fixes (son, vue jury) */
-  --system-bar-width: 230px;
+  /* Largeur réservée en haut à droite pour les boutons fixes (vue jury,
+     langue, son) */
+  --system-bar-width: 270px;
 }
 
 /* Petits écrans : texte et ombre un peu plus petits (comme dans la maquette) */
@@ -97,6 +104,52 @@
     --font-size: 0.8125rem;
     --font-size-reading: 0.875rem;
     --shadow-offset: 8px;
-    --system-bar-width: 170px;
+    --system-bar-width: 206px;
+  }
+}
+
+/* ==========================================================================
+   Thème sombre
+   --------------------------------------------------------------------------
+   La console (démarrage, terminal) est déjà noire : elle ne change pas.
+   L'interface RémiOS garde son identité (fond bleu, boîte en relief, titres
+   rouges, barre de sélection bleue et numéros jaunes), en couleurs de nuit.
+   La vue jury passe en texte clair sur fond sombre.
+
+   Contrastes vérifiés (texte/fond) : texte 11,9:1, titres 7,6:1, liens
+   8,1:1, sélection 7,1:1 (numéro jaune 5,1:1), vue jury 14,8:1 (texte),
+   9,7:1 (liens), 8:1 (textes secondaires) ; bords des cadres et des champs
+   au moins 3:1, comme l'exigent les règles d'accessibilité.
+
+   À l'écran seulement : l'impression reste en noir sur blanc (print.css).
+   ========================================================================== */
+
+@media screen {
+  :root[data-theme='dark'] {
+    --tui-bg: #0e1729;          /* bleu nuit */
+    --tui-box: #22262e;         /* boîte gris anthracite */
+    --tui-ink: #e1e4ea;
+    --tui-sel: #2a52b5;
+    --tui-sel-ink: #ffffff;
+    --tui-sel-key: #ffd76a;
+    --tui-link: #9fbdff;        /* bleu clair : lisible sur la boîte sombre */
+    --tui-hover: rgb(159 189 255 / 0.1);
+    --tui-title: #ff9d92;       /* rouge clair */
+    --tui-hint: #b4bfd6;
+    --tui-bevel-light: #4a505b;
+    --tui-bevel-dark: #08090b;
+    --tui-inner-border: #737b87;
+    --tui-field-bg: #171a20;
+    --tui-field-border: #8c94a0;
+    --tui-separator: #959ca8;
+
+    --jury-bg: #14161a;
+    --jury-ink: #e6e8eb;
+    --jury-muted: #a6adb8;
+    --jury-accent: #9fbdff;
+    --jury-rule: #363b45;
+
+    /* Texte posé sur l'accent, devenu bleu clair */
+    --on-accent: #0e1729;
   }
 }

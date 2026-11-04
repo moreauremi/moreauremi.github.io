@@ -27,6 +27,12 @@
 // Si une fiche est mal remplie, le build s'arrête avec un message en français
 // qui indique le fichier et ce qu'il faut corriger.
 //
+// Version anglaise : content/<…>/<nom>.en.md traduit <nom>.md (voir
+// plugins/content/translation.js). Son en-tête ne contient que les champs à
+// traduire (titre, résumé…) : les autres (slug, type, date, technos,
+// compétences, brouillon…) sont repris du fichier français, pour qu'ils ne
+// puissent jamais diverger d'une langue à l'autre.
+//
 // Le plugin s'appuie sur les modules de plugins/content/ :
 //   config.js       lecture et vérification de la configuration et de la veille
 //   realisation.js  vérification d'une fiche
@@ -34,8 +40,10 @@
 //   seo.js          référencement (titre, données structurées, sitemap, robots)
 //   pages-statiques.js  pages lisibles sans JavaScript (robots, IA) et llms.txt
 //   csp.js          politique de sécurité du contenu
+//   translation.js  fichiers .en.md et traductions de la configuration
 // =============================================================================
 
+import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
 import { publicBase } from '../src/utils/url.js';
@@ -45,7 +53,8 @@ import { renderMarkdown, stripComments, stripSourcePlaceholders } from './conten
 import { checkRealisation, checkImage } from './content/realisation.js';
 import { applySeo, structuredData, sitemapXml, robotsTxt } from './content/seo.js';
 import { formatErrors, toPosix } from './content/utils.js';
-import { collectPages, renderPage, llmsTxt, withoutMetaPlaceholders, STYLESHEET, STYLES } from './content/pages-statiques.js';
+import { collectPages, renderPage, redirectPage, llmsTxt, withoutMetaPlaceholders, STYLESHEET, STYLES } from './content/pages-statiques.js';
+import { isTranslation, frenchFileOf, checkTranslatedFields, checkOrphanTranslations, checkConfigTranslations } from './content/translation.js';
 
 export default function contentPlugin() {
   let root = process.cwd();
@@ -66,8 +75,11 @@ export default function contentPlugin() {
     // doit annoncer la même politique de sécurité que les pages.
     async buildStart() {
       const site = await loadSiteConfig(root);
-      const errors = [...checkDocuments(site, root), ...checkConfig(site, root), ...checkVeilleConfig(site)];
+      const errors = [...checkDocuments(site, root), ...checkConfig(site, root), ...checkVeilleConfig(site), ...checkConfigTranslations(site)];
       if (errors.length) this.error(formatErrors(CONFIG_FILE, errors));
+      // Chaque traduction (.en.md) a son fichier français
+      const orphans = checkOrphanTranslations(root);
+      if (orphans.length) this.error(formatErrors('content/', orphans));
       // Actualités écrites chaque semaine par scripts/veille.mjs, une par sujet
       for (const { id } of site.veille.sujets) {
         const veilleErrors = checkVeille(root, id);
@@ -89,7 +101,10 @@ export default function contentPlugin() {
       // Le référencement ne concerne que la page du site : les pages d'erreur
       // gardent leur propre titre et ne sont pas proposées aux moteurs.
       const isMainPage = path.basename(context.filename) === 'index.html';
-      if (isMainPage) html = applySeo(html, site);
+      if (isMainPage) {
+        const published = new Set(['fr', 'en'].flatMap((lang) => collectPages(root, site, lang).map((p) => p.path)));
+        html = applySeo(html, site, (p) => published.has(p));
+      }
 
       // Aperçus de lien et données structurées : page du site seulement
       const url = site.urlPublique;
@@ -140,15 +155,18 @@ export default function contentPlugin() {
     },
 
     // Au build : pages lisibles sans JavaScript (une par rubrique, fiche et
-    // sujet de veille) et llms.txt, plan du site (sitemap.xml) qui les liste
-    // toutes, et consignes aux robots (robots.txt)
+    // sujet de veille, en français et en anglais) et llms.txt, plan du site
+    // (sitemap.xml) qui les liste toutes, et consignes aux robots (robots.txt).
+    // en/index.html : adresse courte de la version anglaise (remim.me/en/),
+    // qui ouvre RémiOS en anglais.
     async generateBundle() {
       const site = await loadSiteConfig(root);
       const base = publicBase(site.urlPublique);
-      const pages = collectPages(root, site);
+      const pages = [...collectPages(root, site, 'fr'), ...collectPages(root, site, 'en')];
       for (const page of pages) {
-        this.emitFile({ type: 'asset', fileName: `${page.path}index.html`, source: renderPage(page, site, base) });
+        this.emitFile({ type: 'asset', fileName: `${page.path}index.html`, source: renderPage(page, site, base, pages) });
       }
+      this.emitFile({ type: 'asset', fileName: 'en/index.html', source: redirectPage(site, '#/en/') });
       this.emitFile({ type: 'asset', fileName: STYLESHEET, source: STYLES });
       this.emitFile({ type: 'asset', fileName: 'llms.txt', source: llmsTxt(pages, site, base) });
       if (base) {
@@ -165,11 +183,19 @@ export default function contentPlugin() {
       const file = toPosix(path.relative(root, filePath));
       if (!file.startsWith('content/')) return null;
 
+      // Traduction : l'en-tête complet est celui du fichier français, complété
+      // par les champs traduits. La traduction suit le fichier français : si
+      // lui change (brouillon retiré…), Vite la retraite.
+      const english = isTranslation(file);
+      const frenchFile = english ? frenchFileOf(file) : file;
+      const shared = english ? readFrenchData(root, frenchFile, (f) => this.addWatchFile(f)) : {};
+
       // Texte source pour le terminal (`cat`). Brouillon : publié seulement
       // en développement, comme la fiche elle-même ; repères retirés au build.
       // Fins de ligne Windows (CRLF) ramenées à LF : même texte sur tout poste.
       if (new URLSearchParams(query).has('source')) {
-        let text = matter(source).data.brouillon && !isDev ? null : stripComments(source.replace(/\r\n?/g, '\n'));
+        const draft = { ...shared, ...matter(source).data }.brouillon;
+        let text = draft && !isDev ? null : stripComments(source.replace(/\r\n?/g, '\n'));
         if (text && !isDev) text = stripSourcePlaceholders(text);
         return { code: `export default ${JSON.stringify(text)};`, map: null };
       }
@@ -179,13 +205,14 @@ export default function contentPlugin() {
       this.addWatchFile(path.join(root, CONFIG_FILE));
       const site = await loadSiteConfig(root);
 
-      const { data, content } = matter(source);
-      const errors = [];
-      const meta = file.startsWith('content/realisations/')
-        ? checkRealisation(data, file, site, errors)
+      const { data: own, content } = matter(source);
+      const errors = english ? checkTranslatedFields(own, frenchFile) : [];
+      const data = { ...shared, ...own };
+      const meta = frenchFile.startsWith('content/realisations/')
+        ? checkRealisation(data, frenchFile, site, errors)
         : data;
 
-      const { html, images } = renderMarkdown(content, { hidePlaceholders: !isDev });
+      const { html, images } = renderMarkdown(content, { hidePlaceholders: !isDev, lang: english ? 'en' : 'fr' });
       for (const src of images) checkImage(src, root, errors);
 
       if (errors.length) this.error(formatErrors(file, errors));
@@ -199,3 +226,10 @@ export default function contentPlugin() {
   };
 }
 
+// En-tête du fichier français d'une traduction
+function readFrenchData(root, frenchFile, watch) {
+  const full = path.join(root, frenchFile);
+  watch(full);
+  if (!fs.existsSync(full)) return {};
+  return matter(fs.readFileSync(full, 'utf8')).data;
+}

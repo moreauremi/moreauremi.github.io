@@ -109,9 +109,10 @@ export function checkConfig(site, root) {
   if (photo && !inPublic(photo)) errors.push(`« identite.photo » pointe vers public/${photo}, qui n'existe pas.`);
 
   // Slugs des fiches existantes : nom des fichiers de content/realisations/
+  // (sans les traductions, <slug>.en.md)
   const slugs = fs
     .readdirSync(path.join(root, 'content/realisations'))
-    .filter((name) => name.endsWith('.md'))
+    .filter((name) => name.endsWith('.md') && !name.endsWith('.en.md'))
     .map((name) => name.slice(0, -3));
 
   const { niveaux = [], domaines = [] } = site.savoirFaire ?? {};

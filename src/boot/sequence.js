@@ -27,6 +27,7 @@
 // =============================================================================
 
 import { reducedMotion } from '../utils/motion.js';
+import { tr } from '../utils/lang.js';
 import { kernelLines, unitLines, loginLines, promptText, COMMAND } from './journal.js';
 // Écran du chargeur de démarrage GRUB (l'entrée « RémiOS GNU/Linux » est
 // sélectionnée, un compte à rebours annonce le démarrage automatique) et
@@ -64,6 +65,10 @@ export function createBoot({ overlay, skipButton, content, onFinish, hooks = {} 
 
     running = true;
     overlay.innerHTML = bootHtml;
+    const slot = (name) => overlay.querySelector(`[data-slot="${name}"]`);
+    slot('avance').textContent = tr('Options avancées pour RémiOS GNU/Linux', 'Advanced options for RémiOS GNU/Linux');
+    slot('memoire').textContent = tr('Mémoire (memtest86+)', 'Memory test (memtest86+)');
+    slot('aide').textContent = tr("L'entrée sélectionnée démarrera automatiquement dans", 'The highlighted entry will be executed automatically in');
     overlay.querySelector('[data-countdown]').textContent = 2; // secondes avant le démarrage
     overlay.hidden = false;
     skipButton.hidden = false;

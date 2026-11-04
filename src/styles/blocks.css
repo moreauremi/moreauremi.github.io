@@ -91,6 +91,15 @@
   text-underline-offset: 2px;
 }
 
+/* Version anglaise : texte pas encore traduit, affiché en français */
+.lang-note {
+  max-width: 75ch;
+  margin: 0 0 1em;
+  padding: 2px 0 2px 10px;
+  border-left: 3px solid var(--rule);
+  font-size: var(--font-size-small);
+}
+
 /* --- Présentation : lettre de présentation ---------------------------------- */
 
 /* En-tête : expéditeur (photo, nom, formation, liens) à gauche, destinataire

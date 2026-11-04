@@ -9,6 +9,14 @@
 // Tout texte « [À COMPLÉTER] » s'affiche surligné en jaune avec `npm run dev` :
 // c'est le signal de ce qui reste à remplir. Le site publié ne les montre pas
 // (repère retiré, avec le paragraphe ou la section qui ne contenait que lui).
+//
+// Version anglaise du site (#/en/) : chaque objet peut avoir un champ « en »,
+// qui donne la traduction de ses textes, champ par champ. Ce qui n'est pas
+// traduit s'affiche en français. Exemple :
+//   { code: 'B1.4', libelle: 'Travailler en mode projet', en: { libelle: 'Work in project mode' } }
+// Le build vérifie que chaque champ traduit existe en français (faute de frappe).
+// Traductions communes à tout le fichier (neofetch, référencement…) : le
+// champ « en » tout en bas.
 // =============================================================================
 
 export default {
@@ -159,6 +167,7 @@ export default {
         id: 'cybersecurite',
         nom: 'Cybersécurité',
         sujet: 'La cybersécurité des PME industrielles',
+        en: { nom: 'Cybersecurity', sujet: 'Cybersecurity in industrial SMEs' },
         motsCles: [
           'cybersécurité', 'cyberattaque', 'cybercriminalité', 'rançongiciel', 'ransomware',
           'hameçonnage', 'phishing', 'vulnérabilité', 'faille', 'fuite de données',
@@ -193,6 +202,7 @@ export default {
         id: 'virtualisation',
         nom: 'Virtualisation',
         sujet: "La virtualisation dans les PME : Hyper-V, Proxmox et l'après-VMware",
+        en: { nom: 'Virtualisation', sujet: 'Virtualisation in SMEs: Hyper-V, Proxmox and life after VMware' },
         motsCles: [
           'virtualisation', 'hyperviseur', 'hyperviseurs', 'Hyper-V', 'Proxmox', 'VMware', 'vSphere',
           'ESXi', 'vCenter', 'Broadcom', 'XCP-ng', 'Xen', 'Nutanix', 'KVM', 'machine virtuelle',
@@ -226,6 +236,7 @@ export default {
         id: 'facturation-electronique',
         nom: 'Facturation électronique',
         sujet: 'La facturation électronique obligatoire (réforme 2026-2027)',
+        en: { nom: 'E-invoicing', sujet: 'Mandatory e-invoicing in France (2026-2027 reform)' },
         motsCles: [
           'facturation électronique', 'facture électronique', 'factures électroniques', 'e-invoicing',
           'e-facture', 'e-reporting', 'Factur-X', 'UBL', 'plateforme agréée', 'plateformes agréées',
@@ -275,6 +286,17 @@ export default {
         'Gérer des sauvegardes',
         'Vérifier le respect des règles d’utilisation des ressources numériques',
       ],
+      en: {
+        libelle: 'Manage IT assets',
+        criteres: [
+          'Inventory and identify digital resources',
+          'Use the frameworks, norms and standards adopted by the IT service provider',
+          'Set up and check the access levels associated with a service',
+          'Check the conditions for the continuity of an IT service',
+          'Manage backups',
+          'Check compliance with the rules for using digital resources',
+        ],
+      },
     },
     {
       code: 'B1.2',
@@ -284,6 +306,14 @@ export default {
         'Traiter des demandes concernant les services réseau et système, applicatifs',
         'Traiter des demandes concernant les applications',
       ],
+      en: {
+        libelle: 'Respond to incidents and to requests for support and change',
+        criteres: [
+          'Collect, track and route requests',
+          'Handle requests concerning network, system and application services',
+          'Handle requests concerning applications',
+        ],
+      },
     },
     {
       code: 'B1.3',
@@ -293,6 +323,14 @@ export default {
         'Référencer les services en ligne de l’organisation et mesurer leur visibilité',
         'Participer à l’évolution d’un site Web exploitant les données de l’organisation',
       ],
+      en: {
+        libelle: 'Develop the organisation’s online presence',
+        criteres: [
+          'Help promote the organisation’s image on digital media, taking into account the legal framework and the economic stakes',
+          'List the organisation’s online services with search engines and measure their visibility',
+          'Contribute to the development of a website that uses the organisation’s data',
+        ],
+      },
     },
     {
       code: 'B1.4',
@@ -302,6 +340,14 @@ export default {
         'Planifier les activités',
         'Évaluer les indicateurs de suivi d’un projet et analyser les écarts',
       ],
+      en: {
+        libelle: 'Work in project mode',
+        criteres: [
+          'Analyse the objectives and organisation of a project',
+          'Plan activities',
+          'Assess a project’s tracking indicators and analyse deviations',
+        ],
+      },
     },
     {
       code: 'B1.5',
@@ -311,6 +357,14 @@ export default {
         'Déployer un service',
         'Accompagner les utilisateurs dans la mise en place d’un service',
       ],
+      en: {
+        libelle: 'Make an IT service available to users',
+        criteres: [
+          'Carry out integration and acceptance testing of a service',
+          'Deploy a service',
+          'Support users when a service is introduced',
+        ],
+      },
     },
     {
       code: 'B1.6',
@@ -321,6 +375,15 @@ export default {
         'Gérer son identité professionnelle',
         'Développer son projet professionnel',
       ],
+      en: {
+        libelle: 'Organise one’s professional development',
+        criteres: [
+          'Set up one’s personal learning environment',
+          'Use information-monitoring tools and strategies',
+          'Manage one’s professional identity',
+          'Develop one’s career plan',
+        ],
+      },
     },
   ],
 
@@ -334,17 +397,18 @@ export default {
   // Rester honnête sur les niveaux : le jury posera des questions dessus.
   savoirFaire: {
     niveaux: [
-      { nom: 'Notions', description: "j'en connais les principes" },
-      { nom: 'Guidé', description: "je l'ai déjà utilisé, avec de l'aide ou une documentation pas à pas" },
-      { nom: 'Autonome', description: "je l'utilise seul pour mener un projet" },
-      { nom: 'Maîtrise', description: "je sais le dépanner, l'optimiser et l'expliquer à d'autres" },
+      { nom: 'Notions', description: "j'en connais les principes", en: { nom: 'Basics', description: 'I know the principles' } },
+      { nom: 'Guidé', description: "je l'ai déjà utilisé, avec de l'aide ou une documentation pas à pas", en: { nom: 'Guided', description: 'I have used it, with help or step-by-step documentation' } },
+      { nom: 'Autonome', description: "je l'utilise seul pour mener un projet", en: { nom: 'Independent', description: 'I use it on my own to carry out a project' } },
+      { nom: 'Maîtrise', description: "je sais le dépanner, l'optimiser et l'expliquer à d'autres", en: { nom: 'Expert', description: 'I can troubleshoot it, optimise it and explain it to others' } },
     ],
     domaines: [
       {
         nom: 'Systèmes et virtualisation',
+        en: { nom: 'Systems and virtualisation' },
         items: [
           { nom: 'Linux', niveau: 3, preuves: ['homelab', 'environnement-open-prod', 'glpi', 'reseau-vm-virtualbox'] },
-          { nom: 'Windows (poste et serveur)', niveau: 2, preuves: ['reseau-vm-virtualbox', 'rmutils'] },
+          { nom: 'Windows (poste et serveur)', niveau: 2, preuves: ['reseau-vm-virtualbox', 'rmutils'], en: { nom: 'Windows (desktop and server)' } },
           { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab', 'depannage-serveurs-tp'] },
           { nom: 'VirtualBox', niveau: 3, preuves: ['reseau-vm-virtualbox', 'glpi'] },
           { nom: 'Docker', niveau: 2, preuves: ['homelab', 'portfolio-remios'] },
@@ -352,45 +416,50 @@ export default {
       },
       {
         nom: 'Réseaux et sécurité',
+        en: { nom: 'Networks and security' },
         items: [
-          { nom: 'Adressage IP, DHCP et diagnostic réseau', niveau: 2, preuves: ['reseau-vm-virtualbox', 'rmutils', 'depannage-serveurs-tp'] },
-          { nom: 'Switch Cisco (IOS) : console, VLAN, STP', niveau: 2, preuves: ['depannage-serveurs-tp'] },
+          { nom: 'Adressage IP, DHCP et diagnostic réseau', niveau: 2, preuves: ['reseau-vm-virtualbox', 'rmutils', 'depannage-serveurs-tp'], en: { nom: 'IP addressing, DHCP and network troubleshooting' } },
+          { nom: 'Switch Cisco (IOS) : console, VLAN, STP', niveau: 2, preuves: ['depannage-serveurs-tp'], en: { nom: 'Cisco switches (IOS): console, VLANs, STP' } },
           { nom: 'VPN (Tailscale)', niveau: 3, preuves: ['homelab'] },
-          { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['portfolio-remios'] },
-          { nom: 'Serveur web (Apache, Nginx), reverse proxy', niveau: 2, preuves: ['glpi', 'portfolio-remios'] },
+          { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['portfolio-remios'], en: { nom: 'DNS and domain names' } },
+          { nom: 'Serveur web (Apache, Nginx), reverse proxy', niveau: 2, preuves: ['glpi', 'portfolio-remios'], en: { nom: 'Web servers (Apache, Nginx), reverse proxy' } },
         ],
       },
       {
         nom: 'Langages de programmation',
+        en: { nom: 'Programming languages' },
         items: [
           { nom: 'Python', niveau: 3.5, preuves: ['crypto-dashboard-pro'] },
-          { nom: 'PowerShell et batch', niveau: 3, preuves: ['rmutils', 'reseau-vm-virtualbox', 'depannage-serveurs-tp'] },
+          { nom: 'PowerShell et batch', niveau: 3, preuves: ['rmutils', 'reseau-vm-virtualbox', 'depannage-serveurs-tp'], en: { nom: 'PowerShell and batch' } },
           { nom: 'HTML', niveau: 2, preuves: ['portfolio-remios'] },
         ],
       },
       {
         nom: 'Bases de données',
+        en: { nom: 'Databases' },
         items: [
           { nom: 'SQL', niveau: 2, preuves: ['glpi', 'rapports-qweb'] },
           { nom: 'PostgreSQL, MariaDB (administration)', niveau: 3, preuves: ['environnement-open-prod', 'glpi'] },
-          { nom: 'Modèle conceptuel de données (MCD)', niveau: 3, preuves: ['reprise-donnees-open-prod'] },
+          { nom: 'Modèle conceptuel de données (MCD)', niveau: 3, preuves: ['reprise-donnees-open-prod'], en: { nom: 'Conceptual data model (MCD)' } },
         ],
       },
       {
         nom: 'Outils et frameworks',
+        en: { nom: 'Tools and frameworks' },
         items: [
-          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'portfolio-remios', 'rmutils', 'environnement-open-prod'] },
-          { nom: 'Excel (RECHERCHEV, RECHERCHEX)', niveau: 3, preuves: ['reprise-donnees-open-prod'] },
+          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'portfolio-remios', 'rmutils', 'environnement-open-prod'], en: { nom: 'Git and GitHub' } },
+          { nom: 'Excel (RECHERCHEV, RECHERCHEX)', niveau: 3, preuves: ['reprise-donnees-open-prod'], en: { nom: 'Excel (VLOOKUP, XLOOKUP)' } },
           { nom: 'Streamlit, Pandas, Plotly', niveau: 3, preuves: ['crypto-dashboard-pro'] },
-          { nom: 'n8n (automatisation)', niveau: 2, preuves: [] },
+          { nom: 'n8n (automatisation)', niveau: 2, preuves: [], en: { nom: 'n8n (automation)' } },
         ],
       },
       {
         nom: 'Logiciels métier',
+        en: { nom: 'Business software' },
         items: [
           { nom: 'ERP Open-Prod', niveau: 2, preuves: ['environnement-open-prod', 'flux-production-sous-traitance', 'reprise-donnees-open-prod', 'rapports-qweb'] },
-          { nom: 'QWeb (rapports Open-Prod)', niveau: 2, preuves: ['rapports-qweb'] },
-          { nom: 'GLPI (gestion des tickets)', niveau: 2, preuves: ['glpi'] },
+          { nom: 'QWeb (rapports Open-Prod)', niveau: 2, preuves: ['rapports-qweb'], en: { nom: 'QWeb (Open-Prod reports)' } },
+          { nom: 'GLPI (gestion des tickets)', niveau: 2, preuves: ['glpi'], en: { nom: 'GLPI (ticket management)' } },
         ],
       },
     ],
@@ -424,6 +493,11 @@ export default {
       detail: 'deux journées, la seconde fin octobre 2026',
       description: 'Création et modification de rapports Open-Prod (devis, factures…) avec QWeb, le moteur de modèles d’Odoo : en vue graphique, en assemblant des blocs imbriqués, puis en vue XML pour aller plus loin que ce que permet l’éditeur.',
       fiche: 'rapports-qweb',
+      en: {
+        titre: 'QWeb: Open-Prod reports',
+        detail: 'two days, the second at the end of October 2026',
+        description: 'Creating and editing Open-Prod reports (quotes, invoices…) with QWeb, the Odoo templating engine: in the graphical view, by assembling nested blocks, then in the XML view to go further than the editor allows.',
+      },
     },
     {
       titre: 'Indicateurs et tableaux de bord Open-Prod',
@@ -432,6 +506,11 @@ export default {
       date: '2026-10',
       detail: 'KPI, création d’indicateurs et de tableaux de bord',
       description: 'Extraction de données PostgreSQL dans Excel par une connexion ODBC et création de graphiques, puis tableaux de bord dans le tableur intégré d’Open-Prod : feuilles liées entre elles et accessibles depuis les menus de l’ERP.',
+      en: {
+        titre: 'Open-Prod KPIs and dashboards',
+        detail: 'KPIs, building indicators and dashboards',
+        description: 'Extracting PostgreSQL data into Excel through an ODBC connection and building charts, then dashboards in the spreadsheet built into Open-Prod: sheets linked to one another and opened from the ERP menus.',
+      },
     },
     {
       titre: 'MCD et reprise de données Open-Prod',
@@ -441,6 +520,11 @@ export default {
       detail: 'modèle conceptuel de données, import de données dans l’ERP',
       description: 'Lecture du modèle conceptuel de données (MCD) d’Open-Prod pour savoir où va chaque information, puis préparation des imports Excel de reprise de données : fichiers mis en correspondance entre eux avec RECHERCHEV et RECHERCHEX, avant import dans Open-Prod.',
       fiche: 'reprise-donnees-open-prod',
+      en: {
+        titre: 'Data model and data migration in Open-Prod',
+        detail: 'conceptual data model, importing data into the ERP',
+        description: 'Reading the Open-Prod conceptual data model (MCD) to know where each piece of information goes, then preparing the Excel imports for data migration: files matched against one another with VLOOKUP and XLOOKUP before being imported into Open-Prod.',
+      },
     },
   ],
 
@@ -468,8 +552,37 @@ export default {
   // ajoutées automatiquement autour de celles-ci.
   boot: [
     { action: 'Started', unite: 'bts-sio-sisr.service', description: 'MyDigitalSchool Nantes' },
-    { action: 'Started', unite: 'alternance@1life.service', description: 'consultant ERP Open-Prod' },
-    { action: 'Mounted', unite: '/srv/nas', description: 'stockage réseau' },
-    { action: 'Started', unite: 'jellyfin.service', description: 'serveur multimédia' },
+    { action: 'Started', unite: 'alternance@1life.service', description: 'consultant ERP Open-Prod', en: { description: 'Open-Prod ERP consultant' } },
+    { action: 'Mounted', unite: '/srv/nas', description: 'stockage réseau', en: { description: 'network storage' } },
+    { action: 'Started', unite: 'jellyfin.service', description: 'serveur multimédia', en: { description: 'media server' } },
   ],
+
+  // --- Version anglaise des textes communs ------------------------------------
+  // Lignes neofetch : dans le même ordre qu'en français (le code retrouve
+  // certaines lignes par leur position : formation, école, poste…).
+  en: {
+    neofetch: [
+      ['User', 'Rémi Moreau'],
+      ['Degree', 'BTS SIO, SISR option'],
+      ['School', 'MyDigitalSchool Nantes'],
+      ['Work-study', '1Life (part of Visiativ)'],
+      ['Position', 'Open-Prod ERP consultant'],
+      ['Class of', '2026 – 2028'],
+      ['Based in', 'Nantes'],
+    ],
+    referencement: {
+      titre: 'Rémi Moreau · BTS SIO SISR portfolio',
+      description:
+        'Portfolio of Rémi Moreau, BTS SIO (SISR) student at MyDigitalSchool Nantes and work-study ERP consultant at 1Life: projects, homelab, technology watch.',
+      poste: 'Work-study ERP consultant',
+    },
+    contact: {
+      disponibilite: 'Work-study placement at 1Life (BTS SIO, class of 2026 – 2028)',
+    },
+    mentionsLegales: {
+      hebergeur: {
+        adresse: '88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, United States',
+      },
+    },
+  },
 };

@@ -1,8 +1,10 @@
 // Les neuf rubriques du menu principal : numéro, libellé, identifiant d'URL
 // (#/presentation…) et contenu. Pour réordonner le menu, il suffit de
 // réordonner cette liste (les touches 1 à 9 suivent l'ordre).
+// Le libellé est lu au moment de l'affichage (get label) : il suit la langue.
 
 import { link } from '../router.js';
+import { tr } from '../utils/lang.js';
 import {
   presentationBlock,
   alternanceBlock,
@@ -20,62 +22,84 @@ import {
 export const SECTIONS = [
   {
     id: 'presentation',
-    label: 'Présentation',
+    get label() {
+      return tr('Présentation', 'About me');
+    },
     render: presentationBlock,
   },
   {
     id: 'alternance',
-    label: 'Alternance et parcours',
+    get label() {
+      return tr('Alternance et parcours', 'Work-study and background');
+    },
     render: () => alternanceBlock(link.fiche),
   },
   {
     id: 'realisations',
-    label: 'Réalisations',
+    get label() {
+      return tr('Réalisations', 'Projects');
+    },
     render: () => realisationsBlock(link.fiche),
   },
   {
     id: 'competences',
-    label: 'Compétences',
+    get label() {
+      return tr('Compétences', 'Skills');
+    },
     render: () => competencesBlock(link.fiche),
   },
   {
     id: 'synthese',
-    label: 'Tableau de synthèse E5',
+    get label() {
+      return tr('Tableau de synthèse E5', 'E5 summary table');
+    },
     render: () => syntheseBlock(link.fiche),
   },
   {
     id: 'veille',
-    label: 'Veille technologique',
+    get label() {
+      return tr('Veille technologique', 'Technology watch');
+    },
     render: () => veilleBlock(link.veilleTag),
   },
   {
     id: 'formations',
-    label: 'Formations',
+    get label() {
+      return tr('Formations', 'Training');
+    },
     render: () => formationsBlock(link.fiche),
   },
   {
     id: 'certifications',
-    label: 'Certifications',
+    get label() {
+      return tr('Certifications', 'Certifications');
+    },
     render: certificationsBlock,
   },
   {
     id: 'contact',
-    label: 'CV et contact',
+    get label() {
+      return tr('CV et contact', 'CV and contact');
+    },
     render: () => contactBlock(),
   },
-].map((section, index) => ({ ...section, key: String(index + 1) }));
+].map((section, index) => Object.assign(section, { key: String(index + 1) })); // pas de { ...section } : il figerait le libellé
 
 // Pages qui ne figurent pas dans le menu : elles s'ouvrent par un lien
 // (bas d'écran, formulaire de contact, terminal).
 export const EXTRA_PAGES = [
   {
     id: 'mentions-legales',
-    label: 'Mentions légales',
+    get label() {
+      return tr('Mentions légales', 'Legal notice');
+    },
     render: mentionsLegalesBlock,
   },
   {
     id: 'message-envoye',
-    label: 'Message envoyé',
+    get label() {
+      return tr('Message envoyé', 'Message sent');
+    },
     render: messageSentBlock,
   },
 ];

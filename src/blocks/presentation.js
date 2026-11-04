@@ -7,8 +7,9 @@
 // presentation.md (champ « lettre »), le corps de la lettre de son texte.
 
 import { site, pages } from '../content.js';
-import { escapeHtml, frenchSpacing, placeholder, safe } from '../utils/html.js';
-import { NEW_TAB } from './shared.js';
+import { escapeHtml, placeholder, safe } from '../utils/html.js';
+import { tr } from '../utils/lang.js';
+import { NEW_TAB, langAttr, typography, untranslatedNote } from './shared.js';
 // Signature manuscrite vectorisée, intégrée à la page (aucun fichier à
 // charger) : elle prend la couleur du texte (currentColor), donc s'adapte à
 // la boîte grise de RémiOS, à la vue jury et à l'impression.
@@ -16,12 +17,12 @@ import SIGNATURE from '../assets/signature.svg?raw';
 
 
 export function presentationBlock() {
-  const { html, lettre = {} } = pages.presentation;
+  const { html, lettre = {}, lang } = pages.presentation;
   const { signataire = [], destinataire, date, objet, formule } = lettre;
   // Lieu de la lettre : la ville de la configuration (« Nantes, novembre 2026 »)
   const lieuDate = [site.contact.localisation, date].filter(Boolean).join(', ');
 
-  return `<div class="presentation lettre">
+  return `${untranslatedNote(lang)}<div class="presentation lettre"${langAttr(lang)}>
     <header class="lettre-entete">
       <div class="profile">
         ${portrait()}
@@ -32,14 +33,14 @@ export function presentationBlock() {
         </div>
       </div>
       <div class="lettre-destinataire">
-        ${destinataire ? `<p>${frenchSpacing(safe(destinataire))}</p>` : ''}
+        ${destinataire ? `<p>${typography(safe(destinataire))}</p>` : ''}
         ${lieuDate ? `<p>${safe(lieuDate)}</p>` : ''}
       </div>
     </header>
-    ${objet ? `<p class="lettre-objet">${frenchSpacing(`<strong>Objet :</strong> ${safe(objet)}`)}</p>` : ''}
+    ${objet ? `<p class="lettre-objet">${typography(`<strong>${tr('Objet :', 'Subject:')}</strong> ${safe(objet)}`)}</p>` : ''}
     <div class="prose">${html}</div>
     <footer class="lettre-pied">
-      ${formule ? `<p>${frenchSpacing(safe(formule))}</p>` : ''}
+      ${formule ? `<p>${typography(safe(formule))}</p>` : ''}
       <div class="presentation-signature">${SIGNATURE}</div>
     </footer>
   </div>`;
@@ -48,7 +49,7 @@ export function presentationBlock() {
 function portrait() {
   const { photo, nom } = site.identite;
   if (photo) {
-    return `<img class="portrait" src="${escapeHtml(photo)}" alt="Portrait de ${escapeHtml(nom)}" width="96" height="96" decoding="async">`;
+    return `<img class="portrait" src="${escapeHtml(photo)}" alt="${tr('Portrait de', 'Portrait of')} ${escapeHtml(nom)}" width="96" height="96" decoding="async">`;
   }
   const missing = placeholder('[À COMPLÉTER : photo professionnelle]');
   return missing ? `<p class="portrait portrait--empty">${missing}</p>` : '';
@@ -60,6 +61,6 @@ function profileLinks() {
   return [
     `<li><a href="${escapeHtml(github)}" ${NEW_TAB}>GitHub</a></li>`,
     `<li><a href="${escapeHtml(linkedin)}" ${NEW_TAB}>LinkedIn</a></li>`,
-    cv ? `<li><a href="${escapeHtml(cv)}" ${NEW_TAB}>CV (PDF)</a></li>` : '',
+    cv ? `<li><a href="${escapeHtml(cv)}" ${NEW_TAB}>${tr('CV (PDF)', 'CV (PDF, in French)')}</a></li>` : '',
   ].join('');
 }

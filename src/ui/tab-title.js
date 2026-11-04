@@ -23,8 +23,9 @@ const CURSOR = '_';
 // Espace « demi-cadratin » (U+2002), à peu près de la largeur du « _ ». Ce
 // n'est pas une espace ordinaire : le navigateur ne la supprime pas.
 const BLANK = String.fromCharCode(0x2002);
-// Fin du titre de l'accueil, après le curseur (site.config.js, « referencement »)
-const HOME_SUFFIX = ` — ${site.referencement?.titre ?? site.identite.nom}`;
+// Fin du titre de l'accueil, après le curseur (site.config.js, « referencement »),
+// dans la langue affichée
+const homeSuffix = () => ` — ${site.referencement?.titre ?? site.identite.nom}`;
 
 let prefix = ''; // texte avant le curseur
 let suffix = ''; // texte après le curseur (accueil uniquement)
@@ -38,7 +39,7 @@ function render() {
 // Titre avec curseur clignotant. `page` : nom de l'écran, vide pour l'accueil.
 export function setPromptTitle(page = '') {
   prefix = page ? `${page} — RémiOS` : 'RémiOS';
-  suffix = page ? '' : HOME_SUFFIX;
+  suffix = page ? '' : homeSuffix();
   cursorVisible = true; // le curseur réapparaît à chaque changement d'écran
   render();
 

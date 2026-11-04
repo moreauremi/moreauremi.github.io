@@ -18,7 +18,7 @@ html[data-view='tui'] body {
   /* Couleurs des blocs de contenu partagés (voir blocks.css). Le bleu est
      réservé à ce qui se clique : titres et étiquettes prennent le rouge du
      titre des boîtes. */
-  --accent: var(--tui-sel);
+  --accent: var(--tui-link);
   --heading: var(--tui-title);
   --rule: var(--tui-inner-border);
   --field-bg: var(--tui-field-bg);
@@ -169,7 +169,7 @@ html[data-view='tui'] body {
   content: '/';
   content: '/' / '';
   margin-inline: 0.6ch;
-  color: var(--crumbs-sep, var(--tui-bevel-dark));
+  color: var(--crumbs-sep, var(--tui-separator));
 }
 
 .crumbs a {
@@ -196,7 +196,7 @@ html[data-view='tui'] body {
 
 .home-logo {
   margin: 0 0 12px;
-  color: var(--tui-sel);
+  color: var(--tui-link);
   font-size: var(--font-size-small);
   font-weight: 600;
   line-height: 1.15;
@@ -358,7 +358,7 @@ html[data-view='tui'] body {
 
 .tui .fiche-link-mark,
 .tui .fiche-link-title {
-  color: var(--tui-sel);
+  color: var(--tui-link);
   font-weight: 600;
 }
 
@@ -374,7 +374,7 @@ html[data-view='tui'] body {
 .tui .fiche-link-open {
   display: block;
   margin-left: 16px;
-  color: var(--tui-sel);
+  color: var(--tui-link);
   font-size: var(--font-size-small);
   white-space: nowrap;
 }
@@ -414,11 +414,17 @@ html[data-view='tui'] body {
   text-align: center;
 }
 
-/* Lien vers les mentions légales, sous l'aide clavier */
+/* Sous l'aide clavier : lien vers les mentions légales, et case « Mode
+   sombre » façon terminal ([ ] / [x]) */
 .tui-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0 1ch;
   padding: 0 var(--gutter) 18px;
+  color: var(--tui-hint);
   font-size: var(--font-size-small);
-  text-align: center;
 }
 
 .tui-footer a {
@@ -426,8 +432,23 @@ html[data-view='tui'] body {
   text-underline-offset: 2px;
 }
 
-.tui-footer a:hover {
+.tui-theme {
+  min-height: 32px;
+  padding: 2px 4px;
+  border: 0;
+  background: transparent;
+  color: var(--tui-hint);
+  cursor: pointer;
+}
+
+.tui-footer a:hover,
+.tui-theme:hover {
   color: var(--tui-bar-ink);
+}
+
+.tui-theme:hover [data-slot='theme'] {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 @media (max-height: 860px) {
@@ -446,7 +467,12 @@ html[data-view='tui'] body {
 /* --- Petits écrans : une seule colonne -------------------------------------- */
 
 @media (max-width: 720px) {
-  /* Barre du haut réduite à l'essentiel, pour tenir sur une ligne */
+  /* Barre du haut réduite à l'essentiel (« RémiOS [tty2] »), pour tenir sur
+     une ligne à côté des boutons fixes, dès 360 px de large */
+  .tui-bar {
+    column-gap: 12px;
+  }
+
   .tui-bar-title,
   .tui-bar-extra {
     display: none;

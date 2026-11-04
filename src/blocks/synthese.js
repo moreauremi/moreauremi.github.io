@@ -3,6 +3,7 @@
 
 import { site, realisations } from '../content.js';
 import { escapeHtml, placeholder, safe } from '../utils/html.js';
+import { tr } from '../utils/lang.js';
 import { NEW_TAB } from './shared.js';
 
 
@@ -11,13 +12,14 @@ import { NEW_TAB } from './shared.js';
 export function syntheseBlock(hrefFor) {
   const { synthese } = site.documents;
   const pdf = synthese
-    ? `<a href="${escapeHtml(synthese)}" ${NEW_TAB}>Ouvrir le tableau de synthèse (PDF)</a>`
+    ? `<a href="${escapeHtml(synthese)}" ${NEW_TAB}>${tr('Ouvrir le tableau de synthèse (PDF)', 'Open the summary table (PDF, in French)')}</a>`
     : placeholder('[À COMPLÉTER : tableau de synthèse en PDF]');
 
   const codes = site.competences;
   const header = codes
     .map((c) => `<th scope="col"><abbr title="${escapeHtml(c.libelle)}">${escapeHtml(c.code)}</abbr></th>`)
     .join('');
+  const [yes, no] = [tr('oui', 'yes'), tr('non', 'no')];
   const rows = realisations
     .map(
       (r) => `<tr>
@@ -25,8 +27,8 @@ export function syntheseBlock(hrefFor) {
         ${codes
           .map((c) =>
             r.competences.includes(c.code)
-              ? '<td><span aria-hidden="true">[X]</span><span class="visually-hidden">oui</span></td>'
-              : '<td><span aria-hidden="true">[ ]</span><span class="visually-hidden">non</span></td>',
+              ? `<td><span aria-hidden="true">[X]</span><span class="visually-hidden">${yes}</span></td>`
+              : `<td><span aria-hidden="true">[ ]</span><span class="visually-hidden">${no}</span></td>`,
           )
           .join('')}
       </tr>`,
@@ -34,12 +36,15 @@ export function syntheseBlock(hrefFor) {
     .join('');
 
   return `<div class="prose">
-    ${pdf ? `<p>Document officiel : ${pdf}</p>` : ''}
-    <p>Tableau croisé généré à partir des fiches : chaque ligne est une réalisation, chaque colonne une compétence du référentiel.</p>
+    ${pdf ? `<p>${tr('Document officiel :', 'Official document:')} ${pdf}</p>` : ''}
+    <p>${tr(
+      'Tableau croisé généré à partir des fiches : chaque ligne est une réalisation, chaque colonne une compétence du référentiel.',
+      'Cross-reference table generated from the project pages: each row is a project, each column a skill of the BTS SIO framework (block 1 of the E5 exam).',
+    )}</p>
   </div>
-  <div class="table-scroll" tabindex="0" role="region" aria-label="Tableau croisé des réalisations et des compétences">
+  <div class="table-scroll" tabindex="0" role="region" aria-label="${tr('Tableau croisé des réalisations et des compétences', 'Projects and skills cross-reference table')}">
     <table class="matrix">
-      <thead><tr><th scope="col">Réalisation</th>${header}</tr></thead>
+      <thead><tr><th scope="col">${tr('Réalisation', 'Project')}</th>${header}</tr></thead>
       <tbody>${rows}</tbody>
     </table>
   </div>

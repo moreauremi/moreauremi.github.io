@@ -6,14 +6,17 @@
 import { site, getRealisation } from '../content.js';
 import { escapeHtml, safe } from '../utils/html.js';
 import { formatDate } from '../utils/dates.js';
+import { tr } from '../utils/lang.js';
 import { NEW_TAB } from './shared.js';
 
 
-const CERTIFICATION_GROUPS = [
+const certificationGroups = () => [
   ['certification', 'Certifications'],
-  ['langue', 'Langues'],
-  ['badge', 'Badges numériques'],
+  ['langue', tr('Langues', 'Languages')],
+  ['badge', tr('Badges numériques', 'Digital badges')],
 ];
+
+const comingSoon = () => `<p>${tr('À venir.', 'Coming soon.')}</p>`;
 
 // Les plus récentes d'abord (dates AAAA-MM-JJ : l'ordre alphabétique suffit)
 function entriesOf(categorie) {
@@ -23,23 +26,23 @@ function entriesOf(categorie) {
 }
 
 export function certificationsBlock() {
-  const intro = '<p>Certifications, résultats en langues et badges numériques, avec leur justificatif.</p>';
-  const groups = CERTIFICATION_GROUPS.map(([categorie, label]) => {
+  const intro = `<p>${tr('Certifications, résultats en langues et badges numériques, avec leur justificatif.', 'Certifications, language results and digital badges, with their supporting documents.')}</p>`;
+  const groups = certificationGroups().map(([categorie, label]) => {
     const items = entriesOf(categorie);
     if (items.length === 0) return '';
     return `<h2 class="block-title">${label}</h2>
       <ul class="certifs">${items.map((c) => certification(c)).join('')}</ul>`;
   }).join('');
 
-  if (!groups) return `<div class="prose">${intro}<p>À venir.</p></div>`;
+  if (!groups) return `<div class="prose">${intro}${comingSoon()}</div>`;
   return `<div class="prose">${intro}</div>${groups}`;
 }
 
 // `hrefFor(slug)` : lien vers la fiche de réalisation liée à une formation
 export function formationsBlock(hrefFor) {
-  const intro = '<p>Formations suivies en alternance chez 1Life et en dehors, de la plus récente à la plus ancienne.</p>';
+  const intro = `<p>${tr('Formations suivies en alternance chez 1Life et en dehors, de la plus récente à la plus ancienne.', 'Training courses taken during my work-study placement at 1Life and elsewhere, most recent first.')}</p>`;
   const items = entriesOf('formation');
-  if (items.length === 0) return `<div class="prose">${intro}<p>À venir.</p></div>`;
+  if (items.length === 0) return `<div class="prose">${intro}${comingSoon()}</div>`;
   return `<div class="prose">${intro}</div>
     <ul class="certifs">${items.map((c) => certification(c, hrefFor)).join('')}</ul>`;
 }
@@ -48,15 +51,15 @@ function certification(c, hrefFor) {
   const details = [
     safe(c.organisme),
     safe(formatDate(String(c.date))),
-    c.statut === 'en cours' ? 'en cours' : '',
+    c.statut === 'en cours' ? tr('en cours', 'in progress') : '',
     c.detail ? safe(c.detail) : '',
   ].filter(Boolean);
   // La fiche liée n'apparaît que si elle est publiée (pas en brouillon)
   const fiche = c.fiche && hrefFor && getRealisation(c.fiche);
   const links = [
-    fiche ? `<a href="${escapeHtml(hrefFor(c.fiche))}">Voir la réalisation</a>` : '',
-    c.justificatif ? `<a href="${escapeHtml(c.justificatif)}" ${NEW_TAB}>Justificatif</a>` : '',
-    c.lien ? `<a href="${escapeHtml(c.lien)}" ${NEW_TAB}>Vérifier en ligne</a>` : '',
+    fiche ? `<a href="${escapeHtml(hrefFor(c.fiche))}">${tr('Voir la réalisation', 'See the project')}</a>` : '',
+    c.justificatif ? `<a href="${escapeHtml(c.justificatif)}" ${NEW_TAB}>${tr('Justificatif', 'Certificate')}</a>` : '',
+    c.lien ? `<a href="${escapeHtml(c.lien)}" ${NEW_TAB}>${tr('Vérifier en ligne', 'Verify online')}</a>` : '',
   ].filter(Boolean);
 
   return `<li>

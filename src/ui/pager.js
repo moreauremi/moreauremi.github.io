@@ -19,6 +19,8 @@
 // page précédente ou suivante.
 // =============================================================================
 
+import { tr } from '../utils/lang.js';
+
 // Liste paginée : `items` (HTML de chaque <li>), `size` éléments par page,
 // `listAttrs` (attributs de chaque <ul>), `label` pour nommer la barre aux
 // lecteurs d'écran.
@@ -48,7 +50,7 @@ function pagerButtons(page, total) {
     .map((n, i) => {
       const gap = i > 0 && n - shown[i - 1] > 1 ? '<span class="pager-gap" aria-hidden="true">…</span>' : '';
       const current = n === page ? ' aria-current="page"' : '';
-      return `${gap}<button type="button" class="pager-btn" data-goto="${n}" data-role="page"${current} aria-label="Page ${n} sur ${total}">${n}</button>`;
+      return `${gap}<button type="button" class="pager-btn" data-goto="${n}" data-role="page"${current} aria-label="${pageOf(n, total)}">${n}</button>`;
     })
     .join('');
 
@@ -57,7 +59,12 @@ function pagerButtons(page, total) {
       target < 1 || target > total ? ' disabled' : ''
     }>${symbol}</button>`;
 
-  return `${arrow('prev', page - 1, '&lt;', 'Page précédente')}${numbers}${arrow('next', page + 1, '&gt;', 'Page suivante')}`;
+  return `${arrow('prev', page - 1, '&lt;', tr('Page précédente', 'Previous page'))}${numbers}${arrow('next', page + 1, '&gt;', tr('Page suivante', 'Next page'))}`;
+}
+
+// « Page 2 sur 5 »
+function pageOf(page, total) {
+  return tr(`Page ${page} sur ${total}`, `Page ${page} of ${total}`);
 }
 
 // Une seule écoute pour tout le site (clics délégués) : les listes sont
@@ -91,5 +98,5 @@ function showPage(container, page, role) {
   const same = role !== 'page' && pager.querySelector(`[data-role="${role}"]:not([disabled])`);
   (same || pager.querySelector('[aria-current="page"]')).focus({ preventScroll: true });
 
-  container.querySelector('[data-pager-status]').textContent = `Page ${page} sur ${pages.length}`;
+  container.querySelector('[data-pager-status]').textContent = pageOf(page, pages.length);
 }

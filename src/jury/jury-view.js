@@ -13,8 +13,8 @@
 // Le contenu vient des mêmes blocs que l'interface RémiOS (src/blocks/).
 // =============================================================================
 
-import { site, realisationsOfType, getRealisation, getTechno, getVeille, getVeilleTag, findVeilleOfTag, TYPES } from '../content.js';
-import { link } from '../router.js';
+import { site, realisationsOfType, getRealisation, getTechno, getVeille, getVeilleTag, findVeilleOfTag, neofetchValue, TYPES } from '../content.js';
+import { link, hashInLang } from '../router.js';
 import {
   presentationBlock,
   alternanceBlock,
@@ -32,25 +32,31 @@ import {
 import { escapeHtml, safe } from '../utils/html.js';
 import { formatDate } from '../utils/dates.js';
 import { hasModifier } from '../utils/keyboard.js';
+import { currentLang, tr } from '../utils/lang.js';
+import { currentTheme, onThemeChange, toggleTheme } from '../utils/theme.js';
 import { setPlainTitle } from '../ui/tab-title.js';
 import { breadcrumb } from '../tui/box.js';
+import { langAttr } from '../blocks/shared.js';
+import { findSection } from '../tui/sections.js';
 
-// Date du build, injectée par Vite (voir vite.config.js)
-const BUILD_DATE = formatDate(__BUILD_DATE__);
-
-// Parties de la page jury, dans l'ordre du sommaire : identifiant, titre et
-// contenu. Les titres des textes descendent d'un niveau (voir demoteHeadings).
+// Parties de la page jury, dans l'ordre du sommaire : identifiant et
+// contenu ; le titre est celui de la rubrique du même nom dans RémiOS. Les
+// titres des textes descendent d'un niveau (voir demoteHeadings).
 const PARTS = [
-  ['presentation', 'Présentation', () => demoteHeadings(presentationBlock())],
-  ['alternance', 'Alternance et parcours', () => demoteHeadings(alternanceBlock())],
-  ['realisations', 'Réalisations', () => Object.entries(TYPES).map(([type, { group: label }]) => group(type, label)).join('')],
-  ['competences', 'Compétences', () => demoteHeadings(competencesBlock(link.juryFiche))],
-  ['synthese', 'Tableau de synthèse E5', () => syntheseBlock(link.juryFiche)],
-  ['veille', 'Veille technologique', () => demoteHeadings(veilleBlock(link.juryVeilleTag))],
-  ['formations', 'Formations', () => demoteHeadings(formationsBlock(link.juryFiche))],
-  ['certifications', 'Certifications', () => demoteHeadings(certificationsBlock())],
-  ['contact', 'CV et contact', () => demoteHeadings(contactBlock({ legalHref: link.juryLegal() }))],
+  ['presentation', () => demoteHeadings(presentationBlock())],
+  ['alternance', () => demoteHeadings(alternanceBlock())],
+  ['realisations', () => Object.entries(TYPES).map(([type, { group: label }]) => group(type, label)).join('')],
+  ['competences', () => demoteHeadings(competencesBlock(link.juryFiche))],
+  ['synthese', () => syntheseBlock(link.juryFiche)],
+  ['veille', () => demoteHeadings(veilleBlock(link.juryVeilleTag))],
+  ['formations', () => demoteHeadings(formationsBlock(link.juryFiche))],
+  ['certifications', () => demoteHeadings(certificationsBlock())],
+  ['contact', () => demoteHeadings(contactBlock({ legalHref: link.juryLegal() }))],
 ];
+const partTitle = (id) => findSection(id).label;
+
+// Fin du titre de l'onglet, sur toutes les pages de la vue jury
+const titleEnd = () => tr('Vue jury', 'Jury view');
 
 export function createJuryView(root) {
   let current = null;
@@ -66,37 +72,43 @@ export function createJuryView(root) {
 
     if (route.name === 'jury-techno' && techno) {
       root.innerHTML = technoPage(techno);
-      setPlainTitle(`Réalisations : ${techno.nom} — Vue jury`);
+      setPlainTitle(`${technoTitle(techno.nom)} — ${titleEnd()}`);
     } else if (route.name === 'jury-techno') {
-      root.innerHTML = missingPage('Techno introuvable', "Aucune réalisation publiée n'utilise cette techno.");
-      setPlainTitle('Techno introuvable — Vue jury');
+      const title = tr('Techno introuvable', 'Technology not found');
+      root.innerHTML = missingPage(title, tr("Aucune réalisation publiée n'utilise cette techno.", 'No published project uses this technology.'));
+      setPlainTitle(`${title} — ${titleEnd()}`);
     } else if (route.name === 'jury-tag' && tag) {
       root.innerHTML = tagPage(veille, route.tag, tag);
-      setPlainTitle(`Veille ${veille.nom} : ${tag.nom} — Vue jury`);
+      setPlainTitle(`${tagTitle(veille.nom, tag.nom)} — ${titleEnd()}`);
     } else if (route.name === 'jury-tag') {
-      root.innerHTML = missingPage('Tag introuvable', "Ce tag n'existe pas dans la veille, ou plus.");
-      setPlainTitle('Tag introuvable — Vue jury');
+      const title = tr('Tag introuvable', 'Tag not found');
+      root.innerHTML = missingPage(title, tr("Ce tag n'existe pas dans la veille, ou plus.", 'This tag does not exist in the technology watch, or no longer exists.'));
+      setPlainTitle(`${title} — ${titleEnd()}`);
     } else if (route.name === 'jury-fiche' && route.slug === 'mentions-legales') {
       root.innerHTML = legalPage();
-      setPlainTitle('Mentions légales — Vue jury');
+      setPlainTitle(`${findSection('mentions-legales').label} — ${titleEnd()}`);
     } else if (route.name === 'jury-fiche' && fiche) {
       root.innerHTML = fichePage(fiche);
-      setPlainTitle(`${fiche.titre} — Vue jury`);
+      setPlainTitle(`${fiche.titre} — ${titleEnd()}`);
     } else if (route.name === 'jury-fiche') {
       root.innerHTML = missingPage();
-      setPlainTitle('Fiche introuvable — Vue jury');
+      setPlainTitle(`${tr('Fiche introuvable', 'Project not found')} — ${titleEnd()}`);
     } else {
       root.innerHTML = mainPage();
-      setPlainTitle(`${site.identite.nom} — Portfolio BTS SIO (vue jury)`);
+      setPlainTitle(`${site.identite.nom} — ${tr('Portfolio BTS SIO (vue jury)', 'BTS SIO portfolio (jury view)')}`);
     }
 
     window.scrollTo(0, 0);
     if (focus) root.querySelector('h1').focus({ preventScroll: true });
   }
 
-  // Bouton « Imprimer » et liens du sommaire
+  // Bouton « Mode sombre » : son état suit le thème, d'où qu'il change
+  onThemeChange((theme) => root.querySelector('[data-action="theme"]')?.setAttribute('aria-pressed', String(theme === 'dark')));
+
+  // Boutons « Imprimer » et « Mode sombre », liens du sommaire
   root.addEventListener('click', (event) => {
     if (event.target.closest('[data-action="print"]')) window.print();
+    if (event.target.closest('[data-action="theme"]')) toggleTheme();
 
     // Les liens du sommaire font défiler jusqu'à la section. On ne passe pas
     // par une ancre « #section » : le hash de l'URL sert déjà au routage.
@@ -123,24 +135,30 @@ export function createJuryView(root) {
 
 function mainPage() {
   const toc = PARTS.map(
-    ([id, label]) => `<li><a href="${link.jury()}" data-scroll-to="jury-${id}">${label}</a></li>`,
+    ([id]) => `<li><a href="${link.jury()}" data-scroll-to="jury-${id}">${partTitle(id)}</a></li>`,
   ).join('');
-  const parts = PARTS.map(([id, label, body]) => part(id, label, body())).join('');
+  const parts = PARTS.map(([id, body]) => part(id, partTitle(id), body())).join('');
+  // Date du build, injectée par Vite (voir vite.config.js)
+  const built = formatDate(__BUILD_DATE__);
+  const legal = `<a href="${link.juryLegal()}">${findSection('mentions-legales').label}</a>`;
 
   return `<div class="jury-page">
-    ${breadcrumb([['Vue jury']])}
+    ${breadcrumb([[titleEnd()]])}
     <header class="jury-header">
-      <p class="jury-kicker">Portfolio BTS SIO option SISR · épreuve E5 · vue rapide jury</p>
+      <p class="jury-kicker">${tr('Portfolio BTS SIO option SISR · épreuve E5 · vue rapide jury', 'BTS SIO portfolio, SISR option · E5 exam · quick jury view')}</p>
       <h1 tabindex="-1">${escapeHtml(site.identite.nom)}</h1>
-      <p class="jury-sub">${site.neofetch
-        .filter(([key]) => ['Formation', 'École', 'Promo', 'Alternance', 'Poste'].includes(key))
-        .map(([, value]) => safe(value))
+      <p class="jury-sub">${['Formation', 'École', 'Alternance', 'Poste', 'Promo']
+        .map(neofetchValue)
+        .filter(Boolean)
+        .map(safe)
         .join(' · ')}</p>
       <div class="jury-actions">
-        <button type="button" class="jury-btn jury-btn--primary" data-action="print">Imprimer</button>
-        <a class="jury-btn" href="${link.home()}">Ouvrir la version RémiOS</a>
+        <button type="button" class="jury-btn jury-btn--primary" data-action="print">${tr('Imprimer', 'Print')}</button>
+        <a class="jury-btn" href="${link.home()}">${tr('Ouvrir la version RémiOS', 'Open the RémiOS version')}</a>
+        ${langLink('class="jury-btn"')}
+        <button type="button" class="jury-btn" data-action="theme" aria-pressed="${currentTheme() === 'dark'}">${tr('Mode sombre', 'Dark mode')}</button>
       </div>
-      <nav class="jury-toc" aria-label="Sommaire">
+      <nav class="jury-toc" aria-label="${tr('Sommaire', 'Contents')}">
         <ol>${toc}</ol>
       </nav>
     </header>
@@ -148,10 +166,24 @@ function mainPage() {
     ${parts}
 
     <footer class="jury-footer">
-      <p>Page générée le ${BUILD_DATE}. Version interactive : <a href="${link.home()}">RémiOS</a>. <a href="${link.juryLegal()}">Mentions légales</a>.</p>
+      <p>${tr(
+        `Page générée le ${built}. Version interactive : <a href="${link.home()}">RémiOS</a>. ${legal}.`,
+        `Page generated on ${built}. Interactive version: <a href="${link.home()}">RémiOS</a>. ${legal}.`,
+      )}</p>
     </footer>
   </div>`;
 }
+
+// Lien vers la même page dans l'autre langue (bouton dans l'en-tête de la
+// page principale, simple lien en pied des autres pages)
+function langLink(attrs = '') {
+  return currentLang() === 'en'
+    ? `<a ${attrs} href="${hashInLang('fr')}" hreflang="fr" lang="fr">Version française</a>`
+    : `<a ${attrs} href="${hashInLang('en')}" hreflang="en" lang="en">English version</a>`;
+}
+
+const technoTitle = (nom) => tr(`Réalisations : ${nom}`, `Projects: ${nom}`);
+const tagTitle = (sujet, tag) => tr(`Veille ${sujet} : ${tag}`, `${sujet} watch: ${tag}`);
 
 // Une section de la page, avec son titre de niveau 2
 function part(id, title, body) {
@@ -166,24 +198,24 @@ function group(type, label) {
   const items = realisationsOfType(type);
   const list = items.length
     ? `<ul class="jury-list">${items.map(item).join('')}</ul>`
-    : '<p>À venir.</p>';
+    : `<p>${tr('À venir.', 'Coming soon.')}</p>`;
   return `<h3>${label}</h3>${list}`;
 }
 
 function item(r) {
   const details = [
-    `Date : ${safe(formatDate(r.date))}`,
-    `Statut : ${safe(r.statut)}`,
-    r.technos.length ? `Technos : ${r.technos.map(safe).join(', ')}` : '',
-    r.competences.length ? `Compétences : ${r.competences.map(escapeHtml).join(', ')}` : '',
+    `${tr('Date :', 'Date:')} ${safe(formatDate(r.date))}`,
+    `${tr('Statut :', 'Status:')} ${safe(r.statut)}`,
+    r.technos.length ? `${tr('Technos :', 'Technologies:')} ${r.technos.map(safe).join(', ')}` : '',
+    r.competences.length ? `${tr('Compétences :', 'Skills:')} ${r.competences.map(escapeHtml).join(', ')}` : '',
   ].filter(Boolean);
 
   // data-print-url : adresse complète de la fiche, affichée à l'impression
   const href = link.juryFiche(r.slug);
   const printUrl = window.location.href.split('#')[0] + href;
   return `<li class="jury-item">
-    <p class="jury-item-title"><a href="${href}" data-print-url="${escapeHtml(printUrl)}">${safe(r.titre)}</a></p>
-    ${r.resume ? `<p class="jury-item-summary">${safe(r.resume)}</p>` : ''}
+    <p class="jury-item-title"${langAttr(r.lang)}><a href="${href}" data-print-url="${escapeHtml(printUrl)}">${safe(r.titre)}</a></p>
+    ${r.resume ? `<p class="jury-item-summary"${langAttr(r.lang)}>${safe(r.resume)}</p>` : ''}
     <p class="jury-item-meta">${details.join(' · ')}</p>
   </li>`;
 }
@@ -193,14 +225,14 @@ function item(r) {
 // Squelette commun : fil d'Ariane, titre, contenu, pied de page.
 // `crumbs` : rubriques entre la vue jury et la page ([libellé, adresse]).
 // `remios` : lien facultatif vers le même écran dans RémiOS.
-function subPage({ title, body, crumbs = [], remios = '' }) {
-  const back = `<a href="${link.jury()}">← Retour à la vue jury</a>`;
+function subPage({ title, body, crumbs = [], remios = '', titleLang = currentLang() }) {
+  const back = `<a href="${link.jury()}">${tr('← Retour à la vue jury', '← Back to the jury view')}</a>`;
   return `<div class="jury-page">
-    ${breadcrumb([['Vue jury', link.jury()], ...crumbs, [title]])}
-    <h1 tabindex="-1">${title}</h1>
+    ${breadcrumb([[titleEnd(), link.jury()], ...crumbs, [title]])}
+    <h1 tabindex="-1"${langAttr(titleLang)}>${title}</h1>
     ${body}
     <footer class="jury-footer">
-      <p>${back}${remios ? ` · ${remios}` : ''}</p>
+      <p>${back}${remios ? ` · ${remios}` : ''} · ${langLink()}</p>
     </footer>
   </div>`;
 }
@@ -208,42 +240,43 @@ function subPage({ title, body, crumbs = [], remios = '' }) {
 function fichePage(r) {
   return subPage({
     title: safe(r.titre),
+    titleLang: r.lang,
     body: ficheBlock(r, link.juryTechno),
-    crumbs: [['Réalisations', link.jury()]],
-    remios: `<a href="${link.fiche(r.slug)}">Voir cette fiche dans RémiOS</a>`,
+    crumbs: [[findSection('realisations').label, link.jury()]],
+    remios: `<a href="${link.fiche(r.slug)}">${tr('Voir cette fiche dans RémiOS', 'See this project in RémiOS')}</a>`,
   });
 }
 
 // Page d'une techno : les réalisations qui l'utilisent
 function technoPage(techno) {
   return subPage({
-    title: `Réalisations : ${escapeHtml(techno.nom)}`,
+    title: technoTitle(escapeHtml(techno.nom)),
     body: technoBlock(techno, link.juryFiche, link.juryTechno),
-    crumbs: [['Réalisations', link.jury()]],
-    remios: `<a href="${link.techno(techno.slug)}">Voir cette techno dans RémiOS</a>`,
+    crumbs: [[findSection('realisations').label, link.jury()]],
+    remios: `<a href="${link.techno(techno.slug)}">${tr('Voir cette techno dans RémiOS', 'See this technology in RémiOS')}</a>`,
   });
 }
 
 // Page d'un tag de la veille
 function tagPage(veille, slug, tag) {
   return subPage({
-    title: `Veille ${escapeHtml(veille.nom)} : ${escapeHtml(tag.nom)}`,
+    title: tagTitle(escapeHtml(veille.nom), escapeHtml(tag.nom)),
     body: veilleTagBlock(veille, slug, link.juryVeilleTag),
-    crumbs: [['Veille technologique', link.jury()], [escapeHtml(veille.nom), link.jury()]],
-    remios: `<a href="${link.veilleTag(veille.id, slug)}">Voir ce tag dans RémiOS</a>`,
+    crumbs: [[findSection('veille').label, link.jury()], [escapeHtml(veille.nom), link.jury()]],
+    remios: `<a href="${link.veilleTag(veille.id, slug)}">${tr('Voir ce tag dans RémiOS', 'See this tag in RémiOS')}</a>`,
   });
 }
 
 function legalPage() {
-  return subPage({ title: 'Mentions légales', body: mentionsLegalesBlock() });
+  return subPage({ title: findSection('mentions-legales').label, body: mentionsLegalesBlock() });
 }
 
-function missingPage(title = 'Fiche introuvable', text = "Cette réalisation n'existe pas, ou plus.") {
+function missingPage(title = tr('Fiche introuvable', 'Project not found'), text = tr("Cette réalisation n'existe pas, ou plus.", 'This project does not exist, or no longer exists.')) {
   return `<div class="jury-page">
-    ${breadcrumb([['Vue jury', link.jury()], [title]])}
+    ${breadcrumb([[titleEnd(), link.jury()], [title]])}
     <h1 tabindex="-1">${title}</h1>
     <p>${text}</p>
-    <p><a href="${link.jury()}">← Retour à la vue jury</a></p>
+    <p><a href="${link.jury()}">${tr('← Retour à la vue jury', '← Back to the jury view')}</a></p>
   </div>`;
 }
 

@@ -8,7 +8,7 @@ Portfolio de **Rémi Moreau**, étudiant en BTS SIO option SISR à MyDigitalScho
 
 **Réalisé avec [Claude Code](https://claude.com/claude-code).** Mon rôle : définir le besoin, faire les choix et tester.
 
-Le site se présente comme le démarrage d'un système Linux : écran GRUB, journal du noyau, services systemd, puis un menu façon ncurses qui donne accès aux réalisations, au tableau de synthèse et à la veille technologique. Une **vue rapide jury**, sobre et imprimable, rassemble tout le contenu sur une seule page.
+Le site se présente comme le démarrage d'un système Linux : écran GRUB, journal du noyau, services systemd, puis un menu façon ncurses qui donne accès aux réalisations, au tableau de synthèse et à la veille technologique. Une **vue rapide jury**, sobre et imprimable, rassemble tout le contenu sur une seule page. Le site existe en **français et en anglais** (https://remim.me/en), et a un **mode sombre**.
 
 ## Sommaire
 
@@ -55,6 +55,8 @@ npm run check    # les trois à la suite : lint, build, test (comme avant chaque
 4. **Vue rapide jury** : bouton jaune en haut à droite, visible en permanence (même pendant le démarrage). Version classique, fond clair, tout sur une page, imprimable.
 5. **Terminal caché** : `remi@remios:~$`, avec historique, autocomplétion et une douzaine de commandes. Les fiches y sont des fichiers. Tout est simulé.
 6. **Sons** (coupés par défaut) : bip POST, clics de disque, bip de validation, générés par le navigateur.
+7. **Version anglaise** : bouton `EN` en haut à droite (`FR` pour revenir), lien « English version » dans la vue jury. Le même écran s'affiche dans l'autre langue, sans recharger la page. Voir [Langues](#langues).
+8. **Mode sombre** : suit le réglage du système ; la case `[ ] Mode sombre` en bas de l'écran RémiOS (bouton « Mode sombre » dans la vue jury) impose l'autre thème, et ce choix est mémorisé.
 
 ### Raccourcis clavier
 
@@ -87,6 +89,8 @@ Sur mobile, le terminal s'ouvre avec le bouton `[tty2]` de la barre du haut.
 | `#/jury/veille/<tag>` | un tag de la veille, style sobre |
 | `#/jury/mentions-legales` | mentions légales, style sobre |
 | `#/message-envoye` | confirmation après l'envoi du formulaire de contact |
+| `#/en/…` | toutes les adresses ci-dessus, en anglais (ex. `#/en/`, `#/en/realisations/glpi`, `#/en/jury`) |
+| `/en/` | adresse courte de la version anglaise (`remim.me/en`) : ouvre `#/en/` |
 
 Un lien direct vers une rubrique, une fiche ou la vue jury s'affiche sans jouer le démarrage. Les anciennes adresses `#/entreprise`, `#/formation` et `#/perso` mènent à la rubrique « Réalisations ».
 
@@ -123,6 +127,9 @@ Tout le contenu est dans `content/` : aucune ligne de code à toucher.
 - **PDF** (CV, tableau de synthèse) : déposer le fichier dans `public/docs/`, puis indiquer son chemin dans `content/site.config.js` (`cv: 'docs/cv.pdf'`).
 - **Fichier à télécharger depuis une fiche** (documentation, script) : le déposer dans `public/docs/<slug>/`, puis le lier avec le titre « Télécharger » : `[télécharger](docs/<slug>/doc.pdf "Télécharger")`. Le lien reçoit l'attribut `download` : le navigateur enregistre le fichier au lieu de l'ouvrir. Sans ce titre, un PDF s'ouvre dans un nouvel onglet.
 
+- **Version anglaise d'une fiche ou d'une page** : créer à côté du fichier français un fichier du même nom terminé par `.en.md` (`homelab.md` → `homelab.en.md` ; de même `content/pages/presentation.en.md`, `content/veille/<sujet>/sujet.en.md`). Son en-tête ne contient que les champs qui se traduisent (`titre`, `resume`, `statut`, et pour les pages `description` et `lettre`) : tout le reste (slug, type, date, technos, compétences, brouillon…) est repris du fichier français, et le build refuse une traduction qui le répéterait. Le texte, les légendes et les descriptions des images se traduisent ; les chemins des images et des PDF restent les mêmes (titre « Download » pour un lien de téléchargement). Tant qu'une traduction n'existe pas, la version anglaise affiche le texte français, avec un avertissement. Une traduction ne suit pas toute seule les modifications du français : après avoir modifié une fiche, penser à sa version anglaise.
+- **Textes de la configuration en anglais** : dans `content/site.config.js`, chaque objet peut avoir un champ `en` avec la traduction de ses textes, champ par champ (`{ code: 'B1.4', libelle: 'Travailler en mode projet', en: { libelle: 'Work in project mode' } }`). Les textes communs (neofetch, référencement, disponibilité…) sont dans le champ `en` tout en bas du fichier. Ce qui n'est pas traduit s'affiche en français ; le build signale un champ `en` qui ne correspond à aucun champ français (faute de frappe).
+
 Les textes `[À COMPLÉTER]` sont surlignés en jaune avec `npm run dev`. Le site en ligne ne les montre pas : au build, chaque repère est retiré, avec le paragraphe, l'élément de liste ou la légende qui ne contenait que lui, puis le titre d'une section restée vide (« Bilan personnel » sans texte dessous disparaît). Une techno `[À COMPLÉTER]` sort de la liste, et une information absente de la configuration (CV, photo, tableau de synthèse) n'affiche rien. Les captures provisoires (`captures/a-venir.svg`) suivent la même règle : retirées avec leur légende, puis la section « Captures d'écran » si elle ne contenait qu'elles (`test/pages-statiques.test.js` vérifie qu'aucune n'est publiée). Une fiche peut donc être publiée avant d'être finie : seul ce qui est rédigé apparaît. Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, image ou PDF introuvable, compétence inexistante…), `npm run dev` et `npm run build` s'arrêtent avec un message qui indique le fichier et la correction à faire : un site incomplet ne peut pas partir en production par erreur.
 
 ## Ce qui reste à compléter
@@ -145,6 +152,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://dashboard.remim.me, à partir des actualités collectées.
 - [ ] **Veille par e-mail** : créer le jeton du relais et installer le relais Gmail (voir [Veille par e-mail](#mise-en-route-du-relais-gmail-une-seule-fois)).
 - [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif. Formation QWeb ajoutée (en cours, sans attestation) : passer son statut à « obtenue » après la seconde journée. Formation « Indicateurs et tableaux de bord Open-Prod » ajoutée sans statut (ni « en cours » ni « obtenue », le champ est facultatif).
+- [ ] **Version anglaise** : pages, sujets de veille et les neuf fiches publiées traduits (4 novembre 2026, anglais britannique). Restent en français, signalés comme tels : les fiches en brouillon (`homelab`, `rapports-qweb`, à traduire au moment de les publier), les synthèses de veille (écrites chaque semaine en français), les actualités (sources françaises), le CV, les PDF et les schémas. À relire, et à tenir à jour à chaque modification d'une fiche française.
 - [ ] **Réalisations en formation** : « GLPI », « Réseau de six machines virtuelles sous VirtualBox » (`reseau-vm-virtualbox.md`, octobre 2026) et « Dépannage des serveurs Proxmox de la salle de TP » (`depannage-serveurs-tp.md`, 4 novembre 2026, à la place de l'ancien brouillon `formation-realisation-3.md`) publiées. Pour le dépannage, il reste le résultat du script sur POD01 et POD03, à lancer plus tard (repère `[À COMPLÉTER]`).
 
 ## Architecture
@@ -152,7 +160,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 ### Vue d'ensemble
 
 ```
-content/*.md + site.config.js          (le contenu, modifiable sans code)
+content/*.md + site.config.js          (le contenu, modifiable sans code ; *.en.md : traductions)
         │  au build : plugins/vite-plugin-content.js (gray-matter + marked)
         ▼
 modules JavaScript { meta, html }     (fiches déjà converties en HTML)
@@ -163,7 +171,8 @@ src/content.js ──► src/blocks/ ──┬──► src/tui/    interface R�
                                  └──► src/terminal/  (téléchargé à la première ouverture ;
                                                       cat lit le texte source des fiches)
 
-src/main.js assemble le tout : routeur, démarrage, interface, vue jury, terminal, sons.
+src/main.js assemble le tout : routeur, démarrage, interface, vue jury, terminal, sons, langue, thème.
+Contenu anglais (src/content-en.js) : un fichier JavaScript à part, téléchargé à la première visite en anglais.
 ```
 
 ### Ce qui se passe quand on ouvre le site
@@ -180,7 +189,7 @@ src/main.js assemble le tout : routeur, démarrage, interface, vue jury, termina
 content/site.config.js   configuration : identité, contact, formulaire, PDF, veille, compétences,
                          certifications, mentions légales, services du boot
 content/pages/           présentation, alternance et veille (Markdown)
-content/realisations/    une fiche Markdown par réalisation
+content/realisations/    une fiche Markdown par réalisation, et sa traduction anglaise (<slug>.en.md)
 content/veille/<sujet>/  un dossier par sujet de veille : pourquoi ce sujet (sujet.md), mes synthèses
                          (syntheses.md), actualités écrites chaque semaine par le robot (actualites.json)
 scripts/veille.mjs       veille automatique : pour chaque sujet, flux RSS → choix, résumés et tags par l'IA
@@ -196,13 +205,14 @@ index.html               page unique : meta, Open Graph, préchargement de la po
 vite.config.js           configuration du build
 plugins/                 plugins Vite maison : Markdown → HTML au build, vérification des fiches
                          (vite-plugin-content.js, qui s'appuie sur plugins/content/ : configuration,
-                         fiche, Markdown, référencement, CSP) ; style, icône et cadre commun recopiés
+                         fiche, Markdown, référencement, CSP, traductions) ; style, icône et cadre commun recopiés
                          dans les pages d'erreur (vite-plugin-inline.js)
 public/                  copié tel quel dans dist/ : icônes, image d'aperçu, robots.txt, captures, PDF
 src/main.js              point d'entrée : assemble les modules, clavier global
 src/app.html             structure de la page : barre fixe, interface RémiOS, vue jury, calque du boot
 src/router.js            routage par hash (#/presentation, #/realisations/homelab…)
-src/content.js           accès au contenu (configuration + fiches) pour le reste du code
+src/content.js           accès au contenu (configuration + fiches) pour le reste du code, dans la langue affichée
+src/content-en.js        traductions anglaises du contenu, téléchargées seulement en anglais
 src/blocks/              blocs de contenu communs à RémiOS et à la vue jury, un fichier par rubrique
                          (index.js les rassemble)
 src/errors.js            pages d'erreur 404 et 403 : affiche l'adresse demandée
@@ -218,9 +228,10 @@ src/audio/               sons générés avec la Web Audio API
 src/ui/                  barre fixe en haut à droite (vue jury, bouton son : system-bar.html), titre de l'onglet,
                          pagination « < 1 2 3 > », onglets
 src/utils/               petites fonctions partagées : HTML sûr, gabarits HTML, adresses, dates, clavier,
-                         animations réduites, réglages mémorisés, adresse du service du formulaire
-src/styles/              un fichier CSS par partie (tokens.css = toutes les couleurs, print.css = impression,
-                         maintenance.css = page 503)
+                         animations réduites, réglages mémorisés, adresse du service du formulaire,
+                         langue (lang.js : tr('français', 'English')) et thème clair ou sombre (theme.js)
+src/styles/              un fichier CSS par partie (tokens.css = toutes les couleurs, des deux thèmes,
+                         print.css = impression, maintenance.css = page 503)
 src/assets/fonts/        IBM Plex Mono en woff2 (400 et 600) + licence OFL
 src/assets/icons/        icônes SVG du bouton son (affichées dans la page, couleur du texte)
 src/assets/signature.svg signature manuscrite vectorisée, en pied de la rubrique Présentation (couleur du texte)
@@ -257,7 +268,19 @@ reference/               maquette validée au départ du projet (hors build) : m
 - **Easter egg du terminal.** La commande cachée `starwars` (ou `telnet towel.blinkenlights.nl`, clin d'œil au célèbre film en ASCII) joue pendant 30 secondes un générique façon Star Wars : intro, titre qui s'éloigne, texte en perspective. Le texte est une parodie originale, et la fanfare (si le son est activé) une composition originale : ni le film, ni son texte, ni sa musique, protégés par le droit d'auteur, ne sont reproduits. Rendu rétro : le générique est dessiné dans un `<canvas>` en basse résolution (un « pixel rétro » = 3 pixels d'écran), agrandi sans lissage (`image-rendering: pixelated`) pour un effet pixelisé qui reste à 60 images/s, avec un filtre CSS de contraste et une couche d'écran cathodique (lignes de balayage, coins assombris, scintillement discret). Un filtre SVG de pixelisation avait d'abord été essayé : il faisait tomber l'animation à 25 images/s. Échap, `q` ou le bouton « Arrêter » l'interrompent ; en animations réduites, le texte s'affiche simplement.
 - **Sons synthétisés.** Bip POST (oscillateur carré à 1 000 Hz), clics de disque (bruit filtré) et bip de validation sont fabriqués par la Web Audio API : aucun fichier audio. Les navigateurs interdisent le son avant une interaction : le contexte audio n'est créé qu'au premier clic ou à la première touche. Au tout premier chargement, le bip POST ne peut donc pas sonner ; il sonne sur `<Redémarrer>`, ou dès que le son est activé pendant le boot.
 - **Titre d'onglet façon invite de commande.** L'onglet affiche « RémiOS_ », et le « _ » clignote comme un curseur de terminal (toutes les 530 ms). Sur une rubrique ou une fiche, le nom de la page reste devant (« Présentation — RémiOS_ ») pour l'historique, les favoris et les lecteurs d'écran. La vue jury garde un titre fixe, et le curseur ne clignote pas si le système demande de réduire les animations.
-- **Réglages mémorisés prudemment.** Le choix du son est gardé dans `localStorage`, dont chaque accès est protégé (`try/catch`) : en navigation privée ou si le stockage est bloqué, le site fonctionne quand même.
+- **Mode sombre par les variables de couleur.** Toutes les couleurs sont des variables (`tokens.css`) : le thème sombre les redéfinit quand `<html>` porte `data-theme="dark"`, sans toucher aux autres feuilles. La console (démarrage, terminal) est déjà noire ; RémiOS garde son identité (fond bleu nuit, boîte anthracite en relief, titres rouges, sélection bleue et numéros jaunes), la vue jury passe en texte clair sur fond sombre. Par défaut, le site suit le réglage du système, même s'il change pendant la visite ; un choix fait sur le site est mémorisé et l'emporte. Le thème est appliqué avant le premier affichage, et aussi sur les pages 404 et 403. L'impression reste en noir sur blanc. Un test vérifie le contraste (4,5:1 au moins) de chaque couple texte/fond, dans les deux thèmes.
+- **Réglages mémorisés prudemment.** Les choix du son et du thème sont gardés dans `localStorage`, dont chaque accès est protégé (`try/catch`) : en navigation privée ou si le stockage est bloqué, le site fonctionne quand même.
+
+### Langues
+
+- **Le français est la langue d'origine.** Tout est d'abord écrit en français ; l'anglais suit les mêmes règles partout, et ce qui n'est pas traduit reste en français plutôt que de manquer.
+- **Une adresse, une langue.** La version anglaise reprend les mêmes adresses, précédées de `en/` (`#/en/realisations/glpi`). Changer de langue, c'est changer d'adresse : le bouton `EN`/`FR` mène au même écran dans l'autre langue, sans recharger la page, Précédent/Suivant fonctionnent, et un lien partagé s'ouvre toujours dans la langue où il a été copié. Pas de détection automatique de la langue du navigateur : le jury, qui reçoit `#/jury`, voit toujours le français.
+- **Contenu : un fichier par langue.** La traduction d'une fiche est un fichier `.en.md` à côté du français ; son en-tête ne contient que ce qui se traduit, le reste est repris du français au build, et ne peut donc jamais diverger. Un texte affiché en français dans la version anglaise porte l'attribut `lang="fr"` (bonne prononciation par les lecteurs d'écran) et un avertissement.
+- **Interface : les deux langues côte à côte dans le code.** Chaque texte de l'interface est écrit `tr('Présentation', 'About me')`, au moment de l'affichage : pas de fichier de clés à maintenir à part. Les fichiers HTML de l'interface ne gardent que les textes communs aux deux langues (« RémiOS », « [tty2] », « GNU GRUB ») : les autres sont écrits dans leurs emplacements `data-slot`.
+- **Configuration : un champ `en` par objet**, fusionné au français par `localizeConfig()` (`src/utils/lang.js`), commun au navigateur et au build.
+- **Le français ne télécharge rien de l'anglais.** Les traductions du contenu forment un fichier JavaScript à part (`content-en`, 30 Ko compressés), comme les textes anglais du terminal (`sources-en`) : seuls les visiteurs de la version anglaise les téléchargent. Les valeurs exportées par `src/content.js` sont recalculées au changement de langue (« liaisons vivantes » `export let`) : le reste du code n'a rien de spécial à faire.
+- **Anglais britannique** (« organisation », « licence », dates « 5 November 2026 »), le plus proche des usages européens.
+- **Restent en français** : les actualités de la veille (résumées chaque semaine à partir de sources françaises), les synthèses tant qu'elles n'ont pas de `syntheses.en.md`, le CV, les PDF et les schémas ; c'est indiqué au visiteur.
 
 ### Pages d'erreur
 
@@ -276,7 +299,8 @@ reference/               maquette validée au départ du projet (hors build) : m
 - **Vue jury en un clic.** Bouton visible en permanence et premier élément atteint avec Tab, ou adresse directe `#/jury`.
 - **Visionneuse et terminal en `<dialog>` natif.** Le navigateur gère le piège du focus, la touche Échap et le retour du focus à la fermeture.
 - **Réduction des animations respectée.** Pas de boot, pas de transition si le système le demande.
-- **Contrastes AA** (au moins 4,5:1) pour tous les textes, tailles en `rem` (le site suit l'agrandissement du texte du navigateur).
+- **Contrastes AA** (au moins 4,5:1) pour tous les textes, dans les deux thèmes (vérifié par un test), tailles en `rem` (le site suit l'agrandissement du texte du navigateur).
+- **Langue annoncée.** `<html lang>` suit la langue affichée ; un texte resté en français dans la version anglaise porte `lang="fr"`, et le bouton `EN` est lu en anglais.
 
 ### Performance
 
@@ -289,6 +313,7 @@ reference/               maquette validée au départ du projet (hors build) : m
 ### Référencement
 
 - **Tout vient de la configuration.** Le titre et la description de la page, les données structurées, le plan du site (`sitemap.xml`), le `robots.txt` et la version sans JavaScript sont générés au build à partir de la rubrique `referencement` de `content/site.config.js`.
+- **Pages statiques en anglais.** Les mêmes pages existent sous `/en/` (`/en/realisations/glpi/`…) pour chaque texte traduit, avec `<html lang="en">`. Chaque page indique sa version dans l'autre langue (balises `hreflang`, français par défaut), pour que Google propose la bonne selon la langue de recherche ; toutes sont dans `sitemap.xml`, et `llms.txt` a une partie « English version ». Les adresses en `#/en/` de RémiOS ne sont pas indexables (Google ignore ce qui suit `#`) : ce sont ces pages qui portent le référencement en anglais.
 - **Pages lisibles sans JavaScript, pour les IA et les moteurs.** Les robots des IA (ChatGPT, Claude, Perplexity…) n'exécutent pas JavaScript : sur l'accueil, ils ne voient que le titre et la version sans JavaScript. Au build, `plugins/content/pages-statiques.js` fabrique donc, à partir des **mêmes fichiers Markdown** que RémiOS, une vraie page HTML par rubrique (`/presentation/`, `/alternance/`, `/realisations/`, `/veille/`), par fiche publiée (`/realisations/<slug>/`) et par sujet de veille (`/veille/<sujet>/`, avec mes synthèses), plus un `llms.txt` (résumé du site et liens, format llmstxt.org). Toutes sont dans `sitemap.xml`, et la version sans JavaScript de l'accueil renvoie vers elles. Rien à écrire à la main : modifier un Markdown met à jour RémiOS et ces pages au build suivant ; elles n'existent que dans `dist/`. Mêmes règles que RémiOS : pas de page pour une fiche en brouillon, repères [À COMPLÉTER] retirés. Un lien en haut de chaque page ouvre le même écran dans RémiOS ; pas de redirection automatique, sinon Google n'indexerait pas la page. `test/pages-statiques.test.js` vérifie tout ça sur le site construit.
 - **Données structurées schema.org** (JSON-LD) : une fiche « personne » lue par les moteurs de recherche, avec le nom, le poste, l'entreprise, l'école, la ville, et les liens GitHub et LinkedIn. C'est ce qui aide Google à associer « Rémi Moreau » à ce site.
 - **Titre de l'onglet** : « RémiOS_ — Rémi Moreau · Portfolio BTS SIO SISR ». L'onglet affiche « RémiOS_ » avec son curseur clignotant, et les moteurs lisent le nom et les mots-clés qui suivent.
@@ -350,6 +375,13 @@ Pour refaire l'audit : ouvrir le site dans Chrome, outils de développement (F12
 - `npm test` : html-validate sur les pages construites, puis 8 tests du site construit exécuté dans un navigateur simulé (jsdom) : chaque bloc écrit dans une page autorisé par sa CSP, aucun commentaire publié, page 503 autonome, chaque rubrique et chaque fiche (RémiOS et vue jury), sommaire de la vue jury, adresses inconnues ou mal encodées, terminal téléchargé à la demande et ses commandes. Les tests ne dépendent pas du texte des fiches : on peut modifier le contenu sans les toucher.
 
 **Mise à jour du 7 octobre 2026** (séparation des langages, optimisation) : poids de l'accueil, compressé en gzip comme le sert GitHub Pages (HTML, CSS, JavaScript et les deux polices), de 74,4 à 65,5 Ko, dont JavaScript de 36,1 à 27,8 Ko. Avant/après comparé écran par écran (34 écrans et états, terminal compris) : contenu identique, sauf l'adresse mal encodée `#/%E9`, qui affiche désormais l'écran d'erreur au lieu de laisser une page vide.
+
+**Mise à jour du 4 novembre 2026** (version anglaise, mode sombre) :
+
+- **Poids** (fichiers compressés en gzip) : le JavaScript principal passe de 79,7 à 86,3 Ko (+6,6 Ko : les textes anglais de l'interface et la gestion des langues), le CSS de 7,3 à 7,7 Ko. Un visiteur de la version française ne télécharge rien d'autre. La version anglaise ajoute 30 Ko (traductions du contenu), le terminal en anglais 27,5 Ko (textes sources anglais). Le site reste un seul fichier JavaScript principal.
+- **Tests** : 44 au total (`npm test`), dont neuf nouveaux : chaque rubrique et chaque fiche en anglais, dans RémiOS et la vue jury, avec des liens qui restent en anglais ; bascule de langue sur le même écran ; rien de l'anglais téléchargé par la version française ; terminal en anglais ; mode sombre (RémiOS, vue jury, choix mémorisé) ; contraste de chaque couple de couleurs dans les deux thèmes ; pages statiques anglaises et leurs `hreflang` ; en-tête des traductions.
+- **Mobile** : la largeur réservée à la barre fixe (vue jury, langue, son) est calculée pour laisser « RémiOS [tty2] » sur une ligne dès 360 px de large ; la version de RémiOS n'est plus affichée sous 720 px.
+- **À refaire** : audit Lighthouse et vérification visuelle dans un vrai navigateur (le mode sombre a été vérifié par le calcul des contrastes et les tests, pas encore à l'œil).
 
 **Validation HTML (W3C)** : les pages construites (`index.html`, `404.html`, `403.html`, `503.html`) passent le [Nu Html Checker](https://validator.w3.org/nu/) sans erreur ni avertissement (6 octobre 2026). Pour vérifier le site en ligne : https://validator.w3.org/nu/?doc=https://remim.me/
 

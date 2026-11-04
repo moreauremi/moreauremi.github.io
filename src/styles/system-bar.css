@@ -1,6 +1,8 @@
 /* ==========================================================================
-   Barre fixe en haut à droite : son, vue rapide jury
+   Barre fixe en haut à droite : vue rapide jury, langue, son
    Placée au-dessus de tout le reste, même de l'écran de démarrage.
+   Sa largeur est réservée dans la barre du haut de RémiOS : --system-bar-width
+   (tokens.css), à ajuster si un bouton est ajouté.
    ========================================================================== */
 
 .system-bar {
@@ -22,7 +24,7 @@
   min-height: 36px;
   padding: 4px 12px;
   background: var(--tui-sel-key);
-  color: var(--tui-ink);
+  color: var(--on-key);
   font-weight: 600;
   text-decoration: none;
   box-shadow: 3px 3px 0 var(--tui-shadow);
@@ -32,7 +34,9 @@
   text-decoration: underline;
 }
 
-/* Bouton haut-parleur : icône blanche, lisible sur le bleu comme sur le noir */
+/* Langue (« EN » / « FR ») et haut-parleur : texte et icône blancs, lisibles
+   sur le bleu comme sur le noir */
+.system-bar-lang,
 .system-bar-sound {
   display: inline-flex;
   align-items: center;
@@ -46,6 +50,12 @@
   cursor: pointer;
 }
 
+.system-bar-lang {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.system-bar-lang:hover,
 .system-bar-sound:hover {
   border-color: var(--text-bright);
 }
@@ -57,6 +67,10 @@
 }
 
 @media (max-width: 720px) {
+  .system-bar {
+    gap: 6px;
+  }
+
   .system-bar-long {
     display: none;
   }

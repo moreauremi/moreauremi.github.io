@@ -15,10 +15,15 @@
 //   #/jury/<slug>                une fiche en style sobre
 //   #/jury/technos/<techno>      une techno en style sobre
 //   #/jury/veille/<sujet>/<tag>  un tag de la veille en style sobre
+//   #/jury/mentions-legales      mentions légales en style sobre
 //
 // Anciennes adresses, d'avant les trois sujets de veille : #/veille/<tag> et
 // #/jury/veille/<tag> mènent au premier sujet qui a ce tag.
-//   #/jury/mentions-legales      mentions légales en style sobre
+//
+// Version anglaise : les mêmes adresses, précédées de « en/ » (#/en/,
+// #/en/realisations/homelab, #/en/jury…). Sans ce préfixe, le site est en
+// français. Chaque adresse donne donc toujours la même langue : un lien
+// partagé s'ouvre comme il a été copié.
 //
 // Quand le hash change, le navigateur ne recharge pas la page : il émet un
 // événement « hashchange », écouté ici. Chaque écran a donc une URL
@@ -27,29 +32,46 @@
 // =============================================================================
 
 import { decodePath } from './utils/url.js';
+import { currentLang } from './utils/lang.js';
 
-// Construction des liens, pour ne jamais écrire les URL à la main ailleurs
+// Début des adresses dans la langue affichée : « #/ » ou « #/en/ »
+const start = () => (currentLang() === 'en' ? '#/en/' : '#/');
+
+// Construction des liens, pour ne jamais écrire les URL à la main ailleurs.
+// Ils restent dans la langue affichée.
 export const link = {
-  home: () => '#/',
-  section: (id) => `#/${id}`,
-  fiche: (slug) => `#/realisations/${slug}`,
-  techno: (slug) => `#/technos/${slug}`,
-  veille: (sujet) => `#/veille/${sujet}`,
-  veilleTag: (sujet, tag) => `#/veille/${sujet}/${tag}`,
-  jury: () => '#/jury',
-  juryFiche: (slug) => `#/jury/${slug}`,
-  juryTechno: (slug) => `#/jury/technos/${slug}`,
-  juryVeilleTag: (sujet, tag) => `#/jury/veille/${sujet}/${tag}`,
-  legal: () => '#/mentions-legales',
-  juryLegal: () => '#/jury/mentions-legales',
+  home: () => start(),
+  section: (id) => `${start()}${id}`,
+  fiche: (slug) => `${start()}realisations/${slug}`,
+  techno: (slug) => `${start()}technos/${slug}`,
+  veille: (sujet) => `${start()}veille/${sujet}`,
+  veilleTag: (sujet, tag) => `${start()}veille/${sujet}/${tag}`,
+  jury: () => `${start()}jury`,
+  juryFiche: (slug) => `${start()}jury/${slug}`,
+  juryTechno: (slug) => `${start()}jury/technos/${slug}`,
+  juryVeilleTag: (sujet, tag) => `${start()}jury/veille/${sujet}/${tag}`,
+  legal: () => `${start()}mentions-legales`,
+  juryLegal: () => `${start()}jury/mentions-legales`,
 };
 
-// Traduit le hash de l'URL en description de l'écran à afficher.
-// Un hash mal encodé (#/%E9) mène à l'écran d'erreur, sans bloquer le site.
+// Le même écran dans une autre langue : #/realisations/glpi ↔ #/en/realisations/glpi
+export function hashInLang(lang, hash = window.location.hash) {
+  const path = hash.replace(/^#\/?/, '').replace(/^en(?:\/|$)/, '');
+  return lang === 'en' ? `#/en/${path}` : `#/${path}`;
+}
+
+// Traduit le hash de l'URL en description de l'écran à afficher, avec sa
+// langue (`lang`). Un hash mal encodé (#/%E9) mène à l'écran d'erreur, sans
+// bloquer le site.
 export function parseRoute(hash = window.location.hash) {
   const path = decodePath(hash.replace(/^#\/?/, '')).replace(/\/+$/, '');
-  const parts = path ? path.split('/') : [];
+  const all = path ? path.split('/') : [];
+  const lang = all[0] === 'en' ? 'en' : 'fr';
+  return { lang, ...screenOf(lang === 'en' ? all.slice(1) : all, path) };
+}
 
+// Écran désigné par les parties de l'adresse (sans le préfixe de langue)
+function screenOf(parts, path) {
   if (parts.length === 0) return { name: 'home' };
   if (parts[0] === 'jury' && parts.length === 1) return { name: 'jury' };
   if (parts[0] === 'jury' && parts.length === 2) return { name: 'jury-fiche', slug: parts[1] };

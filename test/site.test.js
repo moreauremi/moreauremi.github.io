@@ -13,6 +13,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
+import matter from 'gray-matter';
 import { DIST, openSite } from './browser.js';
 import site from '../content/site.config.js';
 
@@ -23,6 +24,14 @@ const boxTitle = (document) => document.querySelector('.tui-box-title')?.textCon
 const plain = (text) => text.replace(/\s+/g, ' ').trim();
 // Repère de contenu à compléter : visible avec `npm run dev`, jamais publié
 const PLACEHOLDER = 'À COMPLÉTER';
+const CONTENT = path.resolve(import.meta.dirname, '../content');
+// En-tête de la traduction anglaise d'un fichier de content/, ou null
+const englishData = (file) => {
+  const full = path.join(CONTENT, file.replace(/\.md$/, '.en.md'));
+  return fs.existsSync(full) ? matter(fs.readFileSync(full, 'utf8')).data : null;
+};
+// Le contenu anglais est un fichier JavaScript à part : le temps de le charger
+const LOAD = 150;
 
 // --- Pages publiées -----------------------------------------------------------
 
@@ -313,4 +322,176 @@ test('terminal : téléchargé à la première ouverture, commandes et textes de
   }
   assert.match(run('cat /etc/os-release'), /RémiOS/);
   assert.deepEqual(errors, []);
+});
+
+// --- Version anglaise (#/en/…) ---------------------------------------------------
+
+test('version française : rien de la version anglaise n\'est téléchargé', async (t) => {
+  const { window, document, errors, wait, loadedFiles } = await openSite(t, '#/realisations');
+  window.location.hash = '#/jury';
+  await wait();
+  document.dispatchEvent(new window.KeyboardEvent('keydown', { key: '`', code: 'Backquote', bubbles: true }));
+  await wait(300);
+  assert.ok(!loadedFiles().some((file) => /(content|sources)-en-/.test(file)), loadedFiles().join(', '));
+  assert.equal(document.documentElement.lang, 'fr');
+  assert.deepEqual(errors, []);
+});
+
+test('version anglaise : chaque rubrique et chaque fiche s\'ouvre en anglais, et ses liens restent en anglais', async (t) => {
+  const { window, document, errors, wait, loadedFiles } = await openSite(t, '#/en/');
+  await wait(LOAD);
+  assert.equal(document.documentElement.lang, 'en');
+  assert.ok(loadedFiles().some((file) => /content-en-/.test(file)), 'contenu anglais téléchargé');
+  assert.ok(document.querySelector('.boot .grub'), 'démarrage joué');
+
+  // Liens d'un écran : tous dans la version anglaise, sauf celui qui mène à
+  // la version française (hreflang)
+  const checkLinks = (root, where) => {
+    for (const a of root.querySelectorAll('a[href^="#/"]:not([hreflang])')) assert.match(a.getAttribute('href'), /^#\/en\//, `lien ${a.getAttribute('href')} dans ${where}`);
+  };
+  const items = [...document.querySelectorAll('.menu-item')];
+  assert.ok(items.length >= 8, 'au moins huit rubriques');
+  for (const item of items) {
+    const label = item.querySelector('span:last-child').textContent;
+    window.location.hash = item.getAttribute('href');
+    await wait();
+    assert.ok(boxTitle(document).includes(label), `rubrique « ${label} »`);
+    assert.ok(!document.querySelector('.tui-stage').innerHTML.includes(PLACEHOLDER), `repère publié dans « ${label} »`);
+    checkLinks(document.querySelector('#tui'), `« ${label} »`);
+  }
+
+  // Fiches : titre traduit s'il y a une traduction, sinon le français, signalé au visiteur
+  window.location.hash = '#/en/realisations';
+  await wait();
+  const fiches = [...document.querySelectorAll('.fiche-link')].map((a) => a.getAttribute('href'));
+  assert.ok(fiches.length > 0);
+  for (const href of fiches) {
+    const slug = href.split('/').pop();
+    const english = englishData(`realisations/${slug}.md`);
+    window.location.hash = href;
+    await wait();
+    const title = plain(boxTitle(document)).replace(/^\[ | \]$/g, '');
+    if (english) assert.equal(title, plain(english.titre), `titre anglais de ${slug}`);
+    else assert.ok(document.querySelector('.tui-stage .lang-note'), `${slug} non traduite : signalée`);
+    checkLinks(document.querySelector('#tui'), slug);
+
+    window.location.hash = `#/en/jury/${slug}`;
+    await wait();
+    assert.equal(plain(document.querySelector('#jury h1').textContent), title, `${slug}, vue jury`);
+    checkLinks(document.querySelector('#jury'), `${slug}, vue jury`);
+  }
+
+  window.location.hash = '#/en/jury';
+  await wait();
+  assert.ok(!document.querySelector('#jury').innerHTML.includes(PLACEHOLDER));
+  checkLinks(document.querySelector('#jury'), 'la vue jury');
+  assert.deepEqual(errors, []);
+});
+
+test('langue : EN / FR mène au même écran dans l\'autre langue, sans recharger la page', async (t) => {
+  const { window, document, errors, wait } = await openSite(t, '#/realisations');
+  const langLink = () => document.querySelector('.system-bar-lang');
+  const frenchTitle = boxTitle(document);
+  assert.equal(langLink().getAttribute('href'), '#/en/realisations');
+  assert.equal(langLink().getAttribute('hreflang'), 'en');
+
+  window.location.hash = langLink().getAttribute('href');
+  await wait(LOAD);
+  assert.equal(document.documentElement.lang, 'en');
+  assert.notEqual(boxTitle(document), frenchTitle, 'rubrique affichée en anglais');
+  assert.equal(langLink().getAttribute('href'), '#/realisations');
+  assert.equal(document.querySelector('[data-back]').getAttribute('href'), '#/en/');
+
+  window.location.hash = langLink().getAttribute('href');
+  await wait();
+  assert.equal(document.documentElement.lang, 'fr');
+  assert.equal(boxTitle(document), frenchTitle);
+
+  // Vue jury : son propre lien vers l'autre langue
+  window.location.hash = '#/jury';
+  await wait();
+  assert.equal(document.querySelector('#jury a[hreflang="en"]').getAttribute('href'), '#/en/jury');
+  window.location.hash = '#/en/jury';
+  await wait();
+  assert.equal(document.querySelector('#jury a[hreflang="fr"]').getAttribute('href'), '#/jury');
+  assert.deepEqual(errors, []);
+});
+
+test('version anglaise : terminal en anglais, qui affiche les textes traduits', async (t) => {
+  const { window, document, errors, wait, loadedFiles } = await openSite(t, '#/en/');
+  await wait(LOAD);
+  document.dispatchEvent(new window.KeyboardEvent('keydown', { key: '`', code: 'Backquote', bubbles: true }));
+  await wait(300);
+  assert.ok(document.querySelector('dialog.terminal').open, 'terminal ouvert');
+  assert.ok(loadedFiles().some((file) => /sources-en-/.test(file)), 'textes anglais téléchargés');
+
+  const output = document.querySelector('.terminal-output');
+  const run = (command) => {
+    document.querySelector('.terminal-input').value = command;
+    document.querySelector('.terminal-form').dispatchEvent(new window.Event('submit', { cancelable: true }));
+    return output.lastElementChild?.textContent ?? '';
+  };
+  run('help');
+  assert.match(output.textContent, /Available commands/);
+  const english = englishData('pages/presentation.md');
+  if (english) assert.ok(run('cat presentation.md').includes(`titre: ${english.titre}`), 'cat : la traduction');
+  assert.match(run('frobnicate'), /command not found/);
+  assert.deepEqual(errors, []);
+});
+
+// --- Mode sombre -------------------------------------------------------------------
+
+test('mode sombre : bascule depuis RémiOS et la vue jury, choix mémorisé', async (t) => {
+  const { window, document, errors, wait } = await openSite(t, '#/');
+  const html = document.documentElement;
+  // Système réglé en clair (voir browser.js) et aucun choix mémorisé
+  assert.equal(html.dataset.theme, 'light');
+  const button = document.querySelector('.tui-theme');
+  assert.equal(button.getAttribute('aria-pressed'), 'false');
+
+  button.click();
+  assert.equal(html.dataset.theme, 'dark');
+  assert.equal(button.getAttribute('aria-pressed'), 'true');
+  assert.equal(window.localStorage.getItem('remios:theme'), 'dark');
+
+  window.location.hash = '#/jury';
+  await wait();
+  const juryButton = document.querySelector('#jury [data-action="theme"]');
+  assert.equal(juryButton.getAttribute('aria-pressed'), 'true');
+  juryButton.click();
+  assert.equal(html.dataset.theme, 'light');
+  assert.equal(juryButton.getAttribute('aria-pressed'), 'false');
+  assert.equal(button.getAttribute('aria-pressed'), 'false', 'le bouton de RémiOS suit');
+  assert.deepEqual(errors, []);
+});
+
+test('mode sombre : chaque couleur de texte se lit bien dans les deux thèmes (contraste d\'au moins 4,5:1)', () => {
+  const css = fs.readFileSync(path.resolve(import.meta.dirname, '../src/styles/tokens.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  const tokens = (block) => Object.fromEntries([...block.matchAll(/--([a-z0-9-]+):\s*(#[0-9a-f]{6})\s*;/gi)].map((m) => [m[1], m[2]]));
+  const light = tokens(/:root\s*\{([\s\S]*?)\}/.exec(css)[1]);
+  const dark = { ...light, ...tokens(/:root\[data-theme='dark'\]\s*\{([\s\S]*?)\}/.exec(css)[1]) };
+
+  const luminance = (hex) =>
+    [1, 3, 5]
+      .map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+      .map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4))
+      .reduce((sum, c, i) => sum + c * [0.2126, 0.7152, 0.0722][i], 0);
+  const contrast = (a, b) => {
+    const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  };
+  // [texte, fond] : chaque couple utilisé dans les feuilles de style
+  const PAIRS = [
+    ['tui-ink', 'tui-box'], ['tui-title', 'tui-box'], ['tui-link', 'tui-box'], ['on-accent', 'tui-link'],
+    ['tui-sel-ink', 'tui-sel'], ['tui-sel-key', 'tui-sel'], ['tui-ink', 'tui-field-bg'],
+    ['tui-bar-ink', 'tui-bg'], ['tui-hint', 'tui-bg'], ['text-bright', 'tui-bg'], ['on-key', 'tui-sel-key'],
+    ['jury-ink', 'jury-bg'], ['jury-muted', 'jury-bg'], ['jury-accent', 'jury-bg'], ['on-accent', 'jury-accent'],
+  ];
+  for (const [name, theme] of [['clair', light], ['sombre', dark]]) {
+    for (const [ink, bg] of PAIRS) {
+      assert.ok(theme[ink] && theme[bg], `thème ${name} : --${ink} et --${bg} au format #rrvvbb`);
+      const ratio = contrast(theme[ink], theme[bg]);
+      assert.ok(ratio >= 4.5, `thème ${name} : --${ink} sur --${bg}, contraste ${ratio.toFixed(2)}:1`);
+    }
+  }
 });

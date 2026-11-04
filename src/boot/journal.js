@@ -11,6 +11,7 @@
 // =============================================================================
 
 import { site } from '../content.js';
+import { tr } from '../utils/lang.js';
 
 // Messages du noyau : purement décoratifs, inspirés d'un vrai démarrage Linux
 const KERNEL = [
@@ -95,7 +96,7 @@ export function unitLines() {
   const sujets = site.veille.sujets ?? [];
   const veille = sujets.length
     ? sujets.map((s) => ok({ action: 'Started', unite: `veille@${s.id}.service`, description: s.sujet }))
-    : [{ kind: 'unit', status: 'warn', before: '', unit: 'veille-techno.service', after: ' : sujet non défini, démarrage différé.' }];
+    : [{ kind: 'unit', status: 'warn', before: '', unit: 'veille-techno.service', after: tr(' : sujet non défini, démarrage différé.', ': topic not set, start postponed.') }];
 
   return [
     ...SYSTEM_UNITS.map(ok),
@@ -110,7 +111,7 @@ export function unitLines() {
 // Écran de connexion automatique (la commande tapée est ajoutée à part)
 export function loginLines() {
   const { utilisateur, machine } = site.identite;
-  const now = new Date().toLocaleString('fr-FR', {
+  const now = new Date().toLocaleString(tr('fr-FR', 'en-GB'), {
     weekday: 'short',
     day: 'numeric',
     month: 'short',
@@ -121,8 +122,8 @@ export function loginLines() {
     { kind: 'text', text: ' ' },
     { kind: 'text', text: `RémiOS 1.0 ${machine} tty1` },
     { kind: 'text', text: ' ' },
-    { kind: 'text', text: `${machine} login: ${utilisateur} (connexion automatique)` },
-    { kind: 'text', text: `Dernière connexion : ${now} sur tty1` },
+    { kind: 'text', text: `${machine} login: ${utilisateur} ${tr('(connexion automatique)', '(automatic login)')}` },
+    { kind: 'text', text: tr(`Dernière connexion : ${now} sur tty1`, `Last login: ${now} on tty1`) },
   ];
 }
 

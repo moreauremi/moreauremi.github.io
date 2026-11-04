@@ -6,6 +6,11 @@ html[data-view='jury'] {
   color-scheme: light;
 }
 
+/* Thème sombre : barres de défilement et champs en version sombre */
+html[data-view='jury'][data-theme='dark'] {
+  color-scheme: dark;
+}
+
 html[data-view='jury'] body {
   background: var(--jury-bg);
 }
@@ -108,6 +113,18 @@ html[data-view='jury'] body {
 .jury-btn--primary {
   background: var(--jury-accent);
   color: var(--on-accent);
+}
+
+/* Bouton « Mode sombre » : coché quand le thème sombre est affiché */
+.jury-btn[aria-pressed]::before {
+  content: '○';
+  content: '○' / '';
+  margin-right: 0.5ch;
+}
+
+.jury-btn[aria-pressed='true']::before {
+  content: '●';
+  content: '●' / '';
 }
 
 .jury-toc ol {

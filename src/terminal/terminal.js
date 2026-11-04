@@ -18,8 +18,9 @@ import { site } from '../content.js';
 import { navigate } from '../router.js';
 import { reducedMotion } from '../utils/motion.js';
 import { htmlToElement } from '../utils/template.js';
+import { currentLang, tr } from '../utils/lang.js';
 import { COMMANDS, complete } from './commands.js';
-import { buildFilesystem, displayPath, HOME } from './filesystem.js';
+import { buildFilesystem, displayPath, getNode, loadSources, HOME } from './filesystem.js';
 import { playCrawl, crawlTranscript } from './movie.js';
 import terminalHtml from './terminal.html?raw';
 
@@ -42,10 +43,12 @@ export function createTerminal({ onReboot, sounds }) {
   const history = [];
   let historyIndex = 0; // position dans l'historique pendant la navigation ↑ ↓
   let welcomed = false;
+  let fsLang = null; // langue des fichiers de l'arborescence
 
-  // Contexte transmis aux commandes (voir commands.js)
+  // Contexte transmis aux commandes (voir commands.js). L'arborescence est
+  // construite à l'ouverture, dans la langue du site (voir open()).
   const ctx = {
-    fs: buildFilesystem(),
+    fs: null,
     cwd: HOME,
     history,
     setCwd(path) {
@@ -77,14 +80,14 @@ export function createTerminal({ onReboot, sounds }) {
       for (const line of crawlTranscript()) print([line, 'term-warn']);
       return;
     }
-    print(['Transmission entrante… (Échap pour arrêter)', 'term-dim']);
+    print([tr('Transmission entrante… (Échap pour arrêter)', 'Incoming transmission… (Esc to stop)'), 'term-dim']);
     // L'animation est cachée aux lecteurs d'écran : ils reçoivent son texte ici
     print([crawlTranscript().join(' '), 'visually-hidden']);
     movie = playCrawl(dialog, {
       sounds,
       onEnd() {
         movie = null;
-        print(['Fin de la transmission.', 'term-dim']);
+        print([tr('Fin de la transmission.', 'End of transmission.'), 'term-dim']);
         input.focus();
       },
     });
@@ -99,17 +102,34 @@ export function createTerminal({ onReboot, sounds }) {
 
   // --- Ouverture / fermeture -------------------------------------------------
 
-  function open() {
+  // Ouvre le terminal. Si la langue du site a changé depuis la dernière
+  // ouverture, l'arborescence est reconstruite (le dossier courant est gardé
+  // s'il existe toujours). Sur le site en anglais, les textes sources anglais
+  // sont téléchargés la première fois.
+  async function open() {
     if (dialog.open) return;
+    if (fsLang !== currentLang()) {
+      await loadSources(currentLang());
+      fsLang = currentLang();
+      ctx.fs = buildFilesystem();
+      if (!getNode(ctx.fs, ctx.cwd)) ctx.cwd = HOME;
+    }
+    renderFrame();
     dialog.showModal();
     if (!welcomed) {
       welcomed = true;
-      print(['RémiOS 1.0 — terminal de démonstration.', 'term-key']);
-      print(['Tout est simulé dans le navigateur : aucune commande n\'est réellement exécutée.', 'term-dim']);
-      print('Tapez ', ['help', 'term-key'], ' pour la liste des commandes.');
+      print([tr('RémiOS 1.0 — terminal de démonstration.', 'RémiOS 1.0 — demo terminal.'), 'term-key']);
+      print([tr('Tout est simulé dans le navigateur : aucune commande n\'est réellement exécutée.', 'Everything is simulated in the browser: no command is actually executed.'), 'term-dim']);
+      print(tr('Tapez ', 'Type '), ['help', 'term-key'], tr(' pour la liste des commandes.', ' for the list of commands.'));
     }
     updatePrompt();
     input.focus();
+  }
+
+  // Textes de la fenêtre, dans la langue affichée
+  function renderFrame() {
+    dialog.querySelector('[data-slot="tab"]').setAttribute('aria-label', tr('Compléter (touche Tab)', 'Complete (Tab key)'));
+    dialog.querySelector('[data-slot="fermer"]').textContent = tr('Fermer', 'Close');
   }
 
   function close() {
@@ -162,7 +182,7 @@ export function createTerminal({ onReboot, sounds }) {
     const [name, ...args] = line.split(/\s+/);
     const command = Object.hasOwn(COMMANDS, name) ? COMMANDS[name] : null;
     if (command) command(args, ctx);
-    else print([`${name} : commande introuvable. Tapez help pour la liste des commandes.`, 'term-err']);
+    else print([tr(`${name} : commande introuvable. Tapez help pour la liste des commandes.`, `${name}: command not found. Type help for the list of commands.`), 'term-err']);
   });
 
   // --- Clavier dans le champ de saisie --------------------------------------------

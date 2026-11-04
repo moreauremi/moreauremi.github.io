@@ -26,28 +26,46 @@
 // =============================================================================
 
 import { htmlToElement } from '../utils/template.js';
+import { tr } from '../utils/lang.js';
 import movieHtml from './movie.html?raw';
 
 export const DURATION = 30000; // durée totale, en millisecondes
 
 // Texte du générique : parodie originale, construite sur des faits réels
-// (vieux PC récupéré, Open-Prod, Proxmox, Docker, Tailscale, épreuve E5).
-export const CRAWL = {
-  intro: 'Il y a bien longtemps, dans un homelab lointain, très lointain…',
-  logo: 'RÉMIOS',
-  episode: 'Épisode E5',
-  title: 'UN NOUVEL ALTERNANT',
-  paragraphs: [
-    "Le homelab est en paix. Depuis un vieux PC récupéré, un jeune alternant a libéré ses vidéos et ses fichiers de l'emprise des services en ligne.",
-    "Le jour, il paramètre l'ERP Open-Prod pour les usines de la République industrielle. La nuit, il dompte Proxmox, Docker et Tailscale.",
-    "Mais une nouvelle épreuve l'attend : présenter son portfolio devant le Conseil du BTS SIO. Armé de ses réalisations et de son tableau de synthèse, Rémi se prépare à affronter les questions du jury…",
-  ],
-};
+// (vieux PC récupéré, Open-Prod, Proxmox, Docker, Tailscale, épreuve E5),
+// dans la langue affichée.
+function crawlText() {
+  return tr(
+    {
+      intro: 'Il y a bien longtemps, dans un homelab lointain, très lointain…',
+      logo: 'RÉMIOS',
+      episode: 'Épisode E5',
+      title: 'UN NOUVEL ALTERNANT',
+      paragraphs: [
+        "Le homelab est en paix. Depuis un vieux PC récupéré, un jeune alternant a libéré ses vidéos et ses fichiers de l'emprise des services en ligne.",
+        "Le jour, il paramètre l'ERP Open-Prod pour les usines de la République industrielle. La nuit, il dompte Proxmox, Docker et Tailscale.",
+        "Mais une nouvelle épreuve l'attend : présenter son portfolio devant le Conseil du BTS SIO. Armé de ses réalisations et de son tableau de synthèse, Rémi se prépare à affronter les questions du jury…",
+      ],
+    },
+    {
+      intro: 'A long time ago, in a homelab far, far away…',
+      logo: 'RÉMIOS',
+      episode: 'Episode E5',
+      title: 'A NEW APPRENTICE',
+      paragraphs: [
+        'The homelab is at peace. From an old salvaged PC, a young apprentice has freed videos and files from the grip of online services.',
+        'By day, the apprentice configures the Open-Prod ERP for the factories of the Industrial Republic. By night, Proxmox, Docker and Tailscale are tamed.',
+        'But a new trial awaits: presenting a portfolio before the Council of the BTS SIO. Armed with projects and a summary table, Rémi prepares to face the questions of the jury…',
+      ],
+    },
+  );
+}
 
 // Version texte du générique, affichée dans le terminal : pour les lecteurs
 // d'écran, et à la place de l'animation si les animations sont réduites.
 export function crawlTranscript() {
-  return [CRAWL.intro, `${CRAWL.logo} — ${CRAWL.episode} : ${CRAWL.title}`, ...CRAWL.paragraphs];
+  const crawl = crawlText();
+  return [crawl.intro, `${crawl.logo} — ${crawl.episode}${tr(' : ', ': ')}${crawl.title}`, ...crawl.paragraphs];
 }
 
 // --- Réglages -------------------------------------------------------------------
@@ -66,7 +84,10 @@ const FADE_OUT = 1.2; // fondu au noir final, en secondes
 // `onEnd` est appelé à la fin, ou dès qu'il est arrêté. Renvoie { stop }.
 export function playCrawl(host, { sounds, onEnd }) {
   // Canvas, couche d'écran cathodique et bouton « Arrêter » : movie.html
+  const CRAWL = crawlText();
   const movie = htmlToElement(movieHtml);
+  movie.querySelector('[data-slot="arreter"]').textContent = tr('Arrêter', 'Stop');
+  movie.querySelector('[data-slot="touche"]').textContent = tr('[Échap]', '[Esc]');
   host.append(movie);
 
   // Couleurs du générique : variables --movie-… et --screen de

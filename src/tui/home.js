@@ -4,6 +4,7 @@
 import { site } from '../content.js';
 import { link } from '../router.js';
 import { escapeHtml, safe } from '../utils/html.js';
+import { tr } from '../utils/lang.js';
 import { box } from './box.js';
 import { SECTIONS } from './sections.js';
 
@@ -27,7 +28,7 @@ export function homeBox() {
   ).join('');
 
   return box({
-    title: 'Bienvenue sur RémiOS',
+    title: tr('Bienvenue sur RémiOS', 'Welcome to RémiOS'),
     crumbs: [['RémiOS']],
     body: `<div class="home">
       <div class="home-id">
@@ -35,11 +36,11 @@ export function homeBox() {
         <dl class="home-facts">${facts}</dl>
       </div>
       <nav class="home-nav" aria-labelledby="menu-label">
-        <p class="home-nav-label" id="menu-label">Choisis une rubrique :</p>
+        <p class="home-nav-label" id="menu-label">${tr('Choisis une rubrique :', 'Choose a section:')}</p>
         <ul class="menu">${items}</ul>
       </nav>
     </div>`,
-    actions: `<button type="button" class="tui-btn tui-btn--primary" data-action="open">&lt; Ouvrir &gt;</button>
-      <button type="button" class="tui-btn" data-action="reboot">&lt;Redémarrer&gt;</button>`,
+    actions: `<button type="button" class="tui-btn tui-btn--primary" data-action="open">&lt; ${tr('Ouvrir', 'Open')} &gt;</button>
+      <button type="button" class="tui-btn" data-action="reboot">&lt;${tr('Redémarrer', 'Reboot')}&gt;</button>`,
   });
 }

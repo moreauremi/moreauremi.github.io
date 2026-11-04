@@ -15,6 +15,19 @@ for (const element of document.querySelectorAll('[data-path]')) {
   element.textContent = path;
 }
 
+// Thème clair ou sombre, comme sur le site : le choix mémorisé (même clé
+// que src/utils/theme.js), sinon le réglage du système
+document.documentElement.dataset.theme = savedTheme() ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+function savedTheme() {
+  try {
+    const value = window.localStorage.getItem('remios:theme');
+    return value === 'dark' || value === 'light' ? value : null;
+  } catch {
+    return null; // stockage indisponible (navigation privée…)
+  }
+}
+
 // « /r%C3%A9alisations » → « /réalisations ». Une adresse mal encodée
 // (« /%E9 ») ferait échouer le décodage : elle est alors affichée telle quelle.
 function readablePath(value) {

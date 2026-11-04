@@ -8,11 +8,17 @@
 //   - l'interface RémiOS (menu whiptail, fiches) ;
 //   - la vue rapide jury (#/jury), sobre et imprimable.
 // Le boot est un calque posé par-dessus, le temps du démarrage.
+//
+// Chaque écran existe en français et en anglais (#/en/…, voir router.js) :
+// changer de langue, c'est changer d'adresse, comme changer d'écran.
 // =============================================================================
 
 // Styles du site : Vite les regroupe en un seul fichier CSS au build.
 import './styles/index.css';
+import { applyTheme } from './utils/theme.js';
 import { parseRoute, onRouteChange, navigate, link } from './router.js';
+import { loadLanguage } from './content.js';
+import { currentLang, tr } from './utils/lang.js';
 import { createTui } from './tui/tui.js';
 import { createLightbox } from './tui/lightbox.js';
 import { createJuryView } from './jury/jury-view.js';
@@ -28,6 +34,10 @@ import appHtml from './app.html?raw';
 
 // --- Construction de la page ---------------------------------------------------
 
+// Thème clair ou sombre (choix mémorisé, sinon réglage du système), avant
+// tout affichage
+applyTheme();
+
 // Structure de la page (app.html) : barre fixe, les deux vues, calque du boot
 const app = document.querySelector('#app');
 app.innerHTML = appHtml;
@@ -37,7 +47,7 @@ const juryRoot = app.querySelector('#jury');
 const bootOverlay = app.querySelector('.boot');
 
 const sounds = createSounds();
-createSystemBar(app.querySelector('.system-bar'), { sounds });
+const systemBar = createSystemBar(app.querySelector('.system-bar'), { sounds });
 createLightbox();
 setupPagers(app); // barres « < 1 2 3 > » des listes paginées (veille)
 setupTabs(app); // onglets « Mes synthèses » / « Dernières actualités » (veille)
@@ -58,7 +68,9 @@ async function openTerminal() {
       return;
     }
   }
-  terminal.open();
+  // Ouverture sur le site en anglais : textes sources anglais téléchargés la
+  // première fois (même cas d'échec)
+  await terminal.open().catch((error) => console.error('Terminal indisponible :', error));
 }
 
 const tui = createTui(tuiRoot, { onReboot: reboot, onOpenTerminal: openTerminal });
@@ -76,7 +88,7 @@ const boot = createBoot({
     if (reducedMotion) return;
     // Après le boot, le focus clavier se place sur le menu, prêt à naviguer
     if (!isJuryRoute(parseRoute())) tui.focusMenu();
-    tui.announce('Démarrage terminé. Menu principal.');
+    tui.announce(tr('Démarrage terminé. Menu principal.', 'Boot complete. Main menu.'));
   },
 });
 
@@ -98,6 +110,12 @@ function render(route, options) {
   // Mesure d'audience : un écran affiché = une page vue (voir utils/audience.js)
   countView();
 
+  // Langue de la page, pour les lecteurs d'écran, la césure et la traduction
+  // automatique du navigateur ; boutons de la barre fixe dans cette langue
+  document.documentElement.lang = currentLang();
+  systemBar.update();
+  app.querySelector('.boot-skip').textContent = tr('Passer le démarrage', 'Skip boot');
+
   const juryMode = isJuryRoute(route);
   // L'attribut data-view sur <html> permet au CSS d'adapter le fond de page
   document.documentElement.dataset.view = juryMode ? 'jury' : 'tui';
@@ -118,10 +136,33 @@ function reboot() {
 // un lien direct (#/jury, #/realisations/homelab…) affiche la page sans attendre.
 handleCountingToggle(); // #toggle-goatcounter : ne plus compter ses propres visites
 const firstRoute = parseRoute();
-render(firstRoute, { focus: false });
-if (firstRoute.name === 'home') boot.start();
+let lastChange = 0; // numéro du dernier changement d'écran (voir plus bas)
+function start() {
+  if (lastChange > 0) return; // l'adresse a déjà changé entre-temps
+  render(firstRoute, { focus: false });
+  if (firstRoute.name === 'home') boot.start();
+}
+// Site en anglais (#/en/…) : le contenu anglais est d'abord téléchargé. S'il
+// ne peut pas l'être (hors ligne…), le site s'affiche en français plutôt que
+// de rester vide. En français, rien à attendre : affichage immédiat.
+if (firstRoute.lang === currentLang()) start();
+else loadLanguage(firstRoute.lang).catch(reportLanguageError).finally(start);
 
-onRouteChange((route) => render(handleCountingToggle() ? parseRoute() : route));
+// Changement d'écran, ou de langue : le contenu de la nouvelle langue est
+// d'abord chargé. Si plusieurs changements se suivent pendant un
+// téléchargement, seul le dernier est affiché.
+onRouteChange(async (route) => {
+  const change = ++lastChange;
+  const target = handleCountingToggle() ? parseRoute() : route;
+  if (target.lang !== currentLang()) await loadLanguage(target.lang).catch(reportLanguageError);
+  if (change === lastChange) render(target);
+});
+
+// Contenu d'une langue impossible à télécharger : le site reste dans la
+// langue précédente
+function reportLanguageError(error) {
+  console.error('Langue indisponible :', error);
+}
 
 // --- Passer le démarrage -----------------------------------------------------------
 

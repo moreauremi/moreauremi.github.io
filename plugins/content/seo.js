@@ -11,7 +11,9 @@ import { noscriptLinks } from './pages-statiques.js';
 
 // Remplace titre, description et version sans JavaScript d'index.html par
 // les valeurs de la configuration (une seule source pour tout le site).
-export function applySeo(html, site) {
+// `exists(path)` : la page statique « path » (« en/presentation/ »…) est-elle
+// fabriquée ? La version sans JavaScript ne renvoie qu'à celles-là.
+export function applySeo(html, site, exists = () => true) {
   const seo = site.referencement;
   if (!seo) return html;
   const title = escapeHtml(`RémiOS — ${seo.titre}`);
@@ -24,11 +26,13 @@ export function applySeo(html, site) {
     `<a href="${escapeHtml(linkedin)}">LinkedIn</a>`,
     cv ? `<a href="${escapeHtml(cv)}">CV (PDF)</a>` : '',
   ].filter(Boolean);
+  const english = noscriptLinks('en', exists);
   const fallback = `<noscript>
       <div class="noscript">
         <h1>${escapeHtml(seo.titre.replace(' · ', ' — '))}</h1>
         <p>${description}</p>
-        <p>Ce portfolio interactif a besoin de JavaScript pour s'afficher. Version texte : ${noscriptLinks()}.</p>
+        <p>Ce portfolio interactif a besoin de JavaScript pour s'afficher. Version texte : ${noscriptLinks('fr', exists)}.</p>
+        ${english ? `<p lang="en">English text version: ${english}.</p>` : ''}
         <p>Contact : ${links.join(' · ')}</p>
       </div>
     </noscript>`;

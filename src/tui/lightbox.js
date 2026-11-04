@@ -12,6 +12,7 @@
 // =============================================================================
 
 import { htmlToElement } from '../utils/template.js';
+import { tr } from '../utils/lang.js';
 import lightboxHtml from './lightbox.html?raw';
 
 export function createLightbox() {
@@ -21,6 +22,7 @@ export function createLightbox() {
 
   const img = dialog.querySelector('.lightbox-img');
   const caption = dialog.querySelector('.lightbox-caption');
+  const closeLabel = dialog.querySelector('[data-slot="fermer"]');
 
   document.addEventListener('click', (event) => {
     const shot = event.target.closest('a.shot');
@@ -33,6 +35,10 @@ export function createLightbox() {
     img.alt = thumbnail?.alt ?? '';
     caption.textContent = shot.closest('figure')?.querySelector('figcaption')?.textContent ?? '';
     caption.hidden = caption.textContent === '';
+    // Textes de la fenêtre, dans la langue affichée
+    dialog.setAttribute('aria-label', tr('Image agrandie', 'Enlarged image'));
+    closeLabel.textContent = tr('Fermer', 'Close');
+    dialog.querySelector('[data-slot="touche"]').textContent = tr('[Échap]', '[Esc]');
     dialog.showModal();
   });
 
