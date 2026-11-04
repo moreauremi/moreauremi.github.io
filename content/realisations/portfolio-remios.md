@@ -49,6 +49,8 @@ C'est aussi ma présence en ligne de candidat : le jury, les recruteurs et mes c
 
 **Le site.** Il est statique et construit avec Vite. Un plugin que j'ai écrit convertit les fiches Markdown en HTML au moment de la construction, et vérifie chacune d'elles (champs obligatoires, compétences existantes, images présentes) : une fiche mal remplie bloque la publication. Le navigateur ne reçoit que du HTML, du CSS et un peu de JavaScript, sans bibliothèque extérieure ni police chargée chez un tiers.
 
+**Deux langues, deux thèmes.** Le site existe en français et en anglais (remim.me/en), avec les mêmes fichiers Markdown : chaque fiche traduite a sa version anglaise à côté de la française, et un texte pas encore traduit reste affiché en français, signalé comme tel. Le contenu anglais n'est téléchargé que par les visiteurs de la version anglaise. Un mode sombre suit le réglage du système, ou le choix du visiteur, mémorisé dans son navigateur.
+
 **L'hébergement et le nom de domaine.**
 
 - GitHub Pages sert le site en HTTPS, avec un certificat renouvelé automatiquement.
