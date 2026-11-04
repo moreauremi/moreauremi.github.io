@@ -345,7 +345,7 @@ export default {
         items: [
           { nom: 'Linux', niveau: 3, preuves: ['homelab', 'environnement-open-prod', 'glpi', 'reseau-vm-virtualbox'] },
           { nom: 'Windows (poste et serveur)', niveau: 2, preuves: ['reseau-vm-virtualbox', 'rmutils'] },
-          { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab'] },
+          { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab', 'depannage-serveurs-tp'] },
           { nom: 'VirtualBox', niveau: 3, preuves: ['reseau-vm-virtualbox', 'glpi'] },
           { nom: 'Docker', niveau: 2, preuves: ['homelab', 'portfolio-remios'] },
         ],
@@ -353,7 +353,8 @@ export default {
       {
         nom: 'Réseaux et sécurité',
         items: [
-          { nom: 'Adressage IP, DHCP et diagnostic réseau', niveau: 2, preuves: ['reseau-vm-virtualbox', 'rmutils'] },
+          { nom: 'Adressage IP, DHCP et diagnostic réseau', niveau: 2, preuves: ['reseau-vm-virtualbox', 'rmutils', 'depannage-serveurs-tp'] },
+          { nom: 'Switch Cisco (IOS) : console, VLAN, STP', niveau: 2, preuves: ['depannage-serveurs-tp'] },
           { nom: 'VPN (Tailscale)', niveau: 3, preuves: ['homelab'] },
           { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['portfolio-remios'] },
           { nom: 'Serveur web (Apache, Nginx), reverse proxy', niveau: 2, preuves: ['glpi', 'portfolio-remios'] },
@@ -363,7 +364,7 @@ export default {
         nom: 'Langages de programmation',
         items: [
           { nom: 'Python', niveau: 3.5, preuves: ['crypto-dashboard-pro'] },
-          { nom: 'PowerShell et batch', niveau: 3, preuves: ['rmutils', 'reseau-vm-virtualbox'] },
+          { nom: 'PowerShell et batch', niveau: 3, preuves: ['rmutils', 'reseau-vm-virtualbox', 'depannage-serveurs-tp'] },
           { nom: 'HTML', niveau: 2, preuves: ['portfolio-remios'] },
         ],
       },

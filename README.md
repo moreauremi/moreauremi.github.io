@@ -136,7 +136,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [ ] **RMutils** : captures des menus et du QR code en place (vrai code, données d'exemple) ; reste une capture d'un rapport HTML prise sur un vrai PC Windows, et le détail des tests une fois l'outil utilisé en conditions réelles (premiers essais faits sur mon PC et des PC de proches).
 - [x] **Compétences techniques** : niveaux renseignés (octobre 2026), reliées à toutes les fiches publiées (4 novembre 2026), avec les lignes Windows, VirtualBox, réseau, PowerShell, PostgreSQL et MariaDB, MCD, Excel et GLPI tirées des fiches. À remonter en cours d'année (Open-Prod, SQL, Docker…). QWeb et SQL renvoient aussi à la fiche QWeb, affichée une fois publiée.
 - [x] **Grille de compétences** : les six compétences du tableau de synthèse officiel (B1.1 à B1.6) sont dans `site.config.js`.
-- [ ] **Compétences des fiches** : renseignées pour toutes les fiches publiées ; à faire pour `formation-realisation-3` quand elle sera remplie (ex. `[B1.1, B1.5]`). B1.3 est couverte par la fiche « Portfolio RémiOS », B1.2 (incidents et demandes d'assistance) par la fiche « RMutils » ; une fiche 1Life sur l'assistance aux utilisateurs la renforcerait.
+- [x] **Compétences des fiches** : renseignées pour toutes les fiches publiées. B1.3 est couverte par la fiche « Portfolio RémiOS », B1.2 (incidents et demandes d'assistance) par les fiches « RMutils » et « Dépannage des serveurs Proxmox de la salle de TP » ; une fiche 1Life sur l'assistance aux utilisateurs la renforcerait.
 - [ ] **Fiche « Portfolio RémiOS »** (`content/realisations/portfolio-remios.md`) : rédigée d'après ce README, à relire.
 - [ ] **PDF** : tableau de synthèse.
 - [x] **Veille** : trois sujets (cybersécurité des PME industrielles, virtualisation, facturation électronique) et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
@@ -144,7 +144,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://dashboard.remim.me, à partir des actualités collectées.
 - [ ] **Veille par e-mail** : créer le jeton du relais et installer le relais Gmail (voir [Veille par e-mail](#mise-en-route-du-relais-gmail-une-seule-fois)).
 - [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif. Formation QWeb ajoutée (en cours, sans attestation) : passer son statut à « obtenue » après la seconde journée. Formation « Indicateurs et tableaux de bord Open-Prod » ajoutée sans statut (ni « en cours » ni « obtenue », le champ est facultatif).
-- [ ] **Réalisations en formation** : « GLPI » et « Réseau de six machines virtuelles sous VirtualBox » (`reseau-vm-virtualbox.md`, octobre 2026) publiées ; une fiche en brouillon (`formation-realisation-3.md`) à remplir au fil des TP et projets de cours.
+- [ ] **Réalisations en formation** : « GLPI », « Réseau de six machines virtuelles sous VirtualBox » (`reseau-vm-virtualbox.md`, octobre 2026) et « Dépannage des serveurs Proxmox de la salle de TP » (`depannage-serveurs-tp.md`, 4 novembre 2026, à la place de l'ancien brouillon `formation-realisation-3.md`) publiées. Pour le dépannage, il reste à confirmer l'accès à l'interface web de Proxmox et le résultat du script sur POD01 et POD03 (repères `[À COMPLÉTER]`).
 
 ## Architecture
 

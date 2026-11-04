@@ -97,3 +97,6 @@
 /* --- IA --- */
 .techno[data-techno="api-claude"] { --techno-bg: #d97757; --techno-ink: #000000; }
 .techno[data-techno="claude-code"] { --techno-bg: #d97757; --techno-ink: #000000; }
+.techno[data-techno="claude"] { --techno-bg: #d97757; --techno-ink: #000000; }
+.techno[data-techno="cisco-ios"] { --techno-bg: #005073; }
+.techno[data-techno="wireshark"] { --techno-bg: #1679a7; }
