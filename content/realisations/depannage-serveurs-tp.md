@@ -69,7 +69,7 @@ Le réseau du POD est isolé : pas de box ni de serveur DHCP, donc aucune adress
 
 ![Façade du switch Cisco Catalyst 2960-XR : LED SYST, bouton MODE, ports MGMT et console RJ45, port console mini-USB](captures/depannage-serveurs-tp/facade-switch.webp "La façade du switch : LED SYST, port MGMT et ports console")
 
-**PortFast.** À chaque branchement, le protocole STP bloque le port environ 30 secondes, le temps de vérifier qu'il n'y a pas de boucle réseau. J'ai activé PortFast sur les ports du serveur et du poste (`spanning-tree portfast`), pour qu'ils transmettent tout de suite.
+**PortFast.** À chaque branchement, le protocole STP bloque le port environ 30 secondes, le temps de vérifier qu'il n'y a pas de boucle réseau. J'ai activé PortFast sur les ports du serveur et du poste (`spanning-tree portfast`), pour qu'ils transmettent tout de suite, puis j'ai sauvegardé la configuration avec `write memory`. IOS l'enregistre sous la forme `spanning-tree portfast edge` : *edge* désigne un port relié à une machine, jamais à un autre switch.
 
 **Trouver le serveur.** Wireshark ne montrait aucune requête ARP du serveur, qui m'aurait donné son IP. Sur le switch, `show mac address-table interface gi1/0/14` donnait sa MAC (64:00:6a:69:13:30, un préfixe Dell), et ses compteurs ne montraient que 34 paquets reçus : un serveur qui n'a besoin de joindre personne reste presque muet.
 
@@ -83,7 +83,7 @@ Dépannage mené avec l'aide de **Claude** (IA), qui a aussi écrit le script et
 
 ## Résultats et tests
 
-- **Switch** : démarré, ports actifs, tous dans le VLAN 1.
+- **Switch** : démarré, ports actifs, tous dans le VLAN 1. PortFast est dans la configuration de démarrage (`show startup-config | include portfast`), qui est rechargée à chaque démarrage.
 - **Serveur** : joint en IPv6 (`ping -6`), puis connexion SSH réussie (root@POD02). Son adresse, 10.2.0.253/16, est maintenant connue et notée.
 - **Interface web** : accès vérifié à https://10.2.0.253:8006, depuis un poste en 10.2.0.100/16.
 - **Script** : vérifié en simulation (sans le matériel), à lancer plus tard sur POD01 et POD03. [À COMPLÉTER : résultat du script sur POD01 et POD03]
@@ -100,7 +100,7 @@ Dépannage mené avec l'aide de **Claude** (IA), qui a aussi écrit le script et
 
 **Un serveur trop silencieux pour Wireshark.** Sans trafic à capturer, impossible de lire son IP dans les requêtes ARP. C'est ce qui m'a mené à l'IPv6 lien local, calculée à partir de la MAC lue sur le switch.
 
-**Point resté ouvert.** Je n'ai pas identifié pourquoi le switch s'arrête au bootloader. Piste, avec l'accord du professeur : vérifier `show boot`, désactiver le démarrage manuel (`no boot manual`) et sauvegarder la configuration.
+**Point resté ouvert.** Pourquoi le switch s'arrête-t-il au bootloader ? `show boot` écarte la piste du démarrage manuel (`Manual Boot : no`), et le chemin de l'image IOS est bien renseigné. En revanche, `Enable Break : yes` : un signal « Break » reçu par la console pendant le démarrage, par exemple au branchement d'un câble console, peut suffire à l'interrompre. Prochaine étape, avec l'accord du professeur : vérifier que l'image existe (`dir flash:`), désactiver cette option (`no boot enable-break`), puis tester un redémarrage (`reload`).
 
 ## Compétences mises en œuvre
 
