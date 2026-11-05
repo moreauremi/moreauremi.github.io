@@ -56,6 +56,13 @@
   text-decoration: none;
 }
 
+/* Icônes du thème et du son, centrées dans leur case. Sans ce réglage,
+   l'icône est posée sur la ligne de base du texte, comme une lettre : la place
+   gardée dessous pour les jambages (p, q…) la remonte de 2 à 3 px */
+.system-bar [data-icon] {
+  display: flex;
+}
+
 .system-bar-lang:hover,
 .system-bar-theme:hover,
 .system-bar-sound:hover {
