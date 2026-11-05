@@ -3,7 +3,8 @@
 // -----------------------------------------------------------------------------
 // Par défaut, le site suit le réglage du système (« apparence sombre » de
 // macOS, Windows, Android, iOS), y compris s'il change pendant la visite.
-// Un clic sur « Mode sombre » (bas de l'écran RémiOS, en-tête de la vue jury)
+// Un clic sur le bouton lune / soleil (en haut à droite, à droite de « EN »)
+// ou sur « Mode sombre » (en-tête de la vue jury)
 // impose l'autre thème : ce choix est mémorisé dans le navigateur, et prend
 // le pas sur le réglage du système aux visites suivantes.
 //

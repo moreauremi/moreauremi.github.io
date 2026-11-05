@@ -56,7 +56,7 @@ npm run check    # les trois à la suite : lint, build, test (comme avant chaque
 5. **Terminal caché** : `remi@remios:~$`, avec historique, autocomplétion et une douzaine de commandes. Les fiches y sont des fichiers. Tout est simulé.
 6. **Sons** (coupés par défaut) : bip POST, clics de disque, bip de validation, générés par le navigateur.
 7. **Version anglaise** : bouton `EN` en haut à droite (`FR` pour revenir), lien « English version » dans la vue jury. Le même écran s'affiche dans l'autre langue, sans recharger la page. Voir [Langues](#langues).
-8. **Mode sombre** (thème « Graphite », inspiré de Linear) : suit le réglage du système ; la case `[ ] Mode sombre` en bas de l'écran RémiOS (bouton « Mode sombre » dans la vue jury) impose l'autre thème, et ce choix est mémorisé.
+8. **Mode sombre** (thème « Graphite », inspiré de Linear) : suit le réglage du système ; le bouton lune / soleil en haut à droite, à droite de `EN` (bouton « Mode sombre » dans la vue jury) impose l'autre thème, et ce choix est mémorisé.
 
 ### Raccourcis clavier
 
@@ -225,7 +225,7 @@ src/terminal/            terminal : fenêtre (terminal.html), commandes, systèm
                          générique de l'easter egg (movie.js, movie.html) ; seul shortcut.js (raccourcis
                          d'ouverture) est chargé avec la page, le reste à la première ouverture
 src/audio/               sons générés avec la Web Audio API
-src/ui/                  barre fixe en haut à droite (vue jury, bouton son : system-bar.html), titre de l'onglet,
+src/ui/                  barre fixe en haut à droite (vue jury, langue, thème, son : system-bar.html), titre de l'onglet,
                          pagination « < 1 2 3 > », onglets
 src/utils/               petites fonctions partagées : HTML sûr, gabarits HTML, adresses, dates, clavier,
                          animations réduites, réglages mémorisés, adresse du service du formulaire,
@@ -234,7 +234,7 @@ src/styles/              un fichier CSS par partie (tokens.css = toutes les coul
                          dark.css = ce que le thème sombre change en plus des couleurs,
                          print.css = impression, maintenance.css = page 503)
 src/assets/fonts/        IBM Plex Mono en woff2 (400 et 600) + licence OFL
-src/assets/icons/        icônes SVG du bouton son (affichées dans la page, couleur du texte)
+src/assets/icons/        icônes SVG des boutons son et thème (affichées dans la page, couleur du texte)
 src/assets/signature.svg signature manuscrite vectorisée, en pied de la rubrique Présentation (couleur du texte)
 test/                    tests du site construit (npm test), dans un navigateur simulé (jsdom)
 eslint.config.js,        règles de vérification du code (npm run lint) et du HTML construit (npm test)

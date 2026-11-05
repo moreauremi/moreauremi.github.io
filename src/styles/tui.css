@@ -35,7 +35,8 @@ html[data-view='tui'] body {
   gap: 4px 16px;
   min-height: 48px;
   padding: 6px var(--gutter);
-  /* Place laissée libre à droite pour les boutons fixes (son, vue jury) */
+  /* Place laissée libre à droite pour les boutons fixes (vue jury, langue,
+     thème, son) */
   padding-right: calc(var(--system-bar-width, 0px) + var(--gutter));
   border-bottom: 1px solid var(--tui-bar-rule);
   color: var(--tui-bar-ink);
@@ -414,8 +415,7 @@ html[data-view='tui'] body {
   text-align: center;
 }
 
-/* Sous l'aide clavier : lien vers les mentions légales, et case « Mode
-   sombre » façon terminal ([ ] / [x]) */
+/* Sous l'aide clavier : lien vers les mentions légales */
 .tui-footer {
   display: flex;
   flex-wrap: wrap;
@@ -432,23 +432,8 @@ html[data-view='tui'] body {
   text-underline-offset: 2px;
 }
 
-.tui-theme {
-  min-height: 32px;
-  padding: 2px 4px;
-  border: 0;
-  background: transparent;
-  color: var(--tui-hint);
-  cursor: pointer;
-}
-
-.tui-footer a:hover,
-.tui-theme:hover {
+.tui-footer a:hover {
   color: var(--tui-bar-ink);
-}
-
-.tui-theme:hover [data-slot='theme'] {
-  text-decoration: underline;
-  text-underline-offset: 2px;
 }
 
 @media (max-height: 860px) {

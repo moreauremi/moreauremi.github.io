@@ -19,7 +19,6 @@ import { ficheBlock, technoBlock, veilleBlock, veilleTagBlock } from '../blocks/
 import { safe } from '../utils/html.js';
 import { hasModifier, isTypingTarget } from '../utils/keyboard.js';
 import { tr } from '../utils/lang.js';
-import { currentTheme, onThemeChange, toggleTheme } from '../utils/theme.js';
 import { setPromptTitle } from '../ui/tab-title.js';
 import { box, backButton } from './box.js';
 import { homeBox } from './home.js';
@@ -32,14 +31,13 @@ const home = () => ['RémiOS', link.home()];
 
 export function createTui(root, { onReboot, onOpenTerminal }) {
   // Cadre de l'interface (tui.html) : barre du haut, zone centrale, aide
-  // clavier, pied de page (mentions légales, mode sombre). Ses textes sont
-  // écrits par renderFrame(), à chaque affichage : ils suivent la langue.
+  // clavier, pied de page (mentions légales). Ses textes sont écrits par
+  // renderFrame(), à chaque affichage : ils suivent la langue.
   root.innerHTML = tuiHtml;
   const slot = (name) => root.querySelector(`[data-slot="${name}"]`);
 
   const stage = root.querySelector('.tui-stage');
   const announcer = root.querySelector('[data-announcer]');
-  const themeButton = root.querySelector('[data-action="theme"]');
 
   function renderFrame() {
     slot('nom').textContent = site.identite.nom;
@@ -50,17 +48,7 @@ export function createTui(root, { onReboot, onOpenTerminal }) {
     );
     slot('mentions-legales').textContent = tr('Mentions légales', 'Legal notice');
     slot('mentions-legales').href = link.legal();
-    slot('theme').textContent = tr('Mode sombre', 'Dark mode');
-    renderTheme(currentTheme());
   }
-
-  // Case à cocher façon terminal : « [x] Mode sombre » quand il est actif
-  function renderTheme(theme) {
-    themeButton.setAttribute('aria-pressed', String(theme === 'dark'));
-    slot('theme-box').textContent = theme === 'dark' ? '[x]' : '[ ]';
-  }
-  themeButton.addEventListener('click', toggleTheme);
-  onThemeChange(renderTheme);
 
   let view = { kind: 'home' }; // écran affiché
   let selected = 0; // rubrique sélectionnée dans le menu

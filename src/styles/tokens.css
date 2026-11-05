@@ -96,8 +96,8 @@
   --shadow-offset: 14px;      /* décalage de l'ombre portée des boîtes */
   --focus-ring: 2px solid var(--warn);
   /* Largeur réservée en haut à droite pour les boutons fixes (vue jury,
-     langue, son) */
-  --system-bar-width: 270px;
+     langue, thème, son) */
+  --system-bar-width: 314px;
 }
 
 /* Petits écrans : texte et ombre un peu plus petits (comme dans la maquette) */
@@ -106,7 +106,7 @@
     --font-size: 0.8125rem;
     --font-size-reading: 0.875rem;
     --shadow-offset: 8px;
-    --system-bar-width: 206px;
+    --system-bar-width: 248px;
   }
 }
 

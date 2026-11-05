@@ -446,7 +446,7 @@ test('mode sombre : bascule depuis RémiOS et la vue jury, choix mémorisé', as
   const html = document.documentElement;
   // Système réglé en clair (voir browser.js) et aucun choix mémorisé
   assert.equal(html.dataset.theme, 'light');
-  const button = document.querySelector('.tui-theme');
+  const button = document.querySelector('.system-bar-theme');
   assert.equal(button.getAttribute('aria-pressed'), 'false');
 
   button.click();
