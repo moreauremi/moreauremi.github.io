@@ -71,11 +71,13 @@ Le réseau du POD est isolé : pas de box ni de serveur DHCP, donc aucune adress
 
 **PortFast.** À chaque branchement, le protocole STP bloque le port environ 30 secondes, le temps de vérifier qu'il n'y a pas de boucle réseau. J'ai activé PortFast sur les ports du serveur et du poste (`spanning-tree portfast`), pour qu'ils transmettent tout de suite, puis j'ai sauvegardé la configuration avec `write memory`. IOS l'enregistre sous la forme `spanning-tree portfast edge` : *edge* désigne un port relié à une machine, jamais à un autre switch.
 
-**Trouver le serveur.** Wireshark ne montrait aucune requête ARP du serveur, qui m'aurait donné son IP. Sur le switch, `show mac address-table interface gi1/0/14` donnait sa MAC (64:00:6a:69:13:30, un préfixe Dell), et ses compteurs ne montraient que 34 paquets reçus : un serveur qui n'a besoin de joindre personne reste presque muet.
+**Trouver le serveur.** Wireshark ne montrait aucune requête ARP du serveur, qui m'aurait donné son IP. Sur le switch, `show mac address-table interface gi1/0/14` donnait sa MAC (un préfixe Dell), et ses compteurs ne montraient que 34 paquets reçus : un serveur qui n'a besoin de joindre personne reste presque muet.
 
-**La solution : l'IPv6 lien local.** Sous Linux, chaque carte réseau a une adresse IPv6 « lien local » (fe80::…), même quand rien n'est configuré, et Debian, la base de Proxmox, la calcule à partir de la MAC (méthode EUI-64). J'en ai déduit fe80::6600:6aff:fe69:1330, puis je me suis connecté en SSH depuis le PC Windows : `ssh root@fe80::6600:6aff:fe69:1330%12`, où 12 est le numéro de la carte Ethernet du PC. La commande `ip a` a donné l'adresse du serveur : **10.2.0.253/16**, portée par vmbr0, le switch virtuel de Proxmox.
+**La solution : l'IPv6 lien local.** Sous Linux, chaque carte réseau a une adresse IPv6 « lien local » (fe80::…), même quand rien n'est configuré, et Debian, la base de Proxmox, la calcule à partir de la MAC (méthode EUI-64). Par exemple, une MAC fictive 00:11:22:33:44:55 donne fe80::211:22ff:fe33:4455. J'ai calculé l'adresse du serveur de la même façon, puis je me suis connecté en SSH depuis le PC Windows : `ssh root@fe80::…%12`, où 12 est le numéro de la carte Ethernet du PC. La commande `ip a` a donné l'adresse IPv4 du serveur, en /16, portée par vmbr0, le switch virtuel de Proxmox.
 
-![Terminal SSH connecté au serveur POD02 : ip a affiche vmbr0 en 10.2.0.253/16 et l'adresse IPv6 fe80::6600:6aff:fe69:1330](captures/depannage-serveurs-tp/ssh-ip-a.webp "Connecté en SSH au serveur : son IP est 10.2.0.253/16")
+*Les adresses IP et MAC du réseau de l'école sont masquées dans cette fiche, sur les photos et dans les documents à télécharger.*
+
+![Terminal SSH connecté au serveur POD02 : ip a affiche l'adresse IPv4 de vmbr0 et l'adresse IPv6 lien local, floutées](captures/depannage-serveurs-tp/ssh-ip-a.webp "Connecté en SSH au serveur : ip a donne son adresse (floutée)")
 
 **Pour POD01 et POD03.** Un script PowerShell, Get-InfosPod.ps1 (à télécharger plus haut), refait toute la démarche depuis le PC Windows : il trouve la carte Ethernet, découvre le serveur en IPv6, lit sa configuration en SSH, interroge le switch par la console (option -Cisco), met le poste dans le bon sous-réseau (option -ConfigurerPC) et écrit un rapport.
 
@@ -84,8 +86,8 @@ Dépannage mené avec l'aide de **Claude** (IA), qui a aussi écrit le script et
 ## Résultats et tests
 
 - **Switch** : démarré, ports actifs, tous dans le VLAN 1. PortFast est dans la configuration de démarrage (`show startup-config | include portfast`), qui est rechargée à chaque démarrage.
-- **Serveur** : joint en IPv6 (`ping -6`), puis connexion SSH réussie (root@POD02). Son adresse, 10.2.0.253/16, est maintenant connue et notée.
-- **Interface web** : accès vérifié à https://10.2.0.253:8006, depuis un poste en 10.2.0.100/16.
+- **Serveur** : joint en IPv6 (`ping -6`), puis connexion SSH réussie (root@POD02). Son adresse IPv4 est maintenant connue et notée dans la documentation remise.
+- **Interface web** : accès vérifié sur le port 8006 du serveur (https), depuis un poste placé dans le même sous-réseau /16.
 - **Script** : vérifié en simulation (sans le matériel), à lancer plus tard sur POD01 et POD03. [À COMPLÉTER : résultat du script sur POD01 et POD03]
 
 ## Difficultés rencontrées

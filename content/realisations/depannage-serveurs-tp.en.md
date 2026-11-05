@@ -47,11 +47,13 @@ The POD network is isolated: no internet box or DHCP server, so no address is as
 
 **PortFast.** Each time a cable is plugged in, the STP protocol blocks the port for about 30 seconds, while it checks that there is no network loop. I enabled PortFast on the server and workstation ports (`spanning-tree portfast`), so that they forward traffic straight away, then saved the configuration with `write memory`. IOS stores it as `spanning-tree portfast edge`: *edge* means a port connected to a machine, never to another switch.
 
-**Finding the server.** Wireshark showed no ARP request from the server, which would have given me its IP. On the switch, `show mac address-table interface gi1/0/14` gave its MAC address (64:00:6a:69:13:30, a Dell prefix), and its counters showed only 34 packets received: a server that has no one to reach stays almost silent.
+**Finding the server.** Wireshark showed no ARP request from the server, which would have given me its IP. On the switch, `show mac address-table interface gi1/0/14` gave its MAC address (a Dell prefix), and its counters showed only 34 packets received: a server that has no one to reach stays almost silent.
 
-**The solution: IPv6 link-local.** On Linux, every network card has an IPv6 "link-local" address (fe80::…), even when nothing is configured, and Debian, which Proxmox is based on, derives it from the MAC address (EUI-64 method). From that I worked out fe80::6600:6aff:fe69:1330, then connected over SSH from the Windows PC: `ssh root@fe80::6600:6aff:fe69:1330%12`, where 12 is the number of the PC's Ethernet card. The `ip a` command gave the server's address: **10.2.0.253/16**, carried by vmbr0, Proxmox's virtual switch.
+**The solution: IPv6 link-local.** On Linux, every network card has an IPv6 "link-local" address (fe80::…), even when nothing is configured, and Debian, which Proxmox is based on, derives it from the MAC address (EUI-64 method). For example, a fictitious MAC 00:11:22:33:44:55 gives fe80::211:22ff:fe33:4455. I worked out the server's address the same way, then connected over SSH from the Windows PC: `ssh root@fe80::…%12`, where 12 is the number of the PC's Ethernet card. The `ip a` command gave the server's IPv4 address, a /16, carried by vmbr0, Proxmox's virtual switch.
 
-![SSH terminal connected to the POD02 server: ip a shows vmbr0 at 10.2.0.253/16 and the IPv6 address fe80::6600:6aff:fe69:1330](captures/depannage-serveurs-tp/ssh-ip-a.webp "Connected to the server over SSH: its IP is 10.2.0.253/16")
+*The school network's IP and MAC addresses are hidden in this page, in the photos and in the downloadable documents.*
+
+![SSH terminal connected to the POD02 server: ip a shows the IPv4 address of vmbr0 and the link-local IPv6 address, blurred](captures/depannage-serveurs-tp/ssh-ip-a.webp "Connected to the server over SSH: ip a gives its address (blurred)")
 
 **For POD01 and POD03.** A PowerShell script, Get-InfosPod.ps1 (available for download above), repeats the whole procedure from the Windows PC: it finds the Ethernet card, discovers the server over IPv6, reads its configuration over SSH, queries the switch through the console (-Cisco option), puts the workstation in the right subnet (-ConfigurerPC option) and writes a report.
 
@@ -60,8 +62,8 @@ Troubleshooting carried out with the help of **Claude** (AI), which also wrote t
 ## Results and testing
 
 - **Switch**: started, ports active, all in VLAN 1. PortFast is in the startup configuration (`show startup-config | include portfast`), which is reloaded at every boot.
-- **Server**: reached over IPv6 (`ping -6`), then a successful SSH connection (root@POD02). Its address, 10.2.0.253/16, is now known and recorded.
-- **Web interface**: access checked at https://10.2.0.253:8006, from a workstation at 10.2.0.100/16.
+- **Server**: reached over IPv6 (`ping -6`), then a successful SSH connection (root@POD02). Its IPv4 address is now known and recorded in the documentation handed over.
+- **Web interface**: access checked on the server's port 8006 (https), from a workstation placed in the same /16 subnet.
 - **Script**: checked in simulation (without the hardware), to be run later on POD01 and POD03. [À COMPLÉTER : résultat du script sur POD01 et POD03]
 
 ## Difficulties encountered
