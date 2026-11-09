@@ -2,6 +2,19 @@
   "miseAJour": "2026-11-09",
   "actualites": [
     {
+      "id": "645c66d93021",
+      "date": "2026-11-09",
+      "titre": "VMware vSphere Express : Broadcom revient vers les PME avec une nouvelle offre !",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/vmware-vsphere-express-128-coeurs-pme/",
+      "resume": "Broadcom lance VMware vSphere Express, une offre basée sur vSphere 9 comprenant ESX et vCenter Standard, limitée à 128 cœurs pour un an et à un pack par client. Plusieurs fonctions avancées sont absentes, et chaque instance est indépendante, ce qui doit être pris en compte par une PME évaluant ses coûts et ses besoins d’administration.",
+      "tags": [
+        "VMware",
+        "Broadcom",
+        "licences"
+      ]
+    },
+    {
       "id": "9e7aaed46f57",
       "date": "2026-11-06",
       "titre": "VMware revoit ses plans en Europe et au-delà",

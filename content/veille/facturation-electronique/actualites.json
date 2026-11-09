@@ -1,6 +1,19 @@
 {
-  "miseAJour": "2026-11-02",
+  "miseAJour": "2026-11-09",
   "actualites": [
+    {
+      "id": "065f23a44020",
+      "date": "2026-11-05",
+      "titre": "Facturation électronique : le véritable test sera la liberté des entreprises, pas le nombre de factures échangées",
+      "source": "Journal du Net",
+      "url": "https://www.journaldunet.com/management/direction-generale/1557363-facturation-electronique-le-veritable-test-sera-la-liberte-des-entreprises-pas-le-nombre-de-factures-echangees/",
+      "resume": "Quelques semaines après l’entrée en vigueur de la réforme, des entreprises ont désigné leur plateforme de réception, mais des difficultés persistent concernant la comparaison des offres, l’intégration des outils et les échanges entre plateformes. Pour une PME, la liberté de changer de prestataire et la clarté du calendrier sont importantes ; l’intégrateur ERP doit notamment gérer l’Annuaire français, Peppol et l’acheminement des factures.",
+      "tags": [
+        "PME",
+        "Peppol",
+        "annuaire"
+      ]
+    },
     {
       "id": "f516831bef7f",
       "date": "2026-11-02",

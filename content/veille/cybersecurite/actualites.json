@@ -2,6 +2,45 @@
   "miseAJour": "2026-11-09",
   "actualites": [
     {
+      "id": "0fb79edf45fb",
+      "date": "2026-11-09",
+      "titre": "Phishing : 7,3 milliards de menaces par e-mail au troisième trimestre 2026, voici ce que révèle Microsoft",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/microsoft-rapport-menaces-email-phishing-exceptions/",
+      "resume": "Microsoft a détecté 7,3 milliards d’e-mails de phishing au troisième trimestre 2026, avec une forte hausse en septembre et des usurpations de domaines de services utilisés par les entreprises. Pour une PME industrielle, ces campagnes peuvent viser les comptes professionnels et contourner certaines protections lorsque des exceptions d’authentification sont mal configurées.",
+      "tags": [
+        "hameçonnage",
+        "PME",
+        "contrôle d’accès"
+      ]
+    },
+    {
+      "id": "7bef8f85e69a",
+      "date": "2026-11-09",
+      "titre": "NoName vise Free, La Poste Mobile et Danfoss",
+      "source": "ZATAZ",
+      "url": "https://www.zataz.com/noname-vise-free-la-poste-mobile-et-danfoss/",
+      "resume": "NoName057(16) revendique des attaques DDoS et diffuse des données attribuées à plusieurs entreprises, dont Danfoss, mais ZATAZ indique que leur origine et les intrusions alléguées ne sont pas démontrées. Pour une PME industrielle, l’épisode souligne l’importance de distinguer les faits établis des revendications et de surveiller les données exposées.",
+      "tags": [
+        "cybercriminalité",
+        "systèmes industriels (OT)",
+        "fuite de données"
+      ]
+    },
+    {
+      "id": "1c1ad1a71f85",
+      "date": "2026-11-09",
+      "titre": "Frigos piratés : le FBI alerte sur des « systèmes ciblés dans le monde entier »",
+      "source": "01net, sécurité",
+      "url": "https://www.01net.com/actualites/frigos-pirates-le-fbi-alerte-sur-des-systemes-cibles-dans-le-monde-entier.html",
+      "resume": "Le FBI et la CISA alertent sur des attaques visant des systèmes de réfrigération connectés dans des supermarchés, entrepôts et établissements de santé. Des appareils obsolètes accessibles depuis Internet peuvent être contrôlés pour altérer la température, entraînant des pertes de stocks, des dommages matériels et des risques sanitaires pour les activités industrielles.",
+      "tags": [
+        "systèmes industriels (OT)",
+        "vulnérabilité",
+        "PME"
+      ]
+    },
+    {
       "id": "98876b523e53",
       "date": "2026-11-08",
       "titre": "Les plans de cyber-reprise n’ont pas été conçus pour faire face à la réalité actuelle",
@@ -11,6 +50,18 @@
       "tags": [
         "sauvegarde",
         "rançongiciel"
+      ]
+    },
+    {
+      "id": "66e7af1b1e10",
+      "date": "2026-11-06",
+      "titre": "*sshole : sur Alpine Linux, un mot de passe trop long peut mener à un accès root via SSH",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/faille-openssh-musl-sshhole-alpine-linux/",
+      "resume": "La vulnérabilité *sshole dans OpenSSH peut accepter un mot de passe très long pour un compte Linux censé interdire cette méthode d’accès, notamment sur des systèmes utilisant musl comme Alpine Linux. Une exploitation réussie pourrait permettre un accès non autorisé à des serveurs utilisés par une PME industrielle.",
+      "tags": [
+        "vulnérabilité",
+        "contrôle d’accès"
       ]
     },
     {
@@ -24,6 +75,19 @@
         "hameçonnage",
         "intelligence artificielle",
         "sensibilisation"
+      ]
+    },
+    {
+      "id": "bee3d91423a7",
+      "date": "2026-11-05",
+      "titre": "14 millions de plaques d’immatriculation piratées en France : Auto-Planning confirme une cyberattaque massive",
+      "source": "01net, sécurité",
+      "url": "https://www.01net.com/actualites/14-millions-de-plaques-dimmatriculation-piratees-en-france-auto-planning-confirme-une-cyberattaque-massive.html",
+      "resume": "Auto-Planning a confirmé une cyberattaque contre sa plateforme de gestion de rendez-vous pour des centres de contrôle technique, tandis que les attaquants affirment détenir de nombreuses données personnelles et plaques d’immatriculation. L’incident montre qu’un prestataire peut exposer les données de ses clients et créer des risques d’arnaque ou d’usurpation d’identité.",
+      "tags": [
+        "fuite de données",
+        "chaîne d'approvisionnement",
+        "cybercriminalité"
       ]
     },
     {
@@ -61,6 +125,18 @@
       "tags": [
         "vulnérabilité",
         "chaîne d'approvisionnement"
+      ]
+    },
+    {
+      "id": "14e59a078c29",
+      "date": "2026-11-02",
+      "titre": "Bulletin d'actualité CERTFR-2026-ACT-046 (02 novembre 2026)",
+      "source": "CERT-FR (ANSSI)",
+      "url": "https://www.cert.cyber.gouv.fr/actualite/CERTFR-2026-ACT-046/",
+      "resume": "Le CERT-FR signale des vulnérabilités touchant notamment Brotli et PHP, ainsi que des tentatives d’exploitation de deux failles dans des déploiements PHP. Il rappelle aux organisations de consulter les avis des éditeurs et d’appliquer les correctifs afin de réduire les risques sur leur système d’information.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
       ]
     },
     {
