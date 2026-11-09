@@ -19,6 +19,18 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
+## 09/11/2026 - La cybersécurité dépend de tous les maillons de l’entreprise
+
+L’explosion du phishing, les attaques visant des prestataires tiers et le piratage d’équipements IoT rappellent que la sécurité globale dépend de la protection des maillons périphériques. Microsoft a détecté 7,3 milliards d’e-mails de phishing au troisième trimestre 2026, notamment par l’usurpation de domaines utilisés par les entreprises. Le FBI et la CISA alertent également sur des systèmes de réfrigération connectés accessibles depuis Internet, tandis que l’attaque contre Auto-Planning montre qu’un prestataire peut exposer les données de ses clients.
+
+Pour les entreprises, cela impose d’isoler les réseaux connectés et de durcir la gestion des accès des tiers. De notre côté, nous révisons les exceptions d’authentification et compartimentons les équipements industriels.
+
+**Sources**
+
+- [Phishing : 7,3 milliards de menaces par e-mail au troisième trimestre 2026, voici ce que révèle Microsoft](https://www.it-connect.fr/microsoft-rapport-menaces-email-phishing-exceptions/) (IT-Connect, 9 novembre 2026)
+- [Frigos piratés : le FBI alerte sur des « systèmes ciblés dans le monde entier »](https://www.01net.com/actualites/frigos-pirates-le-fbi-alerte-sur-des-systemes-cibles-dans-le-monde-entier.html) (01net, sécurité, 9 novembre 2026)
+- [14 millions de plaques d’immatriculation piratées en France : Auto-Planning confirme une cyberattaque massive](https://www.01net.com/actualites/14-millions-de-plaques-dimmatriculation-piratees-en-france-auto-planning-confirme-une-cyberattaque-massive.html) (01net, sécurité, 5 novembre 2026)
+
 ## 03/11/2026 - L’IA accélère les cyberattaques contre les PME industrielles
 
 On remarque encore une fois que l’IA joue un rôle majeur dans les cyberattaques, que ce soit pour hacker ou pour entrer chez les utilisateurs. Des groupes de cyberespionnage et des groupes criminels l’utilisent de plus en plus pour rapprocher ou automatiser leurs opérations, notamment lors d’intrusions, de vols d’identifiants et de déplacements dans les réseaux. Les PME industrielles peuvent être exposées indirectement lorsqu’elles travaillent dans des secteurs stratégiques comme la défense, les technologies ou les semi-conducteurs.
