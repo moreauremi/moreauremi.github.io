@@ -5,8 +5,9 @@ import js from '@eslint/js';
 import globals from 'globals';
 
 export default [
-  // Fichiers générés, dépendances, maquette d'origine et documents personnels
-  { ignores: ['dist/', 'node_modules/', 'reference/', 'a-integrer/'] },
+  // Fichiers générés, dépendances, maquette d'origine, documents personnels
+  // et skills Claude Code (code tiers, pas celui du site)
+  { ignores: ['dist/', 'node_modules/', 'reference/', 'a-integrer/', '.claude/'] },
 
   js.configs.recommended,
 

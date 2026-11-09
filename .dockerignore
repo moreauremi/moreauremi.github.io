@@ -4,6 +4,7 @@ node_modules
 dist
 .git
 reference
+.claude
 *.log
 .DS_Store
 
