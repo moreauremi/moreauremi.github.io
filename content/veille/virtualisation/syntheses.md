@@ -19,6 +19,14 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
+## 09/11/2026 - vSphere Express : une offre PME à comparer aux alternatives
+
+L’offre vSphere Express de Broadcom s’adresse aux PME, mais elle bride les fonctionnalités d’administration avancées et la haute disponibilité. Basée sur vSphere 9, elle comprend ESX et vCenter Standard, avec une limitation à 128 cœurs pour un an et à un pack par client. Plusieurs fonctions avancées sont absentes et chaque instance reste indépendante. Pour les entreprises, cela limite les capacités d’évolution et surcharge la gestion individuelle des instances. Je vais comparer cette offre avec des alternatives comme Proxmox avant de faire un choix d’infrastructure.
+
+**Sources**
+
+- [VMware vSphere Express : Broadcom revient vers les PME avec une nouvelle offre !](https://www.it-connect.fr/vmware-vsphere-express-128-coeurs-pme/) (IT-Connect, 9 novembre 2026)
+
 ## 19/10/2026 - La virtualisation ne supprime pas les risques de sécurité
 
 Je considère que réussir à sortir d’une VM pour accéder à l’hôte est une situation très dangereuse. À l’intérieur d’une VM, un utilisateur peut se sentir totalement invulnérable, alors que la faille PwnEscape montre qu’une exécution de code dans une VM KVM peut permettre à un attaquant d’accéder à la mémoire de l’hôte. Cette avancée rappelle que les failles de sécurité existent toujours et que le danger reste présent, notamment lorsqu’un code non fiable est exécuté sur des serveurs virtualisés.
