@@ -19,6 +19,16 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
+## 09/11/2026 - La liberté de choix au cœur de la facturation électronique
+
+L’enjeu majeur de la facturation électronique réside, selon moi, dans la liberté de choix et l’interopérabilité entre les plateformes, notamment via Peppol et l’Annuaire. Quelques semaines après l’entrée en vigueur de la réforme, des entreprises ont choisi leur plateforme de réception, mais des difficultés persistent pour comparer les offres, intégrer les outils et assurer les échanges entre plateformes. Pour une PME, la possibilité de changer de prestataire et la clarté du calendrier sont donc essentielles.
+
+Les PME doivent veiller à ne pas se retrouver verrouillées par un prestataire ERP ou une PDP spécifique. Nous privilégierons les solutions ouvertes, garantissant la réversibilité et la simplicité d’intégration. L’intégrateur ERP doit notamment prendre en compte l’Annuaire français, Peppol et l’acheminement des factures.
+
+**Sources**
+
+- [Facturation électronique : le véritable test sera la liberté des entreprises, pas le nombre de factures échangées](https://www.journaldunet.com/management/direction-generale/1557363-facturation-electronique-le-veritable-test-sera-la-liberte-des-entreprises-pas-le-nombre-de-factures-echangees/) (Journal du Net, 5 novembre 2026)
+
 ## 03/11/2026 - La complexité, limite de la facturation électronique
 
 La facturation électronique montre ses limites en raison de sa complexité, ce qui rend sa mise en place compliquée. La multiplication des formats et des exceptions dans le modèle français pourrait compliquer les échanges et réduire l’interopérabilité entre les plateformes. Pour une PME, les offres et les outils sont plus difficiles à comparer et à intégrer. Cette situation représente également une difficulté pour l’accompagnement par un intégrateur ERP, qui devra tenir compte des problèmes d’échange entre les différentes plateformes.
