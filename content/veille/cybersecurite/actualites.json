@@ -1,6 +1,68 @@
 {
-  "miseAJour": "2026-11-02",
+  "miseAJour": "2026-11-09",
   "actualites": [
+    {
+      "id": "98876b523e53",
+      "date": "2026-11-08",
+      "titre": "Les plans de cyber-reprise n’ont pas été conçus pour faire face à la réalité actuelle",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/reseau-securite/les-plans-de-cyber-reprise-nont-pas-ete-concus-pour-faire-face-a-la-realite-actuelle.html",
+      "resume": "Un rapport de Cohesity examine les difficultés croissantes de réponse et de restauration face aux attaques modernes, en soulignant un décalage entre les plans de cyberreprise et la réalité. Pour une PME industrielle, cela rappelle l’importance de plans de reprise adaptés et régulièrement évalués.",
+      "tags": [
+        "sauvegarde",
+        "rançongiciel"
+      ]
+    },
+    {
+      "id": "2e43b6b95458",
+      "date": "2026-11-06",
+      "titre": "Faux événements OpenAI, SpaceX et Anthropic : ce phishing vole les comptes Microsoft et Google",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/faux-evenements-openai-spacex-phishing-microsoft-google/",
+      "resume": "Une campagne de hameçonnage utilise de faux événements liés à l’intelligence artificielle pour voler des comptes Microsoft et Google, y compris protégés par le MFA. Pour une PME, ces leurres montrent l’importance de sensibiliser les employés et de vérifier les pages d’inscription avant toute connexion professionnelle.",
+      "tags": [
+        "hameçonnage",
+        "intelligence artificielle",
+        "sensibilisation"
+      ]
+    },
+    {
+      "id": "9850bf2157f2",
+      "date": "2026-11-05",
+      "titre": "NIS 2, le projet de loi de retour le 9 novembre",
+      "source": "Silicon",
+      "url": "https://www.silicon.fr/cybersecurite-1371/nis-2-le-projet-de-loi-de-retour-le-9-novembre-230126",
+      "resume": "Le projet de loi Résilience, qui transpose notamment NIS2, doit être discuté à l’Assemblée nationale du 9 au 13 novembre. Son périmètre inclut les industries manufacturières et la fabrication de produits chimiques, ce qui pourrait renforcer les obligations de cybersécurité applicables à certaines PME industrielles.",
+      "tags": [
+        "NIS2",
+        "réglementation",
+        "systèmes industriels (OT)"
+      ]
+    },
+    {
+      "id": "9e6a98593911",
+      "date": "2026-11-05",
+      "titre": "[MàJ] Vulnérabilité dans OpenSSH (05 novembre 2026)",
+      "source": "CERT-FR, alertes",
+      "url": "https://www.cert.cyber.gouv.fr/alerte/CERTFR-2026-ALE-015/",
+      "resume": "Une vulnérabilité d’OpenSSH permet de contourner l’authentification par mot de passe dans certaines configurations Linux utilisant musl. Le CERT-FR recommande d’appliquer le correctif avec redémarrage du service, ou de désactiver l’authentification par mot de passe si cela est impossible.",
+      "tags": [
+        "vulnérabilité",
+        "contrôle d’accès"
+      ]
+    },
+    {
+      "id": "8f3c6a4cbd33",
+      "date": "2026-11-05",
+      "titre": "Linux : une faille dans APT permet de remplacer un paquet vérifié et de l’exécuter en root",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/faille-apt-cve-2026-109518-debian-ubuntu-root/",
+      "resume": "Une faille d’APT permet à un attaquant qui manipule le trafic HTTP de remplacer un paquet après sa vérification et d’exécuter du code avec les privilèges root. Les PME industrielles utilisant Debian, Ubuntu ou des dérivées doivent donc surveiller les mises à jour et appliquer les correctifs disponibles.",
+      "tags": [
+        "vulnérabilité",
+        "chaîne d'approvisionnement"
+      ]
+    },
     {
       "id": "e0586ded1f7b",
       "date": "2026-11-02",
@@ -48,6 +110,19 @@
       "tags": [
         "chaîne d'approvisionnement",
         "contrôle d’accès"
+      ]
+    },
+    {
+      "id": "ab79ecad1fc5",
+      "date": "2026-10-30",
+      "titre": "Combiné à d’autres failles, PHP2Shell devient plus concret",
+      "source": "Silicon",
+      "url": "https://www.silicon.fr/cybersecurite-1371/php2shell-firewalls-230011",
+      "resume": "Une attaque a combiné PHP2Shell et Fragnesia, une vulnérabilité d’élévation de privilèges, pour compromettre des firewalls et atteindre potentiellement un annuaire Active Directory. Cet exemple montre l’importance, pour une PME industrielle, de corriger rapidement les failles affectant les équipements d’administration et les systèmes Linux.",
+      "tags": [
+        "vulnérabilité",
+        "contrôle d’accès",
+        "systèmes industriels (OT)"
       ]
     },
     {

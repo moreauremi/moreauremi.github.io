@@ -1,6 +1,19 @@
 {
-  "miseAJour": "2026-11-02",
+  "miseAJour": "2026-11-09",
   "actualites": [
+    {
+      "id": "9e7aaed46f57",
+      "date": "2026-11-06",
+      "titre": "VMware revoit ses plans en Europe et au-delà",
+      "source": "Silicon",
+      "url": "https://www.silicon.fr/cloud-1370/vmware-vsphere-express-standard-enterprise-plus-230149",
+      "resume": "VMware maintient vSphere Standard et Enterprise+ dans l’Espace économique européen jusqu’au 31 octobre 2027, tout en lançant vSphere Express sur vSphere 9 avec un forfait fixe de 128 cœurs. Cette évolution offre un sursis aux PME, mais les contraintes de facturation, de version et de support doivent être prises en compte dans leurs choix de licences ou de migration.",
+      "tags": [
+        "VMware",
+        "Broadcom",
+        "licences"
+      ]
+    },
     {
       "id": "e0586ded1f7b",
       "date": "2026-11-02",
