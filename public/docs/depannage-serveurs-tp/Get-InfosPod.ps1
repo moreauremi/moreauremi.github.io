@@ -39,7 +39,7 @@ param(
     [switch]$ConfigurerPC,
 
     # Plan B si la découverte échoue : MAC du serveur lue sur le switch
-    # avec "show mac address-table" (ex : 6400.6a69.1330).
+    # avec "show mac address-table" (ex : 0011.2233.4455).
     [string]$MacServeur
 )
 
@@ -93,7 +93,7 @@ function Get-IPPourPC([string]$ipServeur, [int]$prefixe) {
 # ---------------------------------------------------------------------------
 # Calcule l'IPv6 lien local qu'un Linux (Debian/Proxmox) fabrique à partir de sa MAC
 # (méthode EUI-64) : on inverse le 7e bit du 1er octet et on insère ff:fe au milieu.
-# Ex : 64:00:6a:69:13:30 -> fe80::6600:6aff:fe69:1330
+# Ex (MAC fictive) : 00:11:22:33:44:55 -> fe80::211:22ff:fe33:4455
 function Get-LienLocalEUI64([string]$mac) {
     $hex = $mac -replace '[^0-9a-fA-F]', ''
     if ($hex.Length -ne 12) { throw "MAC invalide : $mac" }
@@ -102,8 +102,8 @@ function Get-LienLocalEUI64([string]$mac) {
     return "fe80::{0:x}:{1:x}:{2:x}:{3:x}" -f ($b[0] * 256 + $b[1]), ($b[2] * 256 + 255), (254 * 256 + $b[3]), ($b[4] * 256 + $b[5])
 }
 
-# Windows écrit les MAC "64-00-6A-69-13-30", Linux "64:00:6a:69:13:30",
-# Cisco "6400.6a69.1330". Cette fonction convertit au format Cisco.
+# Windows écrit les MAC "00-11-22-33-44-55", Linux "00:11:22:33:44:55",
+# Cisco "0011.2233.4455". Cette fonction convertit au format Cisco.
 function ConvertTo-MacCisco([string]$mac) {
     $hex = ($mac -replace '[^0-9a-fA-F]', '').ToLower()
     if ($hex.Length -ne 12) { return $null }
