@@ -42,6 +42,7 @@
 .techno[data-techno="powershell"] { --techno-bg: #5391fe; --techno-ink: #000000; }
 .techno[data-techno="batch-cmd-exe"] { --techno-bg: #4d4d4d; }
 .techno[data-techno="markdown"] { --techno-bg: #000000; }
+.techno[data-techno="rust"] { --techno-bg: #000000; }
 
 /* --- Systèmes et outils Windows --- */
 .techno[data-techno="linux"] { --techno-bg: #fcc624; --techno-ink: #000000; }
@@ -63,6 +64,9 @@
 .techno[data-techno="nginx"] { --techno-bg: #009639; --techno-ink: #000000; }
 .techno[data-techno="apache"] { --techno-bg: #d22128; }
 .techno[data-techno="tailscale"] { --techno-bg: #242424; }
+.techno[data-techno="cloudflare"] { --techno-bg: #f38020; --techno-ink: #000000; }
+.techno[data-techno="lxc"] { --techno-bg: #333333; }
+.techno[data-techno="openid-connect"] { --techno-bg: #f78c40; --techno-ink: #000000; }
 .techno[data-techno="nmap"] { --techno-bg: #4682b4; --techno-ink: #000000; }
 .techno[data-techno="jellyfin"] { --techno-bg: #00a4dc; --techno-ink: #000000; }
 .techno[data-techno="hostinger"] { --techno-bg: #673de6; }
@@ -85,6 +89,8 @@
 /* --- Développement web et données --- */
 .techno[data-techno="vs-code"] { --techno-bg: #007acc; }
 .techno[data-techno="vite"] { --techno-bg: #646cff; --techno-ink: #000000; }
+.techno[data-techno="htmx"] { --techno-bg: #3366cc; }
+.techno[data-techno="lighthouse"] { --techno-bg: #f44b21; --techno-ink: #000000; }
 .techno[data-techno="react"] { --techno-bg: #61dafb; --techno-ink: #000000; }
 .techno[data-techno="fastapi"] { --techno-bg: #009688; --techno-ink: #000000; }
 .techno[data-techno="streamlit"] { --techno-bg: #ff4b4b; --techno-ink: #000000; }
