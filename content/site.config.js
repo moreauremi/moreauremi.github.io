@@ -407,11 +407,13 @@ export default {
         nom: 'Systèmes et virtualisation',
         en: { nom: 'Systems and virtualisation' },
         items: [
-          { nom: 'Linux', niveau: 3, preuves: ['homelab', 'environnement-open-prod', 'glpi', 'reseau-vm-virtualbox'] },
+          { nom: 'Linux', niveau: 3, preuves: ['homelab', 'environnement-open-prod', 'glpi', 'reseau-vm-virtualbox', 'dashu'] },
           { nom: 'Windows (poste et serveur)', niveau: 2, preuves: ['reseau-vm-virtualbox', 'rmutils'], en: { nom: 'Windows (desktop and server)' } },
-          { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab', 'depannage-serveurs-tp'] },
+          { nom: 'Proxmox VE', niveau: 3, preuves: ['homelab', 'depannage-serveurs-tp', 'dashu'] },
           { nom: 'VirtualBox', niveau: 3, preuves: ['reseau-vm-virtualbox', 'glpi'] },
           { nom: 'Docker', niveau: 2, preuves: ['homelab', 'portfolio-remios'] },
+          { nom: 'systemd (services, minuteries)', niveau: 2, preuves: ['dashu'], en: { nom: 'systemd (services, timers)' } },
+          { nom: 'Sauvegarde et restauration', niveau: 2, preuves: ['dashu', 'rmutils'], en: { nom: 'Backup and restore' } },
         ],
       },
       {
@@ -420,9 +422,10 @@ export default {
         items: [
           { nom: 'Adressage IP, DHCP et diagnostic réseau', niveau: 2, preuves: ['reseau-vm-virtualbox', 'rmutils', 'depannage-serveurs-tp'], en: { nom: 'IP addressing, DHCP and network troubleshooting' } },
           { nom: 'Switch Cisco (IOS) : console, VLAN, STP', niveau: 2, preuves: ['depannage-serveurs-tp'], en: { nom: 'Cisco switches (IOS): console, VLANs, STP' } },
-          { nom: 'VPN (Tailscale)', niveau: 3, preuves: ['homelab'] },
-          { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['portfolio-remios'], en: { nom: 'DNS and domain names' } },
-          { nom: 'Serveur web (Apache, Nginx), reverse proxy', niveau: 2, preuves: ['glpi', 'portfolio-remios'], en: { nom: 'Web servers (Apache, Nginx), reverse proxy' } },
+          { nom: 'VPN (Tailscale)', niveau: 3, preuves: ['homelab', 'dashu'] },
+          { nom: 'DNS et nom de domaine', niveau: 3, preuves: ['portfolio-remios', 'dashu'], en: { nom: 'DNS and domain names' } },
+          { nom: 'Cloudflare (DNS, tunnel)', niveau: 2, preuves: ['dashu'] },
+          { nom: 'Serveur web (Apache, Nginx), reverse proxy', niveau: 2, preuves: ['glpi', 'portfolio-remios', 'dashu'], en: { nom: 'Web servers (Apache, Nginx), reverse proxy' } },
         ],
       },
       {
@@ -447,7 +450,7 @@ export default {
         nom: 'Outils et frameworks',
         en: { nom: 'Tools and frameworks' },
         items: [
-          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'portfolio-remios', 'rmutils', 'environnement-open-prod'], en: { nom: 'Git and GitHub' } },
+          { nom: 'Git et GitHub', niveau: 2, preuves: ['crypto-dashboard-pro', 'portfolio-remios', 'rmutils', 'environnement-open-prod', 'dashu'], en: { nom: 'Git and GitHub' } },
           { nom: 'Excel (RECHERCHEV, RECHERCHEX)', niveau: 3, preuves: ['reprise-donnees-open-prod'], en: { nom: 'Excel (VLOOKUP, XLOOKUP)' } },
           { nom: 'Streamlit, Pandas, Plotly', niveau: 3, preuves: ['crypto-dashboard-pro'] },
           { nom: 'n8n (automatisation)', niveau: 2, preuves: [], en: { nom: 'n8n (automation)' } },
@@ -555,6 +558,7 @@ export default {
     { action: 'Started', unite: 'alternance@1life.service', description: 'consultant ERP Open-Prod', en: { description: 'Open-Prod ERP consultant' } },
     { action: 'Mounted', unite: '/srv/nas', description: 'stockage réseau', en: { description: 'network storage' } },
     { action: 'Started', unite: 'jellyfin.service', description: 'serveur multimédia', en: { description: 'media server' } },
+    { action: 'Started', unite: 'dashu.service', description: 'espace de travail auto-hébergé', en: { description: 'self-hosted workspace' } },
   ],
 
   // --- Version anglaise des textes communs ------------------------------------

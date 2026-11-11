@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-labelledby="t d" font-family="'IBM Plex Mono', ui-monospace, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace">
+  <title id="t">dashu — architecture</title>
+  <desc id="d">Mon ordinateur et mon iPhone joignent dashu de deux façons : par Internet, sur app.dashu.dev, à travers le tunnel Cloudflare (aucun port ouvert sur la box), ou par le VPN Tailscale. Hermès, mon agent IA, passe par Tailscale : il utilise l'API JSON de dashu avec un jeton, et une connexion SSH limitée à six actions d'administration. Sur le serveur Proxmox de mon homelab, un conteneur LXC Debian fait tourner cloudflared et tailscale serve, qui relaient vers dashu, un binaire Rust lancé par systemd. dashu stocke tout dans une base SQLite, sauvegardée chaque nuit. Des scripts d'exploitation gèrent la mise à jour, la sauvegarde, la restauration et l'administration. Le code est sur GitHub, testé à chaque modification.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1a1d23"/>
+    </marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1e3c8c"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="600" fill="#ffffff"/>
+
+  <!-- Titre -->
+  <text x="32" y="44" font-size="20" font-weight="600" fill="#1a1d23">dashu — architecture</text>
+  <text x="32" y="68" font-size="13" fill="#4a5260">Un binaire Rust dans un conteneur LXC, joignable sans ouvrir de port sur la box</text>
+  <line x1="32" y1="84" x2="768" y2="84" stroke="#1a1d23" stroke-width="1"/>
+
+  <!-- Mes appareils -->
+  <rect x="32" y="112" width="200" height="176" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="48" y="138" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">MES APPAREILS</text>
+  <text x="48" y="168" font-size="13" font-weight="600" fill="#1a1d23">Ordinateur</text>
+  <text x="48" y="192" font-size="13" font-weight="600" fill="#1a1d23">iPhone</text>
+  <line x1="48" y1="210" x2="216" y2="210" stroke="#d5d9e0" stroke-width="1"/>
+  <text x="48" y="232" font-size="12" fill="#4a5260">navigateur, ou app</text>
+  <text x="48" y="250" font-size="12" fill="#4a5260">sur l'écran d'accueil</text>
+  <text x="48" y="272" font-size="12" fill="#4a5260">de l'iPhone</text>
+
+  <!-- Hermès -->
+  <rect x="32" y="320" width="200" height="176" rx="6" fill="#ffffff" stroke="#1e3c8c" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="48" y="346" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">HERMÈS</text>
+  <text x="48" y="376" font-size="13" font-weight="600" fill="#1a1d23">Mon agent IA</text>
+  <text x="48" y="398" font-size="12" fill="#4a5260">par iMessage</text>
+  <line x1="48" y1="416" x2="216" y2="416" stroke="#d5d9e0" stroke-width="1"/>
+  <text x="48" y="438" font-size="12" fill="#4a5260">API JSON (jeton)</text>
+  <text x="48" y="456" font-size="12" fill="#4a5260">SSH limité à six</text>
+  <text x="48" y="474" font-size="12" fill="#4a5260">actions d'admin</text>
+
+  <!-- Cloudflare -->
+  <rect x="268" y="112" width="136" height="176" rx="8" fill="#eef2fa" stroke="#1e3c8c" stroke-width="1.5"/>
+  <text x="284" y="138" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">CLOUDFLARE</text>
+  <text x="284" y="166" font-size="16" font-weight="600" fill="#1a1d23">Tunnel</text>
+  <text x="284" y="190" font-size="12" fill="#1a1d23">app.dashu.dev</text>
+  <text x="284" y="208" font-size="12" fill="#1a1d23">HTTPS, DNS</text>
+  <text x="284" y="252" font-size="12" fill="#4a5260">aucun port</text>
+  <text x="284" y="270" font-size="12" fill="#4a5260">ouvert</text>
+
+  <!-- Tailscale -->
+  <rect x="268" y="320" width="136" height="176" rx="8" fill="#eef2fa" stroke="#1e3c8c" stroke-width="1.5"/>
+  <text x="284" y="346" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">TAILSCALE</text>
+  <text x="284" y="374" font-size="16" font-weight="600" fill="#1a1d23">VPN</text>
+  <text x="284" y="398" font-size="12" fill="#1a1d23">réseau privé</text>
+  <text x="284" y="416" font-size="12" fill="#1a1d23">chiffré</text>
+  <text x="284" y="460" font-size="12" fill="#4a5260">marche même</text>
+  <text x="284" y="478" font-size="12" fill="#4a5260">sans Cloudflare</text>
+
+  <!-- Serveur Proxmox et conteneur LXC -->
+  <rect x="442" y="100" width="326" height="428" rx="8" fill="#f5f6f8" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="458" y="124" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">HOMELAB · PROXMOX VE</text>
+
+  <rect x="458" y="136" width="294" height="376" rx="6" fill="#ffffff" stroke="#4a5260" stroke-width="1.5"/>
+  <text x="474" y="160" font-size="11" font-weight="600" letter-spacing="1.5" fill="#1e3c8c">CONTENEUR LXC · DEBIAN 13</text>
+
+  <rect x="474" y="174" width="262" height="58" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="490" y="198" font-size="13" font-weight="600" fill="#1a1d23">cloudflared, tailscale serve</text>
+  <text x="490" y="219" font-size="12" fill="#4a5260">relaient vers 127.0.0.1:3000</text>
+
+  <rect x="474" y="248" width="262" height="76" rx="6" fill="#eef2fa" stroke="#1e3c8c" stroke-width="1.5"/>
+  <text x="490" y="274" font-size="15" font-weight="600" fill="#1a1d23">dashu</text>
+  <text x="490" y="296" font-size="12" fill="#4a5260">binaire Rust, service systemd</text>
+  <text x="490" y="314" font-size="12" fill="#4a5260">axum, htmx</text>
+
+  <rect x="474" y="340" width="262" height="58" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="490" y="364" font-size="13" font-weight="600" fill="#1a1d23">Base SQLite</text>
+  <text x="490" y="385" font-size="12" fill="#4a5260">sauvegarde à 3 h 30, 14 jours</text>
+
+  <rect x="474" y="414" width="262" height="58" rx="6" fill="#ffffff" stroke="#1a1d23" stroke-width="1.5"/>
+  <text x="490" y="438" font-size="13" font-weight="600" fill="#1a1d23">Scripts d'exploitation</text>
+  <text x="490" y="459" font-size="12" fill="#4a5260">update, backup, restore, admin</text>
+
+  <text x="474" y="496" font-size="11.5" fill="#4a5260">code sur GitHub, testé à chaque PR</text>
+
+  <!-- Flèches pleines : mes accès -->
+  <g fill="none" stroke="#1a1d23" stroke-width="1.5" marker-end="url(#a)">
+    <path d="M232 168 H267"/>
+    <path d="M232 262 H250 V366 H267"/>
+    <path d="M404 203 H473"/>
+    <path d="M404 372 H450 V218 H473"/>
+    <path d="M605 232 V247"/>
+    <path d="M605 324 V339"/>
+  </g>
+
+  <!-- Flèches pointillées : Hermès (API par Tailscale, SSH limité aux scripts) -->
+  <g fill="none" stroke="#1e3c8c" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#b)">
+    <path d="M232 440 H267"/>
+    <path d="M404 443 H473"/>
+  </g>
+
+  <!-- Pied -->
+  <line x1="32" y1="552" x2="768" y2="552" stroke="#d5d9e0" stroke-width="1"/>
+  <text x="32" y="576" font-size="11.5" fill="#4a5260">Réalisation : dashu, espace de travail auto-hébergé</text>
+  <text x="768" y="576" font-size="11.5" fill="#4a5260" text-anchor="end">Rémi Moreau · remim.me</text>
+</svg>
