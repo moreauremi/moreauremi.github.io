@@ -1,9 +1,9 @@
 ---
 # Traduction anglaise de dashu.md. Seuls les champs traduits sont ici
 # (titre, resume, statut) : les autres viennent du fichier français.
-titre: "dashu — a self-hosted workspace"
-statut: "v1 in service"
-resume: "My all-in-one workspace: a dashboard, Markdown notes and my Pronote timetable, split across three spaces (Personal, School, Work). I wrote its specification, then deployed it on my Proxmox homelab, reachable at app.dashu.dev through a Cloudflare tunnel and through Tailscale, with a nightly backup checked by an actual restore."
+titre: "Hermes Dashboard (dashu) — a self-hosted workspace"
+statut: "v1 in service, v2 in progress"
+resume: "My all-in-one workspace: a dashboard, notes, my Pronote timetable and files sorted into folders, split across spaces (Personal, School, Work…). I wrote its specification, then deployed it on my Proxmox homelab, reachable at app.dashu.dev through a Cloudflare tunnel and through Tailscale, with a nightly backup checked by an actual restore."
 ---
 
 ## Context
@@ -12,20 +12,23 @@ Between my BTS (timetable on Pronote Campus), my work-study job at 1Life and my 
 
 I also turned it into a project-management exercise: write a real specification with testable acceptance criteria, have it built by an AI (Claude), and keep control of the choices, the deployment and the validation.
 
+Since 12 November 2026, the app is displayed as Hermes Dashboard, like my other projects; dashu remains its code name (repository, program, commands).
+
 ## Objectives
 
 - A single way in: username and password, or a Google account. Sign-up is closed: only authorised addresses get in.
-- Three spaces, Personal, School and Work: every note, task or calendar belongs to a space, and the Personal calendar brings together those of all spaces.
+- Spaces, Personal, School and Work to start with: every note, task, file or calendar belongs to a space, and the Personal space brings together the content of all spaces.
 - Markdown notes with search, today's tasks, and the timetable imported from Pronote Campus.
+- In version 2, a place for my files (classes, scans, iPhone photos), sorted into folders, with conversions that never put the server at risk.
 - Fast (a mobile Lighthouse score of at least 95) and usable on a phone like an app.
 - Hosted on my homelab, reachable from anywhere without opening a port on the home router.
 - Easy to run: a nightly backup, checked by an actual restore, and an update in one command with an automatic rollback.
 
 ## Implementation
 
-**The specification.** I wrote the specification: scope of version 1 and what it leaves out, technologies, data model, performance and security requirements, deployment, and 14 acceptance criteria. A tracking file states, for each criterion, whether it is verified, where and how, and lists the deviations from the specification with their reasons.
+**The specification.** I wrote the specification: scope of version 1 and what it leaves out, technologies, data model, performance and security requirements, deployment, and 14 acceptance criteria. A tracking file states, for each criterion, whether it is verified, where and how, and lists the deviations from the specification with their reasons. Every later change (files, spaces and tools, command bar, folders) got its own section, with its own criteria, written before the code.
 
-**The application.** A single program written in Rust, which builds the pages on the server; the htmx library keeps navigation smooth, without reloading the page. The data lives in an SQLite database, with full-text search. The timetable is synced every hour from the Pronote Campus iCal link. A JSON API, protected by a token, lets Hermès, my AI agent, manage my tasks and notes, and read my calendar.
+**The application.** A single program written in Rust, which builds the pages on the server; the htmx library keeps navigation smooth, without reloading the page. The data lives in an SQLite database, with full-text search. Notes are edited already formatted, as in Notion (a "/" menu inserts headings, lists, tables or images), but are still saved as Markdown. The timetable is synced every hour from the Pronote Campus iCal link. A command bar, opened with "/", makes everything doable from the keyboard. A JSON API, protected by a token, lets Hermès, my AI agent, manage my tasks and notes, and read my calendar.
 
 **Security.**
 
@@ -34,6 +37,13 @@ I also turned it into a project-management exercise: write a real specification 
 - A strict Content Security Policy (CSP): no inline script or style. Note content is cleaned to prevent script injection.
 - The service runs as an unprivileged system user, only listens on the machine itself (127.0.0.1) and sees the file system as read-only (systemd hardening).
 - Hermès only has SSH access limited to six actions (status, logs, restart, update, update tracking, backup), enforced by a forced command.
+
+**Version 2: files and folders.**
+
+- I wiped the server's second disk (465 GB, an old Proxmox install) and declared it as LVM-thin storage in Proxmox. Two volumes from it are mounted in the container: 45 GB for the files, 5 GB for the database backups, which are therefore no longer on the same disk as the database.
+- A file is sent in 50 MB chunks, because Cloudflare's free plan refuses requests over 100 MB. On disk, it has a random name, never the one chosen by the user. It is never run inside the page: only types without code (images, videos, sounds) are displayed, everything else is served as a download, with a "sandbox" CSP.
+- Conversions (iPhone HEIC photos, videos, sounds, PDFs) run in a separate service: another system user, with no network, that sees neither the database nor the stored files, limited to 1.5 GB of memory. The web service, limited to 256 MB, never runs a tool itself.
+- Folders and subfolders, three levels at most, hold both files and notes. They only exist in the database: nothing moves on disk, and a folder name can never point to another file. Items are filed through a window that shows the whole tree, or by dragging with the mouse; deleting a folder that is not empty goes through a warning.
 
 **Deployment on my homelab.**
 
@@ -47,9 +57,9 @@ I also turned it into a project-management exercise: write a real specification 
 - A hot backup of the database every night at 3:30 a.m. (systemd timer), checked by SQLite and kept 14 days.
 - dashu-restore puts a backup back into service: it first sets the current database aside, and rolls back by itself if dashu does not restart.
 - dashu-update fetches the code, recompiles, backs up the database, replaces the program and checks that the service responds. If not, it puts the previous version back.
-- On every change, GitHub Actions checks the formatting and quality of the code, runs 96 automated tests and builds a 7 MB Docker image.
+- On every change, GitHub Actions checks the formatting and quality of the code, runs the automated tests (235 today), replays the server's systemd sandbox and builds a Docker image under 30 MB.
 
-**Project tracking.** After version 1, every change went through a pull request, tested before being merged: the API for Hermès, an overview of all calendars in the Personal space, navigation without a black flash, a "Dynamic Island" style space switcher with swipe-to-switch, a shortcut bar on phones, and installation as an app on the iPhone home screen.
+**Project tracking.** After version 1, every change went through a pull request, tested before being merged: the API for Hermès, an overview of all calendars in the Personal space, navigation without a black flash, a "Dynamic Island" style space switcher with swipe-to-switch, a shortcut bar on phones, installation as an app on the iPhone home screen. Then custom spaces (up to eight), a modular dashboard, version 2 with files, the command bar that replaces the Ctrl+K palette, the new note editor and folders.
 
 Built with **Claude Code**. My role: define the need, make the choices and test. I did the deployment and operations myself on my server (Proxmox, Cloudflare, Tailscale, Google, backup and restore), guided step by step.
 
@@ -59,7 +69,7 @@ Source code: [github.com/moreauremi/dashu](https://github.com/moreauremi/dashu) 
 
 ## Screenshots
 
-Screenshots from 11 November 2026, taken on a copy of dashu filled with demo data (fake classes, fake notes). The last one is the real output of the restore on my server.
+Screenshots of version 1, from 11 November 2026, taken on a copy of dashu filled with demo data (fake classes, fake notes). The last one is the real output of the restore on my server. Since then, the editor shows a single formatted view, and the Ctrl+K palette has become the command bar.
 
 ![Dashboard of the School space in dark theme: upcoming classes with times and rooms, today's tasks with one ticked, recent notes and a clock. At the top, the island with the three spaces, School selected.](captures/dashu/dashboard.webp "Dashboard of the School space: upcoming classes, today's tasks, recent notes")
 
@@ -76,12 +86,14 @@ Screenshots from 11 November 2026, taken on a copy of dashu filled with demo dat
 ## Results and testing
 
 - All 14 acceptance criteria of the specification are verified, most of them on the real server.
-- 96 automated tests (sign-in, data isolation between two accounts, notes, reading the timetable including daylight saving time, API, script injection), run by GitHub Actions on every pull request.
-- Mobile Lighthouse on the server, through Cloudflare, on simulated 4G: 99 for the dashboard, 100 for the notes, 100 for the calendar, 99 for the editor.
-- The service uses 7.6 MB of memory and responds in 0.5 ms; the Docker image is 7 MB.
+- 96 automated tests at the end of version 1, 235 today (sign-in, data isolation between two accounts, notes, reading the timetable including daylight saving time, API, script injection, booby-trapped files, folders), run by GitHub Actions on every pull request.
+- Mobile Lighthouse on the server (version 1), through Cloudflare, on simulated 4G: 99 for the dashboard, 100 for the notes, 100 for the calendar, 99 for the editor.
+- At the end of version 1, the service used 7.6 MB of memory and responded in 0.5 ms; the Docker image was 7 MB.
 - Google sign-in tested with my account (the same as with my password) and with an unauthorised account, which is refused.
 - Actual restore on 11 November 2026: a note created after the backup disappears when it is restored, then comes back when the restore is undone.
-- I have used dashu every day since November 2026, on my computer and my iPhone.
+- Compression checked on the server, through the isolated service: a 4032 × 3024 HEIC photo becomes a 2560 × 1920 JPEG (816 KB → 391 KB), a PDF goes from 626 KB to 57 KB, a 10-second 4K HDR video becomes a 3.7 MB 1080p MP4 instead of 54.8 MB. During a conversion, the service only sees the local network interface.
+- Folders tried on the server on 15 November 2026, from my iPhone and my computer.
+- I have used Hermes Dashboard every day since November 2026, on my computer and my iPhone.
 
 ## Difficulties encountered
 
@@ -93,17 +105,19 @@ Screenshots from 11 November 2026, taken on a copy of dashu filled with demo dat
 
 **Zoom on iPhone.** Added to the home screen, the app could be zoomed like a web page, and iOS has ignored the standard setting since iOS 10. Solution: a web app manifest, and pinch blocking only in app mode. In Safari, zoom is still possible, for accessibility.
 
+**Compression that worked everywhere except on the server.** The "Compress" button failed in production while every test passed. Two causes, specific to the service's systemd sandbox, which is absent locally and in the tests: RestrictSUIDSGID=yes refuses any chmod that sets the setgid bit, and each folder listed in ReadWritePaths is a separate mount point, so a plain rename from one folder to the other fails (EXDEV). Fix: no more setgid bit, and a copy followed by a delete when the rename fails. So that the bug does not come back, the CI now replays this sandbox.
+
 **A skewed measurement.** The first Lighthouse run on the dashboard scored about 94, below the target: my browser extensions added work while the page loaded. I measured again three times in a Guest window, with no extensions: median of 99.
 
 ## Possible improvements
 
-- Copy the backups to the server's second disk: they are currently on the same disk as the database, which does not protect against a disk failure.
+- Back up the files every night as well, this time on the first disk, so that every piece of data exists on two disks, then run a restore drill with a file.
 - Monitor the service with Uptime Kuma, to be told when it goes down.
-- Version 2: file storage and tools (PDF, conversion), planned in the roadmap of the specification.
+- Finish version 2: sharing a file through a temporary, revocable link, tags and search in files, document conversion (Markdown to PDF).
 
 ## Skills applied
 
-- **B1.1**: manage backups (checked nightly backup, actual restore); set up and check access levels (authorised addresses, API token, Hermès's SSH access limited to six actions); check service continuity (two ways in, automatic rollback of updates, /health check endpoint).
+- **B1.1**: manage backups (checked nightly backup, actual restore, database backups on a second disk); set up and check access levels (authorised addresses, API token, Hermès's SSH access limited to six actions); check service continuity (two ways in, automatic rollback of updates, /health check endpoint).
 - **B1.4**: write a specification with acceptance criteria, split the work into pull requests, track progress criterion by criterion and analyse deviations from the specification.
-- **B1.5**: carry out integration and acceptance testing (automated tests, criteria checked on the server, Lighthouse measurements), deploy the service (Proxmox, LXC, systemd, Cloudflare, Tailscale, DNS, Google OAuth) and document how to install and run it.
+- **B1.5**: carry out integration and acceptance testing (automated tests, criteria checked on the server, Lighthouse measurements), deploy the service (Proxmox, LXC, LVM-thin storage and mount points, systemd, isolated conversion service, Cloudflare, Tailscale, DNS, Google OAuth) and document how to install and run it.
 - **B1.6**: set up my personal work environment, with my classes, revision notes and timetable in one place, and use it every day.
