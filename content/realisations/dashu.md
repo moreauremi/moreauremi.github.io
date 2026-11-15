@@ -31,10 +31,10 @@ competences: [B1.1, B1.4, B1.5, B1.6]  # codes du référentiel, ex. [B1.1, B1.4
   - Contenu rédigé d'après le dépôt github.com/moreauremi/dashu : SPEC.md (cahier
     des charges), STATUS.md (critères vérifiés, mesures, écarts) et README.md
     (déploiement, sauvegardes). C'est la référence.
-  - Captures du 11 novembre 2026 : une copie de dashu remplie de données de
-    démonstration (faux cours, fausses notes, compte demo@dashu.dev), pas mes
-    vraies données. La capture de la restauration est la sortie réelle sur le
-    serveur, remise en forme.
+  - Captures du 15 novembre 2026 : une copie locale de l'application remplie de
+    données de démonstration (faux cours, fausses notes, faux fichiers, compte
+    demo@example.test), pas mes vraies données. La capture de la restauration est
+    la sortie réelle sur le serveur, le 11 novembre, remise en forme.
   - Mise à jour du 15 novembre 2026 : la v2 (fichiers, conversions, dossiers),
     la barre de commandes et le nouvel éditeur, d'après STATUS.md.
 -->
@@ -102,17 +102,21 @@ Code source : [github.com/moreauremi/dashu](https://github.com/moreauremi/dashu)
 
 ## Captures d'écran
 
-Captures de la v1, le 11 novembre 2026, sur une copie de dashu remplie de données de démonstration (faux cours, fausses notes). La dernière est la sortie réelle de la restauration sur mon serveur. Depuis, l'éditeur ne montre plus qu'une vue mise en forme, et la palette Ctrl+K est devenue la barre de commandes.
+Captures du 15 novembre 2026, sur une copie de l'application remplie de données de démonstration (faux cours, fausses notes, faux fichiers). La dernière est la sortie réelle de la restauration sur mon serveur, le 11 novembre.
 
-![Dashboard de l'espace École en thème sombre : prochains cours avec horaires et salles, tâches du jour avec une case cochée, notes récentes et horloge. En haut, l'île avec les trois espaces, École sélectionné.](captures/dashu/dashboard.webp "Dashboard de l'espace École : prochains cours, tâches du jour, notes récentes")
+![Dashboard de l'espace École en thème sombre : un calendrier sur trois jours avec les cours colorés par matière, le prochain cours avec son heure et sa salle, et les tâches du jour, dont une cochée. En haut, l'île avec les trois espaces, École sélectionné ; à gauche, la barre latérale : Commandes, Dashboard, Notes, Fichiers, Agenda, Outils.](captures/dashu/dashboard.webp "Dashboard de l'espace École : calendrier, prochain cours, tâches du jour")
 
-![Agenda de l'espace Perso en thème clair, semaine du 16 novembre : les cours de l'espace École le lundi et le mardi, le planning de l'espace Taff du mercredi au vendredi, et les rendez-vous perso. Chaque événement porte le nom de son espace.](captures/dashu/agenda-vue-ensemble.webp "Agenda de Perso : la vue d'ensemble de tous les espaces")
+![Agenda de l'espace Perso en thème clair, semaine du 16 novembre : les cours de l'espace École le lundi et le mardi, le planning de l'espace Taff du mercredi au vendredi. Chaque événement porte le nom de son espace.](captures/dashu/agenda-vue-ensemble.webp "Agenda de Perso : la vue d'ensemble de tous les espaces")
 
-![Éditeur de la note « VLAN et trunk 802.1Q » : le Markdown à gauche, l'aperçu à droite avec titres, liste, bloc de commandes Cisco et tableau des VLAN, et les tags #bts et #réseau.](captures/dashu/editeur.webp "Éditeur Markdown, avec aperçu en direct et sauvegarde automatique")
+![Onglet Fichiers, dossier Réseaux de l'espace École : le chemin Fichiers › École › Réseaux, les boutons Nouvelle note, Nouveau dossier et Envoyer des fichiers, la zone de dépôt qui envoie dans « École / Réseaux », puis le sous-dossier TP, deux notes et deux PDF.](captures/dashu/dossiers.webp "Fichiers : des dossiers qui rangent les fichiers et les notes")
 
-![Palette de commandes ouverte par Ctrl+K : la recherche « vlan » trouve la note « VLAN et trunk 802.1Q » de l'espace École, mot recherché surligné.](captures/dashu/palette.webp "Palette Ctrl+K : recherche dans toutes les notes, au clavier")
+![Fenêtre « Ranger » ouverte sur le fichier memento-cisco.pdf : les espaces Perso, École et Taff, et sous chacun ses dossiers et sous-dossiers ; le dossier actuel, Réseaux, est marqué « Ici ».](captures/dashu/ranger.webp "Ranger un fichier : tous les espaces et tous les dossiers dans une seule fenêtre")
 
-![Trois écrans d'iPhone en thème sombre : le dashboard de l'espace École, l'agenda de Perso qui défile horizontalement, et la liste des notes avec les tags. En bas, la barre de raccourcis : Dashboard, Notes, Agenda, Rechercher.](captures/dashu/telephone.webp "Sur iPhone, en application sur l'écran d'accueil : île en haut, raccourcis en bas")
+![Éditeur de la note « VLAN et trunk 802.1Q » : le texte mis en forme (liste, bloc de commandes Cisco, tableau des VLAN, cases à cocher), et sous le titre le dossier « École / Réseaux » et les tags #bts et #réseau. Le menu des blocs est ouvert après un « / » : texte, titres, listes, liste de tâches.](captures/dashu/editeur.webp "Éditeur en une seule vue : « / » ouvre le menu des blocs")
+
+![Barre de commandes ouverte sur le dashboard : la saisie « /open vlan » propose la note « VLAN et trunk 802.1Q » et le fichier cours-vlan.pdf de l'espace École ; en bas, l'aide des touches Tab, flèches et Entrée.](captures/dashu/commandes.webp "Barre de commandes « / » : tout se fait au clavier")
+
+![Trois écrans d'iPhone en thème sombre : le dashboard de l'espace École avec son calendrier, la liste des notes rangée par dossier (Sans dossier, Culture générale, Cybersécurité), et le dossier Réseaux dans l'onglet Fichiers. En bas, la barre de raccourcis : Dashboard, Notes, Agenda, Commandes.](captures/dashu/telephone.webp "Sur iPhone, en application sur l'écran d'accueil")
 
 ![Terminal du serveur : dashu-restore liste les sauvegardes de la plus récente à la plus ancienne, puis restaure dashu-2026-11-11_183222.db. La base actuelle est d'abord sauvegardée et vérifiée, puis la restauration se termine et indique la commande pour revenir en arrière.](captures/dashu/restauration.webp "Exercice de restauration sur le serveur, le 11 novembre 2026")
 

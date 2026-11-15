@@ -69,17 +69,21 @@ Source code: [github.com/moreauremi/dashu](https://github.com/moreauremi/dashu) 
 
 ## Screenshots
 
-Screenshots of version 1, from 11 November 2026, taken on a copy of dashu filled with demo data (fake classes, fake notes). The last one is the real output of the restore on my server. Since then, the editor shows a single formatted view, and the Ctrl+K palette has become the command bar.
+Screenshots from 15 November 2026, taken on a copy of the app filled with demo data (fake classes, fake notes, fake files). The last one is the real output of the restore on my server, on 11 November.
 
-![Dashboard of the School space in dark theme: upcoming classes with times and rooms, today's tasks with one ticked, recent notes and a clock. At the top, the island with the three spaces, School selected.](captures/dashu/dashboard.webp "Dashboard of the School space: upcoming classes, today's tasks, recent notes")
+![Dashboard of the School space in dark theme: a three-day calendar with classes coloured by subject, the next class with its time and room, and today's tasks, one of them ticked. At the top, the island with the three spaces, School selected; on the left, the sidebar: Commands, Dashboard, Notes, Files, Agenda, Tools.](captures/dashu/dashboard.webp "Dashboard of the School space: calendar, next class, today's tasks")
 
-![Calendar of the Personal space in light theme, week of 16 November: the School classes on Monday and Tuesday, the Work schedule from Wednesday to Friday, and personal appointments. Each event shows the name of its space.](captures/dashu/agenda-vue-ensemble.webp "Personal calendar: an overview of every space")
+![Calendar of the Personal space in light theme, week of 16 November: the School classes on Monday and Tuesday, the Work schedule from Wednesday to Friday. Each event shows the name of its space.](captures/dashu/agenda-vue-ensemble.webp "Personal calendar: an overview of every space")
 
-![Editor of the note "VLAN et trunk 802.1Q": Markdown on the left, the preview on the right with headings, a list, a block of Cisco commands and a table of VLANs, and the tags #bts and #réseau.](captures/dashu/editeur.webp "Markdown editor, with live preview and autosave")
+![Files tab, Réseaux folder of the School space: the path Files › School › Réseaux, the New note, New folder and Upload buttons, the drop zone that uploads to "École / Réseaux", then the TP subfolder, two notes and two PDFs.](captures/dashu/dossiers.webp "Files: folders that hold both files and notes")
 
-![Command palette opened with Ctrl+K: searching for "vlan" finds the note "VLAN et trunk 802.1Q" in the School space, with the search word highlighted.](captures/dashu/palette.webp "Ctrl+K palette: search every note from the keyboard")
+![The "Ranger" (file away) window opened on the file memento-cisco.pdf: the Personal, School and Work spaces, each with its folders and subfolders; the current folder, Réseaux, is marked "Ici" (here).](captures/dashu/ranger.webp "Filing a file: every space and every folder in a single window")
 
-![Three iPhone screens in dark theme: the dashboard of the School space, the Personal calendar scrolling horizontally, and the list of notes with their tags. At the bottom, the shortcut bar: Dashboard, Notes, Agenda, Search.](captures/dashu/telephone.webp "On iPhone, as an app on the home screen: island at the top, shortcuts at the bottom")
+![Editor of the note "VLAN et trunk 802.1Q": formatted text (a list, a block of Cisco commands, a table of VLANs, checkboxes), and under the title the folder "École / Réseaux" and the tags #bts and #réseau. The block menu is open after typing "/": text, headings, lists, task list.](captures/dashu/editeur.webp "Single-view editor: “/” opens the block menu")
+
+![Command bar opened on the dashboard: typing "/open vlan" suggests the note "VLAN et trunk 802.1Q" and the file cours-vlan.pdf from the School space; at the bottom, help for the Tab, arrow and Enter keys.](captures/dashu/commandes.webp "The “/” command bar: everything from the keyboard")
+
+![Three iPhone screens in dark theme: the dashboard of the School space with its calendar, the list of notes grouped by folder (no folder, Culture générale, Cybersécurité), and the Réseaux folder in the Files tab. At the bottom, the shortcut bar: Dashboard, Notes, Agenda, Commands.](captures/dashu/telephone.webp "On iPhone, as an app on the home screen")
 
 ![Server terminal: dashu-restore lists the backups from newest to oldest, then restores dashu-2026-11-11_183222.db. The current database is first backed up and checked, then the restore finishes and shows the command to roll back.](captures/dashu/restauration.webp "Restore drill on the server, 11 November 2026")
 
