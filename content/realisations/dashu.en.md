@@ -44,7 +44,7 @@ Since 12 November 2026, the app is displayed as Hermes Dashboard, like my other 
 - A file is sent in 50 MB chunks, because Cloudflare's free plan refuses requests over 100 MB. On disk, it has a random name, never the one chosen by the user. It is never run inside the page: only types without code (images, videos, sounds) are displayed, everything else is served as a download, with a "sandbox" CSP.
 - Conversions (iPhone HEIC photos, videos, sounds, PDFs, and Markdown documents with pandoc and Typst) run in a separate service: another system user, with no network, that sees neither the database nor the stored files, limited to 1.5 GB of memory. The web service, limited to 256 MB, never runs a tool itself.
 - Folders and subfolders, three levels at most, hold both files and notes. They only exist in the database: nothing moves on disk, and a folder name can never point to another file. Items are filed through a window that shows the whole tree, or by dragging with the mouse; deleting a folder that is not empty goes through a warning.
-- Files have the same tags as notes, and a search on their name (SQLite full-text index, accents ignored) in the open folder and its subfolders.
+- Files have the same tags as notes, and a search on their name (SQLite full-text index, accents ignored) in the open folder and its subfolders. A file can be renamed from its preview or from the list: only the part before the extension changes, the file type stays the one it was uploaded with.
 - A file can be shared through a link valid for 1 hour, 1 day or 7 days, and revocable. The link holds 32 random bytes; the database only keeps their SHA-256 hash, so reading it does not give a link back. The link's page only shows the name and the size, and downloads the file; expired, revoked or unknown, it is the same page, and the number of requests per IP address is limited.
 
 **Deployment on my homelab.**
@@ -59,7 +59,7 @@ Since 12 November 2026, the app is displayed as Hermes Dashboard, like my other 
 - A hot backup of the database every night at 3:30 a.m. (systemd timer), checked by SQLite and kept 14 days, then the copy of the files to the other disk.
 - dashu-restore puts a backup back into service: it first sets the current database aside, and rolls back by itself if dashu does not restart.
 - dashu-update fetches the code, recompiles, backs up the database, replaces the program and checks that the service responds. If not, it puts the previous version back.
-- On every change, GitHub Actions checks the formatting and quality of the code, runs the automated tests (245 today), replays the server's systemd sandbox, tests the file backup script and builds a Docker image under 30 MB.
+- On every change, GitHub Actions checks the formatting and quality of the code, runs the automated tests (247 today), replays the server's systemd sandbox, tests the file backup script and builds a Docker image under 30 MB.
 
 **Project tracking.** After version 1, every change went through a pull request, tested before being merged: the API for Hermès, an overview of all calendars in the Personal space, navigation without a black flash, a "Dynamic Island" style space switcher with swipe-to-switch, a shortcut bar on phones, installation as an app on the iPhone home screen. Then custom spaces (up to eight), a modular dashboard, version 2 with files, the command bar that replaces the Ctrl+K palette, the new note editor and folders.
 
@@ -88,7 +88,7 @@ Screenshots of version 1, from 11 November 2026, taken on a copy of dashu filled
 ## Results and testing
 
 - All 14 acceptance criteria of the specification are verified, most of them on the real server.
-- 96 automated tests at the end of version 1, 245 today (sign-in, data isolation between two accounts, notes, reading the timetable including daylight saving time, API, script injection, booby-trapped files, folders, expired or revoked share links), run by GitHub Actions on every pull request.
+- 96 automated tests at the end of version 1, 247 today (sign-in, data isolation between two accounts, notes, reading the timetable including daylight saving time, API, script injection, booby-trapped files, folders, expired or revoked share links), run by GitHub Actions on every pull request.
 - Mobile Lighthouse on the server (version 1), through Cloudflare, on simulated 4G: 99 for the dashboard, 100 for the notes, 100 for the calendar, 99 for the editor.
 - At the end of version 1, the service used 7.6 MB of memory and responded in 0.5 ms; the Docker image was 7 MB.
 - Google sign-in tested with my account (the same as with my password) and with an unauthorised account, which is refused.
@@ -115,7 +115,7 @@ Screenshots of version 1, from 11 November 2026, taken on a copy of dashu filled
 
 - Run the restore drill with a file on the server: delete one, then bring it back from the nightly backup.
 - Monitor the service with Uptime Kuma, in its own container (the procedure is written), to be told when it goes down.
-- Finish version 2: renaming a file, and opening files to Hermès's API.
+- Finish version 2: opening files to Hermès's API.
 
 ## Skills applied
 

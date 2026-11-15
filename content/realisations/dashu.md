@@ -77,7 +77,7 @@ Depuis le 12 novembre 2026, l'application s'affiche sous le nom Hermes Dashboard
 - Un fichier part en morceaux de 50 Mo, car l'offre gratuite de Cloudflare refuse les requêtes de plus de 100 Mo. Sur le disque, il porte un nom aléatoire, jamais celui choisi par l'utilisateur. Il n'est jamais exécuté dans la page : seuls les types sans code (images, vidéos, sons) s'affichent, le reste est servi en téléchargement, avec une CSP « sandbox ».
 - Les conversions (photos HEIC d'iPhone, vidéos, sons, PDF, et documents Markdown avec pandoc et Typst) tournent dans un service à part : un autre utilisateur système, sans réseau, qui ne voit ni la base ni les fichiers rangés, limité à 1,5 Go de mémoire. Le service web, limité à 256 Mo, ne lance jamais d'outil lui-même.
 - Des dossiers et sous-dossiers, trois niveaux au plus, rangent les fichiers et les notes. Ils n'existent que dans la base : rien ne bouge sur le disque, et un nom de dossier ne peut désigner aucun autre fichier. On range par une fenêtre qui montre tout l'arborescence, ou en glissant à la souris ; supprimer un dossier qui n'est pas vide passe par un avertissement.
-- Les fichiers ont les mêmes tags que les notes, et une recherche sur le nom (index plein texte de SQLite, accents ignorés) dans le dossier ouvert et ses sous-dossiers.
+- Les fichiers ont les mêmes tags que les notes, et une recherche sur le nom (index plein texte de SQLite, accents ignorés) dans le dossier ouvert et ses sous-dossiers. Un fichier se renomme depuis son aperçu ou la liste : seule la partie avant l'extension change, le type du fichier reste celui de l'envoi.
 - Un fichier se partage par un lien valable 1 heure, 1 jour ou 7 jours, et révocable. Le lien contient 32 octets aléatoires ; la base n'en garde que l'empreinte SHA-256, donc la lire ne permet pas de reconstituer un lien. La page du lien ne montre que le nom et la taille, et télécharge le fichier ; expiré, révoqué ou inconnu, c'est la même page, et le nombre de requêtes par adresse IP est limité.
 
 **Le déploiement sur mon homelab.**
@@ -92,7 +92,7 @@ Depuis le 12 novembre 2026, l'application s'affiche sous le nom Hermes Dashboard
 - Une sauvegarde à chaud de la base chaque nuit à 3 h 30 (minuterie systemd), vérifiée par SQLite et gardée 14 jours, puis la copie des fichiers sur l'autre disque.
 - dashu-restore remet une sauvegarde en service : il met d'abord la base actuelle de côté, et revient en arrière tout seul si dashu ne redémarre pas.
 - dashu-update récupère le code, recompile, sauvegarde la base, remplace le programme et vérifie que le service répond. Sinon, il remet la version précédente.
-- À chaque modification, GitHub Actions vérifie le format et la qualité du code, lance les tests automatiques (245 aujourd'hui), rejoue le bac à sable systemd du serveur, teste le script de sauvegarde des fichiers et construit une image Docker de moins de 30 Mo.
+- À chaque modification, GitHub Actions vérifie le format et la qualité du code, lance les tests automatiques (247 aujourd'hui), rejoue le bac à sable systemd du serveur, teste le script de sauvegarde des fichiers et construit une image Docker de moins de 30 Mo.
 
 **Le suivi du projet.** Après la v1, chaque évolution est passée par une pull request, testée avant d'être fusionnée : l'API pour Hermès, la vue d'ensemble de l'agenda dans Perso, une navigation sans écran noir, un sélecteur d'espace façon « Dynamic Island » avec changement d'espace par balayage, une barre de raccourcis sur téléphone, l'installation en application sur l'écran d'accueil de l'iPhone. Puis des espaces à la carte (jusqu'à huit), un dashboard modulaire, la v2 des fichiers, la barre de commandes qui remplace la palette Ctrl+K, le nouvel éditeur de notes et les dossiers.
 
@@ -121,7 +121,7 @@ Captures de la v1, le 11 novembre 2026, sur une copie de dashu remplie de donné
 ## Résultats et tests
 
 - Les 14 critères d'acceptation du cahier des charges sont vérifiés, la plupart sur le serveur réel.
-- 96 tests automatiques à la fin de la v1, 245 aujourd'hui (connexion, isolation des données entre deux comptes, notes, lecture de l'agenda heure d'été comprise, API, injection de script, fichiers piégés, dossiers, liens de partage expirés ou révoqués), lancés par GitHub Actions à chaque pull request.
+- 96 tests automatiques à la fin de la v1, 247 aujourd'hui (connexion, isolation des données entre deux comptes, notes, lecture de l'agenda heure d'été comprise, API, injection de script, fichiers piégés, dossiers, liens de partage expirés ou révoqués), lancés par GitHub Actions à chaque pull request.
 - Lighthouse mobile sur le serveur (v1), via Cloudflare, en 4G simulée : 99 pour le dashboard, 100 pour les notes, 100 pour l'agenda, 99 pour l'éditeur.
 - À la fin de la v1, le service occupait 7,6 Mo de mémoire et répondait en 0,5 ms ; l'image Docker faisait 7 Mo.
 - Connexion Google testée avec mon compte (le même que par mot de passe) et avec un compte non autorisé, qui est refusé.
@@ -148,7 +148,7 @@ Captures de la v1, le 11 novembre 2026, sur une copie de dashu remplie de donné
 
 - Faire l'exercice de restauration avec un fichier sur le serveur : en supprimer un, puis le faire revenir avec la sauvegarde de la nuit.
 - Surveiller le service avec Uptime Kuma, dans son propre conteneur (la procédure est écrite), pour être prévenu d'une panne.
-- Finir la v2 : renommer un fichier, et ouvrir les fichiers à l'API d'Hermès.
+- Finir la v2 : ouvrir les fichiers à l'API d'Hermès.
 
 ## Compétences mises en œuvre
 
