@@ -588,6 +588,27 @@ a.tag:focus-visible {
   margin-top: 4px;
 }
 
+/* Plusieurs badges du même organisme : une ligne par badge, titre et liens */
+.certif-group {
+  margin: 4px 0 0;
+  padding-left: 1.25em;
+  list-style: disc;
+}
+
+.certifs .certif-group li {
+  display: list-item;
+}
+
+.certif-group .certif-title {
+  font-weight: 500;
+}
+
+.certif-group a {
+  color: var(--accent);
+  font-weight: 600;
+  text-underline-offset: 2px;
+}
+
 /* --- Tableau croisé réalisations × compétences ------------------------------ */
 
 /* Sur petit écran, le tableau défile horizontalement dans son cadre au lieu

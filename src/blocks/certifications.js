@@ -30,8 +30,9 @@ export function certificationsBlock() {
   const groups = certificationGroups().map(([categorie, label]) => {
     const items = entriesOf(categorie);
     if (items.length === 0) return '';
+    const list = categorie === 'badge' ? badges(items) : items.map((c) => certification(c));
     return `<h2 class="block-title">${label}</h2>
-      <ul class="certifs">${items.map((c) => certification(c)).join('')}</ul>`;
+      <ul class="certifs">${list.join('')}</ul>`;
   }).join('');
 
   if (!groups) return `<div class="prose">${intro}${comingSoon()}</div>`;
@@ -58,8 +59,7 @@ function certification(c, hrefFor) {
   const fiche = c.fiche && hrefFor && getRealisation(c.fiche);
   const links = [
     fiche ? `<a href="${escapeHtml(hrefFor(c.fiche))}">${tr('Voir la réalisation', 'See the project')}</a>` : '',
-    c.justificatif ? `<a href="${escapeHtml(c.justificatif)}" ${NEW_TAB}>${tr('Justificatif', 'Certificate')}</a>` : '',
-    c.lien ? `<a href="${escapeHtml(c.lien)}" ${NEW_TAB}>${tr('Vérifier en ligne', 'Verify online')}</a>` : '',
+    ...proofLinks(c),
   ].filter(Boolean);
 
   return `<li>
@@ -68,4 +68,43 @@ function certification(c, hrefFor) {
     ${c.description ? `<span class="certif-description">${safe(c.description)}</span>` : ''}
     ${links.length ? `<span class="certif-links">${links.join(' · ')}</span>` : ''}
   </li>`;
+}
+
+// Justificatif et page de vérification, communs à toutes les entrées
+function proofLinks(c) {
+  return [
+    c.justificatif ? `<a href="${escapeHtml(c.justificatif)}" ${NEW_TAB}>${tr('Justificatif', 'Certificate')}</a>` : '',
+    c.lien ? `<a href="${escapeHtml(c.lien)}" ${NEW_TAB}>${tr('Vérifier en ligne', 'Verify online')}</a>` : '',
+  ].filter(Boolean);
+}
+
+// Badges : quand un organisme en délivre plusieurs, une seule entrée
+// (organisme, date, nombre), puis une ligne par badge avec ses liens, sans
+// description. Un badge seul de son organisme garde l'affichage habituel.
+function badges(items) {
+  const byOrganisme = new Map();
+  for (const c of items) {
+    byOrganisme.set(c.organisme, [...(byOrganisme.get(c.organisme) ?? []), c]);
+  }
+  return [...byOrganisme.values()].map((group) => {
+    if (group.length === 1) return certification(group[0]);
+    const sameDate = new Set(group.map((c) => String(c.date))).size === 1;
+    const meta = [
+      sameDate ? safe(formatDate(String(group[0].date))) : '',
+      `${group.length} badges`,
+    ].filter(Boolean);
+    const lines = group.map((c) => {
+      const parts = [
+        `<span class="certif-title">${safe(c.titre)}</span>`,
+        sameDate ? '' : safe(formatDate(String(c.date))),
+        ...proofLinks(c),
+      ].filter(Boolean);
+      return `<li>${parts.join(' · ')}</li>`;
+    });
+    return `<li>
+    <span class="certif-title">${safe(group[0].organisme)}</span>
+    <span class="certif-meta">${meta.join(' · ')}</span>
+    <ul class="certif-group">${lines.join('')}</ul>
+  </li>`;
+  });
 }
