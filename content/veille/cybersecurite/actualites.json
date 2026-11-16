@@ -2,6 +2,83 @@
   "miseAJour": "2026-11-16",
   "actualites": [
     {
+      "id": "07ffd638182c",
+      "date": "2026-11-16",
+      "titre": "PostgreSQL corrige 52 failles, dont une vieille de 22 ans",
+      "source": "Le Monde Informatique, sécurité",
+      "url": "https://www.lemondeinformatique.fr/cybersecurite-conformite/postgresql-corrige-52-failles-dont-une-vieille-de-",
+      "resume": "PostgreSQL a publié des mises à jour corrigeant 52 vulnérabilités, dont une permettant à un utilisateur authentifié et suffisamment privilégié d’exécuter du code arbitraire sur le serveur. La fin du support de PostgreSQL 14 rappelle aux PME l’importance de maintenir leurs bases de données à jour et de maîtriser les contrôles d’accès.",
+      "tags": [
+        "vulnérabilité",
+        "contrôle d’accès",
+        "PME"
+      ]
+    },
+    {
+      "id": "c6d33585d1a9",
+      "date": "2026-11-16",
+      "titre": "Le FBI alerte sur Artex, qui automatise les cyberattaques",
+      "source": "InCyber",
+      "url": "https://incyber.org/article/fbi-alerte-sur-artex-qui-automatise-cyberattaques/",
+      "resume": "Le FBI alerte sur Artex, une plateforme open source détournée pour automatiser des cyberattaques, de la reconnaissance à l’exfiltration de données. Sa diffusion peut accroître la vitesse et l’ampleur des attaques visant notamment l’industrie manufacturière et les chaînes d’approvisionnement, ce qui concerne directement les PME industrielles.",
+      "tags": [
+        "intelligence artificielle",
+        "cybercriminalité",
+        "chaîne d'approvisionnement"
+      ]
+    },
+    {
+      "id": "9d34c76902f8",
+      "date": "2026-11-15",
+      "titre": "Fuite de données géante à La Poste : « 22 millions de personnes sont concernées » par une cyberattaque massive",
+      "source": "01net, sécurité",
+      "url": "https://www.01net.com/actualites/fuite-donnees-geante-poste-22-millions-personnes-concernees-cyberattaque-massive.html",
+      "resume": "Maileva, filiale de La Poste, a subi une cyberattaque ayant exposé les noms, prénoms et adresses postales de 22 millions de personnes liées aux entreprises clientes. L’incident montre qu’une PME industrielle doit aussi évaluer les risques liés à ses prestataires et aux services externalisés qui traitent ses données.",
+      "tags": [
+        "fuite de données",
+        "chaîne d'approvisionnement",
+        "PME"
+      ]
+    },
+    {
+      "id": "bc0888e89c5e",
+      "date": "2026-11-12",
+      "titre": "Serveurs Apache : cette faille critique dans HTTP/2 permet d’exécuter du code à distance",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/faille-apache-http2-cve-2026-119618-rce/",
+      "resume": "Une vulnérabilité critique du module HTTP/2 d’Apache permet à un attaquant distant non authentifié d’exécuter du code sur le serveur Web. Les versions concernées doivent être mises à jour, notamment dans une PME industrielle exposant des services Web ou connectés à son système d’information.",
+      "tags": [
+        "vulnérabilité",
+        "systèmes industriels (OT)",
+        "PME"
+      ]
+    },
+    {
+      "id": "81f877b07b18",
+      "date": "2026-11-12",
+      "titre": "Google corrige d’urgence une 8e faille Chrome exploitée par des pirates, installez vite la mise à jour",
+      "source": "01net, sécurité",
+      "url": "https://www.01net.com/actualites/google-corrige-urgence-8e-faille-chrome-exploitee-pirates-installez-vite-mise-jour.html",
+      "resume": "Google a corrigé une faille zero-day de Chrome déjà exploitée au moyen de pages Web piégées, ainsi que d’autres vulnérabilités. L’installation rapide du correctif est importante dans une PME industrielle, où les navigateurs peuvent servir à accéder aux outils professionnels et aux systèmes internes.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
+      ]
+    },
+    {
+      "id": "0b5a72c3f9c0",
+      "date": "2026-11-12",
+      "titre": "CAF, France Travail, OFB… l’ANSSI fait le point sur les fuites de données d’octobre 2026",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/reactiv-anssi-point-situation-fuites-donnees-caf-france-travail/",
+      "resume": "L’ANSSI a recensé 64 nouvelles violations de données en octobre 2026, tandis que les incidents continuent notamment d’exploiter des identifiants, mots de passe ou jetons volés. Cette récurrence souligne pour les PME industrielles l’importance de l’authentification multifacteur et de la protection des accès aux applications contenant des données sensibles.",
+      "tags": [
+        "fuite de données",
+        "contrôle d’accès",
+        "PME"
+      ]
+    },
+    {
       "id": "63e4f2161cf5",
       "date": "2026-11-12",
       "titre": "Maersk confirme une fuite de données : WhiteArmor réclame 5 millions de dollars",

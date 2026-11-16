@@ -15,6 +15,19 @@
       ]
     },
     {
+      "id": "760c6e74df0d",
+      "date": "2026-11-12",
+      "titre": "Red Hat voit l’IA comme un cheval de Troie pour OpenShift",
+      "source": "LeMagIT",
+      "url": "https://www.lemagit.fr/actualites/366654664/Red-Hat-voit-lIA-comme-un-cheval-de-Troie-pour-OpenShift",
+      "resume": "Red Hat présente OpenShift et RHEL comme des plateformes où l’IA agentique aide les administrateurs à analyser les journaux, les disques, les processus et les risques de mise à jour, tandis que la virtualisation soutient la croissance d’OpenShift. Pour une PME qui héberge ses serveurs, ces fonctions peuvent améliorer la supervision et la modernisation, mais certaines automatisations restent en préversion ou soumises à validation humaine.",
+      "tags": [
+        "supervision",
+        "sécurité",
+        "conteneurs"
+      ]
+    },
+    {
       "id": "3f6789e615d8",
       "date": "2026-11-10",
       "titre": "November 2026 Security Updates #3 for XCP-ng 8.3 LTS",

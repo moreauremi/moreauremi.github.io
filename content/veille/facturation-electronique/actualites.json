@@ -2,6 +2,19 @@
   "miseAJour": "2026-11-16",
   "actualites": [
     {
+      "id": "87dab25f4297",
+      "date": "2026-11-12",
+      "titre": "Facturation électronique : La comptabilité en temps réel commence aujourd’hui",
+      "source": "DAF Magazine",
+      "url": "https://www.daf-mag.fr/bi-1244/facturation-electronique-la-comptabilite-en-temps-reel-commence-aujourdhui-28138",
+      "resume": "Un mois après le passage à la facture électronique du 1er septembre, la transition s’est déroulée dans de bonnes conditions, mais des fragilités persistent : certaines TPE-PME ont retardé leurs démarches et beaucoup demandent encore un accompagnement. Pour une PME et son intégrateur ERP, la réforme constitue à la fois une obligation à sécuriser et une occasion de moderniser le pilotage quotidien.",
+      "tags": [
+        "PME",
+        "ERP",
+        "expert-comptable"
+      ]
+    },
+    {
       "id": "4d13e23e5ae9",
       "date": "2026-11-12",
       "titre": "Facture électronique : la réforme ne fera pas payer vos clients plus vite",
@@ -24,6 +37,19 @@
       "tags": [
         "ERP",
         "PME",
+        "administration"
+      ]
+    },
+    {
+      "id": "19d66205f397",
+      "date": "2026-11-09",
+      "titre": "Comment la facture électronique simplifie la fiscalité de votre PME ?",
+      "source": "Sage, blog",
+      "url": "https://www.sage.com/fr-fr/blog/facture-electronique-fiscalite-pme/",
+      "resume": "Depuis le 1er septembre 2026, une PME peut recevoir ses factures électroniquement ; un an plus tard, leur émission deviendra obligatoire avec transmission des données à l’administration. L’activation d’une plateforme agréée ne suffit pas : l’annuaire et les flux doivent être suivis pour éviter les blocages, ce qui mobilise la PME et l’intégrateur ERP.",
+      "tags": [
+        "PME",
+        "plateformes agréées",
         "administration"
       ]
     },
