@@ -488,6 +488,21 @@ export default {
   // Liste vide = la rubrique affiche « À venir ».
   certifications: [
     {
+      titre: 'Claude Code in Action',
+      organisme: 'Anthropic (Claude Academy)',
+      categorie: 'badge',
+      date: '2026-11-16',
+      statut: 'obtenue',
+      detail: 'badge de fin de cours',
+      description: 'Cours en ligne sur Claude Code, l’assistant de programmation d’Anthropic dans le terminal : contexte du projet (CLAUDE.md), commandes personnalisées, serveurs MCP, intégration à GitHub et hooks. C’est l’outil avec lequel j’ai construit ce portfolio et dashu.',
+      justificatif: 'docs/certifications/claude-code-in-action.pdf',
+      lien: 'https://academy.claude.com/verify/00a04007e0c63aef2c341c1e5ca78024',
+      en: {
+        detail: 'course completion badge',
+        description: 'Online course on Claude Code, Anthropic’s coding assistant in the terminal: project context (CLAUDE.md), custom commands, MCP servers, GitHub integration and hooks. It is the tool I used to build this portfolio and dashu.',
+      },
+    },
+    {
       titre: 'QWeb : rapports Open-Prod',
       organisme: '1Life',
       categorie: 'formation',
