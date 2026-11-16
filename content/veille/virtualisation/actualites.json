@@ -1,6 +1,31 @@
 {
-  "miseAJour": "2026-11-09",
+  "miseAJour": "2026-11-16",
   "actualites": [
+    {
+      "id": "31a2d87e02cf",
+      "date": "2026-11-14",
+      "titre": "Passerelles Check Point piratées via PHP2Shell : une porte dérobée et un wiper pour VMware ESXi",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/check-point-php2shell-wiper-esxi-tsga/",
+      "resume": "Des passerelles Check Point compromises ont servi de point d'accès pour atteindre des hôtes VMware ESXi, où un wiper a été déployé dans certaines attaques. Cet incident souligne pour une PME l'importance de corriger rapidement les équipements exposés et de cloisonner les accès entre la périphérie réseau et l'infrastructure de virtualisation.",
+      "tags": [
+        "sécurité",
+        "VMware",
+        "migration"
+      ]
+    },
+    {
+      "id": "3f6789e615d8",
+      "date": "2026-11-10",
+      "titre": "November 2026 Security Updates #3 for XCP-ng 8.3 LTS",
+      "source": "XCP-ng",
+      "url": "https://xcp-ng.org/blog/2026/11/10/november-2026-security-updates-3-for-xcp-ng-8-3-lts/",
+      "resume": "XCP-ng 8.3 LTS reçoit une mise à jour de sécurité cumulative corrigeant des vulnérabilités critiques dans XAPI et le noyau, ainsi qu'une faille modérée dans le firmware EDK2. Pour une PME, l'application rapide de cette mise à jour protège notamment la gestion du pool, les privilèges et certains démarrages PXE des machines virtuelles.",
+      "tags": [
+        "sécurité",
+        "nouvelle version"
+      ]
+    },
     {
       "id": "645c66d93021",
       "date": "2026-11-09",

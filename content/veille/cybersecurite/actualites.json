@@ -1,6 +1,83 @@
 {
-  "miseAJour": "2026-11-09",
+  "miseAJour": "2026-11-16",
   "actualites": [
+    {
+      "id": "63e4f2161cf5",
+      "date": "2026-11-12",
+      "titre": "Maersk confirme une fuite de données : WhiteArmor réclame 5 millions de dollars",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/maersk-fuite-de-donnees-whitearmor/",
+      "resume": "Maersk confirme un accès non autorisé et une fuite de données depuis un système hérité d’une acquisition. Le groupe WhiteArmor revendique le vol de données et demande une rançon en bitcoins, tandis que l’incident serait resté isolé, sans perturbation opérationnelle détectée. Cela souligne les risques liés aux anciens systèmes et à leur maintien en sécurité.",
+      "tags": [
+        "fuite de données",
+        "rançongiciel"
+      ]
+    },
+    {
+      "id": "53987b75e296",
+      "date": "2026-11-12",
+      "titre": "Les menaces par hameçonnage progressent trois fois plus vite en Europe que dans le reste du monde",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/reseau-securite/phishing-hoax/les-menaces-par-hameconnage-progressent-trois-fois-plus-vite-en-europe-que-dans-le-reste-du-monde.html",
+      "resume": "Une étude rapporte une multiplication par 4,5 des détections de tentatives d’hameçonnage en Europe sur un an, contre 1,5 à l’échelle mondiale, dans un contexte de menaces liées au cloud et à l’intelligence artificielle. Cette progression accroît l’exposition des PME industrielles aux attaques visant leurs utilisateurs et leurs accès.",
+      "tags": [
+        "hameçonnage",
+        "intelligence artificielle",
+        "contrôle d’accès"
+      ]
+    },
+    {
+      "id": "cca92571bf24",
+      "date": "2026-11-12",
+      "titre": "Zoom Workplace : une faille critique et une faille élevée corrigées sous Windows",
+      "source": "Le Monde Informatique, sécurité",
+      "url": "https://www.lemondeinformatique.fr/cybersecurite-conformite/zoom-workplace-une-faille-critique-et-une-faille-e",
+      "resume": "Zoom a corrigé deux vulnérabilités de Workplace sous Windows, dont une faille critique d’élévation de privilèges exploitable à distance par un attaquant non authentifié après interaction d’un utilisateur. Les entreprises sont invitées à installer rapidement les mises à jour afin de réduire le risque sur leurs postes de travail.",
+      "tags": [
+        "vulnérabilité",
+        "contrôle d’accès",
+        "sensibilisation"
+      ]
+    },
+    {
+      "id": "235f537291e3",
+      "date": "2026-11-11",
+      "titre": "Microsoft corrige plus de 1 200 failles Windows, dont une brèche d’Outlook déjà exploitée par des pirates",
+      "source": "01net, sécurité",
+      "url": "https://www.01net.com/actualites/microsoft-corrige-plus-de-1-200-failles-windows-dont-une-breche-doutlook-deja-exploitee-par-des-pirates.html",
+      "resume": "Microsoft corrige 1 235 failles, dont une vulnérabilité d’Outlook déjà exploitée pour dérober des identifiants grâce à un fichier piégé. Pour une PME, l’épisode rappelle l’importance d’appliquer rapidement les correctifs et de sensibiliser les utilisateurs à la prudence face aux fichiers reçus.",
+      "tags": [
+        "vulnérabilité",
+        "sensibilisation",
+        "intelligence artificielle"
+      ]
+    },
+    {
+      "id": "3586fac739cc",
+      "date": "2026-11-10",
+      "titre": "Qubole : des accès cloud oubliés exposent les entreprises au vol de données",
+      "source": "Le Monde Informatique, sécurité",
+      "url": "https://www.lemondeinformatique.fr/cybersecurite-conformite/qubole-des-acces-cloud-oublies-exposent-les-entrep",
+      "resume": "Des attaquants ont utilisé des identifiants AWS compromis associés à Qubole pour accéder aux environnements cloud de plusieurs clients et voler des secrets et des données. Des autorisations de confiance conservées après l’abandon de la plateforme ont facilité l’attaque, montrant l’importance de révoquer les accès inutiles dans une PME industrielle.",
+      "tags": [
+        "contrôle d’accès",
+        "fuite de données",
+        "chaîne d'approvisionnement"
+      ]
+    },
+    {
+      "id": "e895341ceb5b",
+      "date": "2026-11-10",
+      "titre": "Cybersécurité – Rapport Acronis Cyberpulse 2026",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/reseau-securite/cybersecurite-rapport-acronis-cyberpulse-2026.html",
+      "resume": "Le rapport Acronis Cyber Pulse 2026 analyse les techniques et objectifs des acteurs malveillants, notamment les attaques appuyées par l’intelligence artificielle et les rançongiciels. Il souligne qu’une identité ou un appareil compromis peut ouvrir un accès plus large et recommande de surveiller les identités et le cloud, de limiter les permissions et de tester les plans de reprise.",
+      "tags": [
+        "cybercriminalité",
+        "intelligence artificielle",
+        "contrôle d’accès"
+      ]
+    },
     {
       "id": "0fb79edf45fb",
       "date": "2026-11-09",

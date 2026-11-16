@@ -1,6 +1,45 @@
 {
-  "miseAJour": "2026-11-09",
+  "miseAJour": "2026-11-16",
   "actualites": [
+    {
+      "id": "4d13e23e5ae9",
+      "date": "2026-11-12",
+      "titre": "Facture électronique : la réforme ne fera pas payer vos clients plus vite",
+      "source": "Journal du Net",
+      "url": "https://www.journaldunet.com/fintech/1557769-facture-electronique-la-reforme-ne-fera-pas-payer-vos-clients-plus-vite/",
+      "resume": "La réforme ne réduit pas les délais de paiement, mais elle rend plus rapidement visibles les refus et les rejets de factures, avec leurs motifs. Les PME doivent donc traiter ces signalements, tandis que l’intégrateur d’ERP doit fiabiliser les données et faciliter le suivi des statuts avec la plateforme agréée.",
+      "tags": [
+        "PME",
+        "plateformes agréées",
+        "ERP"
+      ]
+    },
+    {
+      "id": "accf375aafc9",
+      "date": "2026-11-12",
+      "titre": "Du formulaire à la donnée : la facturation électronique est aussi une opportunité pour les entreprises",
+      "source": "Journal du Net",
+      "url": "https://www.journaldunet.com/fintech/1557589-du-formulaire-a-la-donnee-la-facturation-electronique-est-aussi-une-opportunite-pour-les-entreprises/",
+      "resume": "Depuis le 1er septembre 2026, la facturation électronique transforme les informations de TVA en données structurées et traçables, exploitables pour suivre l’activité, la marge et les paiements. Pour une PME comme pour l’intégrateur d’ERP, l’enjeu est de faire circuler correctement les données de facturation, de comptabilité et de fiscalité.",
+      "tags": [
+        "ERP",
+        "PME",
+        "administration"
+      ]
+    },
+    {
+      "id": "cfeb79a7df2f",
+      "date": "2026-11-09",
+      "titre": "Facturation électronique : les PME pourraient être exemptées ?",
+      "source": "DAF Magazine",
+      "url": "https://www.daf-mag.fr/bi-1244/transformation-processus-2133/facturation-electronique-les-pme-pourraient-etre-exemptees-28115",
+      "resume": "L’Assemblée nationale a adopté un amendement proposant un moratoire sur la facturation électronique pour les microentreprises, les PME et les exploitations agricoles, mais son parcours législatif n’est pas achevé. Cette incertitude oblige les PME et les intégrateurs d’ERP à suivre le calendrier et à préparer les évolutions malgré le maintien provisoire des règles actuelles.",
+      "tags": [
+        "PME",
+        "calendrier",
+        "plateformes agréées"
+      ]
+    },
     {
       "id": "065f23a44020",
       "date": "2026-11-05",
