@@ -496,6 +496,8 @@ export default {
       categorie: 'badge',
       date: '2026-11-16',
       statut: 'obtenue',
+      justificatif: 'docs/certifications/claude-code-101.pdf',
+      lien: 'https://academy.claude.com/verify/50689eb47e290b9c3abc1fa18657c6f9',
     },
     {
       titre: 'Claude Code in Action',
@@ -512,6 +514,8 @@ export default {
       categorie: 'badge',
       date: '2026-11-16',
       statut: 'obtenue',
+      justificatif: 'docs/certifications/introduction-model-context-protocol.pdf',
+      lien: 'https://academy.claude.com/verify/31bc905f25153b6b1eb2cdc0407801a7',
     },
     {
       titre: 'QWeb : rapports Open-Prod',
