@@ -10,6 +10,10 @@ titre: Alternance et parcours
   (content/realisations/, type: entreprise) : inutile de les répéter ici.
 -->
 
+## Ma ligne directrice
+
+**Du client à l'outil qui le sert.** Au **Château des Tourelles**, à Pornichet, j'ai commencé **runner**, je suis devenu **chef de rang**, puis **alternant commercial** : vente, prospection, base clients, événements. J'y ai appris le terrain, l'exigence du service et le travail en équipe, et j'ai vu qu'une entreprise tient aussi par ses outils. Je suis donc passé de l'autre côté : **BTS SIO option SISR** et **consultant ERP chez 1Life**, où je paramètre l'outil qui fait tourner les entreprises, en gardant le réflexe du client appris aux Tourelles.
+
 ## L'entreprise : 1Life
 
 1Life est un **intégrateur de l'ERP Open-Prod**, au sein du **groupe Visiativ**. Elle accompagne les entreprises de l'**industrie**, un secteur très diversifié où chaque client est différent.

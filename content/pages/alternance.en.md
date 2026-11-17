@@ -3,6 +3,10 @@
 titre: Work-study and background
 ---
 
+## My guiding thread
+
+**From the customer to the tool that serves them.** At the **Château des Tourelles** in Pornichet, I started as a **runner**, became **head waiter**, then a **work-study sales assistant**: sales, prospecting, customer database, events. There I learned field work, high service standards and teamwork, and saw that a business also stands on its tools. So I moved to the other side: a **BTS SIO (SISR option)** and a role as **ERP consultant at 1Life**, where I configure the tool that runs businesses, keeping the customer reflex I learned at Les Tourelles.
+
 ## The company: 1Life
 
 1Life is an **integrator of the Open-Prod ERP**, part of the **Visiativ group**. It supports companies in **manufacturing**, a very diverse sector where every customer is different.
