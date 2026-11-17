@@ -19,6 +19,17 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
+## 17/11/2026 - Cloisonner et corriger pour sécuriser la virtualisation
+
+L’attaque de passerelles Check Point compromises montre qu’un équipement exposé peut servir de point d’accès jusqu’aux hôtes VMware ESXi, où un wiper a été déployé dans certaines attaques. Pour une PME, une passerelle exposée ne doit jamais donner d’accès direct à la virtualisation : il faut cloisonner les accès entre la périphérie réseau et l’infrastructure de virtualisation, puis corriger rapidement les équipements exposés.
+
+La mise à jour de sécurité cumulative de XCP-ng 8.3 LTS rappelle également l’importance d’appliquer les correctifs des hyperviseurs sans attendre. Elle corrige des vulnérabilités critiques dans XAPI et le noyau, ainsi qu’une faille modérée dans le firmware EDK2. XCP-ng doit donc être patché vite afin de mieux protéger la gestion du pool, les privilèges et certains démarrages PXE des machines virtuelles.
+
+**Sources**
+
+- [Passerelles Check Point piratées via PHP2Shell : une porte dérobée et un wiper pour VMware ESXi](https://www.it-connect.fr/check-point-php2shell-wiper-esxi-tsga/) (IT-Connect, 14 novembre 2026)
+- [November 2026 Security Updates #3 for XCP-ng 8.3 LTS](https://xcp-ng.org/blog/2026/11/10/november-2026-security-updates-3-for-xcp-ng-8-3-lts/) (XCP-ng, 10 novembre 2026)
+
 ## 09/11/2026 - vSphere Express : une offre PME à comparer aux alternatives
 
 L’offre vSphere Express de Broadcom s’adresse aux PME, mais elle bride les fonctionnalités d’administration avancées et la haute disponibilité. Basée sur vSphere 9, elle comprend ESX et vCenter Standard, avec une limitation à 128 cœurs pour un an et à un pack par client. Plusieurs fonctions avancées sont absentes et chaque instance reste indépendante. Pour les entreprises, cela limite les capacités d’évolution et surcharge la gestion individuelle des instances. Je vais comparer cette offre avec des alternatives comme Proxmox avant de faire un choix d’infrastructure.
