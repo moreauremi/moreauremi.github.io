@@ -13,8 +13,8 @@ lettre:
   formule: I invite you to browse my projects and would be glad to discuss them with you.
 ---
 
-I am a student in the **BTS SIO, SISR option** (a French two-year degree in IT systems and networks) at **MyDigitalSchool Nantes** (2026-2028), on a work-study placement as an **ERP consultant at 1Life**, an Open-Prod integrator for industrial SMEs. There, I connect **users' needs** with the **technical tools** that meet them.
+I am a student in the **BTS SIO, SISR option** (a French two-year degree in IT systems and networks) at MyDigitalSchool Nantes (2026-2028), on a work-study placement as an **ERP consultant at 1Life**, an Open-Prod integrator for industrial SMEs. There, I connect users' needs with the tools that meet them, and I administer my Ubuntu test environment: ERP updates, database restores.
 
-After a general baccalaureate in 2024 and two years in **business studies** (a BBA at Audencia, then a BTS in sales), I kept what I enjoy most: **working with customers**. IT gave me the rest: at home, I am building a **Proxmox homelab** (**Jellyfin** server, **NAS**) that I reach over a **VPN**.
+After a general baccalaureate in 2024, I spent two years in business studies (a BBA at Audencia, then a BTS in sales). I kept a taste for working with customers, then turned to IT. At home, on a **Proxmox homelab** reachable over a VPN, I host Jellyfin and **Hermes Dashboard**, my self-hosted workspace, backed up every night.
 
-My goal: to **establish myself as an ERP consultant**, a job that combines customer contact with technical work, and that lets me discover **French industry** through companies with very different trades.
+My goal: to become an **ERP consultant**, a job that combines customer contact with technical work, for industrial SMEs with very different trades. My SISR option is directly useful here: an ERP runs on servers and databases that must be installed, maintained and backed up.
