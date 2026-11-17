@@ -407,6 +407,10 @@ dl.fiche dt{color:var(--doux)}dl.fiche dd{margin:0}
 .liste li{margin-bottom:.75rem}.type{color:var(--doux);font-size:.85rem}
 .note{color:var(--doux);font-size:.9rem;border-left:3px solid var(--trait);padding-left:.6rem}
 footer{margin-top:3rem;padding:1rem;border-top:1px solid var(--trait);font-size:.9rem;color:var(--doux)}
+.frise{margin:0 0 1.5rem;padding:0;list-style:none}.frise li{position:relative;padding:0 0 1rem 1.6rem}.frise p{margin:0}
+.frise li::before{content:"";position:absolute;top:.45em;left:0;width:.7em;height:.7em;background:var(--texte)}
+.frise li::after{content:"";position:absolute;top:1.3em;bottom:.1em;left:calc(.35em - 1px);border-left:2px dotted var(--texte)}
+.frise-tete{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 1rem}.frise-date{font-weight:600}.frise-lieu{font-style:italic;color:var(--doux)}
 `;
 
 // Liens vers les pages statiques, ajoutés à la version sans JavaScript

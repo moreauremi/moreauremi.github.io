@@ -10,9 +10,16 @@ titre: Alternance et parcours
   (content/realisations/, type: entreprise) : inutile de les répéter ici.
 -->
 
-## Ma ligne directrice
+## Mon parcours
 
-**Du client à l'outil qui le sert.** Au **Château des Tourelles**, à Pornichet, j'ai commencé **runner**, je suis devenu **chef de rang**, puis **alternant commercial** : vente, prospection, base clients, événements. J'y ai appris le terrain, l'exigence du service et le travail en équipe, et j'ai vu qu'une entreprise tient aussi par ses outils. Je suis donc passé de l'autre côté : **BTS SIO option SISR** et **consultant ERP chez 1Life**, où je paramètre l'outil qui fait tourner les entreprises, en gardant le réflexe du client appris aux Tourelles.
+Du service en salle au conseil ERP : d'abord le client, puis l'outil qui le sert.
+
+<ol class="frise">
+<li><p class="frise-tete"><strong>Alternant consultant ERP</strong><span class="frise-date">sept. 2026 – aujourd'hui</span></p><p class="frise-lieu">1Life (groupe Visiativ), Nantes</p><p>Open-Prod, paramétrage, SQL, notions comptables, flux de vente et de production.</p></li>
+<li><p class="frise-tete"><strong>Employé commercial</strong><span class="frise-date">févr. 2026 – août 2026</span></p><p class="frise-lieu">Super U, Couëron</p><p>Mise en rayon et gestion des stocks.</p></li>
+<li><p class="frise-tete"><strong>Alternant commercial</strong><span class="frise-date">déc. 2024 – nov. 2025</span></p><p class="frise-lieu">Château des Tourelles, Pornichet</p><p>Runner → chef de rang → alternant commercial.</p><p>Vente, prospection de nouveaux clients, gestion de la base clients, événements commerciaux, rang de 90 couverts.</p></li>
+<li><p class="frise-tete"><strong>Employé polyvalent</strong><span class="frise-date">août 2022, 2023 et 2024</span></p><p class="frise-lieu">Carrefour, La Baule</p><p>Gestion des stocks, caisses automatiques, formation de 4 saisonniers, mise en rayon.</p></li>
+</ol>
 
 ## L'entreprise : 1Life
 
@@ -46,10 +53,3 @@ En octobre 2026, je suis aussi une **formation de deux journées sur QWeb**, le 
 ## Recommandation
 
 [À COMPLÉTER : recommandation de mon tuteur, citée avec son accord (nom et fonction)]
-
-## Expériences précédentes
-
-- **Château des Tourelles, Pornichet** : alternant, de runner à chef de rang, puis alternant commercial (vente, prospection de nouveaux clients, gestion de la base clients, événements commerciaux) ;
-- **Grande distribution** : Carrefour, puis Super U.
-
-[À COMPLÉTER : dates de chaque expérience]

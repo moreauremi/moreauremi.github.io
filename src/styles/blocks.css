@@ -789,3 +789,63 @@ a.tag:focus-visible {
 .fiche-link-open {
   display: none;
 }
+
+/* --- Frise du parcours (content/pages/alternance.md) ------------------------
+   Une puce par poste, reliées par des pointillés, du plus récent au plus
+   ancien. Les couleurs suivent le conteneur (RémiOS ou vue jury). */
+
+.prose .frise {
+  max-width: 75ch;
+  margin: 0 0 1em;
+  padding: 0;
+  list-style: none;
+}
+
+.prose .frise li {
+  position: relative;
+  margin: 0;
+  padding: 0 0 1em 1.6em;
+}
+
+/* Puce carrée, dans l'esprit de l'écran texte */
+.prose .frise li::before {
+  content: '';
+  position: absolute;
+  top: 0.3em;
+  left: 0;
+  width: 0.75em;
+  height: 0.75em;
+  background: var(--heading);
+}
+
+/* Pointillés jusqu'à la puce suivante */
+.prose .frise li::after {
+  content: '';
+  position: absolute;
+  top: 1.2em;
+  bottom: 0.1em;
+  left: calc(0.375em - 1px);
+  border-left: 2px dotted var(--heading);
+}
+
+.prose .frise p {
+  margin: 0;
+}
+
+/* Poste à gauche, dates à droite ; les dates passent dessous si la place
+   manque */
+.prose .frise .frise-tete {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 1em;
+  color: var(--heading);
+}
+
+.prose .frise .frise-date {
+  font-weight: bold;
+}
+
+.prose .frise .frise-lieu {
+  font-style: italic;
+}

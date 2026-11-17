@@ -3,9 +3,16 @@
 titre: Work-study and background
 ---
 
-## My guiding thread
+## My path
 
-**From the customer to the tool that serves them.** At the **Château des Tourelles** in Pornichet, I started as a **runner**, became **head waiter**, then a **work-study sales assistant**: sales, prospecting, customer database, events. There I learned field work, high service standards and teamwork, and saw that a business also stands on its tools. So I moved to the other side: a **BTS SIO (SISR option)** and a role as **ERP consultant at 1Life**, where I configure the tool that runs businesses, keeping the customer reflex I learned at Les Tourelles.
+From serving tables to ERP consulting: the customer first, then the tool that serves them.
+
+<ol class="frise">
+<li><p class="frise-tete"><strong>Work-study ERP consultant</strong><span class="frise-date">Sept. 2026 – present</span></p><p class="frise-lieu">1Life (Visiativ group), Nantes</p><p>Open-Prod, configuration, SQL, accounting basics, sales and production flows.</p></li>
+<li><p class="frise-tete"><strong>Sales assistant</strong><span class="frise-date">Feb. 2026 – Aug. 2026</span></p><p class="frise-lieu">Super U, Couëron</p><p>Shelf stocking and inventory management.</p></li>
+<li><p class="frise-tete"><strong>Work-study sales assistant</strong><span class="frise-date">Dec. 2024 – Nov. 2025</span></p><p class="frise-lieu">Château des Tourelles, Pornichet</p><p>Runner → head waiter → work-study sales assistant.</p><p>Sales, prospecting new customers, customer database management, sales events, a 90-cover station.</p></li>
+<li><p class="frise-tete"><strong>General assistant</strong><span class="frise-date">Aug. 2022, 2023 and 2024</span></p><p class="frise-lieu">Carrefour, La Baule</p><p>Inventory management, self-checkouts, training 4 seasonal workers, shelf stocking.</p></li>
+</ol>
 
 ## The company: 1Life
 
@@ -39,10 +46,3 @@ In October 2026, I am also taking a **two-day training course on QWeb**, the Odo
 ## Recommendation
 
 [À COMPLÉTER : recommandation de mon tuteur, citée avec son accord (nom et fonction)]
-
-## Previous experience
-
-- **Château des Tourelles, Pornichet**: work-study student, from runner to head waiter, then work-study sales assistant (sales, prospecting new customers, managing the customer database, sales events);
-- **Retail**: Carrefour, then Super U.
-
-[À COMPLÉTER : dates de chaque expérience]
