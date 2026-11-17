@@ -22,10 +22,15 @@ lettre:
   parcours », homelab et projets dans « Réalisations ».
   Le 3e paragraphe est le projet professionnel attendu par les consignes de
   l'épreuve E5 (« énoncé de votre projet professionnel »).
+  Relu le 17 novembre 2026 : le lien avec l'option SISR est rendu visible
+  (environnement de test chez 1Life, homelab, Hermes Dashboard), les études
+  de commerce sont présentées comme des études, et le gras est réservé à
+  cinq repères. Chaque fait vient d'une fiche déjà publiée : « Alternance
+  et parcours », « Environnement Open-Prod », « Hermes Dashboard (dashu) ».
 -->
 
-Étudiant en **BTS SIO option SISR** à **MyDigitalSchool Nantes** (2026-2028), je suis en alternance comme **consultant ERP chez 1Life**, intégrateur d'Open-Prod pour les PME industrielles. J'y fais le lien entre les **besoins des utilisateurs** et les **outils techniques** qui y répondent.
+Étudiant en **BTS SIO option SISR** à MyDigitalSchool Nantes (2026-2028), je suis en alternance comme **consultant ERP chez 1Life**, intégrateur d'Open-Prod pour les PME industrielles. J'y fais le lien entre les besoins des utilisateurs et les outils qui y répondent, et j'administre mon environnement de test sous Ubuntu : mises à jour de l'ERP, restauration des bases de données.
 
-Après un bac général en 2024 et deux ans dans le **commerce** (BBA à Audencia, BTS NDRC), j'en ai retenu ce qui me plaît : le **contact client**. L'informatique m'a apporté le reste : chez moi, je construis un **homelab Proxmox** (serveur **Jellyfin**, **NAS**) accessible par **VPN**.
+Après un bac général en 2024, j'ai fait deux ans d'études de commerce (BBA à Audencia, puis BTS NDRC). J'en ai gardé le goût du contact client, puis je me suis tourné vers l'informatique. Chez moi, sur un **homelab Proxmox** joignable par VPN, j'héberge Jellyfin et **Hermes Dashboard**, mon espace de travail auto-hébergé, sauvegardé chaque nuit.
 
-Mon objectif : **confirmer mon profil de consultant ERP**, un métier qui allie contact client et technique, et qui me fait découvrir l'**industrie française** à travers des entreprises aux métiers très différents.
+Mon objectif : devenir **consultant ERP**, un métier qui allie contact client et technique, auprès de PME industrielles aux métiers très différents. Mon option SISR m'y sert directement : un ERP repose sur des serveurs et des bases de données qu'il faut installer, maintenir et sauvegarder.
