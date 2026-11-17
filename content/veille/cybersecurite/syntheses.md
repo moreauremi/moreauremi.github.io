@@ -19,6 +19,15 @@ titre: Mes synthèses
   `git pull` avant de le modifier à la main. Voir le README.
 -->
 
+## 17/11/2026 - Les PME industrielles face à la hausse du hameçonnage
+
+Le hameçonnage est en forte hausse en Europe : les détections ont été multipliées par 4,5 en un an, contre 1,5 à l’échelle mondiale, dans un contexte de menaces liées au cloud et à l’intelligence artificielle. Les PME industrielles sont directement visées, notamment par des attaques ciblant leurs utilisateurs et leurs accès. La correction par Microsoft de 1 235 failles, dont une vulnérabilité d’Outlook déjà exploitée pour dérober des identifiants à l’aide d’un fichier piégé, montre également le risque lié aux pièces jointes. Je considère donc qu’il faut appliquer rapidement les correctifs et former les utilisateurs à la prudence face aux fichiers et aux liens reçus.
+
+**Sources**
+
+- [Les menaces par hameçonnage progressent trois fois plus vite en Europe que dans le reste du monde](https://www.undernews.fr/reseau-securite/phishing-hoax/les-menaces-par-hameconnage-progressent-trois-fois-plus-vite-en-europe-que-dans-le-reste-du-monde.html) (UnderNews, 12 novembre 2026)
+- [Microsoft corrige plus de 1 200 failles Windows, dont une brèche d’Outlook déjà exploitée par des pirates](https://www.01net.com/actualites/microsoft-corrige-plus-de-1-200-failles-windows-dont-une-breche-doutlook-deja-exploitee-par-des-pirates.html) (01net, sécurité, 11 novembre 2026)
+
 ## 09/11/2026 - La cybersécurité dépend de tous les maillons de l’entreprise
 
 L’explosion du phishing, les attaques visant des prestataires tiers et le piratage d’équipements IoT rappellent que la sécurité globale dépend de la protection des maillons périphériques. Microsoft a détecté 7,3 milliards d’e-mails de phishing au troisième trimestre 2026, notamment par l’usurpation de domaines utilisés par les entreprises. Le FBI et la CISA alertent également sur des systèmes de réfrigération connectés accessibles depuis Internet, tandis que l’attaque contre Auto-Planning montre qu’un prestataire peut exposer les données de ses clients.
