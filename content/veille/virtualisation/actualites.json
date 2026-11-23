@@ -1,6 +1,45 @@
 {
-  "miseAJour": "2026-11-16",
+  "miseAJour": "2026-11-23",
   "actualites": [
+    {
+      "id": "89017ac0e85f",
+      "date": "2026-11-20",
+      "titre": "Windows Server 2028 va durcir sa base et activer Trusted Launch pour les VM",
+      "source": "Next",
+      "url": "https://next.ink/268563/windows-server-2028-va-durcir-sa-base-et-activer-trusted-launch-pour-les-vm/",
+      "resume": "Microsoft a publié la première préversion de Windows Server 2028 et présente un durcissement renforcé de la configuration Server Core, notamment pour limiter les risques dès l’installation. Cette évolution peut aider une PME à sécuriser ses serveurs locaux et à mieux protéger ses machines virtuelles.",
+      "tags": [
+        "sécurité",
+        "nouvelle version",
+        "Hyper-V"
+      ]
+    },
+    {
+      "id": "a79dd03bf58f",
+      "date": "2026-11-19",
+      "titre": "VMware vCenter : une faille critique exploitée comme zero-day depuis septembre 2026",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/vmware-vcenter-cve-2026-123890-zero-day/",
+      "resume": "Broadcom a corrigé une vulnérabilité critique de VMware vCenter exploitée comme zéro-day contre des environnements sur lesquels un accès réseau suffit pour obtenir une session administrateur. Pour une PME hébergeant VMware, l’incident impose d’appliquer rapidement les correctifs et de renforcer l’accès au vCenter.",
+      "tags": [
+        "sécurité",
+        "VMware",
+        "Broadcom"
+      ]
+    },
+    {
+      "id": "d622f2b896c2",
+      "date": "2026-11-19",
+      "titre": "OpenShift sur Azure exécute enfin les VM",
+      "source": "LeMagIT",
+      "url": "https://www.lemagit.fr/actualites/366654916/OpenShift-sur-Azure-execute-enfin-les-VM",
+      "resume": "OpenShift Virtualization sur Azure Red Hat OpenShift peut désormais exécuter des machines virtuelles et les gérer avec des conteneurs dans une même plateforme. Cette possibilité facilite une éventuelle migration depuis VMware pour les PME confrontées à la hausse des coûts de licences.",
+      "tags": [
+        "VMware",
+        "licences",
+        "migration"
+      ]
+    },
     {
       "id": "31a2d87e02cf",
       "date": "2026-11-14",

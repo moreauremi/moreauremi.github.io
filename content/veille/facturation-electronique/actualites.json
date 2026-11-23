@@ -1,6 +1,19 @@
 {
-  "miseAJour": "2026-11-16",
+  "miseAJour": "2026-11-23",
   "actualites": [
+    {
+      "id": "22d95fe0f060",
+      "date": "2026-11-16",
+      "titre": "Facturation électronique J+60 : quels premiers enseignements tirer ?",
+      "source": "Docoon (plateforme agréée)",
+      "url": "https://docoon.com/facturation-electronique-j60-quels-premiers-enseignements-tirer/",
+      "resume": "À J+60 après le lancement de la réforme, Docoon partage ses premiers retours d’expérience sous forme d’un décryptage à télécharger. Ces premiers enseignements peuvent aider les PME et les intégrateurs d’ERP à mieux comprendre les premiers effets pratiques du déploiement.",
+      "tags": [
+        "PME",
+        "ERP",
+        "plateformes agréées"
+      ]
+    },
     {
       "id": "87dab25f4297",
       "date": "2026-11-12",

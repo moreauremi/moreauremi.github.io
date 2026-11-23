@@ -1,6 +1,84 @@
 {
-  "miseAJour": "2026-11-16",
+  "miseAJour": "2026-11-23",
   "actualites": [
+    {
+      "id": "7a1ccc36b5c1",
+      "date": "2026-11-20",
+      "titre": "NAS Synology : une mise à jour DSM corrige deux failles critiques, dont NGINX2Root",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/nginx2root-synology-dsm-faille-oauth-cve-2026-120382/",
+      "resume": "Synology a publié des correctifs après la découverte de deux failles critiques dans DSM, dont une pouvant permettre une exécution à distance sans authentification. L’application rapide des mises à jour est essentielle pour limiter l’accès et les compromissions des équipements utilisés par les PME.",
+      "tags": [
+        "vulnérabilité",
+        "contrôle d’accès",
+        "PME"
+      ]
+    },
+    {
+      "id": "1c98f8364f48",
+      "date": "2026-11-19",
+      "titre": "Une cyberattaque frappe le géant de l’énergie Equinor",
+      "source": "InCyber",
+      "url": "https://incyber.org/article/cyberattaque-frappe-geant-energie-equinor/",
+      "resume": "Equinor a subi une cyberattaque ayant perturbé ses outils internes et sa messagerie, sans interrompre sa production ni provoquer de fuite de données. L’incident montre que même une grande entreprise du secteur industriel doit protéger ses systèmes et disposer de moyens de relèvement.",
+      "tags": [
+        "systèmes industriels (OT)",
+        "cybercriminalité",
+        "fuite de données"
+      ]
+    },
+    {
+      "id": "a79dd03bf58f",
+      "date": "2026-11-19",
+      "titre": "VMware vCenter : une faille critique exploitée comme zero-day depuis septembre 2026",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/vmware-vcenter-cve-2026-123890-zero-day/",
+      "resume": "Une faille critique de VMware vCenter a permis d’obtenir une session administrateur sans mot de passe et aurait été exploitée avant la publication du correctif. Une mise à jour rapide est importante pour les PME, car la compromission d’un outil de virtualisation peut exposer de nombreux systèmes.",
+      "tags": [
+        "vulnérabilité",
+        "contrôle d’accès",
+        "cybercriminalité"
+      ]
+    },
+    {
+      "id": "a96353ab15b7",
+      "date": "2026-11-19",
+      "titre": "Black Friday : les tentatives de phishing bondissent de 82 % début novembre",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/reseau-securite/phishing-hoax/black-friday-les-tentatives-de-phishing-bondissent-de-82-debut-novembre.html",
+      "resume": "Les tentatives de hameçonnage liées au Black Friday ont fortement augmenté, avec des campagnes usurpant l’identité de grandes marques. Les PME industrielles doivent sensibiliser leurs collaborateurs, car des achats professionnels peuvent ouvrir une voie d’intrusion vers leurs réseaux.",
+      "tags": [
+        "hameçonnage",
+        "sensibilisation",
+        "PME"
+      ]
+    },
+    {
+      "id": "6efec4132851",
+      "date": "2026-11-17",
+      "titre": "Cybersécurité : les TPE ne peuvent plus rester les oubliées de la protection numérique",
+      "source": "UnderNews",
+      "url": "https://www.undernews.fr/reseau-securite/cybersecurite-les-tpe-ne-peuvent-plus-rester-les-oubliees-de-la-protection-numerique.html",
+      "resume": "La transformation numérique expose les TPE et PME à davantage d’attaques, alors que leurs moyens de protection restent souvent limités. Une cyberattaque peut menacer leur continuité et affecter particulièrement leurs systèmes industriels, dépendants du numérique.",
+      "tags": [
+        "PME",
+        "vulnérabilité",
+        "sensibilisation"
+      ]
+    },
+    {
+      "id": "aca6c1f70b6c",
+      "date": "2026-11-17",
+      "titre": "NIS 2 : une transposition à périmètre élargi",
+      "source": "Silicon",
+      "url": "https://www.silicon.fr/cybersecurite-1371/nis-2-transposition-entites-concerness-230470",
+      "resume": "La transposition française de NIS 2 élargit le périmètre des entités concernées, notamment aux plates-formes de facturation électronique et à certains secteurs industriels. Les PME doivent donc vérifier si elles sont concernées et anticiper leurs obligations.",
+      "tags": [
+        "NIS2",
+        "réglementation",
+        "PME"
+      ]
+    },
     {
       "id": "07ffd638182c",
       "date": "2026-11-16",
