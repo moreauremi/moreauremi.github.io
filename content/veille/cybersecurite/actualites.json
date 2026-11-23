@@ -2,6 +2,44 @@
   "miseAJour": "2026-11-23",
   "actualites": [
     {
+      "id": "7913f8c4c2d8",
+      "date": "2026-11-23",
+      "titre": "BlackHatSect0r : phishing bancaire, extorsion et industrie",
+      "source": "ZATAZ",
+      "url": "https://www.zataz.com/blackhatsect0r-phishing-bancaire-extorsion-et-industrie/",
+      "resume": "BlackHatSect0r commercialise une plateforme de hameçonnage bancaire et revendique des opérations d’extorsion, de destruction de sauvegardes et la découverte d’une interface industrielle exposée sur Internet. Pour une PME industrielle, cet ensemble illustre les risques liés aux systèmes OT accessibles et à la protection insuffisante des sauvegardes.",
+      "tags": [
+        "cybercriminalité",
+        "hameçonnage",
+        "systèmes industriels (OT)"
+      ]
+    },
+    {
+      "id": "ea65b5be2501",
+      "date": "2026-11-23",
+      "titre": "GL.iNet : des pirates ont exploité le cloud GoodCloud pour infecter des routeurs et des KVM",
+      "source": "IT-Connect",
+      "url": "https://www.it-connect.fr/gl-inet-goodcloud-routeurs-kvm-malware/",
+      "resume": "Une vulnérabilité du service cloud GoodCloud a permis d’installer un logiciel malveillant sur certains routeurs et KVM GL.iNet. Bien que la faille ait été corrigée côté cloud, les appareils déjà infectés restent à traiter, ce qui souligne l’importance de vérifier les équipements administrés à distance dans une PME.",
+      "tags": [
+        "vulnérabilité",
+        "contrôle d’accès",
+        "cybercriminalité"
+      ]
+    },
+    {
+      "id": "278b757ad0ea",
+      "date": "2026-11-23",
+      "titre": "Après une cyberattaque, Nissan coupe un outil vital pour ses concessionnaires",
+      "source": "01net, sécurité",
+      "url": "https://www.01net.com/actualites/apres-une-cyberattaque-nissan-coupe-un-outil-vital-pour-ses-concessionnaires.html",
+      "resume": "Une cyberattaque a compromis l’outil de diagnostic utilisé par les concessionnaires Nissan, entraînant la désactivation de fonctions liées aux réparations électroniques et aux clés. Cet incident montre qu’une compromission d’un outil métier connecté peut interrompre des opérations et retarder les services d’une entreprise industrielle.",
+      "tags": [
+        "cybercriminalité",
+        "systèmes industriels (OT)"
+      ]
+    },
+    {
       "id": "7a1ccc36b5c1",
       "date": "2026-11-20",
       "titre": "NAS Synology : une mise à jour DSM corrige deux failles critiques, dont NGINX2Root",
@@ -51,6 +89,30 @@
         "hameçonnage",
         "sensibilisation",
         "PME"
+      ]
+    },
+    {
+      "id": "f815d9a66de2",
+      "date": "2026-11-18",
+      "titre": "Vulnérabilité dans Oracle Java SE (18 novembre 2026)",
+      "source": "CERT-FR, alertes",
+      "url": "https://www.cert.cyber.gouv.fr/alerte/CERTFR-2026-ALE-016/",
+      "resume": "Oracle a signalé une vulnérabilité d’OpenJDK pouvant permettre une exécution de code ou un déni de service dans certaines conditions matérielles. Le CERT-FR recommande d’appliquer les correctifs, car OpenJDK est utilisé par de nombreux outils susceptibles d’être présents dans le système d’information d’une PME.",
+      "tags": [
+        "vulnérabilité",
+        "PME"
+      ]
+    },
+    {
+      "id": "8ba00376dffb",
+      "date": "2026-11-18",
+      "titre": "Multiples vulnérabilités dans F5 NGINX (18 novembre 2026)",
+      "source": "CERT-FR, alertes",
+      "url": "https://www.cert.cyber.gouv.fr/alerte/CERTFR-2026-ALE-017/",
+      "resume": "Deux vulnérabilités de NGINX permettent à un attaquant non authentifié d’exécuter du code à distance via HTTP/2, avec une preuve de concept publique pour l’une d’elles. En attendant les correctifs, le CERT-FR recommande de désactiver HTTP/2, mesure importante pour limiter l’exposition des services d’une PME industrielle.",
+      "tags": [
+        "vulnérabilité",
+        "contrôle d’accès"
       ]
     },
     {

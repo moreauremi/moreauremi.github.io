@@ -2,6 +2,19 @@
   "miseAJour": "2026-11-23",
   "actualites": [
     {
+      "id": "4cfcfb7556bd",
+      "date": "2026-11-23",
+      "titre": "Facture électronique : pour beaucoup de PME, le vrai chantier est le logiciel maison",
+      "source": "Journal du Net",
+      "url": "https://www.journaldunet.com/solutions/dsi/1558157-facture-electronique-pour-beaucoup-de-pme-le-vrai-chantier-est-le-logiciel-maison/",
+      "resume": "Depuis le 1er septembre 2026, les PME assujetties à la TVA doivent recevoir des factures électroniques, tandis que l’émission devient obligatoire pour elles en 2027. Les PME utilisant un logiciel maison doivent adapter leurs outils aux formats structurés et aux mentions imposées ; un intégrateur d’ERP doit auditer les bases, développer les champs requis et les connecter à une plateforme agréée.",
+      "tags": [
+        "PME",
+        "ERP",
+        "plateformes agréées"
+      ]
+    },
+    {
       "id": "22d95fe0f060",
       "date": "2026-11-16",
       "titre": "Facturation électronique J+60 : quels premiers enseignements tirer ?",
