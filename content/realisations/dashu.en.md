@@ -2,8 +2,8 @@
 # Traduction anglaise de dashu.md. Seuls les champs traduits sont ici
 # (titre, resume, statut) : les autres viennent du fichier français.
 titre: "Hermes Dashboard (dashu) — a self-hosted workspace"
-statut: "v1 in service, v2 in progress"
-resume: "My all-in-one workspace: a dashboard, notes, my Pronote timetable and files sorted into folders, split across spaces (Personal, School, Work…). I wrote its specification, then deployed it on my Proxmox homelab, reachable at app.dashu.dev through a Cloudflare tunnel and through Tailscale, with a nightly backup checked by an actual restore."
+statut: "in service, version 1.0.0 released"
+resume: "My all-in-one workspace: a dashboard, notes, my Pronote timetable and files sorted into folders, split across spaces (Personal, School, Work…). I wrote its specification, then deployed it on my Proxmox homelab, reachable at app.dashu.dev through a Cloudflare tunnel and through Tailscale, with a nightly backup checked by an actual restore. Since version 1.0.0, anyone can install it with one command, and Claude connects to it as a connector."
 ---
 
 ## Context
@@ -47,9 +47,22 @@ Since 12 November 2026, the app is displayed as Hermes Dashboard, like my other 
 - Files have the same tags as notes, and a search on their name (SQLite full-text index, accents ignored) in the open folder and its subfolders. A file can be renamed from its preview or from the list: only the part before the extension changes, the file type stays the one it was uploaded with.
 - A file can be shared through a link valid for 1 hour, 1 day or 7 days, and revocable. The link holds 32 random bytes; the database only keeps their SHA-256 hash, so reading it does not give a link back. The link's page only shows the name and the size, and downloads the file; expired, revoked or unknown, it is the same page, and the number of requests per IP address is limited.
 
+**Claude and the complete API.**
+
+- A Claude connector (MCP, the protocol that lets an AI discover and call an application's tools): each account plugs in its own Claude, on claude.ai, the iPhone app or Claude Code. Authorisation goes through OAuth, like "Sign in with Google": Claude never gets the password, and each access can be revoked in the settings.
+- The JSON API now does everything the site does (files, folders, share links, conversions, calendar, spaces and members), with personal tokens. Hermès and Claude go through the same functions as the site: a security rule is written once and applies everywhere.
+- Before opening deletions to an AI, a 30-day trash: a mistake by the assistant, or an instruction slipped into a shared note, can be undone. Emptying the trash stays on the site.
+
+**One-command installation (version 1.0.0).** Until then, installing dashu meant compiling it and following the README step by step. I wrote the specification for it, then it was delivered in five pull requests:
+
+- **Ready-made binaries**: on every merge, the CI builds dashu for Linux on x86_64 and 64-bit ARM (Raspberry Pi), each on a machine of its own architecture, as a static binary that runs on any distribution. It publishes the archives with their SHA-256 checksums, and a Docker image for both architectures. Two channels: `v1` follows every merge (my server's channel), the stable channel follows numbered versions. AGPL licence.
+- **A script that asks the questions** (`curl … | sudo bash`): how to reach dashu (home network, Tailscale, Tailscale Funnel or a domain name through a Cloudflare tunnel: no domain is required), files, conversions. Secrets are typed without being shown and are never passed as a command argument. Run again, it offers a menu, and undoes any change that would stop dashu from starting.
+- **First launch in the browser**: as long as no account exists, every page leads to a wizard. It first asks for an installation code that dashu writes to its log on every start: whoever stumbles on the page first cannot take over the instance. Then the admin account, the address and, optionally, Google. dashu restarts by itself to pick up these settings.
+- **Settings › Instance**, for the administrator: the address, Google and the authorised addresses. A value set in the server's configuration file takes precedence and is shown locked: my server, configured that way, saw no change.
+
 **Deployment on my homelab.**
 
-- A Debian 13 LXC container on Proxmox. dashu is compiled there and runs as a systemd service.
+- A Debian 13 LXC container on Proxmox, with dashu running as a systemd service. Since 24 November 2026, it is the binary published by the CI; before that, it was compiled on the server.
 - A Cloudflare tunnel: the container opens an outgoing connection to Cloudflare, which publishes app.dashu.dev over HTTPS. No port is open on the home router. I moved the DNS of the dashu.dev domain to Cloudflare.
 - Tailscale: a second way in, through my VPN, which works even if Cloudflare is down.
 - dashu.dev shows a public page that presents the project (GitHub Pages).
@@ -58,10 +71,10 @@ Since 12 November 2026, the app is displayed as Hermes Dashboard, like my other 
 
 - A hot backup of the database every night at 3:30 a.m. (systemd timer), checked by SQLite and kept 14 days, then the copy of the files to the other disk.
 - dashu-restore puts a backup back into service: it first sets the current database aside, and rolls back by itself if dashu does not restart.
-- dashu-update fetches the code, recompiles, backs up the database, replaces the program and checks that the service responds. If not, it puts the previous version back.
-- On every change, GitHub Actions checks the formatting and quality of the code, runs the automated tests (247 today), replays the server's systemd sandbox, tests the file backup script and builds a Docker image under 30 MB.
+- dashu-update downloads the latest version, checks its checksum, backs up the database, replaces the program and checks that the service responds. If not, it puts the previous version and the previous database back. A few seconds, instead of 4 to 20 minutes of compiling.
+- On every change, GitHub Actions checks the formatting and quality of the code, runs the automated tests (390 today), replays the server's systemd sandbox, then builds dashu for x86_64 and ARM and really installs it on a machine of each architecture: the script's questions, first launch, updates, a corrupted archive refused, rollback.
 
-**Project tracking.** After version 1, every change went through a pull request, tested before being merged: the API for Hermès, an overview of all calendars in the Personal space, navigation without a black flash, a "Dynamic Island" style space switcher with swipe-to-switch, a shortcut bar on phones, installation as an app on the iPhone home screen. Then custom spaces (up to eight), a modular dashboard, version 2 with files, the command bar that replaces the Ctrl+K palette, the new note editor and folders.
+**Project tracking.** After version 1, every change went through a pull request, tested before being merged: the API for Hermès, an overview of all calendars in the Personal space, navigation without a black flash, a "Dynamic Island" style space switcher with swipe-to-switch, a shortcut bar on phones, installation as an app on the iPhone home screen. Then custom spaces (up to eight), a modular dashboard, version 2 with files, the command bar that replaces the Ctrl+K palette, the new note editor and folders. In November, the Claude connector, the trash, the complete API and one-command installation, each in several pull requests merged in order.
 
 Built with **Claude Code**. My role: define the need, make the choices and test. I did the deployment and operations myself on my server (Proxmox, Cloudflare, Tailscale, Google, backup and restore), guided step by step.
 
@@ -71,7 +84,7 @@ Source code: [github.com/moreauremi/dashu](https://github.com/moreauremi/dashu) 
 
 ## Screenshots
 
-Screenshots of version 1, from 11 November 2026, taken on a copy of dashu filled with demo data (fake classes, fake notes). The last one is the real output of the restore on my server. Since then, the editor shows a single formatted view, and the Ctrl+K palette has become the command bar.
+Screenshots of version 1, from 11 November 2026, taken on a copy of dashu filled with demo data (fake classes, fake notes). Since then, the editor shows a single formatted view, and the Ctrl+K palette has become the command bar. The screenshots from 24 November follow, then the real output of the restore on my server.
 
 ![Dashboard of the School space in dark theme: upcoming classes with times and rooms, today's tasks with one ticked, recent notes and a clock. At the top, the island with the three spaces, School selected.](captures/dashu/dashboard.webp "Dashboard of the School space: upcoming classes, today's tasks, recent notes")
 
@@ -83,12 +96,24 @@ Screenshots of version 1, from 11 November 2026, taken on a copy of dashu filled
 
 ![Three iPhone screens in dark theme: the dashboard of the School space, the Personal calendar scrolling horizontally, and the list of notes with their tags. At the bottom, the shortcut bar: Dashboard, Notes, Agenda, Search.](captures/dashu/telephone.webp "On iPhone, as an app on the home screen: island at the top, shortcuts at the bottom")
 
+Screenshots of one-command installation, 24 November 2026. The first launch and Settings › Instance come from a brand-new copy of dashu; the installation (on a test container on my Proxmox) and the update (on my server) are the real output, reformatted and shortened.
+
+![Terminal: the curl command runs the install script on a fresh Debian container. It asks how to reach dashu (home network, Tailscale, Tailscale Funnel or domain name), then about files and conversions. It downloads version 1.0.0, checks its SHA-256 checksum, starts the services, then gives the wizard's address and the installation code.](captures/dashu/installation.webp "One-command installation, on a fresh Debian container")
+
+![Three first-launch screens, in dark theme. Top left, the "Installation code" field, with where to find it (journalctl -u dashu, or docker logs). Right, the wizard: 1. the account, which becomes the administrator, 2. dashu's address, 3. Google sign-in, expanded, with the Google console steps and the redirect address to declare. Bottom left, the final page: dashu restarts, and warns that the address does not respond from the server (here a demo address), without blocking.](captures/dashu/premier-lancement.webp "First launch: the code from the log, then the account, the address and Google on a single page")
+
+![Instance card in the settings: the public address, Google sign-in to enable, and three authorised addresses. The administrator cannot remove her own address; another one has no account yet.](captures/dashu/instance.webp "Settings › Instance, for the administrator")
+
+![Server terminal: echo binaire into /etc/dashu/source then dashu-update, which downloads the v1 channel version, backs up the database (27 notes) and installs the new version; dashu-admin status then shows the service active, the version and "mise à jour par : binaire, canal v1".](captures/dashu/mise-a-jour.webp "My server switches to the downloaded binary: an update takes a few seconds")
+
 ![Server terminal: dashu-restore lists the backups from newest to oldest, then restores dashu-2026-11-11_183222.db. The current database is first backed up and checked, then the restore finishes and shows the command to roll back.](captures/dashu/restauration.webp "Restore drill on the server, 11 November 2026")
 
 ## Results and testing
 
 - All 14 acceptance criteria of the specification are verified, most of them on the real server.
-- 96 automated tests at the end of version 1, 247 today (sign-in, data isolation between two accounts, notes, reading the timetable including daylight saving time, API, script injection, booby-trapped files, folders, expired or revoked share links), run by GitHub Actions on every pull request.
+- 96 automated tests at the end of version 1, 390 today (sign-in, data isolation between two accounts, notes, reading the timetable including daylight saving time, API, the Claude connector's full OAuth flow, trash, first launch, script injection, booby-trapped files, folders, expired or revoked share links), run by GitHub Actions on every pull request.
+- Version 1.0.0 released on 24 November 2026: x86_64 and ARM archives, a Docker image of 10 MB (x86_64) and 21 MB (ARM), downloadable by anyone. Installation tried the same day on a fresh Debian container on my Proxmox, reached from my PC through Tailscale.
+- My server switched to the downloaded binary: /login responds in 0.66 ms (median of 20 requests) instead of 0.55 ms with the binary compiled on the server, an expected difference with this kind of binary, far below the 20 ms target.
 - Mobile Lighthouse on the server (version 1), through Cloudflare, on simulated 4G: 99 for the dashboard, 100 for the notes, 100 for the calendar, 99 for the editor.
 - At the end of version 1, the service used 7.6 MB of memory and responded in 0.5 ms; the Docker image was 7 MB.
 - Google sign-in tested with my account (the same as with my password) and with an unauthorised account, which is refused.
@@ -109,17 +134,24 @@ Screenshots of version 1, from 11 November 2026, taken on a copy of dashu filled
 
 **Compression that worked everywhere except on the server.** The "Compress" button failed in production while every test passed. Two causes, specific to the service's systemd sandbox, which is absent locally and in the tests: RestrictSUIDSGID=yes refuses any chmod that sets the setgid bit, and each folder listed in ReadWritePaths is a separate mount point, so a plain rename from one folder to the other fails (EXDEV). Fix: no more setgid bit, and a copy followed by a delete when the rename fails. So that the bug does not come back, the CI now replays this sandbox.
 
+**A test that never gave control back.** To test the install script like a real person, the CI sent it answers through a simulated terminal. It stayed stuck for 20 minutes: the simulated terminal was waiting for the end of its input, which never came. I replaced it with a small Python program that waits for each question to appear before answering it, stops with the script, and fails clearly on an unexpected question. The step also got a time limit.
+
+**A rollback that checked nothing.** That same test showed it: when a new version did not start, dashu-update put the old one back but returned without checking that it responded. It now waits for it, and resets systemd's restart counter, which the failed version may have used up.
+
+**The home page that stopped publishing.** From one day to the next, publishing dashu.dev failed: the publish step could no longer find the site uploaded just before. My first fix (one more permission) changed nothing. Comparing a successful run and a failed one line by line, everything was identical except that result: a change on GitHub's side. Splitting the upload and the publishing into two steps, like GitHub's official template, solved it.
+
 **A skewed measurement.** The first Lighthouse run on the dashboard scored about 94, below the target: my browser extensions added work while the page loaded. I measured again three times in a Guest window, with no extensions: median of 99.
 
 ## Possible improvements
 
 - Run the restore drill with a file on the server: delete one, then bring it back from the nightly backup.
 - Monitor the service with Uptime Kuma, in its own container (the procedure is written), to be told when it goes down.
-- Finish version 2: opening files to Hermès's API.
+- Try the Claude connector from claude.ai and the iPhone: the full flow is tested automatically, the real-world try is still to do.
+- Sign the published versions (with minisign, for example): the SHA-256 checksum protects against a corrupted download, not against a version published by someone else.
 
 ## Skills applied
 
-- **B1.1**: manage backups (checked nightly backup, actual restore, cross backups: the database on the second disk, the files on the first); set up and check access levels (authorised addresses, API token, Hermès's SSH access limited to six actions, temporary and revocable share links); check service continuity (two ways in, automatic rollback of updates, /health check endpoint).
+- **B1.1**: manage backups (checked nightly backup, actual restore, cross backups: the database on the second disk, the files on the first); set up and check access levels (authorised addresses, API token, Hermès's SSH access limited to six actions, temporary and revocable share links); check service continuity (two ways in, automatic rollback of updates, /health check endpoint); a 30-day trash before opening deletions to an AI.
 - **B1.4**: write a specification with acceptance criteria, split the work into pull requests, track progress criterion by criterion and analyse deviations from the specification.
-- **B1.5**: carry out integration and acceptance testing (automated tests, criteria checked on the server, Lighthouse measurements), deploy the service (Proxmox, LXC, LVM-thin storage and mount points, systemd, isolated conversion service, Cloudflare, Tailscale, DNS, Google OAuth) and document how to install and run it.
+- **B1.5**: carry out integration and acceptance testing (automated tests, criteria checked on the server, Lighthouse measurements, installation replayed by the CI on two architectures), publish releases (binaries, Docker image, install script), deploy the service (Proxmox, LXC, LVM-thin storage and mount points, systemd, isolated conversion service, Cloudflare, Tailscale, DNS, Google OAuth) and document how to install and run it.
 - **B1.6**: set up my personal work environment, with my classes, revision notes and timetable in one place, and use it every day.
