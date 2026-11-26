@@ -13,7 +13,7 @@ titre: Veille technologique
   Ce fichier contient ce qui est commun aux trois sujets : la méthode.
 -->
 
-Je suis trois sujets, liés à mon alternance et à mes projets : la **sécurité des entreprises industrielles**, la **virtualisation** qui fait tourner leurs serveurs, et la réforme de la **facturation électronique**, qui change leurs logiciels de gestion.
+Je suis trois sujets, liés à mon alternance et à mes projets : la **sécurité des entreprises industrielles**, l'**intelligence artificielle** qui arrive dans leurs outils, et la réforme de la **facturation électronique**, qui change leurs logiciels de gestion.
 
 ## Méthode
 

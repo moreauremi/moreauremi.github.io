@@ -38,7 +38,7 @@ It is also my online presence as a candidate: the jury, recruiters and my Linked
 
 **Audience measurement.** GoatCounter, a cookie-free open-source tool, counts each page viewed. To keep the "no external script" rule, I wrote the page-view sending myself instead of loading the official script. Nothing is counted for bots, nor for browsers that ask not to be tracked.
 
-**The technology watch.** Every Monday, a GitHub Actions job reads the RSS feeds of 33 sources. GitHub Copilot then picks, for each of my three topics (cybersecurity in industrial SMEs, virtualisation, e-invoicing), the most useful articles, summarises them and tags them. The news appears in the "Technology watch" section, one tab per topic.
+**The technology watch.** Every Monday, a GitHub Actions job reads the RSS feeds of 31 sources. GitHub Copilot then picks, for each of my three topics (cybersecurity in industrial SMEs, artificial intelligence, e-invoicing), the most useful articles, summarises them and tags them. The news appears in the "Technology watch" section, one tab per topic.
 
 **The watch by e-mail.** New news items also reach me by e-mail, numbered. I reply with my opinion on the ones that caught my attention ("1, 3: what I take away…"); the AI turns it into a synthesis, without adding anything, and sends it back for me to proofread. I reply "ok" and it is published, or I ask for a correction. The website has no server: a small Google Apps Script in my Gmail account relays the e-mails to GitHub Actions, which runs the AI and saves the synthesis. Nothing is published without my approval, and only my own messages are read.
 
@@ -51,7 +51,7 @@ It is also my online presence as a candidate: the jury, recruiters and my Linked
 - the age of each topic's latest synthesis, with an e-mail reminder (GitHub issue) if a topic has had nothing for three weeks;
 - site visits over 7, 30 or 90 days, most viewed pages and where visitors come from.
 
-![Portfolio architecture diagram: visitors open remim.me over HTTPS; the domain name, managed at Namecheap, leads to GitHub Pages, which serves the portfolio and the dashboard.remim.me dashboard. Each page viewed is counted by GoatCounter. I write in VS Code or from the dashboard, which saves to the repository through the GitHub API. Each push triggers GitHub Actions, which tests then publishes the site. Every Monday, the watch reads 33 RSS feeds and has GitHub Copilot summarise the articles.](schemas/portfolio-architecture.svg "Portfolio architecture: publication, automated watch and dashboard (diagram in French)")
+![Portfolio architecture diagram: visitors open remim.me over HTTPS; the domain name, managed at Namecheap, leads to GitHub Pages, which serves the portfolio and the dashboard.remim.me dashboard. Each page viewed is counted by GoatCounter. I write in VS Code or from the dashboard, which saves to the repository through the GitHub API. Each push triggers GitHub Actions, which tests then publishes the site. Every Monday, the watch reads 31 RSS feeds and has GitHub Copilot summarise the articles.](schemas/portfolio-architecture.svg "Portfolio architecture: publication, automated watch and dashboard (diagram in French)")
 
 Built with **Claude Code**. My role: defining the need, making the choices and testing.
 

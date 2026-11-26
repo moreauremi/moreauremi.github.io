@@ -81,7 +81,7 @@ Sur mobile, le terminal s'ouvre avec le bouton `[tty2]` de la barre du haut.
 | `#/mentions-legales` | mentions légales |
 | `#/realisations/<slug>` | une fiche, style RémiOS (ex. `#/realisations/homelab`) |
 | `#/technos/<techno>` | les réalisations qui utilisent une techno, puis toutes les technos (ex. `#/technos/python`) |
-| `#/veille/<sujet>` | la veille, onglet de ce sujet ouvert (ex. `#/veille/virtualisation`) |
+| `#/veille/<sujet>` | la veille, onglet de ce sujet ouvert (ex. `#/veille/intelligence-artificielle`) |
 | `#/veille/<sujet>/<tag>` | les actualités d'un sujet qui portent ce tag (ex. `#/veille/cybersecurite/rancongiciel`) ; l'ancienne forme `#/veille/<tag>` mène au premier sujet qui a ce tag |
 | `#/jury` | vue rapide jury : **le lien à donner au jury** |
 | `#/jury/<slug>` | une fiche, style sobre |
@@ -148,7 +148,7 @@ Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER
 - [x] **Compétences des fiches** : renseignées pour toutes les fiches publiées. B1.3 est couverte par la fiche « Portfolio RémiOS », B1.2 (incidents et demandes d'assistance) par les fiches « RMutils » et « Dépannage des serveurs Proxmox de la salle de TP » ; une fiche 1Life sur l'assistance aux utilisateurs la renforcerait.
 - [ ] **Fiche « Portfolio RémiOS »** (`content/realisations/portfolio-remios.md`) : rédigée d'après ce README, à relire.
 - [ ] **PDF** : tableau de synthèse.
-- [x] **Veille** : trois sujets (cybersécurité des PME industrielles, virtualisation, facturation électronique) et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
+- [x] **Veille** : trois sujets (cybersécurité des PME industrielles, intelligence artificielle, facturation électronique) et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
 - [x] **Jeton Copilot** : jeton GitHub « Copilot Requests » rangé dans les secrets du dépôt (`COPILOT_GITHUB_TOKEN`) ; la collecte des trois sujets fonctionne (9 octobre 2026 ; jeton recréé le 12 octobre 2026). À renouveler avant son expiration, un an après sa création (voir [Mise en route](#mise-en-route-une-seule-fois)).
 - [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://dashboard.remim.me, à partir des actualités collectées.
 - [ ] **Veille par e-mail** : créer le jeton du relais et installer le relais Gmail (voir [Veille par e-mail](#mise-en-route-du-relais-gmail-une-seule-fois)).
@@ -338,7 +338,7 @@ reference/               maquette validée au départ du projet (hors build) : m
 
 ### Mesure d'audience
 
-- **GoatCounter** (gratuit pour un site personnel, open source) compte les écrans consultés : `#/`, `#/veille/virtualisation`, `#/realisations/glpi`, `#/jury`… Statistiques sur https://remim.goatcounter.com et dans le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses).
+- **GoatCounter** (gratuit pour un site personnel, open source) compte les écrans consultés : `#/`, `#/veille/intelligence-artificielle`, `#/realisations/glpi`, `#/jury`… Statistiques sur https://remim.goatcounter.com et dans le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses).
 - **Sans le script de GoatCounter** : `src/utils/audience.js` envoie lui-même une requête par écran affiché (`navigator.sendBeacon`, comme le script officiel), avec seulement la page, le site d'origine à l'arrivée et la largeur de l'écran. Le site garde sa règle « aucun script extérieur », et son poids ne change pas.
 - **Rien n'est compté** en dehors de https://remim.me (développement, tests, homelab), pour un navigateur piloté par un programme (tests, robots), ni quand le navigateur demande à ne pas être suivi (Do Not Track, Global Privacy Control).
 - **Ne pas compter ses propres visites** : ouvrir une fois https://remim.me/#toggle-goatcounter sur chaque appareil (Mac, téléphone). Un message confirme ; la même adresse réactive le comptage.
@@ -399,7 +399,7 @@ GitHub Actions ──►  flux RSS du sujet, articles ──►  choisit les plu
                     filtrés par mots-clés
 ```
 
-- **Trois sujets**, collectés au même moment, l'un après l'autre : **Cybersécurité** (la cybersécurité des PME industrielles, 13 sources dont le CERT-FR), **Virtualisation** (Hyper-V, Proxmox et l'après-VMware, 12 sources dont Proxmox et XCP-ng) et **Facturation électronique** (la réforme 2026-2027, 13 sources dont la FNFE-MPE, Service-public.fr et DAF Magazine). IOPOLE n'a pas de flux RSS : ses actualités sont captées par mot-clé dans les autres sources.
+- **Trois sujets**, collectés au même moment, l'un après l'autre : **Cybersécurité** (la cybersécurité des PME industrielles, 13 sources dont le CERT-FR), **Intelligence artificielle** (usages, risques et encadrement de l'IA en entreprise, 11 sources dont ActuIA et la CNIL) et **Facturation électronique** (la réforme 2026-2027, 13 sources dont la FNFE-MPE, Service-public.fr et DAF Magazine). IOPOLE n'a pas de flux RSS : ses actualités sont captées par mot-clé dans les autres sources.
 - `.github/workflows/veille.yml` lance `scripts/veille.mjs` chaque lundi vers 7 h, puis enregistre les fichiers d'actualités dans le dépôt et relance la publication du site. Un sujet en échec (IA indisponible…) n'empêche pas les autres d'être enregistrés. La première collecte d'un nouveau sujet remonte à 30 jours au lieu de 10, pour démarrer avec du contenu.
 - Le sujet, les mots-clés, les tags proposés, les sources et le modèle d'IA se règlent dans `content/site.config.js`, rubrique `veille`.
 - La rubrique « Veille technologique » a un onglet par sujet. Dans chacun : le sujet, pourquoi je l'ai choisi, puis deux onglets au même niveau, **Mes synthèses** (affiché d'abord ; texte personnel, dans `content/veille/<sujet>/syntheses.md`, écrit depuis le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses) ou à la main) et **Dernières actualités**, et enfin les sources suivies. Changer d'onglet ne change pas d'adresse et ne fait rien défiler (au clavier : ← et → sur les onglets) ; `#/veille/<sujet>` ouvre directement l'onglet d'un sujet.
@@ -426,7 +426,7 @@ Le jeton expire au bout d'un an : en créer un nouveau et remplacer la valeur du
 
 ```bash
 npm run veille -- --sans-ia     # collecte seulement : vérifie les flux et les mots-clés
-npm run veille -- --sans-ia --sujet virtualisation   # un seul sujet
+npm run veille -- --sans-ia --sujet intelligence-artificielle   # un seul sujet
 npm install -g @github/copilot  # une fois : installe Copilot CLI, puis `copilot login`
 npm run veille                  # collecte complète, écrit content/veille/<sujet>/actualites.json
 ```

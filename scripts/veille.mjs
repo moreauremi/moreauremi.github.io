@@ -24,7 +24,7 @@
 //
 // `npm run veille -- --sans-ia` : collecte seulement, sans appeler l'IA ni
 // modifier les fichiers (pour vérifier les flux et les mots-clés).
-// `npm run veille -- --sujet virtualisation` : un seul sujet.
+// `npm run veille -- --sujet intelligence-artificielle` : un seul sujet.
 //
 // Si la variable VEILLE_NOUVELLES donne un chemin de fichier, les identifiants
 // des actualités ajoutées y sont écrits ({ "<sujet>": ["<id>", …] }) : la

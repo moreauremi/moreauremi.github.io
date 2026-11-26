@@ -3,7 +3,7 @@
 titre: Technology watch
 ---
 
-I follow three topics, linked to my work-study placement and my projects: the **security of industrial companies**, the **virtualisation** that runs their servers, and the **e-invoicing** reform, which is changing their business software.
+I follow three topics, linked to my work-study placement and my projects: the **security of industrial companies**, the **artificial intelligence** arriving in their tools, and the **e-invoicing** reform, which is changing their business software.
 
 ## Method
 
