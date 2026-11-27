@@ -1,83 +1,20 @@
 ---
 titre: "Crypto Dashboard Pro"
 slug: crypto-dashboard-pro
-type: perso  # entreprise, formation ou perso
-date: 2026-01  # AAAA, AAAA-MM, AAAA-MM-JJ ou période début/fin (ex. 2026-01/2026-08)
-statut: "terminé"  # ex. en cours, terminé, en pause
-resume: "Tableau de bord interactif en temps réel pour suivre le cours de six cryptomonnaies, avec système d'alertes personnalisé : Python, Streamlit et API CoinGecko."
-technos:
-  - "Python"
-  - "Streamlit"
-  - "Pandas"
-  - "Plotly"
-  - "Requests"
-  - "API CoinGecko"
-competences: [B1.4, B1.6]  # codes du référentiel, ex. [B1.1, B1.4]
+type: perso
+domaine: applicatif
+date: 2026-01
+statut: "terminé"
+resume: "tableau de bord web qui suit le cours de six cryptomonnaies, avec une alerte de seuil personnalisée."
+contexte: "projet personnel en Python, publié sur GitHub en janvier 2026. [À COMPLÉTER : pourquoi ce projet]"
+actions:
+  - "récupéré les prix par l'API CoinGecko, avec un cache de 30 secondes et la gestion des erreurs réseau"
+  - "calculé les indicateurs de la session avec Pandas et tracé le cours avec Plotly"
+  - "ajouté une alerte quand le prix dépasse le seuil choisi"
+tags: [Python, Streamlit, Pandas, Plotly, API REST, B1.4, B1.6]
+liens:
+  - { libelle: "github", url: "https://github.com/moreauremi/crypto-dashboard-pro" }
+illustrations:
+  - { src: "captures/crypto-dashboard-pro/tableau-de-bord.webp", legende: "prix sous le seuil : indicateurs de la session et courbe du cours" }
+  - { src: "captures/crypto-dashboard-pro/alerte-seuil.webp", legende: "seuil dépassé : message « signal de vente » et notification" }
 ---
-
-<!--
-  Guide de rédaction
-  - Remplacer chaque [À COMPLÉTER] par le vrai contenu (ou supprimer la ligne).
-  - Captures : déposer l'image dans public/captures/crypto-dashboard-pro/, puis écrire
-      ![Description de l'image](captures/crypto-dashboard-pro/nom-du-fichier.webp "Légende affichée")
-  - competences : codes définis dans content/site.config.js, ex. [B1.1, B1.4]
-  - Contenu rédigé d'après le dépôt GitHub (README, app.py, requirements.txt,
-    historique des commits) : c'est la référence, le CV sera aligné dessus.
--->
-
-## Contexte
-
-[À COMPLÉTER : pourquoi ce projet, pour qui, avec quels moyens]
-
-## Objectifs
-
-Suivre en temps réel le cours d'une cryptomonnaie, le résumer en indicateurs clés, et être alerté dès que le prix dépasse un seuil choisi.
-
-## Mise en œuvre
-
-L'application est écrite en **Python** avec **Streamlit**, un framework qui transforme un script Python en application web.
-
-- **Données** : l'API publique **CoinGecko** (gratuite, sans clé) fournit le prix en euros de six cryptomonnaies : Bitcoin, Ethereum, Dogecoin, Solana, Cardano et XRP. Les requêtes passent par la bibliothèque Requests.
-- **Mise en cache** : chaque réponse de l'API est gardée 30 secondes, pour respecter sa limite d'environ 50 requêtes par minute et accélérer l'affichage.
-- **Actualisation** : manuelle avec un bouton, ou automatique toutes les 60 secondes.
-- **Historique** : les prix relevés sont conservés pendant la session et traités avec **Pandas** ; l'historique repart de zéro quand on change de cryptomonnaie.
-- **Indicateurs clés (KPI)** : prix actuel, variation depuis le début de la session (en euros et en pourcentage), plus haut et plus bas.
-- **Graphique** : courbe interactive **Plotly** de l'évolution du cours, avec la ligne du seuil d'alerte.
-- **Alerte** : quand le prix dépasse le seuil défini par l'utilisateur, une notification s'affiche avec un message « signal de vente » ; sinon, l'écart restant sous le seuil est indiqué.
-- **Gestion des erreurs** : délai de réponse dépassé, erreur réseau ou données invalides affichent un message clair au lieu d'interrompre l'application.
-
-Code source (licence MIT) : [github.com/moreauremi/crypto-dashboard-pro](https://github.com/moreauremi/crypto-dashboard-pro)
-
-## Captures d'écran
-
-Captures réalisées le 25 septembre 2026, avec de vraies données CoinGecko : huit relevés du cours du Bitcoin en quatre minutes environ.
-
-![Tableau de bord Bitcoin : message « prix stable », quatre indicateurs et courbe de huit relevés sous la ligne pointillée du seuil](captures/crypto-dashboard-pro/tableau-de-bord.webp "Prix sous le seuil d'alerte : indicateurs de la session et courbe du cours, avec le seuil en pointillés rouges")
-
-![Seuil d'alerte abaissé sous le cours : bandeau rouge « signal de vente » et notification en haut à droite](captures/crypto-dashboard-pro/alerte-seuil.webp "Seuil dépassé : message « signal de vente » et notification d'alerte")
-
-![Tableau de l'historique détaillé : heure et prix de chaque relevé, du plus récent au plus ancien](captures/crypto-dashboard-pro/historique.webp "Historique détaillé des relevés de la session")
-
-## Résultats et tests
-
-Le projet est terminé ; son code a été publié sur GitHub en janvier 2026.
-
-[À COMPLÉTER : ce qui a été vérifié (actualisation, alertes, comportement sans réseau…), et comment]
-
-## Difficultés rencontrées
-
-[À COMPLÉTER : problèmes rencontrés et solutions trouvées]
-
-## Pistes d'amélioration
-
-- Suivre davantage de cryptomonnaies, et les comparer entre elles
-- Exporter les données en CSV ou Excel
-- Afficher le cours sur plusieurs périodes (1 heure, 24 heures, 7 jours)
-- Envoyer les alertes par e-mail ou Telegram
-- Ajouter des indicateurs techniques (RSI, MACD)
-
-## Compétences mises en œuvre
-
-- Développement en Python (Streamlit, Pandas)
-- Utilisation d'une API REST (CoinGecko) et gestion des erreurs réseau
-- Visualisation de données (Plotly)

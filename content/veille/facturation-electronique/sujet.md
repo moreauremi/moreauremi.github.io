@@ -1,14 +1,7 @@
 ---
-titre: Facturation électronique
+titre: facturation électronique
 ---
 
-<!--
-  « Pourquoi ce sujet » de la veille Facturation électronique. Réglages du
-  sujet (mots-clés, sources) : content/site.config.js, veille.sujets.
--->
+<!-- « Pourquoi ce sujet » : une ou deux phrases. Réglages : content/site.config.js, veille.sujets. -->
 
-## Pourquoi ce sujet
-
-La **facturation électronique** devient **obligatoire** pour toutes les entreprises françaises. Depuis **septembre 2026**, elles doivent toutes pouvoir **recevoir** des factures électroniques ; les PME et les TPE devront aussi en **émettre** à partir de **septembre 2027**, en passant par une **plateforme agréée**.
-
-J'y suis en plein dedans : en alternance chez un intégrateur d'ERP, nous travaillons avec **IOPOLE**, une plateforme agréée, pour accompagner nos clients dans la réforme. Cette veille me permet de suivre le calendrier, les formats (**Factur-X**, **UBL**, **CII**) et les questions que se posent les entreprises.
+la facturation électronique devient obligatoire : réception depuis septembre 2026, émission par les PME et TPE en septembre 2027, via une plateforme agréée. chez 1Life, nous accompagnons nos clients dans la réforme avec IOPOLE.

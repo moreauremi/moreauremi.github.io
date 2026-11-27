@@ -1,20 +1,13 @@
 ---
-titre: Veille technologique
+titre: veille technologique
+description: "veille technologique de Rémi Moreau, alternant consultant ERP chez 1Life : cybersécurité des ERP et des PME industrielles, intelligence artificielle, facturation électronique."
 ---
 
 <!--
-  Rubrique « Veille technologique » : trois sujets, un onglet chacun.
-  Les sujets, leurs mots-clés et leurs sources se règlent dans
-  content/site.config.js (veille.sujets). Chaque sujet a son dossier
-  content/veille/<id>/ :
-    sujet.md          pourquoi ce sujet
-    syntheses.md      mes synthèses (écrites depuis https://dashboard.remim.me)
-    actualites.json   actualités ajoutées chaque lundi par scripts/veille.mjs
-  Ce fichier contient ce qui est commun aux trois sujets : la méthode.
+  Introduction de la page « veille » : la méthode, commune aux trois sujets.
+  Les sujets se règlent dans content/site.config.js (veille.sujets) ; chaque
+  sujet a son dossier content/veille/<id>/ (sujet.md, syntheses.md,
+  actualites.json).
 -->
 
-Je suis trois sujets, liés à mon alternance et à mes projets : la **sécurité des entreprises industrielles**, l'**intelligence artificielle** qui arrive dans leurs outils, et la réforme de la **facturation électronique**, qui change leurs logiciels de gestion.
-
-## Méthode
-
-**Chaque lundi**, un **outil que j'ai développé** pour ce portfolio lit une **trentaine de sources spécialisées** (dont le **CERT-FR de l'ANSSI**), puis une **IA** (GitHub Copilot) choisit pour chaque sujet les articles les plus utiles, les résume et leur attribue des tags. Je reçois ces actualités **par e-mail**, je **lis les articles retenus**, puis j'**écris mes synthèses** : ce que j'en retiens, ce que ça change pour les entreprises, ce que j'en fais. Je les écris dans mon tableau de bord, ou directement en répondant à l'e-mail : l'IA met alors mon avis en forme, sans rien y ajouter, et je **relis la synthèse avant de la publier**.
+chaque lundi, un script lit une trentaine de sources, dont le CERT-FR de l'ANSSI. une IA (GitHub Copilot) retient les articles utiles, les résume et les classe. je lis les articles retenus, puis j'écris mes synthèses : ce que j'en retiens, ce que ça change pour les entreprises.
