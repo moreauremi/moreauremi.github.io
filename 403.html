@@ -1,42 +1,31 @@
 <!doctype html>
-<html lang="fr" data-view="tui">
+<html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Page affichée par le serveur quand l'accès est refusé (par exemple un
-         dossier sans index.html, comme /captures/), quelle que soit la
-         profondeur de l'adresse : <base> fait partir ses liens et ses
-         fichiers (CSS, police) de la racine du site. -->
+    <!-- Page servie quand l'accès est refusé (par exemple un dossier sans
+         index.html, comme /captures/), quelle que soit la profondeur de
+         l'adresse : <base> fait partir ses liens de la racine du site. -->
     <base href="/">
-    <title>Accès refusé (erreur 403) — RémiOS</title>
-    <!-- Page d'erreur : à ne pas proposer dans les résultats de recherche -->
+    <title>accès refusé (403) · Rémi Moreau</title>
     <meta name="robots" content="noindex">
-    <meta name="theme-color" content="#1e3c8c">
+    <meta name="theme-color" content="#0b0b0b">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/src/styles/errors.css">
     <script type="module" src="/src/errors.js"></script>
   </head>
   <body>
-    <!-- Cadre commun aux pages d'erreur (barre du haut, boîte, boutons, pied
-         de page) : src/error-layout.html. Le contenu propre à cette page,
-         ci-dessous, y est inséré par plugins/vite-plugin-inline.js. -->
-    <template data-layout="/src/error-layout.html">
-      <h1 class="tui-box-title" id="error-title"><span aria-hidden="true">[ </span>Erreur 403<span aria-hidden="true"> ]</span></h1>
-      <nav class="crumbs" aria-label="Fil d'Ariane"><ol><li><a href="/">RémiOS</a></li><li><span aria-current="page">Erreur 403</span></li></ol></nav>
-      <div class="tui-box-inner">
-        <pre class="error-code" aria-hidden="true">
- _  _      ___    _____
-| || |    / _ \  |___ /
-| || |_  | | | |   |_ \
-|__   _| | |_| |  ___) |
-   |_|    \___/  |____/</pre>
-        <pre class="error-shell"><span class="error-prompt">visiteur@remios:~$</span> ls <span data-path>/dossier</span>
-ls: impossible d'ouvrir le répertoire '<span data-path>/dossier</span>'&nbsp;: Permission non accordée
-<span class="error-prompt">visiteur@remios:~$</span> sudo ls <span data-path>/dossier</span>
-visiteur n'est pas dans le fichier sudoers. Cet incident sera signalé.</pre>
-        <p>Cette adresse existe, mais son contenu n'est pas consultable directement. Rassurez-vous, rien n'est signalé à personne&nbsp;: les réalisations, leurs captures et le CV s'ouvrent depuis le menu principal.</p>
-        <p lang="en">This address exists, but its contents cannot be browsed directly. <a href="/#/en/">Go to the English version of the portfolio</a>.</p>
-      </div>
-    </template>
+    <header class="site-header"><a class="brand" href="./">rémi moreau</a></header>
+    <main class="page">
+      <h1>erreur 403</h1>
+      <pre class="error-shell"><span class="muted">visiteur@remim.me:~$</span> ls <span data-path>/dossier-demandé</span>
+ls: <span data-path>/dossier-demandé</span> : permission refusée</pre>
+      <p>ce dossier ne se consulte pas directement. les fichiers utiles sont liés depuis les pages du site.</p>
+      <ul class="nav">
+        <li><a href="./">accueil</a></li>
+        <li><a href="./projets/">projets</a></li>
+        <li><a href="./veille/">veille</a></li>
+      </ul>
+    </main>
   </body>
 </html>

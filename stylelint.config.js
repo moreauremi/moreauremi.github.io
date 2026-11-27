@@ -3,7 +3,7 @@
 // valeur inconnue, accolade oubliée, sélecteur en double…), pas le style.
 export default {
   extends: ['stylelint-config-recommended'],
-  ignoreFiles: ['dist/**', 'reference/**'],
+  ignoreFiles: ['dist/**'],
   rules: {
     // Cette règle exige un ordre précis entre sélecteurs de poids différents
     // (.skills th après .skills thead th:nth-child(1)…), même quand ils

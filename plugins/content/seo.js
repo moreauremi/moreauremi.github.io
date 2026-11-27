@@ -1,54 +1,29 @@
 // =============================================================================
-// Référencement : titre, description, version sans JavaScript, données
-// structurées, plan du site et consignes aux robots
-// -----------------------------------------------------------------------------
-// Tout vient de la rubrique « referencement » de content/site.config.js : une
-// seule source pour tout le site.
+// Référencement : balises de chaque page, données structurées, plan du site
 // =============================================================================
 
 import { escapeHtml } from '../../src/utils/html.js';
-import { noscriptLinks } from './pages-statiques.js';
 
-// Remplace titre, description et version sans JavaScript d'index.html par
-// les valeurs de la configuration (une seule source pour tout le site).
-// `exists(path)` : la page statique « path » (« en/presentation/ »…) est-elle
-// fabriquée ? La version sans JavaScript ne renvoie qu'à celles-là.
-export function applySeo(html, site, exists = () => true) {
-  const seo = site.referencement;
-  if (!seo) return html;
-  const title = escapeHtml(`RémiOS — ${seo.titre}`);
-  const description = escapeHtml(seo.description);
-  const { email, github, linkedin } = site.contact;
-  const cv = site.documents.cv;
-  const links = [
-    `<a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>`,
-    `<a href="${escapeHtml(github)}">GitHub</a>`,
-    `<a href="${escapeHtml(linkedin)}">LinkedIn</a>`,
-    cv ? `<a href="${escapeHtml(cv)}">CV (PDF)</a>` : '',
-  ].filter(Boolean);
-  const english = noscriptLinks('en', exists);
-  const fallback = `<noscript>
-      <div class="noscript">
-        <h1>${escapeHtml(seo.titre.replace(' · ', ' — '))}</h1>
-        <p>${description}</p>
-        <p>Ce portfolio interactif a besoin de JavaScript pour s'afficher. Version texte : ${noscriptLinks('fr', exists)}.</p>
-        ${english ? `<p lang="en">English text version: ${english}.</p>` : ''}
-        <p>Contact : ${links.join(' · ')}</p>
-      </div>
-    </noscript>`;
-  return html
-    .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
-    .replace(/(<meta\s+name="description"\s+content=")[^"]*(")/, `$1${description}$2`)
-    .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${escapeHtml(seo.titre)}$2`)
-    .replace(/(<meta\s+property="og:description"\s+content=")[^"]*(")/, `$1${description}$2`)
-    .replace(/<noscript data-fallback>[\s\S]*?<\/noscript>/, fallback);
+// Balises <head> propres à une page : description, adresse canonique, aperçus
+// de lien (Open Graph). `base` vide : seulement la description.
+export function headTags(page, base) {
+  const tags = [`<meta name="description" content="${escapeHtml(page.description)}">`];
+  if (page.noindex) tags.push('<meta name="robots" content="noindex">');
+  if (base) {
+    const url = base + page.path;
+    tags.push(
+      `<link rel="canonical" href="${escapeHtml(url)}">`,
+      '<meta property="og:type" content="website">',
+      '<meta property="og:locale" content="fr_FR">',
+      `<meta property="og:url" content="${escapeHtml(url)}">`,
+      `<meta property="og:title" content="${escapeHtml(page.title)}">`,
+      `<meta property="og:description" content="${escapeHtml(page.description)}">`,
+    );
+  }
+  return tags.join('\n    ');
 }
 
-// Données structurées schema.org (JSON-LD) : le site, la page de profil et la
-// personne qu'elle présente. C'est ce qui aide Google à associer le nom
-// « Rémi Moreau » à ce site, à ses comptes GitHub et LinkedIn, à sa formation
-// et à son entreprise. Écrites sur une seule ligne : les moteurs n'ont pas
-// besoin de la mise en forme, la page est plus légère.
+// Fiche « personne » lue par les moteurs de recherche (accueil seulement)
 export function structuredData(site, base) {
   const seo = site.referencement ?? {};
   const person = {
@@ -71,20 +46,17 @@ export function structuredData(site, base) {
   const data = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'WebSite', '@id': `${base}#site`, url: base, name: `RémiOS — portfolio de ${site.identite.nom}`, inLanguage: 'fr-FR' },
+      { '@type': 'WebSite', '@id': `${base}#site`, url: base, name: `portfolio de ${site.identite.nom}`, inLanguage: 'fr-FR' },
       { '@type': 'ProfilePage', '@id': `${base}#page`, url: base, name: seo.titre, inLanguage: 'fr-FR', isPartOf: { '@id': `${base}#site` }, mainEntity: { '@id': `${base}#personne` } },
       person,
     ],
   };
-  // « < » échappé : le texte ne peut jamais fermer la balise <script> par erreur
+  // « < » échappé : le texte ne peut pas fermer la balise <script> qui le contient
   return JSON.stringify(data).replaceAll('<', '\\u003c');
 }
 
-// Plan du site : l'accueil (RémiOS, dont les écrans #/… sont dans la même
-// page) et les pages lisibles sans JavaScript (pages-statiques.js).
-// `base` : adresse publique, terminée par « / » ; `paths` : dossiers des pages.
 export function sitemapXml(base, lastmod, paths = []) {
-  const urls = ['', ...paths]
+  const urls = paths
     .map((p) => `  <url>\n    <loc>${escapeHtml(base + p)}</loc>\n    <lastmod>${lastmod}</lastmod>\n  </url>`)
     .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -94,9 +66,8 @@ ${urls}
 `;
 }
 
-// Consignes aux robots. Le CV (docs/) n'est pas proposé aux moteurs de
-// recherche : il contient un numéro de téléphone qu'il vaut mieux ne pas
-// voir dans les résultats.
+// Le dossier docs/ (CV avec numéro de téléphone, documents de TP) est écarté
+// des moteurs de recherche.
 export function robotsTxt(base) {
   const robots = ['User-agent: *', 'Allow: /', 'Disallow: /docs/'];
   if (base) robots.push('', `Sitemap: ${base}sitemap.xml`);

@@ -1,221 +1,93 @@
 /* ==========================================================================
-   Terminal caché : fenêtre noire avec barre de titre grise façon whiptail.
-   Plein écran sur mobile, pour laisser la place au clavier virtuel.
+   Terminal caché : panneau posé sur la page, même thème que le site
    ========================================================================== */
 
-.terminal {
-  width: min(900px, calc(100vw - 2 * var(--gutter)));
-  max-width: none;
-  height: min(600px, 80dvh);
-  max-height: none;
-  padding: 0;
-  border: 1px solid var(--dim);
-  background: var(--screen);
-  color: var(--text);
-  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 rgb(0 0 0 / 0.6);
+.term {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem;
+  background: rgb(11 11 11 / 0.82);
 }
 
-.terminal[open] {
+.term[hidden] {
+  display: none;
+}
+
+.term-inner {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 720px;
+  height: min(70vh, 560px);
+  padding: 1rem 1.25rem;
+  border: 1.5px solid var(--text);
+  background: var(--bg);
 }
 
-/* Voile sombre derrière la fenêtre */
-.terminal::backdrop {
-  background: rgb(0 0 0 / 0.55);
-}
-
-.terminal-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 2px 4px 2px 12px;
-  background: var(--tui-box);
-  color: var(--tui-ink);
-  --focus-ring: 2px solid var(--tui-ink);
-}
-
-.terminal-tools {
-  display: flex;
-  gap: 4px;
-}
-
-.terminal-tools button {
-  min-height: 36px;
-  padding: 2px 10px;
-  border: 0;
-  background: transparent;
-  color: var(--tui-ink);
-  cursor: pointer;
-}
-
-.terminal-tools button:hover {
-  text-decoration: underline;
-}
-
-/* Zone de texte : défile quand elle est pleine */
-.terminal-output {
+.term-out {
   flex: 1;
   overflow-y: auto;
-  padding: 10px 12px 4px;
   white-space: pre-wrap;
-  overflow-wrap: anywhere;
 }
 
-.terminal-form {
+.term-out .dim {
+  color: var(--muted);
+}
+
+.term-out .err {
+  color: #ff8a8a;
+}
+
+.term-out .warn {
+  color: #ffd27a;
+}
+
+.term-out .echo {
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+.term-line {
   display: flex;
-  gap: 1ch;
-  padding: 0 12px 10px;
+  gap: 0.6em;
+  margin-top: 0.5rem;
 }
 
-.terminal-prompt,
 .term-prompt {
-  color: var(--ok);
-  white-space: nowrap;
+  flex: none;
+  color: var(--accent);
 }
 
-.terminal-input {
+.term-input {
   flex: 1;
   min-width: 0;
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--text-bright);
-  caret-color: var(--text-bright);
+  color: var(--text);
+  font: inherit;
+  caret-color: var(--accent);
 }
 
-/* Le champ n'a pas de cadre : on souligne la ligne de saisie quand elle a le focus */
-.terminal-input:focus-visible {
+.term-input:focus {
   outline: none;
 }
 
-.terminal-form:focus-within {
-  box-shadow: inset 0 -1px 0 var(--dim);
-}
-
-/* Couleurs de la sortie des commandes */
-.term-key,
-.term-logo {
-  color: var(--info);
-}
-
-.term-dir {
-  color: var(--info);
-  font-weight: 600;
-}
-
-.term-dim {
-  color: var(--dim);
-}
-
-.term-ok {
-  color: var(--ok);
-}
-
-.term-warn {
-  color: var(--warn);
-}
-
-.term-err {
-  color: var(--err);
-}
-
-/* --- Easter egg : générique façon Star Wars (voir src/terminal/movie.js) ------
-   Le générique est dessiné dans un canvas en basse résolution, agrandi sans
-   lissage : c'est ce qui donne l'aspect pixelisé. */
-
-.terminal-movie {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+body.term-open {
   overflow: hidden;
-  background: var(--screen);
 }
 
-.movie-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  /* Agrandissement « au plus proche voisin » : chaque pixel du petit canvas
-     devient un bloc net de plusieurs pixels d'écran (crisp-edges : Firefox) */
-  image-rendering: crisp-edges;
-  image-rendering: pixelated;
-  /* Filtre de couleur : un peu plus de contraste et de saturation, comme un
-     vieux moniteur. Calculé par la carte graphique, sans coût notable. */
-  filter: contrast(1.15) saturate(1.3) brightness(1.05);
-}
-
-/* --- Effet d'écran cathodique (CRT), posé par-dessus tout le générique -------- */
-
-.movie-crt {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  overflow: hidden;
-  pointer-events: none; /* laisse passer les clics */
-  /* Lignes de balayage horizontales + coins assombris (vignettage) */
-  background:
-    repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.4) 0 1px, transparent 1px 3px),
-    radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 0.75) 100%);
-  /* Écran légèrement bombé : bords arrondis et ombre intérieure */
-  border-radius: 24px / 32px;
-  box-shadow: inset 0 0 70px rgb(0 0 0 / 0.9);
-  /* Scintillement très discret (moins de 6 % de variation) */
-  animation: crt-flicker 0.2s steps(2) infinite;
-}
-
-/* Bande lumineuse qui balaie l'écran de haut en bas */
-.movie-crt::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 18%;
-  background: linear-gradient(to bottom, transparent, rgb(255 255 255 / 0.05), transparent);
-  transform: translateY(-100%);
-  animation: crt-roll 5s linear infinite;
-}
-
-@keyframes crt-flicker {
-  50% {
-    opacity: 0.94;
-  }
-}
-
-@keyframes crt-roll {
-  to {
-    transform: translateY(560%);
-  }
-}
-
-/* Bouton pour arrêter (seul moyen sur mobile, sans touche Échap) */
-.movie-stop {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 2;
-  min-height: 36px;
-  padding: 4px 10px;
-  border: 1px solid var(--dim);
-  background: rgb(0 0 0 / 0.7);
-  color: var(--text);
-  cursor: pointer;
-}
-
-@media (max-width: 720px) {
-  .terminal {
-    width: 100vw;
-    height: 100dvh;
-    margin: 0;
-    border: 0;
-    box-shadow: none;
+@media (max-width: 560px) {
+  .term {
+    padding: 0.5rem;
   }
 
-  /* En dessous de 16px, iOS zoome sur le champ quand on le touche */
-  .terminal-input {
-    font-size: 16px;
+  .term-line {
+    flex-wrap: wrap;
+    gap: 0;
   }
 }

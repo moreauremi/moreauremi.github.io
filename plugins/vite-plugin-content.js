@@ -1,235 +1,255 @@
 // =============================================================================
-// Plugin Vite « remios-content » : transforme le Markdown en modules JavaScript
+// Plugin Vite « site-content » : fabrique les pages du site depuis content/
 // -----------------------------------------------------------------------------
-// Chaque fichier .md de content/ devient, au moment du build, un module :
+// index.html est le cadre commun de toutes les pages (balises <head>, police,
+// CSS et JavaScript). Ce plugin y insère, pour chaque page, son titre, ses
+// balises de référencement et son contenu (plugins/content/pages.js), à la
+// place du repère <!--site:body-->.
 //
-//   content/realisations/homelab.md      →  export default { meta, html }
-//   content/realisations/homelab.md?source →  export default '…texte source…'
+//   - `npm run dev` : chaque page est fabriquée à la demande, à partir des
+//     fichiers du moment ; les brouillons sont visibles, les repères
+//     [À COMPLÉTER] surlignés.
+//   - `npm run build` : toutes les pages sont écrites dans dist/, avec la
+//     politique de sécurité (CSP), le plan du site, robots.txt et les pages
+//     de redirection des anciennes adresses. Brouillons et repères retirés.
 //
-//   - meta   : le frontmatter (bloc entre --- en tête de fichier), vérifié ;
-//   - html   : le corps du fichier converti en HTML ;
-//   - source : le texte source sans commentaires, affiché par `cat` dans le
-//              terminal. Module à part : il n'est téléchargé qu'avec le
-//              terminal, à sa première ouverture.
-//
-// Une fiche marquée « brouillon: true » est visible avec `npm run dev`, mais
-// absente du site publié : au build, ses modules sont vides (null), et son
-// texte n'apparaît nulle part dans les fichiers envoyés aux visiteurs.
-//
-// Les repères [À COMPLÉTER] suivent la même logique : surlignés avec
-// `npm run dev`, retirés au build, avec les paragraphes et les sections qui
-// ne contenaient qu'eux.
-//
-// gray-matter (lecture du frontmatter) et marked (Markdown → HTML) ne tournent
-// que sur la machine qui fabrique le site : le navigateur reçoit du HTML déjà
-// prêt et n'a aucune bibliothèque à télécharger.
+// Le terminal caché reçoit son contenu par le module virtual:site-data,
+// téléchargé seulement à sa première ouverture.
 //
 // Si une fiche est mal remplie, le build s'arrête avec un message en français
 // qui indique le fichier et ce qu'il faut corriger.
-//
-// Version anglaise : content/<…>/<nom>.en.md traduit <nom>.md (voir
-// plugins/content/translation.js). Son en-tête ne contient que les champs à
-// traduire (titre, résumé…) : les autres (slug, type, date, technos,
-// compétences, brouillon…) sont repris du fichier français, pour qu'ils ne
-// puissent jamais diverger d'une langue à l'autre.
-//
-// Le plugin s'appuie sur les modules de plugins/content/ :
-//   config.js       lecture et vérification de la configuration et de la veille
-//   realisation.js  vérification d'une fiche
-//   markdown.js     conversion Markdown → HTML
-//   seo.js          référencement (titre, données structurées, sitemap, robots)
-//   pages-statiques.js  pages lisibles sans JavaScript (robots, IA) et llms.txt
-//   csp.js          politique de sécurité du contenu
-//   translation.js  fichiers .en.md et traductions de la configuration
 // =============================================================================
 
 import fs from 'node:fs';
 import path from 'node:path';
-import matter from 'gray-matter';
-import { publicBase } from '../src/utils/url.js';
-import { CONFIG_FILE, veilleFile, loadSiteConfig, checkDocuments, checkConfig, checkVeilleConfig, checkVeille } from './content/config.js';
+import { loadSite, ContentError } from './content/site.js';
+import { sitePages, redirectPages, terminalData } from './content/pages.js';
+import { headTags, structuredData, sitemapXml, robotsTxt } from './content/seo.js';
 import { contentSecurityPolicy, cspHash, inlineStyleHashes, checkNginxPolicy, NGINX_HEADERS_FILE } from './content/csp.js';
-import { renderMarkdown, stripComments, stripSourcePlaceholders } from './content/markdown.js';
-import { checkRealisation, checkImage } from './content/realisation.js';
-import { applySeo, structuredData, sitemapXml, robotsTxt } from './content/seo.js';
-import { formatErrors, toPosix } from './content/utils.js';
-import { collectPages, renderPage, redirectPage, llmsTxt, withoutMetaPlaceholders, STYLESHEET, STYLES } from './content/pages-statiques.js';
-import { isTranslation, frenchFileOf, checkTranslatedFields, checkOrphanTranslations, checkConfigTranslations } from './content/translation.js';
+import { loadSiteConfig } from './content/config.js';
+import { formatErrors } from './content/utils.js';
+import { escapeHtml } from '../src/utils/html.js';
+import { publicBase } from '../src/utils/url.js';
+
+const VIRTUAL_ID = 'virtual:site-data';
+const RESOLVED_ID = `\0${VIRTUAL_ID}`;
+const BODY_MARK = '<!--site:body-->';
+
+// Préfixe des liens internes d'une page selon sa profondeur :
+// accueil « ./ », projets/ « ../ », projets/glpi/ « ../../ »
+const prefixOf = (depth) => (depth ? '../'.repeat(depth) : './');
+
+// Liens internes écrits depuis la racine (« ./… ») → relatifs à la page
+function relocate(html, depth) {
+  if (!depth) return html;
+  return html.replace(/(\s(?:href|src)=")\.\//g, `$1${prefixOf(depth)}`);
+}
+
+// Insère une page dans le cadre (index.html)
+// `config` : adresse publique et GoatCounter, lus par src/main.js (mesure d'audience)
+function fill(shell, page, config, extraHead = '') {
+  if (!shell.includes(BODY_MARK)) throw new Error(`index.html : le repère ${BODY_MARK} est introuvable.`);
+  const attrs = [
+    `data-root="${prefixOf(page.depth)}"`,
+    `data-page="${escapeHtml(page.path)}"`,
+    config.urlPublique ? `data-site="${escapeHtml(config.urlPublique)}"` : '',
+    config.audience?.goatcounter ? `data-goatcounter="${escapeHtml(config.audience.goatcounter)}"` : '',
+  ].filter(Boolean);
+  const html = shell
+    .replace('<html lang="fr">', () => `<html lang="fr" ${attrs.join(' ')}>`)
+    .replace(/<title>[^<]*<\/title>/, () => `<title>${escapeHtml(page.title)}</title>`)
+    .replace('</head>', () => `${extraHead}\n  </head>`)
+    .replace(BODY_MARK, () => page.body);
+  return relocate(html, page.depth);
+}
+
+// Petite page qui renvoie vers la nouvelle adresse d'une ancienne page.
+// Pas de script : une balise meta refresh, et un lien pour les autres cas.
+function redirectHtml({ target, depth }, base) {
+  const href = prefixOf(depth) + target;
+  const canonical = base ? `\n    <link rel="canonical" href="${escapeHtml(base + target)}">` : '';
+  return `<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>page déplacée</title>
+    <meta name="robots" content="noindex">
+    <meta http-equiv="refresh" content="0; url=${escapeHtml(href)}">${canonical}
+  </head>
+  <body>
+    <p>cette page a changé d'adresse : <a href="${escapeHtml(href)}">${escapeHtml(href)}</a></p>
+  </body>
+</html>
+`;
+}
+
+// Balise CSP en tête de <head> ; commentaires, espaces en fin de ligne et
+// lignes vides en trop (laissées par les blocs facultatifs des gabarits) retirés
+function finalize(html, config, scriptHashes = []) {
+  const withoutComments = html
+    .replace(/\s*<!--[\s\S]*?-->/g, '')
+    .replace(/[ \t]+$/gm, '')
+    .replace(/\n{3,}/g, '\n\n');
+  const csp = contentSecurityPolicy(config, { scriptHashes, styleHashes: inlineStyleHashes(withoutComments) });
+  return withoutComments.replace(
+    /<head>/,
+    () => `<head>\n    <meta http-equiv="Content-Security-Policy" content="${csp}">\n    <meta name="referrer" content="strict-origin-when-cross-origin">`,
+  );
+}
 
 export default function contentPlugin() {
   let root = process.cwd();
   let isDev = false;
 
-  return {
-    name: 'remios-content',
+  async function load() {
+    try {
+      return await loadSite(root, { dev: isDev });
+    } catch (error) {
+      if (error instanceof ContentError) error.message = error.message.trim();
+      throw error;
+    }
+  }
 
-    // Dossier racine du projet et mode (développement ou build), fournis par Vite
+  function headFor(page, site, base) {
+    let head = `    ${headTags(page, base)}`;
+    let jsonLd = '';
+    if (page.path === '' && base) {
+      jsonLd = structuredData(site.config, base);
+      head += `\n    <script type="application/ld+json">${jsonLd}</script>`;
+    }
+    if (base && fs.existsSync(path.join(root, 'public', 'og-image.png'))) {
+      head += `\n    <meta property="og:image" content="${base}og-image.png">\n    <meta name="twitter:card" content="summary_large_image">`;
+    }
+    return { head, jsonLd };
+  }
+
+  return {
+    name: 'site-content',
+
     configResolved(config) {
       root = config.root;
       isDev = config.command === 'serve';
     },
 
-    // Au démarrage (en dev comme au build) : les fichiers déclarés dans la
-    // configuration (PDF, photo, justificatifs) doivent exister dans public/,
-    // les compétences ne peuvent renvoyer qu'à des fiches existantes, et nginx
-    // doit annoncer la même politique de sécurité que les pages.
+    // Contenu et configuration vérifiés au démarrage (dev et build), et
+    // politique de sécurité identique dans nginx et dans les pages
     async buildStart() {
-      const site = await loadSiteConfig(root);
-      const errors = [...checkDocuments(site, root), ...checkConfig(site, root), ...checkVeilleConfig(site), ...checkConfigTranslations(site)];
-      if (errors.length) this.error(formatErrors(CONFIG_FILE, errors));
-      // Chaque traduction (.en.md) a son fichier français
-      const orphans = checkOrphanTranslations(root);
-      if (orphans.length) this.error(formatErrors('content/', orphans));
-      // Actualités écrites chaque semaine par scripts/veille.mjs, une par sujet
-      for (const { id } of site.veille.sujets) {
-        const veilleErrors = checkVeille(root, id);
-        if (veilleErrors.length) this.error(formatErrors(veilleFile(id), veilleErrors));
+      try {
+        await load();
+      } catch (error) {
+        this.error(error.message);
       }
-      const headerErrors = checkNginxPolicy(site, root);
+      const config = await loadSiteConfig(root);
+      const headerErrors = checkNginxPolicy(config, root);
       if (headerErrors.length) this.error(formatErrors(NGINX_HEADERS_FILE, headerErrors));
     },
 
-    // Balises qui exigent l'adresse complète du site (aperçus de lien) : ajoutées
-    // à index.html seulement si urlPublique est renseignée dans la configuration.
-    // Ajoute aussi, au build seulement, la politique de sécurité du contenu.
-    // Référencement : titre, description et version sans JavaScript viennent
-    // de la rubrique « referencement » de la configuration.
-    // Appelé pour chaque page : index.html et les pages d'erreur (404.html…).
-    async transformIndexHtml(html, context) {
-      const tags = [];
-      const site = await loadSiteConfig(root);
-      // Le référencement ne concerne que la page du site : les pages d'erreur
-      // gardent leur propre titre et ne sont pas proposées aux moteurs.
-      const isMainPage = path.basename(context.filename) === 'index.html';
-      if (isMainPage) {
-        const published = new Set(['fr', 'en'].flatMap((lang) => collectPages(root, site, lang).map((p) => p.path)));
-        html = applySeo(html, site, (p) => published.has(p));
-      }
+    resolveId(id) {
+      return id === VIRTUAL_ID ? RESOLVED_ID : null;
+    },
 
-      // Aperçus de lien et données structurées : page du site seulement
-      const url = site.urlPublique;
-      let jsonLd = '';
-      if (isMainPage && url) {
-        if (!/^https?:\/\//.test(url)) {
-          this.error(formatErrors(CONFIG_FILE, ['« urlPublique » doit commencer par http:// ou https://']));
+    async load(id) {
+      if (id !== RESOLVED_ID) return null;
+      const site = await load();
+      return `export default ${JSON.stringify(terminalData(site))};`;
+    },
+
+    // --- Développement : pages fabriquées à la demande -------------------------
+    configureServer(server) {
+      const contentDir = path.join(root, 'content');
+      server.watcher.add(contentDir);
+      server.watcher.on('change', (file) => {
+        if (!path.resolve(file).startsWith(contentDir)) return;
+        const mod = server.moduleGraph.getModuleById(RESOLVED_ID);
+        if (mod) server.moduleGraph.invalidateModule(mod);
+        server.ws.send({ type: 'full-reload' });
+      });
+
+      server.middlewares.use(async (req, res, next) => {
+        if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+        const url = new URL(req.url, 'http://localhost');
+        let rel = decodeURIComponent(url.pathname).replace(/^\//, '');
+        if (rel === 'index.html') rel = '';
+        if (rel.endsWith('/index.html')) rel = rel.slice(0, -'index.html'.length);
+        if (rel && !rel.endsWith('/') && path.extname(rel)) return next(); // fichier (CSS, image…)
+
+        let site;
+        try {
+          site = await load();
+        } catch (error) {
+          res.statusCode = 500;
+          res.setHeader('Content-Type', 'text/html; charset=utf-8');
+          return res.end(`<pre style="white-space:pre-wrap;font:14px monospace;padding:2rem">${escapeHtml(error.message)}</pre>`);
         }
-        const base = publicBase(url);
-        const meta = (attrs) => ({ tag: 'meta', attrs, injectTo: 'head' });
-        jsonLd = structuredData(site, base);
-        tags.push(
-          { tag: 'link', attrs: { rel: 'canonical', href: base }, injectTo: 'head' },
-          meta({ property: 'og:url', content: base }),
-          meta({ property: 'og:image', content: `${base}og-image.png` }),
-          meta({ property: 'og:image:width', content: '1200' }),
-          meta({ property: 'og:image:height', content: '630' }),
-          meta({ property: 'og:image:alt', content: 'Menu principal de RémiOS, le portfolio de Rémi Moreau' }),
-          meta({ name: 'twitter:card', content: 'summary_large_image' }),
-          // Données structurées : fiche « personne » lue par les moteurs de recherche
-          { tag: 'script', attrs: { type: 'application/ld+json' }, children: jsonLd, injectTo: 'head' },
-        );
-      }
+        const base = publicBase(site.config.urlPublique);
+        const pages = sitePages(site, base);
 
-      // Au build seulement :
-      //  - les commentaires HTML (explications destinées à qui lit le code
-      //    source) sont retirés des pages publiées ;
-      //  - politique de sécurité (CSP) en balise meta : GitHub Pages ne permet
-      //    pas d'envoyer des en-têtes HTTP (la version Docker les envoie via
-      //    nginx). Pas en développement : Vite y insère des styles à la volée,
-      //    qu'une politique aussi stricte bloquerait.
-      // Les données structurées sont un bloc <script> écrit dans la page : le
-      // navigateur ne l'exécute pas, mais la CSP l'autorise quand même
-      // explicitement, par son empreinte (le validateur du W3C le demande).
-      if (!context.server) {
-        html = html.replace(/\s*<!--[\s\S]*?-->/g, '');
-        const csp = contentSecurityPolicy(site, {
-          scriptHashes: jsonLd ? [cspHash(jsonLd)] : [],
-          styleHashes: inlineStyleHashes(html),
-        });
-        tags.push(
-          { tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: csp }, injectTo: 'head-prepend' },
-          { tag: 'meta', attrs: { name: 'referrer', content: 'strict-origin-when-cross-origin' }, injectTo: 'head' },
-        );
-      }
+        if (rel && !rel.endsWith('/') && pages.some((p) => p.path === `${rel}/`)) {
+          res.statusCode = 301;
+          res.setHeader('Location', `/${rel}/${url.search}`);
+          return res.end();
+        }
+        const redirect = redirectPages(site).find((r) => r.path === rel);
+        if (redirect && !pages.some((p) => p.path === rel)) {
+          res.setHeader('Content-Type', 'text/html; charset=utf-8');
+          return res.end(redirectHtml(redirect, base));
+        }
+        const page = pages.find((p) => p.path === rel);
+        if (!page) return next();
 
-      return { html, tags };
+        try {
+          const shell = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+          const { head } = headFor(page, site, base);
+          const html = await server.transformIndexHtml(req.originalUrl ?? req.url, fill(shell, page, site.config, head));
+          res.setHeader('Content-Type', 'text/html; charset=utf-8');
+          res.end(html);
+        } catch (error) {
+          next(error);
+        }
+      });
     },
 
-    // Au build : pages lisibles sans JavaScript (une par rubrique, fiche et
-    // sujet de veille, en français et en anglais) et llms.txt, plan du site
-    // (sitemap.xml) qui les liste toutes, et consignes aux robots (robots.txt).
-    // en/index.html : adresse courte de la version anglaise (remim.me/en/),
-    // qui ouvre RémiOS en anglais.
-    async generateBundle() {
-      const site = await loadSiteConfig(root);
-      const base = publicBase(site.urlPublique);
-      const pages = [...collectPages(root, site, 'fr'), ...collectPages(root, site, 'en')];
-      for (const page of pages) {
-        this.emitFile({ type: 'asset', fileName: `${page.path}index.html`, source: renderPage(page, site, base, pages) });
-      }
-      this.emitFile({ type: 'asset', fileName: 'en/index.html', source: redirectPage(site, '#/en/') });
-      this.emitFile({ type: 'asset', fileName: STYLESHEET, source: STYLES });
-      this.emitFile({ type: 'asset', fileName: 'llms.txt', source: llmsTxt(pages, site, base) });
-      if (base) {
-        const today = new Date().toISOString().slice(0, 10);
-        this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(base, today, pages.map((p) => p.path)) });
-      }
-      this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robotsTxt(base) });
-    },
+    // --- Build : toutes les pages, à partir du cadre construit par Vite -------
+    generateBundle: {
+      order: 'post',
+      async handler(_, bundle) {
+        let site;
+        try {
+          site = await load();
+        } catch (error) {
+          this.error(error.message);
+        }
+        const { config } = site;
+        const base = publicBase(config.urlPublique);
+        const shell = bundle['index.html']?.source;
+        if (typeof shell !== 'string') this.error('index.html absent du build.');
 
-    // Appelé par Vite pour chaque fichier importé : on ne traite que les .md de content/
-    async transform(source, id) {
-      const [filePath, query = ''] = id.split('?');
-      if (!filePath.endsWith('.md')) return null;
-      const file = toPosix(path.relative(root, filePath));
-      if (!file.startsWith('content/')) return null;
+        const pages = sitePages(site, base);
+        for (const page of pages) {
+          const { head, jsonLd } = headFor(page, site, base);
+          const html = finalize(fill(shell, page, site.config, head), config, jsonLd ? [cspHash(jsonLd)] : []);
+          if (page.path === '') bundle['index.html'].source = html;
+          else this.emitFile({ type: 'asset', fileName: `${page.path}index.html`, source: html });
+        }
 
-      // Traduction : l'en-tête complet est celui du fichier français, complété
-      // par les champs traduits. La traduction suit le fichier français : si
-      // lui change (brouillon retiré…), Vite la retraite.
-      const english = isTranslation(file);
-      const frenchFile = english ? frenchFileOf(file) : file;
-      const shared = english ? readFrenchData(root, frenchFile, (f) => this.addWatchFile(f)) : {};
+        // Pages d'erreur (404, 403, 503) : même politique de sécurité
+        for (const name of ['404.html', '403.html', '503.html']) {
+          if (typeof bundle[name]?.source === 'string') bundle[name].source = finalize(bundle[name].source, config);
+        }
 
-      // Texte source pour le terminal (`cat`). Brouillon : publié seulement
-      // en développement, comme la fiche elle-même ; repères retirés au build.
-      // Fins de ligne Windows (CRLF) ramenées à LF : même texte sur tout poste.
-      if (new URLSearchParams(query).has('source')) {
-        const draft = { ...shared, ...matter(source).data }.brouillon;
-        let text = draft && !isDev ? null : stripComments(source.replace(/\r\n?/g, '\n'));
-        if (text && !isDev) text = stripSourcePlaceholders(text);
-        return { code: `export default ${JSON.stringify(text)};`, map: null };
-      }
+        const published = new Set(pages.map((p) => p.path));
+        for (const redirect of redirectPages(site)) {
+          if (published.has(redirect.path)) continue;
+          this.emitFile({ type: 'asset', fileName: `${redirect.path}index.html`, source: redirectHtml(redirect, base) });
+        }
 
-      // La vérification des compétences dépend de la configuration : si elle
-      // change, Vite doit retraiter les fiches.
-      this.addWatchFile(path.join(root, CONFIG_FILE));
-      const site = await loadSiteConfig(root);
-
-      const { data: own, content } = matter(source);
-      const errors = english ? checkTranslatedFields(own, frenchFile) : [];
-      const data = { ...shared, ...own };
-      const meta = frenchFile.startsWith('content/realisations/')
-        ? checkRealisation(data, frenchFile, site, errors)
-        : data;
-
-      const { html, images } = renderMarkdown(content, { hidePlaceholders: !isDev, lang: english ? 'en' : 'fr' });
-      for (const src of images) checkImage(src, root, errors);
-
-      if (errors.length) this.error(formatErrors(file, errors));
-
-      // Brouillon : publié seulement en développement
-      if (meta.brouillon && !isDev) return { code: 'export default null;', map: null };
-
-      const published = isDev ? meta : withoutMetaPlaceholders(meta);
-      return { code: `export default ${JSON.stringify({ meta: published, html })};`, map: null };
+        if (base) {
+          const today = new Date().toISOString().slice(0, 10);
+          const indexed = pages.filter((p) => !p.noindex).map((p) => p.path);
+          this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(base, today, indexed) });
+        }
+        this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robotsTxt(base) });
+      },
     },
   };
-}
-
-// En-tête du fichier français d'une traduction
-function readFrenchData(root, frenchFile, watch) {
-  const full = path.join(root, frenchFile);
-  watch(full);
-  if (!fs.existsSync(full)) return {};
-  return matter(fs.readFileSync(full, 'utf8')).data;
 }

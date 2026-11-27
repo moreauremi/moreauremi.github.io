@@ -3,39 +3,23 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Maintenance en cours (erreur 503) — RémiOS</title>
-    <!-- Page d'erreur : à ne pas proposer dans les résultats de recherche -->
+    <title>maintenance en cours (503) · Rémi Moreau</title>
     <meta name="robots" content="noindex">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#0b0b0b">
     <!-- Page affichée par le reverse proxy du homelab quand le portfolio est
-         arrêté (maintenance, mise à jour, panne) : elle ne peut alors rien
-         télécharger depuis le site. La page publiée doit donc tout contenir,
-         sans police ni script : la police du site est remplacée par celle,
-         à chasse fixe, du système.
-         L'icône et le style restent dans leurs propres fichiers. Les deux
+         arrêté : elle ne peut alors rien télécharger depuis le site. Les deux
          balises marquées data-inline sont remplacées par leur contenu
-         (plugins/vite-plugin-inline.js) : le style est écrit dans la page,
-         l'icône intégrée à son adresse (data:).
-         Ce style écrit dans la page est autorisé par la politique de
-         sécurité (CSP) grâce à son empreinte SHA-256, calculée au build
-         par plugins/vite-plugin-content.js. -->
+         (plugins/vite-plugin-inline.js) ; le style écrit dans la page est
+         autorisé par la CSP grâce à son empreinte SHA-256. -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" data-inline>
     <link rel="stylesheet" href="/src/styles/maintenance.css" data-inline>
   </head>
   <body>
-    <main class="console">
-      <pre class="code" aria-hidden="true">
- ____     ___    _____
-| ___|   / _ \  |___ /
-|___ \  | | | |   |_ \
- ___) | | |_| |  ___) |
-|____/   \___/  |____/</pre>
-      <h1>Erreur 503&nbsp;: service momentanément indisponible</h1>
-      <pre aria-hidden="true">[<span class="ok">  OK  </span>] Stopped <span class="unit">remios.service</span> - Portfolio RémiOS.
-[<span class="warn"> WARN </span>] <span class="unit">remios.service</span>&nbsp;: maintenance en cours, redémarrage dans quelques minutes.</pre>
-      <p>Le portfolio est en cours de maintenance ou de mise à jour. Il revient dans quelques minutes&nbsp;: merci de réessayer un peu plus tard.</p>
-      <p><a class="btn" href="">&lt; Réessayer &gt;</a></p>
-      <p aria-hidden="true"><span class="prompt">visiteur@remios:~$</span> <span class="cursor">█</span></p>
+    <main class="page">
+      <p class="brand">rémi moreau</p>
+      <h1>erreur 503 : service momentanément indisponible</h1>
+      <p>le portfolio est en maintenance ou en cours de mise à jour. il revient dans quelques minutes : merci de réessayer un peu plus tard.</p>
+      <p><a href="">réessayer</a></p>
     </main>
   </body>
 </html>

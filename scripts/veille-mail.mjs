@@ -539,8 +539,8 @@ function draftMail(state, brouillons, day, corrected = false) {
 
 function publishedMail(published) {
   const lines = published.map((p) => ({
-    text: `- ${topicName(p.sujet)} : « ${p.titre} »\n  ${SITE}/#/veille/${p.sujet}${p.commit ? `\n  (commit : ${p.commit})` : '\n  (déjà publiée)'}`,
-    html: `<li>${escapeHtml(topicName(p.sujet))} : ${link(`${SITE}/#/veille/${p.sujet}`, `« ${p.titre} »`)}${p.commit ? ` <span style="color:#6b6b6b">(${link(p.commit, 'commit')})</span>` : ' <span style="color:#6b6b6b">(déjà publiée)</span>'}</li>`,
+    text: `- ${topicName(p.sujet)} : « ${p.titre} »\n  ${SITE}/veille/#${p.sujet}${p.commit ? `\n  (commit : ${p.commit})` : '\n  (déjà publiée)'}`,
+    html: `<li>${escapeHtml(topicName(p.sujet))} : ${link(`${SITE}/veille/#${p.sujet}`, `« ${p.titre} »`)}${p.commit ? ` <span style="color:#6b6b6b">(${link(p.commit, 'commit')})</span>` : ' <span style="color:#6b6b6b">(déjà publiée)</span>'}</li>`,
   }));
   const intro = `C'est publié : le site sera à jour dans 2 à 3 minutes.`;
   const outro = `Pour modifier ou supprimer une synthèse : ${DASHBOARD}`;

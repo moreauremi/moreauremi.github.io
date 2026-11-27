@@ -2,8 +2,8 @@
 // Configuration du site et actualités de la veille : lecture et vérification
 // -----------------------------------------------------------------------------
 // Vérifié au démarrage (en dev comme au build) : les fichiers déclarés dans la
-// configuration (PDF, photo, justificatifs) doivent exister dans public/, les
-// compétences ne peuvent renvoyer qu'à des fiches existantes, les sujets de
+// configuration (PDF, justificatifs) doivent exister dans public/, les
+// formations ne peuvent renvoyer qu'à des fiches existantes, les sujets de
 // veille doivent être bien déclarés, et chaque actualité doit être complète.
 // =============================================================================
 
@@ -17,8 +17,8 @@ export const CONFIG_FILE = 'content/site.config.js';
 export const veilleFile = (id) => `content/veille/${id}/actualites.json`;
 
 const SINGLE_DATE_PATTERN = /^\d{4}(?:-\d{2}){0,2}$/;
-const CERTIFICATION_CATEGORIES = ['certification', 'langue', 'formation', 'badge'];
-const CERTIFICATION_STATUSES = ['obtenue', 'en cours'];
+const FORMATION_CATEGORIES = ['formation', 'badge'];
+const FORMATION_STATUSES = ['obtenue', 'en cours'];
 
 // Charge content/site.config.js. Le paramètre ?v= (date de modification) force
 // Node à relire le fichier quand il a changé, au lieu de garder l'ancienne version.
@@ -100,63 +100,41 @@ export function checkVeille(root, id) {
   return errors;
 }
 
-// Photo, savoir-faire et certifications
+// Formations et badges (page formations/)
 export function checkConfig(site, root) {
   const errors = [];
   const inPublic = (file) => fs.existsSync(path.join(root, 'public', file));
 
-  const photo = site.identite?.photo;
-  if (photo && !inPublic(photo)) errors.push(`« identite.photo » pointe vers public/${photo}, qui n'existe pas.`);
-
   // Slugs des fiches existantes : nom des fichiers de content/realisations/
-  // (sans les traductions, <slug>.en.md)
   const slugs = fs
     .readdirSync(path.join(root, 'content/realisations'))
-    .filter((name) => name.endsWith('.md') && !name.endsWith('.en.md'))
+    .filter((name) => name.endsWith('.md'))
     .map((name) => name.slice(0, -3));
 
-  const { niveaux = [], domaines = [] } = site.savoirFaire ?? {};
-  for (const domaine of domaines) {
-    for (const item of domaine.items ?? []) {
-      const label = `savoir-faire « ${item.nom} »`;
-      // Par pas de 0,5 : 3.5 = entre le niveau 3 et le niveau 4
-      if (item.niveau !== null && !(Number.isInteger(item.niveau * 2) && item.niveau >= 1 && item.niveau <= niveaux.length)) {
-        errors.push(`${label} : « niveau » doit être un nombre de 1 à ${niveaux.length} (demi-niveaux permis, ex. 3.5), ou null.`);
-      }
-      if (!isTextList(item.preuves ?? [])) {
-        errors.push(`${label} : « preuves » doit être une liste de slugs de fiches (ex. ['homelab']).`);
-        continue;
-      }
-      for (const slug of item.preuves ?? []) {
-        if (!slugs.includes(slug)) errors.push(`${label} : la fiche « ${slug} » n'existe pas dans content/realisations/.`);
-      }
-    }
+  for (const key of ['formation', 'alternance', 'activite', 'ville']) {
+    if (!isFilled(site.accueil?.[key])) errors.push(`« accueil.${key} » doit être un texte.`);
   }
 
-  for (const [index, certif] of (site.certifications ?? []).entries()) {
-    const label = `certification n° ${index + 1}${isFilled(certif.titre) ? ` (« ${certif.titre} »)` : ''}`;
-    if (!isFilled(certif.titre)) errors.push(`${label} : « titre » est obligatoire.`);
-    if (!isFilled(certif.organisme)) errors.push(`${label} : « organisme » est obligatoire.`);
-    if (!CERTIFICATION_CATEGORIES.includes(certif.categorie)) {
-      errors.push(`${label} : « categorie » doit valoir ${CERTIFICATION_CATEGORIES.join(', ')}.`);
+  for (const [index, item] of (site.formations ?? []).entries()) {
+    const label = `formation n° ${index + 1}${isFilled(item.titre) ? ` (« ${item.titre} »)` : ''}`;
+    if (!isFilled(item.titre)) errors.push(`${label} : « titre » est obligatoire.`);
+    if (!isFilled(item.organisme)) errors.push(`${label} : « organisme » est obligatoire.`);
+    if (!FORMATION_CATEGORIES.includes(item.categorie)) {
+      errors.push(`${label} : « categorie » doit valoir ${FORMATION_CATEGORIES.join(' ou ')}.`);
     }
-    // « statut » est facultatif : sans lui, ni « en cours » ni « obtenue » n'est affiché
-    if (certif.statut !== undefined && !CERTIFICATION_STATUSES.includes(certif.statut)) {
-      errors.push(`${label} : « statut », s'il est indiqué, doit valoir ${CERTIFICATION_STATUSES.join(' ou ')}.`);
+    if (item.statut !== undefined && !FORMATION_STATUSES.includes(item.statut)) {
+      errors.push(`${label} : « statut », s'il est indiqué, doit valoir ${FORMATION_STATUSES.join(' ou ')}.`);
     }
-    if (!SINGLE_DATE_PATTERN.test(String(certif.date ?? ''))) {
+    if (!SINGLE_DATE_PATTERN.test(String(item.date ?? ''))) {
       errors.push(`${label} : « date » doit être au format AAAA, AAAA-MM ou AAAA-MM-JJ, entre guillemets.`);
     }
-    if (certif.justificatif && !inPublic(certif.justificatif)) {
-      errors.push(`${label} : le justificatif public/${certif.justificatif} n'existe pas.`);
+    if (item.justificatif && !inPublic(item.justificatif)) {
+      errors.push(`${label} : le justificatif public/${item.justificatif} n'existe pas.`);
     }
-    if (certif.description !== undefined && !isFilled(certif.description)) {
-      errors.push(`${label} : « description », si elle est indiquée, doit être un texte non vide.`);
+    if (item.fiche !== undefined && !slugs.includes(item.fiche)) {
+      errors.push(`${label} : la fiche « ${item.fiche} » n'existe pas dans content/realisations/.`);
     }
-    if (certif.fiche !== undefined && !slugs.includes(certif.fiche)) {
-      errors.push(`${label} : la fiche « ${certif.fiche} » n'existe pas dans content/realisations/.`);
-    }
-    if (certif.lien && !/^https?:\/\//.test(certif.lien)) {
+    if (item.lien && !/^https?:\/\//.test(item.lien)) {
       errors.push(`${label} : « lien » doit commencer par http:// ou https://.`);
     }
   }

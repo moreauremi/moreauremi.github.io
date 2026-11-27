@@ -5,8 +5,8 @@ import js from '@eslint/js';
 import globals from 'globals';
 
 export default [
-  // Fichiers générés, dépendances, maquette d'origine et documents personnels
-  { ignores: ['dist/', 'node_modules/', 'reference/', 'a-integrer/'] },
+  // Fichiers générés, dépendances, documents personnels
+  { ignores: ['dist/', 'node_modules/', 'a-integrer/', 'maquettes/'] },
 
   js.configs.recommended,
 
@@ -14,10 +14,7 @@ export default [
   {
     files: ['src/**/*.js'],
     languageOptions: {
-      globals: {
-        ...globals.browser,
-        __BUILD_DATE__: 'readonly', // date du build, remplacée par Vite (vite.config.js)
-      },
+      globals: globals.browser,
     },
   },
 
