@@ -1,24 +1,21 @@
-# RémiOS — portfolio BTS SIO SISR
+# Portfolio de Rémi Moreau — BTS SIO SLAM
 
-![Menu principal de RémiOS](public/og-image.png)
+![Aperçu du portfolio : sphère de particules ASCII et carte de présentation](public/og-image.png)
 
-Portfolio de **Rémi Moreau**, étudiant en BTS SIO option SISR à MyDigitalSchool Nantes (promo 2026-2028), en alternance chez 1Life (groupe Visiativ) comme consultant ERP Open-Prod.
+Portfolio de **Rémi Moreau**, étudiant en BTS SIO option SLAM à MyDigitalSchool Nantes (promo 2026-2028), en alternance chez 1Life (groupe Visiativ) comme consultant ERP Open-Prod.
 
-**En ligne : https://remim.me** · vue rapide jury : https://remim.me/#/jury
+**En ligne : https://remim.me**
 
 **Réalisé avec [Claude Code](https://claude.com/claude-code).** Mon rôle : définir le besoin, faire les choix et tester.
 
-Le site se présente comme le démarrage d'un système Linux : écran GRUB, journal du noyau, services systemd, puis un menu façon ncurses qui donne accès aux réalisations, au tableau de synthèse et à la veille technologique. Une **vue rapide jury**, sobre et imprimable, rassemble tout le contenu sur une seule page. Le site existe en **français et en anglais** (https://remim.me/en), et a un **mode sombre**.
+Un thème « terminal minimal » : fond presque noir, une seule police à chasse fixe (IBM Plex Mono), tout en minuscules, une colonne de 720 px. L'accueil montre une sphère de particules ASCII animée et une carte de présentation ; les projets sont classés en trois sections (en formation, en entreprise, perso), chacun avec le même gabarit court. Un terminal caché permet de parcourir le site comme un système de fichiers.
 
 ## Sommaire
 
 - [Démarrer en local](#démarrer-en-local)
 - [Ce que fait le site](#ce-que-fait-le-site)
 - [Modifier le contenu](#modifier-le-contenu)
-- [Ce qui reste à compléter](#ce-qui-reste-à-compléter)
 - [Architecture](#architecture)
-- [Choix techniques](#choix-techniques)
-- [Qualité mesurée](#qualité-mesurée)
 - [Veille automatique](#veille-automatique)
 - [Veille par e-mail](#veille-par-e-mail)
 - [Tableau de bord des synthèses](#tableau-de-bord-des-synthèses)
@@ -31,362 +28,79 @@ Le site se présente comme le démarrage d'un système Linux : écran GRUB, jour
 
 Prérequis : **Node.js 22.22.2 ou 24.15 au minimum** (version conseillée : 24 LTS, indiquée dans `.nvmrc`) et **Git**. Sous Windows : `winget install OpenJS.NodeJS.LTS Git.Git`, puis rouvrir le terminal.
 
-**Garder le projet hors d'un dossier synchronisé** (iCloud Drive, OneDrive…) : la synchronisation bloque `npm install`, et les outils installés sur un PC (propres à Windows ou à macOS) écraseraient ceux de l'autre machine. Sur chaque ordinateur, on clone le dépôt dans un dossier local, puis on se synchronise avec `git pull` et `git push` :
+**Garder le projet hors d'un dossier synchronisé** (iCloud Drive, OneDrive…) : la synchronisation bloque `npm install`. Sur chaque ordinateur, cloner le dépôt dans un dossier local, puis se synchroniser avec `git pull` et `git push` :
 
 ```bash
-git clone https://github.com/moreauremi/moreauremi.github.io.git portfolio-v2
-cd portfolio-v2
+git clone https://github.com/moreauremi/moreauremi.github.io.git portfolio
+cd portfolio
 npm install      # installe les outils du projet (à faire une fois)
-npm run dev      # lance le site en local, avec rechargement automatique à chaque modification
+npm run dev      # lance le site en local, rechargé à chaque modification
 npm run build    # fabrique la version finale, 100 % statique, dans dist/
-npm run preview  # sert le contenu de dist/ pour vérifier le build avant de le déployer
+npm run preview  # sert le contenu de dist/ pour vérifier le build
 npm run lint     # vérifie le code : JavaScript (ESLint) et CSS (Stylelint)
-npm test         # teste le site construit (dist/) : HTML valide, CSP, chaque écran, terminal
+npm test         # teste le site construit (dist/) : HTML valide, CSP, liens, gabarit
 npm run check    # les trois à la suite : lint, build, test (comme avant chaque publication)
 ```
 
-`npm run dev` affiche l'adresse à ouvrir dans le navigateur (par défaut http://localhost:5173). Toute modification d'une fiche ou du code s'affiche immédiatement.
+`npm run dev` affiche l'adresse à ouvrir (par défaut http://localhost:5173). Avec `npm run dev`, les fiches en brouillon sont visibles (marquées « brouillon ») et chaque `[À COMPLÉTER]` est surligné en jaune ; le site publié n'affiche ni l'un ni l'autre.
 
 ## Ce que fait le site
 
-1. **Démarrage** (à l'arrivée sur l'accueil, 5 secondes au maximum) : GRUB, messages du noyau, services systemd détournés avec mes projets (`jellyfin.service`, `alternance@1life.service`…), connexion automatique, puis `portfolio --menu`. Le bouton « Passer le démarrage », n'importe quelle touche ou un clic l'interrompent. Si le système demande de réduire les animations, le site arrive directement sur le menu.
-2. **Menu façon whiptail** : identité façon neofetch à gauche, 9 rubriques numérotées à droite (présentation, alternance et parcours, réalisations, compétences, tableau de synthèse E5, veille, formations, certifications, CV et contact). Chaque rubrique s'ouvre dans une boîte de dialogue avec `< Retour >`. `<Redémarrer>` rejoue le démarrage. Les mentions légales sont accessibles par un lien en bas d'écran.
-3. **Fiches de réalisation** : contexte, objectifs, mise en œuvre, captures (agrandissables), résultats, difficultés, compétences du référentiel. Chaque fiche a sa propre adresse, partageable. Les technos de la fiche sont des étiquettes aux couleurs de leur marque, comme les badges des README GitHub : chacune ouvre la liste de toutes les réalisations qui l'utilisent.
-4. **Vue rapide jury** : bouton jaune en haut à droite, visible en permanence (même pendant le démarrage). Version classique, fond clair, tout sur une page, imprimable.
-5. **Terminal caché** : `remi@remios:~$`, avec historique, autocomplétion et une douzaine de commandes. Les fiches y sont des fichiers. Tout est simulé.
-6. **Sons** (coupés par défaut) : bip POST, clics de disque, bip de validation, générés par le navigateur.
-7. **Version anglaise** : bouton `EN` en haut à droite (`FR` pour revenir), lien « English version » dans la vue jury. Le même écran s'affiche dans l'autre langue, sans recharger la page. Voir [Langues](#langues).
-8. **Mode sombre** (thème « Graphite », inspiré de Linear) : suit le réglage du système ; le bouton lune / soleil en haut à droite, à droite de `EN` (bouton « Mode sombre » dans la vue jury) impose l'autre thème, et ce choix est mémorisé.
-
-### Raccourcis clavier
-
-| Touche | Effet |
+| Adresse | Contenu |
 |---|---|
-| ↑ ↓ | se déplacer dans le menu ou dans une liste de fiches |
-| Entrée | ouvrir l'élément sélectionné |
-| 1 à 8 | ouvrir directement une rubrique (depuis le menu) |
-| Échap ou Retour arrière | revenir à l'écran précédent |
-| n'importe quelle touche (sauf Tab) | passer le démarrage |
-| `` ` `` ou `²` (AZERTY PC), `Ctrl+Alt+T` (`Ctrl+Option+T` sur Mac) | ouvrir le terminal |
-| Tab, ↑ ↓, Ctrl+L, Échap | dans le terminal : compléter, historique, effacer, fermer |
+| `/` | sphère de particules ASCII (noyau dense, anneau incliné) et carte : nom, formation et alternance, activité, ville |
+| `/projets/` | trois sections : en formation, en entreprise (1Life), perso ; dans chacune, l'applicatif (dev, SQL, paramétrage ERP) avant l'infra |
+| `/projets/<fiche>/` | la fiche : même gabarit, plus documents, illustrations et mention de l'IA |
+| `/formations/` | formations suivies chez 1Life, badges |
+| `/veille/` | méthode, puis pour chaque sujet : pourquoi, mes synthèses, dernières actualités |
+| `/contact/` | e-mail, GitHub, LinkedIn, CV, formulaire |
+| `/mentions-legales/` | éditeur, hébergeur, données personnelles |
 
-Sur mobile, le terminal s'ouvre avec le bouton `[tty2]` de la barre du haut.
+**Gabarit d'une réalisation**, le même partout : titre ; une phrase de résumé (20 mots au plus) ; contexte en une ligne ; « ce que j'ai fait » en 3 puces au plus ; compétences en tags ; liens (fiche, GitHub, démo). Le build refuse une fiche qui ne le respecte pas.
 
-### Adresses
+**Terminal caché** : touche `` ` `` (ou `²` sur un clavier AZERTY), ou Ctrl+Alt+T. `help` liste les commandes (`ls`, `cd`, `cat`, `open`…), Échap ou `exit` le ferme. Son code n'est téléchargé qu'à la première ouverture.
 
-| Adresse | Écran |
-|---|---|
-| `#/` | menu principal (avec le démarrage) |
-| `#/presentation`, `#/alternance`, `#/realisations`, `#/competences`, `#/synthese`, `#/veille`, `#/formations`, `#/certifications`, `#/contact` | une rubrique |
-| `#/mentions-legales` | mentions légales |
-| `#/realisations/<slug>` | une fiche, style RémiOS (ex. `#/realisations/homelab`) |
-| `#/technos/<techno>` | les réalisations qui utilisent une techno, puis toutes les technos (ex. `#/technos/python`) |
-| `#/veille/<sujet>` | la veille, onglet de ce sujet ouvert (ex. `#/veille/intelligence-artificielle`) |
-| `#/veille/<sujet>/<tag>` | les actualités d'un sujet qui portent ce tag (ex. `#/veille/cybersecurite/rancongiciel`) ; l'ancienne forme `#/veille/<tag>` mène au premier sujet qui a ce tag |
-| `#/jury` | vue rapide jury : **le lien à donner au jury** |
-| `#/jury/<slug>` | une fiche, style sobre |
-| `#/jury/technos/<techno>` | une techno, style sobre |
-| `#/jury/veille/<tag>` | un tag de la veille, style sobre |
-| `#/jury/mentions-legales` | mentions légales, style sobre |
-| `#/message-envoye` | confirmation après l'envoi du formulaire de contact |
-| `#/en/…` | toutes les adresses ci-dessus, en anglais (ex. `#/en/`, `#/en/realisations/glpi`, `#/en/jury`) |
-| `/en/` | adresse courte de la version anglaise (`remim.me/en`) : ouvre `#/en/` |
+**Animation** : la sphère tourne à 30 images par seconde au plus, se met en pause quand l'onglet est caché ou qu'elle sort de l'écran, et reste figée si le système demande de réduire les animations (`prefers-reduced-motion`).
 
-Un lien direct vers une rubrique, une fiche ou la vue jury s'affiche sans jouer le démarrage. Les anciennes adresses `#/entreprise`, `#/formation` et `#/perso` mènent à la rubrique « Réalisations ».
+**Anciennes adresses** du site RémiOS (`#/realisations/glpi`, `/realisations/glpi/`, `#/veille/cybersecurite`…) : renvoyées vers les nouvelles pages.
 
 ## Modifier le contenu
 
-Tout le contenu est dans `content/` : aucune ligne de code à toucher.
+| Quoi | Où |
+|---|---|
+| Carte de l'accueil, contact, CV, formations et badges, mention de l'IA, sujets de veille | `content/site.config.js` |
+| Une réalisation | `content/realisations/<fiche>.md` (le gabarit est expliqué en tête de `glpi.md`) |
+| Introduction de la veille | `content/pages/veille.md` |
+| Un sujet de veille | `content/veille/<sujet>/sujet.md` (pourquoi), `syntheses.md` (mes synthèses), `actualites.json` (écrit chaque lundi) |
 
-- **Informations générales** (contact, sujet de veille, compétences du référentiel, PDF, mentions légales, services affichés au démarrage) : `content/site.config.js`, commenté ligne par ligne.
-- **Présentation, alternance et veille** : `content/pages/presentation.md`, `content/pages/alternance.md`, `content/pages/veille.md` (méthode, commune aux trois sujets de veille).
-- **Veille** : un dossier par sujet, `content/veille/<sujet>/` : `sujet.md` (pourquoi ce sujet) et `syntheses.md` (mes synthèses, à écrire de préférence depuis le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses)). Les sujets, leurs mots-clés et leurs sources sont dans `veille.sujets` de `content/site.config.js`.
-- **Photo** : déposer le portrait dans `public/photo/` (`.webp` carré, environ 400 × 400 px), puis indiquer son chemin dans `identite.photo` (`photo: 'photo/remi-moreau.webp'`).
-- **Compétences techniques** (rubrique « Compétences ») : `savoirFaire` dans `content/site.config.js`. Pour chaque compétence, un niveau de 1 à 4 (Notions, Guidé, Autonome, Maîtrise), demi-niveaux permis (`3.5` s'affiche « Entre autonome et maîtrise ») et les fiches qui la prouvent (`preuves: ['homelab']`).
-- **Formations** et **Certifications** (certifications, langues, formations, badges) : `certifications` dans `content/site.config.js`, un exemple commenté y montre tous les champs. Les entrées `categorie: 'formation'` s'affichent dans la rubrique Formations (avec leur `description` et un lien vers la `fiche` liée une fois publiée), les autres dans la rubrique Certifications. Le justificatif se dépose dans `public/docs/certifications/`. Les badges d'un même organisme sont regroupés à l'affichage : une entrée (organisme, date, nombre de badges), puis une ligne par badge avec ses liens, sans description.
-- **Couleur d'une techno** (étiquettes des fiches) : une ligne dans `src/styles/technos.css`, par exemple `.techno[data-techno="python"] { --techno-bg: #3776ab; }`. L'identifiant est le nom en minuscules, sans accents, avec des tirets (« GitHub Actions » → `github-actions`). Texte blanc par défaut ; ajouter `--techno-ink: #000000;` sur une couleur claire. `npm test` vérifie que chaque couleur se lit bien. Une techno sans ligne reste grise.
-- **Formulaire de contact** : la clé Web3Forms est dans `formulaire.cle` ; les messages arrivent à l'adresse associée à cette clé. Pour changer d'adresse, créer une nouvelle clé gratuite sur [web3forms.com](https://web3forms.com) et la remplacer. Clé vide = pas de formulaire, seul le lien e-mail est affiché. La politique de sécurité (CSP) et les mentions légales s'adaptent toutes seules.
-- **Ajouter une réalisation** : copier une fiche de `content/realisations/`, la renommer (minuscules, chiffres et tirets : `supervision-zabbix.md`), puis remplir le bloc d'en-tête :
+Règles d'écriture : minuscules, sauf noms propres et sigles ; phrases courtes ; rien d'inventé. Une information manquante s'écrit `[À COMPLÉTER : …]`. Une fiche avec `brouillon: true` n'est pas publiée.
 
-  ```yaml
-  titre: "Supervision du réseau avec Zabbix"
-  slug: supervision-zabbix        # identique au nom du fichier
-  type: entreprise                # entreprise, formation ou perso
-  date: 2026-11                   # AAAA, AAAA-MM, AAAA-MM-JJ ou période 2026-01/2026-08
-  statut: terminé
-  resume: "Une phrase qui résume la réalisation."
-  technos: [Zabbix, Debian]
-  competences: [B1.1, B1.4]       # codes définis dans site.config.js
-  brouillon: true                 # facultatif : fiche non publiée (voir ci-dessous)
-  ```
-
-  La fiche apparaît automatiquement dans sa rubrique, dans la vue jury, dans le tableau croisé et dans le terminal.
-- **Fiche en cours de rédaction** : avec `brouillon: true`, elle est visible avec `npm run dev` (marquée « brouillon, non publié ») mais absente du site en ligne : son texte n'est même pas dans les fichiers publiés. Retirer la ligne quand la fiche est prête.
-- **Captures d'écran** : déposer l'image dans `public/captures/<slug>/` (format `.webp` conseillé, plus léger), puis l'insérer dans la fiche avec `![Description de l'image](captures/<slug>/image.webp "Légende affichée")`. Dans RémiOS, chaque image s'affiche dans une fenêtre (barre de titre bleue avec le nom du fichier et « [agrandir] », ombre portée) ; la vue jury la montre sans habillage. Une capture pas encore faite se réserve avec l'image provisoire `captures/a-venir.svg` (sa légende dit ce que la capture doit montrer) : visible avec `npm run dev`, absente du site en ligne.
-- **Schémas** (architecture…) : déposer le fichier dans `public/schemas/` et l'insérer de la même façon (`![Description](schemas/schema.svg "Légende")`). Ils s'affichent dans la même fenêtre que les captures.
-- **PDF** (CV, tableau de synthèse) : déposer le fichier dans `public/docs/`, puis indiquer son chemin dans `content/site.config.js` (`cv: 'docs/cv.pdf'`).
-- **Fichier à télécharger depuis une fiche** (documentation, script) : le déposer dans `public/docs/<slug>/`, puis le lier avec le titre « Télécharger » : `[télécharger](docs/<slug>/doc.pdf "Télécharger")`. Le lien reçoit l'attribut `download` : le navigateur enregistre le fichier au lieu de l'ouvrir. Sans ce titre, un PDF s'ouvre dans un nouvel onglet.
-
-- **Version anglaise d'une fiche ou d'une page** : créer à côté du fichier français un fichier du même nom terminé par `.en.md` (`homelab.md` → `homelab.en.md` ; de même `content/pages/presentation.en.md`, `content/veille/<sujet>/sujet.en.md`). Son en-tête ne contient que les champs qui se traduisent (`titre`, `resume`, `statut`, et pour les pages `description` et `lettre`) : tout le reste (slug, type, date, technos, compétences, brouillon…) est repris du fichier français, et le build refuse une traduction qui le répéterait. Le texte, les légendes et les descriptions des images se traduisent ; les chemins des images et des PDF restent les mêmes (titre « Download » pour un lien de téléchargement). Tant qu'une traduction n'existe pas, la version anglaise affiche le texte français, avec un avertissement. Une traduction ne suit pas toute seule les modifications du français : après avoir modifié une fiche, penser à sa version anglaise.
-- **Textes de la configuration en anglais** : dans `content/site.config.js`, chaque objet peut avoir un champ `en` avec la traduction de ses textes, champ par champ (`{ code: 'B1.4', libelle: 'Travailler en mode projet', en: { libelle: 'Work in project mode' } }`). Les textes communs (neofetch, référencement, disponibilité…) sont dans le champ `en` tout en bas du fichier. Ce qui n'est pas traduit s'affiche en français ; le build signale un champ `en` qui ne correspond à aucun champ français (faute de frappe).
-
-Les textes `[À COMPLÉTER]` sont surlignés en jaune avec `npm run dev`. Le site en ligne ne les montre pas : au build, chaque repère est retiré, avec le paragraphe, l'élément de liste ou la légende qui ne contenait que lui, puis le titre d'une section restée vide (« Bilan personnel » sans texte dessous disparaît). Une techno `[À COMPLÉTER]` sort de la liste, et une information absente de la configuration (CV, photo, tableau de synthèse) n'affiche rien. Les captures provisoires (`captures/a-venir.svg`) suivent la même règle : retirées avec leur légende, puis la section « Captures d'écran » si elle ne contenait qu'elles (`test/pages-statiques.test.js` vérifie qu'aucune n'est publiée). Une fiche peut donc être publiée avant d'être finie : seul ce qui est rédigé apparaît. Si une fiche est mal remplie (type inconnu, slug différent du nom de fichier, image ou PDF introuvable, compétence inexistante…), `npm run dev` et `npm run build` s'arrêtent avec un message qui indique le fichier et la correction à faire : un site incomplet ne peut pas partir en production par erreur.
-
-## Ce qui reste à compléter
-
-Pour retrouver tous les repères : dans VS Code, `Cmd+Maj+F` puis `À COMPLÉTER`.
-
-- [x] **Présentation** : photo professionnelle, projet professionnel (attendu par les consignes de l'épreuve E5).
-- [ ] **Alternance** : présentation de 1Life, missions, outils, bilan personnel, recommandation du tuteur, dates des expériences précédentes.
-- [ ] **Réalisations 1Life** : « Environnement Open-Prod v10 » publiée (fiche `environnement-open-prod`, renommée le 4 novembre 2026 ; l'ancienne adresse `1life-realisation-1` mène à la fiche) ; « Rapports Open-Prod avec QWeb » (`rapports-qweb.md`) en brouillon, à compléter après la seconde journée de formation (fin octobre 2026) puis à publier ; « Flux de production avec sous-traitance » (`flux-production-sous-traitance.md`, présentation du 16 octobre 2026) et « Reprise de données dans Open-Prod » publiées, sans leurs captures provisoires sur le site en ligne : il reste les vraies captures, et pour le flux la préparation, les retours reçus et les difficultés. Toujours après accord du tuteur sur ce qui peut être montré (noms de clients, captures d'Open-Prod à flouter).
-- [ ] **Homelab sous Proxmox** (fiche `homelab`, qui réunit depuis le 24 octobre 2026 les anciennes fiches Homelab Jellyfin et NAS Homelab, et présente la VM de projet partagée avec les camarades de classe ; les anciennes adresses mènent à cette fiche) : **en brouillon depuis le 4 novembre 2026**, le temps de réinstaller Proxmox ; retirer `brouillon: true` pour la republier. À faire avant : détails techniques balisés `[À COMPLÉTER]` (dont ceux de la VM partagée), et les vraies captures à la place des images provisoires `a-venir.svg` (leur légende dit ce que chacune doit montrer).
-- [ ] **Crypto Dashboard Pro** : contexte, tests et difficultés balisés `[À COMPLÉTER]`.
-- [x] **dashu** (`dashu.md`, 11 novembre 2026) : fiche publiée et traduite, avec son schéma d'architecture. Les captures viennent d'une copie de dashu remplie de données de démonstration ; celle de la restauration est la sortie réelle sur le serveur. Mise à jour le 24 novembre 2026 (connecteur Claude, API complète, corbeille, installation en une commande et version 1.0.0), avec quatre captures de plus. À tenir à jour avec le STATUS.md du dépôt dashu.
-- [ ] **RMutils** : captures des menus et du QR code en place (vrai code, données d'exemple) ; reste une capture d'un rapport HTML prise sur un vrai PC Windows, et le détail des tests une fois l'outil utilisé en conditions réelles (premiers essais faits sur mon PC et des PC de proches).
-- [x] **Compétences techniques** : niveaux renseignés (octobre 2026), reliées à toutes les fiches publiées (4 novembre 2026), avec les lignes Windows, VirtualBox, réseau, PowerShell, PostgreSQL et MariaDB, MCD, Excel et GLPI tirées des fiches, puis systemd, sauvegarde et restauration, et Cloudflare tirées de la fiche dashu (11 novembre 2026, niveau « Guidé »). À remonter en cours d'année (Open-Prod, SQL, Docker…). QWeb et SQL renvoient aussi à la fiche QWeb, affichée une fois publiée.
-- [x] **Grille de compétences** : les six compétences du tableau de synthèse officiel (B1.1 à B1.6) sont dans `site.config.js`.
-- [x] **Compétences des fiches** : renseignées pour toutes les fiches publiées. B1.3 est couverte par la fiche « Portfolio RémiOS », B1.2 (incidents et demandes d'assistance) par les fiches « RMutils » et « Dépannage des serveurs Proxmox de la salle de TP » ; une fiche 1Life sur l'assistance aux utilisateurs la renforcerait.
-- [ ] **Fiche « Portfolio RémiOS »** (`content/realisations/portfolio-remios.md`) : rédigée d'après ce README, à relire.
-- [ ] **PDF** : tableau de synthèse.
-- [x] **Veille** : trois sujets (cybersécurité des PME industrielles, intelligence artificielle, facturation électronique) et collecte automatique en place (voir [Veille automatique](#veille-automatique)).
-- [x] **Jeton Copilot** : jeton GitHub « Copilot Requests » rangé dans les secrets du dépôt (`COPILOT_GITHUB_TOKEN`) ; la collecte des trois sujets fonctionne (9 octobre 2026 ; jeton recréé le 12 octobre 2026). À renouveler avant son expiration, un an après sa création (voir [Mise en route](#mise-en-route-une-seule-fois)).
-- [ ] **Synthèses de veille** : rédiger régulièrement l'onglet « Mes synthèses » de chaque sujet, depuis https://dashboard.remim.me, à partir des actualités collectées.
-- [ ] **Veille par e-mail** : créer le jeton du relais et installer le relais Gmail (voir [Veille par e-mail](#mise-en-route-du-relais-gmail-une-seule-fois)).
-- [ ] **Certifications** : celles obtenues ou en cours, avec leur justificatif. Formation QWeb ajoutée (en cours, sans attestation) : passer son statut à « obtenue » après la seconde journée. Formation « Indicateurs et tableaux de bord Open-Prod » ajoutée sans statut (ni « en cours » ni « obtenue », le champ est facultatif). Trois badges Claude Academy (Anthropic) obtenus le 16 novembre 2026 : « Claude Code 101 », « Claude Code in Action » et « Introduction to Model Context Protocol ».
-- [ ] **Version anglaise** : pages, sujets de veille et les dix fiches publiées traduits (4 novembre 2026, et dashu le 11 novembre, anglais britannique). Restent en français, signalés comme tels : les fiches en brouillon (`homelab`, `rapports-qweb`, à traduire au moment de les publier), les synthèses de veille (écrites chaque semaine en français), les actualités (sources françaises), le CV, les PDF et les schémas. À relire, et à tenir à jour à chaque modification d'une fiche française.
-- [ ] **Réalisations en formation** : « GLPI », « Réseau de six machines virtuelles sous VirtualBox » (`reseau-vm-virtualbox.md`, octobre 2026) et « Dépannage des serveurs Proxmox de la salle de TP » (`depannage-serveurs-tp.md`, 4 novembre 2026, à la place de l'ancien brouillon `formation-realisation-3.md`) publiées. Pour le dépannage, il reste le résultat du script sur POD01 et POD03, à lancer plus tard (repère `[À COMPLÉTER]`).
+Pour 1Life, rester général sur l'environnement technique : ne nommer ni machine, ni mode d'accès, ni outil ou script interne (un test le vérifie).
 
 ## Architecture
 
-### Vue d'ensemble
+Chaque page est une vraie page HTML, fabriquée au build à partir des fichiers Markdown et de la configuration. Le navigateur ne reçoit que du HTML, du CSS et un peu de JavaScript (sphère, terminal, mesure d'audience), sans bibliothèque ni ressource extérieure.
 
 ```
-content/*.md + site.config.js          (le contenu, modifiable sans code ; *.en.md : traductions)
-        │  au build : plugins/vite-plugin-content.js (gray-matter + marked)
-        ▼
-modules JavaScript { meta, html }     (fiches déjà converties en HTML)
-        │                              + texte source (?source), pour le terminal seulement
-        ▼
-src/content.js ──► src/blocks/ ──┬──► src/tui/    interface RémiOS (menu, rubriques, fiches)
-                                 ├──► src/jury/   vue rapide jury
-                                 └──► src/terminal/  (téléchargé à la première ouverture ;
-                                                      cat lit le texte source des fiches)
-
-src/main.js assemble le tout : routeur, démarrage, interface, vue jury, terminal, sons, langue, thème.
-Contenu anglais (src/content-en.js) : un fichier JavaScript à part, téléchargé à la première visite en anglais.
+content/                 le contenu (Markdown, configuration, actualités)
+index.html               cadre commun à toutes les pages (head, police, CSS, JS)
+plugins/
+  vite-plugin-content.js fabrique les pages (dev : à la demande ; build : dans dist/)
+  content/site.js        lit et vérifie tout le contenu
+  content/realisation.js vérifie une fiche (gabarit court)
+  content/pages.js       gabarits des pages
+  content/seo.js         référencement, plan du site, robots.txt
+  content/csp.js         politique de sécurité du contenu (pages et nginx)
+src/
+  main.js                JS commun : anciennes adresses, sphère, terminal, audience
+  sphere.js              sphère de particules ASCII
+  terminal/terminal.js   terminal caché (module virtual:site-data pour le contenu)
+  styles/site.css        thème
+404.html, 403.html, 503.html   pages d'erreur
+test/                    tests du site construit et des scripts de veille
 ```
 
-### Ce qui se passe quand on ouvre le site
-
-1. Le navigateur charge `index.html` (2 Ko), la police (préchargée), une feuille CSS et un fichier JavaScript. Le terminal caché (commandes, générique, textes sources des fiches) est un second fichier JavaScript, téléchargé seulement à sa première ouverture.
-2. `main.js` construit la page et affiche **tout de suite** l'écran demandé par l'URL.
-3. Si l'URL est l'accueil, le calque du démarrage est posé par-dessus le menu, qui devient « inerte » le temps du boot.
-4. Une boucle `requestAnimationFrame` déroule le planning du boot image par image ; à la fin (ou dès qu'on passe), le calque disparaît et le focus clavier arrive sur le menu.
-5. Chaque clic sur une rubrique change le hash de l'URL (`#/veille`) ; le routeur le détecte et affiche la boîte correspondante, sans recharger la page.
-
-### Organisation des fichiers
-
-```
-content/site.config.js   configuration : identité, contact, formulaire, PDF, veille, compétences,
-                         certifications, mentions légales, services du boot
-content/pages/           présentation, alternance et veille (Markdown)
-content/realisations/    une fiche Markdown par réalisation, et sa traduction anglaise (<slug>.en.md)
-content/veille/<sujet>/  un dossier par sujet de veille : pourquoi ce sujet (sujet.md), mes synthèses
-                         (syntheses.md), actualités écrites chaque semaine par le robot (actualites.json)
-scripts/veille.mjs       veille automatique : pour chaque sujet, flux RSS → choix, résumés et tags par l'IA
-                         → actualites.json
-scripts/ia.mjs           appel de l'IA (Copilot CLI ou API), commun à la veille et à la reformulation
-scripts/reformuler.mjs   reformulation d'un passage pour le tableau de bord (dashboard.remim.me)
-scripts/veille-mail.mjs  veille par e-mail : e-mail des actualités du lundi, lecture de mes réponses,
-                         synthèse mise en forme par l'IA, publication après mon « ok »
-apps-script/             relais Gmail de la veille par e-mail (Google Apps Script, copié dans mon compte Google)
-index.html               page unique : meta, Open Graph, préchargement de la police
-404.html, 403.html       pages d'erreur du serveur : adresse inconnue, accès refusé
-503.html                 page de maintenance affichée par le reverse proxy (fichier autonome)
-vite.config.js           configuration du build
-plugins/                 plugins Vite maison : Markdown → HTML au build, vérification des fiches
-                         (vite-plugin-content.js, qui s'appuie sur plugins/content/ : configuration,
-                         fiche, Markdown, référencement, CSP, traductions) ; style, icône et cadre commun recopiés
-                         dans les pages d'erreur (vite-plugin-inline.js)
-public/                  copié tel quel dans dist/ : icônes, image d'aperçu, robots.txt, captures, PDF
-src/main.js              point d'entrée : assemble les modules, clavier global
-src/app.html             structure de la page : barre fixe, interface RémiOS, vue jury, calque du boot
-src/router.js            routage par hash (#/presentation, #/realisations/homelab…)
-src/content.js           accès au contenu (configuration + fiches) pour le reste du code, dans la langue affichée
-src/content-en.js        traductions anglaises du contenu, téléchargées seulement en anglais
-src/blocks/              blocs de contenu communs à RémiOS et à la vue jury, un fichier par rubrique
-                         (index.js les rassemble)
-src/errors.js            pages d'erreur 404 et 403 : affiche l'adresse demandée
-src/error-layout.html    cadre commun des pages 404 et 403 (barre, boîte, boutons, pied de page)
-src/tui/                 interface whiptail : boîte, accueil, rubriques, fiches, visionneuse d'images
-                         (cadre de l'écran : tui.html ; visionneuse : lightbox.html)
-src/boot/                démarrage : écran GRUB (boot.html), contenu du journal, déroulement (sequence.js)
-src/jury/                vue rapide jury
-src/terminal/            terminal : fenêtre (terminal.html), commandes, système de fichiers simulé,
-                         générique de l'easter egg (movie.js, movie.html) ; seul shortcut.js (raccourcis
-                         d'ouverture) est chargé avec la page, le reste à la première ouverture
-src/audio/               sons générés avec la Web Audio API
-src/ui/                  barre fixe en haut à droite (vue jury, langue, thème, son : system-bar.html), titre de l'onglet,
-                         pagination « < 1 2 3 > », onglets
-src/utils/               petites fonctions partagées : HTML sûr, gabarits HTML, adresses, dates, clavier,
-                         animations réduites, réglages mémorisés, adresse du service du formulaire,
-                         langue (lang.js : tr('français', 'English')) et thème clair ou sombre (theme.js)
-src/styles/              un fichier CSS par partie (tokens.css = toutes les couleurs, des deux thèmes,
-                         dark.css = ce que le thème sombre change en plus des couleurs,
-                         print.css = impression, maintenance.css = page 503)
-src/assets/fonts/        IBM Plex Mono en woff2 (400 et 600) + licence OFL
-src/assets/icons/        icônes SVG des boutons son et thème (affichées dans la page, couleur du texte)
-src/assets/signature.svg signature manuscrite vectorisée, en pied de la rubrique Présentation (couleur du texte)
-test/                    tests du site construit (npm test), dans un navigateur simulé (jsdom)
-eslint.config.js,        règles de vérification du code (npm run lint) et du HTML construit (npm test)
-  stylelint.config.js,
-  .htmlvalidate.json
-.github/workflows/       publication automatique sur GitHub Pages (remim.me), veille hebdomadaire,
-                         reformulation à la demande du tableau de bord des synthèses, veille par e-mail
-Dockerfile, docker/      image Docker et configuration nginx (hébergement sur le homelab)
-docker-compose.yml       lancement du conteneur sur le homelab
-LICENSE                  licence MIT du code
-reference/               maquette validée au départ du projet (hors build) : maquette.html, .css, .js
-```
-
-**Un langage par fichier.** La structure HTML est dans des fichiers `.html`, les styles dans des `.css`, les icônes dans des `.svg`, le comportement dans des `.js`. Aucune page ne contient de style ni de script écrit dans le HTML. Les parties fixes de l'interface (cadre de l'écran, barre du haut, fenêtres du terminal et de la visionneuse, écran GRUB) ont chacune leur fichier `.html` à côté de leur module, importé avec le suffixe `?raw` de Vite ; les rares données qu'elles affichent (nom, adresse d'un lien) remplissent des emplacements `data-slot`, avec `textContent`. Seul le contenu produit à partir des données (rubriques, fiches, listes) reste fabriqué par des fonctions JavaScript (`src/blocks/`…), qui jouent le rôle d'un moteur de gabarits.
-
-## Choix techniques
-
-### Construction et contenu
-
-- **Vite + JavaScript sans framework.** Le site n'a pas besoin de React ou Vue : quelques modules JavaScript suffisent, le code reste court et facile à expliquer, et le navigateur n'a presque rien à télécharger. Vite apporte le serveur de développement (rechargement instantané) et le build optimisé : fichiers minifiés et noms de fichiers « hashés » (`index-3f9a2c.js`).
-- **Aucune dépendance au moment de l'exécution.** Vite, `gray-matter` et `marked` ne servent qu'à fabriquer le site (`devDependencies`) ; le visiteur reçoit uniquement mon code et du HTML déjà prêt.
-- **Contenu en Markdown, converti et vérifié au build.** Chaque réalisation est un fichier texte lisible. Le plugin `plugins/vite-plugin-content.js` lit l'en-tête avec `gray-matter`, convertit le texte en HTML avec `marked`, rend les images cliquables et vérifie chaque champ.
-- **Un contenu, deux habillages.** Les rubriques sont produites par `src/blocks/` (un fichier par rubrique) ; l'interface RémiOS et la vue jury les habillent différemment. Le tableau croisé réalisations × compétences est généré à partir des fiches : il est toujours à jour.
-- **Routage par hash.** Tout le site tient dans `index.html` ; la partie après `#` indique l'écran à afficher. Chaque écran a une URL partageable, Précédent/Suivant fonctionnent, et le serveur n'a besoin d'aucune règle de réécriture.
-- **Chemins relatifs (`base: './'`).** Le site fonctionne à la racine d'un domaine comme dans un sous-dossier derrière un reverse proxy, sans reconfiguration.
-
-### Interface
-
-- **Boot en calque, par-dessus le menu.** Le menu est affiché dès le chargement ; le boot est un calque posé dessus pendant 5 secondes au maximum. « Passer » retire simplement le calque. Pendant le boot, le menu est rendu « inerte » (attribut `inert`) pour que la touche Tab ne s'y perde pas.
-- **Boot seulement à l'accueil.** Un lien direct affiche la page sans attendre. Le service `veille-techno.service` passe de `[ WARN ]` à `[  OK  ]` dès qu'un sujet de veille est renseigné.
-- **Terminal entièrement simulé.** L'arborescence (`~/realisations/perso/homelab.md`…) est construite en mémoire à partir du contenu. Aucune commande n'est exécutée, rien n'est envoyé à un serveur.
-- **Easter egg du terminal.** La commande cachée `starwars` (ou `telnet towel.blinkenlights.nl`, clin d'œil au célèbre film en ASCII) joue pendant 30 secondes un générique façon Star Wars : intro, titre qui s'éloigne, texte en perspective. Le texte est une parodie originale, et la fanfare (si le son est activé) une composition originale : ni le film, ni son texte, ni sa musique, protégés par le droit d'auteur, ne sont reproduits. Rendu rétro : le générique est dessiné dans un `<canvas>` en basse résolution (un « pixel rétro » = 3 pixels d'écran), agrandi sans lissage (`image-rendering: pixelated`) pour un effet pixelisé qui reste à 60 images/s, avec un filtre CSS de contraste et une couche d'écran cathodique (lignes de balayage, coins assombris, scintillement discret). Un filtre SVG de pixelisation avait d'abord été essayé : il faisait tomber l'animation à 25 images/s. Échap, `q` ou le bouton « Arrêter » l'interrompent ; en animations réduites, le texte s'affiche simplement.
-- **Sons synthétisés.** Bip POST (oscillateur carré à 1 000 Hz), clics de disque (bruit filtré) et bip de validation sont fabriqués par la Web Audio API : aucun fichier audio. Les navigateurs interdisent le son avant une interaction : le contexte audio n'est créé qu'au premier clic ou à la première touche. Au tout premier chargement, le bip POST ne peut donc pas sonner ; il sonne sur `<Redémarrer>`, ou dès que le son est activé pendant le boot.
-- **Titre d'onglet façon invite de commande.** L'onglet affiche « RémiOS_ », et le « _ » clignote comme un curseur de terminal (toutes les 530 ms). Sur une rubrique ou une fiche, le nom de la page reste devant (« Présentation — RémiOS_ ») pour l'historique, les favoris et les lecteurs d'écran. La vue jury garde un titre fixe, et le curseur ne clignote pas si le système demande de réduire les animations.
-- **Mode sombre « Graphite », inspiré des meilleurs.** Choisi parmi des pistes inspirées de Linear, Vercel, GitHub et Apple, montrées sur des aperçus du vrai site. Il applique les principes communs à leurs thèmes sombres (et à Material Design) : la profondeur vient de la lumière (la boîte est un cran plus claire que l'écran, avec un filet, un reflet en haut et une ombre douce, car l'ombre dure de whiptail ne se voit plus sur fond sombre) ; chaque gris a un rôle (écran, boîte, filets, bords cliquables, libellés, texte) ; peu de couleur (le bleu de RémiOS pour ce qui se clique et la sélection, le rouge de whiptail seulement dans les crochets du titre) ; des couleurs calculées dans l'espace perceptif OKLCH à partir des teintes de RémiOS, comme Linear et Stripe calculent les leurs. Les couleurs sont des variables (`tokens.css`), redéfinies quand `<html>` porte `data-theme="dark"` ; le reste (relief, rôles des gris, titre) tient dans `dark.css`. La console (démarrage, terminal) est déjà noire et ne change pas. Par défaut, le site suit le réglage du système, même s'il change pendant la visite ; un choix fait sur le site est mémorisé et l'emporte. Le thème est appliqué avant le premier affichage, et aussi sur les pages 404 et 403. L'impression reste en noir sur blanc. Un test vérifie le contraste de chaque couple de couleurs dans les deux thèmes : 4,5:1 pour le texte, 3:1 pour les bords cliquables et la barre de sélection (que la première version du thème sombre ratait, à 2,1:1).
-- **Réglages mémorisés prudemment.** Les choix du son et du thème sont gardés dans `localStorage`, dont chaque accès est protégé (`try/catch`) : en navigation privée ou si le stockage est bloqué, le site fonctionne quand même.
-
-### Langues
-
-- **Le français est la langue d'origine.** Tout est d'abord écrit en français ; l'anglais suit les mêmes règles partout, et ce qui n'est pas traduit reste en français plutôt que de manquer.
-- **Une adresse, une langue.** La version anglaise reprend les mêmes adresses, précédées de `en/` (`#/en/realisations/glpi`). Changer de langue, c'est changer d'adresse : le bouton `EN`/`FR` mène au même écran dans l'autre langue, sans recharger la page, Précédent/Suivant fonctionnent, et un lien partagé s'ouvre toujours dans la langue où il a été copié. Pas de détection automatique de la langue du navigateur : le jury, qui reçoit `#/jury`, voit toujours le français.
-- **Contenu : un fichier par langue.** La traduction d'une fiche est un fichier `.en.md` à côté du français ; son en-tête ne contient que ce qui se traduit, le reste est repris du français au build, et ne peut donc jamais diverger. Un texte affiché en français dans la version anglaise porte l'attribut `lang="fr"` (bonne prononciation par les lecteurs d'écran) et un avertissement.
-- **Interface : les deux langues côte à côte dans le code.** Chaque texte de l'interface est écrit `tr('Présentation', 'About me')`, au moment de l'affichage : pas de fichier de clés à maintenir à part. Les fichiers HTML de l'interface ne gardent que les textes communs aux deux langues (« RémiOS », « [tty2] », « GNU GRUB ») : les autres sont écrits dans leurs emplacements `data-slot`.
-- **Configuration : un champ `en` par objet**, fusionné au français par `localizeConfig()` (`src/utils/lang.js`), commun au navigateur et au build.
-- **Le français ne télécharge rien de l'anglais.** Les traductions du contenu forment un fichier JavaScript à part (`content-en`, 30 Ko compressés), comme les textes anglais du terminal (`sources-en`) : seuls les visiteurs de la version anglaise les téléchargent. Les valeurs exportées par `src/content.js` sont recalculées au changement de langue (« liaisons vivantes » `export let`) : le reste du code n'a rien de spécial à faire.
-- **Anglais britannique** (« organisation », « licence », dates « 5 November 2026 »), le plus proche des usages européens.
-- **Restent en français** : les actualités de la veille (résumées chaque semaine à partir de sources françaises), les synthèses tant qu'elles n'ont pas de `syntheses.en.md`, le CV, les PDF et les schémas ; c'est indiqué au visiteur.
-
-### Pages d'erreur
-
-- **Trois pages hors de l'application**, dans le style du site : `404.html` (adresse inconnue), `403.html` (accès refusé, par exemple un dossier sans `index.html` comme `/captures/`) et `503.html` (maintenance). Une erreur *dans* le site (`#/rubrique-inconnue`) reste affichée par l'application elle-même ; ces pages couvrent les adresses que le serveur ne connaît pas, par exemple `remim.me/jury` tapé sans le `#`.
-- **404 et 403 : la boîte whiptail du menu.** Elles importent les feuilles de style du site (police, couleurs, boîte) et suivent donc toute modification du thème. Leur cadre commun (barre du haut, boîte, boutons, pied de page) est écrit une seule fois, dans `src/error-layout.html` : chaque page ne contient que son propre texte, inséré dans ce cadre au build par `plugins/vite-plugin-inline.js`. La ligne de commande simulée reprend l'adresse demandée (`bash: cd: /adresse : aucun fichier ou dossier de ce nom`) ; elle est insérée avec `textContent`, une adresse piégée ne peut donc rien injecter. Les boutons mènent au menu et à la vue jury.
-- **Valables à n'importe quelle profondeur.** Le serveur renvoie la même page pour `/a` comme pour `/a/b/c` : une balise `<base href="/">` fait partir ses liens et ses fichiers de la racine du site. Contrepartie : dans un sous-dossier (`http://192.168.1.10/portfolio/`), ces deux pages s'affichent sans mise en forme, car leurs fichiers sont cherchés à la racine du serveur. Elles retrouvent leur style dès que le site a son propre nom de domaine.
-- **503 : la console noire du démarrage, dans un fichier autonome.** Le reverse proxy l'affiche quand le conteneur est arrêté : elle ne peut alors rien télécharger depuis le site. Son style (`src/styles/maintenance.css`) et son icône (`public/favicon.svg`) restent dans leurs propres fichiers ; le plugin `plugins/vite-plugin-inline.js` les recopie dans la page publiée (style écrit dans la page, icône intégrée à son adresse `data:`), en développement comme au build. Elle utilise la police à chasse fixe du système. Pour ne pas affaiblir la CSP avec `'unsafe-inline'`, le build calcule l'empreinte SHA-256 de ce style et l'ajoute à la CSP de la page : ce style précis est autorisé, aucun autre.
-- **Qui les affiche.** GitHub Pages sert de lui-même `404.html` pour toute adresse inconnue (il ne permet pas de personnaliser les autres erreurs). Dans le conteneur, nginx sert la 403 et la 404 (`error_page`), sans cache, et jamais en accès direct (`internal`). La 503 se branche sur le reverse proxy (voir « Page de maintenance » dans la partie homelab).
-- **Aperçu** : `npm run dev`, puis http://localhost:5173/404.html (ou `403.html`, `503.html`).
-- **Vérifié** (site construit, servi comme par GitHub Pages et avec les en-têtes de nginx, dans un navigateur piloté par script) : bon code HTTP pour chaque page, aucune ressource bloquée par la CSP, police chargée même à une adresse profonde, aucun défilement horizontal à 320 px. Les fichiers du site principal (`index-*.js`, `index-*.css`) sont identiques à l'octet près : il n'est pas modifié.
-
-### Accessibilité
-
-- **Vrais éléments HTML.** Rubriques et fiches sont des liens `<a>`, les actions des `<button>` : souris, tactile, clavier et lecteurs d'écran fonctionnent sans code spécial.
-- **Focus maîtrisé.** Contour de focus visible (adapté à chaque fond), focus placé sur le titre de chaque boîte ouverte, zone `aria-live` qui annonce la rubrique ouverte et la fin du démarrage.
-- **Vue jury en un clic.** Bouton visible en permanence et premier élément atteint avec Tab, ou adresse directe `#/jury`.
-- **Visionneuse et terminal en `<dialog>` natif.** Le navigateur gère le piège du focus, la touche Échap et le retour du focus à la fermeture.
-- **Réduction des animations respectée.** Pas de boot, pas de transition si le système le demande.
-- **Contrastes AA** (au moins 4,5:1) pour tous les textes, dans les deux thèmes (vérifié par un test), tailles en `rem` (le site suit l'agrandissement du texte du navigateur).
-- **Langue annoncée.** `<html lang>` suit la langue affichée ; un texte resté en français dans la version anglaise porte `lang="fr"`, et le bouton `EN` est lu en anglais.
-
-### Performance
-
-- **Boot à 60 images/s, sans décalage de mise en page.** Une seule boucle `requestAnimationFrame` traite à chaque image les lignes dont l'heure est venue. L'écran du journal est une grille fixe de lignes, créées une seule fois : pour faire défiler, on réécrit seulement leur texte. Aucun élément n'est ajouté ni déplacé, donc aucun « décalage de mise en page » (CLS passé de 0,44 à 0 grâce à ce choix). Le seul effet animé, le curseur clignotant, n'utilise que l'opacité. À la fin, pas de fondu : l'écran bascule d'un coup sur le menu, comme un vrai système.
-- **Police auto-hébergée et préchargée.** IBM Plex Mono est servie par le site lui-même : pas de Google Fonts, donc fonctionnement hors ligne et aucune donnée de visite transmise à un tiers. Seuls le sous-ensemble latin et deux graisses sont embarqués (≈ 30 Ko).
-- **Terminal téléchargé à la demande.** Le terminal caché (commandes, système de fichiers simulé, générique, textes sources des fiches pour `cat`) est un fichier JavaScript à part, chargé par `import()` à sa première ouverture. Le JavaScript chargé à l'ouverture du site passe de 36,1 à 27,8 Ko compressés (−23 %).
-- **Rien d'inutile dans les pages publiées.** Les consignes de rédaction des fiches (commentaires `<!-- … -->` du Markdown) et les commentaires des pages HTML sont retirés au build ; les données structurées sont écrites sur une seule ligne.
-- **Cache long.** Les fichiers hashés sont gardés un an par le navigateur ; `index.html` n'est jamais mis en cache, donc une nouvelle version est visible immédiatement.
-
-### Référencement
-
-- **Tout vient de la configuration.** Le titre et la description de la page, les données structurées, le plan du site (`sitemap.xml`), le `robots.txt` et la version sans JavaScript sont générés au build à partir de la rubrique `referencement` de `content/site.config.js`.
-- **Pages statiques en anglais.** Les mêmes pages existent sous `/en/` (`/en/realisations/glpi/`…) pour chaque texte traduit, avec `<html lang="en">`. Chaque page indique sa version dans l'autre langue (balises `hreflang`, français par défaut), pour que Google propose la bonne selon la langue de recherche ; toutes sont dans `sitemap.xml`, et `llms.txt` a une partie « English version ». Les adresses en `#/en/` de RémiOS ne sont pas indexables (Google ignore ce qui suit `#`) : ce sont ces pages qui portent le référencement en anglais.
-- **Pages lisibles sans JavaScript, pour les IA et les moteurs.** Les robots des IA (ChatGPT, Claude, Perplexity…) n'exécutent pas JavaScript : sur l'accueil, ils ne voient que le titre et la version sans JavaScript. Au build, `plugins/content/pages-statiques.js` fabrique donc, à partir des **mêmes fichiers Markdown** que RémiOS, une vraie page HTML par rubrique (`/presentation/`, `/alternance/`, `/realisations/`, `/veille/`), par fiche publiée (`/realisations/<slug>/`) et par sujet de veille (`/veille/<sujet>/`, avec mes synthèses), plus un `llms.txt` (résumé du site et liens, format llmstxt.org). Toutes sont dans `sitemap.xml`, et la version sans JavaScript de l'accueil renvoie vers elles. Rien à écrire à la main : modifier un Markdown met à jour RémiOS et ces pages au build suivant ; elles n'existent que dans `dist/`. Mêmes règles que RémiOS : pas de page pour une fiche en brouillon, repères [À COMPLÉTER] retirés. Un lien en haut de chaque page ouvre le même écran dans RémiOS ; pas de redirection automatique, sinon Google n'indexerait pas la page. `test/pages-statiques.test.js` vérifie tout ça sur le site construit.
-- **Données structurées schema.org** (JSON-LD) : une fiche « personne » lue par les moteurs de recherche, avec le nom, le poste, l'entreprise, l'école, la ville, et les liens GitHub et LinkedIn. C'est ce qui aide Google à associer « Rémi Moreau » à ce site.
-- **Titre de l'onglet** : « RémiOS_ — Rémi Moreau · Portfolio BTS SIO SISR ». L'onglet affiche « RémiOS_ » avec son curseur clignotant, et les moteurs lisent le nom et les mots-clés qui suivent.
-- **Le CV n'est pas proposé aux moteurs** (`Disallow: /docs/` dans `robots.txt`), pour éviter que le numéro de téléphone apparaisse dans les résultats de recherche. Il reste téléchargeable depuis le site.
-- **Icône dans les résultats de Google** : Google demande une image carrée de 48 px ou d'un multiple de 48, et va chercher `/favicon.ico` par défaut. Le site déclare donc, en plus de `favicon.svg` (onglets), `favicon.ico` (16, 32 et 48 px) et `favicon-192.png`, rendus à partir du même dessin. Google met à jour l'icône à son propre rythme, de quelques jours à quelques semaines ; pour accélérer : [Google Search Console](https://search.google.com/search-console), **Inspection de l'URL** → `https://remim.me/` → **Demander une indexation**. Pour changer d'icône : modifier `favicon.svg`, puis refaire les trois images (au même nom, aux mêmes tailles).
-- **Déclarer le site aux moteurs** (une fois) : [Google Search Console](https://search.google.com/search-console) (Gemini s'appuie sur l'index de Google) et [Bing Webmaster Tools](https://www.bing.com/webmasters) (la recherche de ChatGPT s'appuie surtout sur Bing ; l'import depuis Google Search Console évite de tout refaire). Dans chacun : ajouter `https://remim.me/`, puis **Sitemaps** → `https://remim.me/sitemap.xml`.
-
-### Sécurité
-
-- **Site 100 % statique** : pas de base de données, pas de code exécuté sur le serveur. La surface d'attaque se limite à nginx.
-- **Formulaire de contact sans serveur** : un formulaire HTML classique, envoyé directement au service Web3Forms qui transfère le message par e-mail sans le conserver. Le site ne reçoit ni ne stocke aucune donnée. La CSP n'autorise l'envoi de formulaires que vers le site lui-même et ce service (`form-action`), et seulement quand le formulaire est activé. Les mentions légales détaillent alors le traitement des données (RGPD).
-- **Mentions légales** (`#/mentions-legales`) : éditeur, hébergeur, propriété intellectuelle, crédits, données personnelles, mesure d'audience. Le site ne dépose aucun cookie : pas de bandeau de consentement nécessaire.
-- **Mesure d'audience sans script extérieur** : voir [Mesure d'audience](#mesure-daudience). La CSP n'autorise les requêtes (`connect-src`, `img-src`) que vers le site lui-même et le point de comptage de GoatCounter, et seulement quand la mesure est activée.
-- **Aucune injection possible.** Ce que tape le visiteur dans le terminal est affiché avec `textContent`, jamais interprété comme du HTML. Les textes de la configuration sont échappés avant affichage.
-- **CSP stricte** (`script-src 'self'`) : le navigateur refuse tout script externe ou injecté. Possible parce que le site n'a aucun script ni style écrit dans le HTML. Deux exceptions, autorisées chacune par son empreinte SHA-256 calculée au build, et non par `'unsafe-inline'` : les données structurées (un bloc JSON que le navigateur n'exécute pas, mais que le validateur du W3C demande d'autoriser) et le style de la page de maintenance (503), qui doit tenir dans un seul fichier. Sur GitHub Pages, qui ne permet pas d'envoyer des en-têtes HTTP, elle est ajoutée au build dans une balise `<meta>` ; la version Docker l'envoie en plus dans les en-têtes nginx. Les deux viennent de la même définition (`plugins/content/csp.js`) : si `docker/security-headers.conf` ne correspond plus (par exemple après avoir retiré le formulaire de contact), le build s'arrête et indique la ligne à écrire.
-- **HTTPS** : certificat fourni et renouvelé automatiquement par GitHub Pages.
-- **Historique protégé** : une règle du dépôt (*Settings → Rules → Rulesets*, « Protéger main (historique) ») interdit sur `main` la réécriture de l'historique (`git push --force`) et la suppression de la branche, pour tout le monde, propriétaire compris. Si le jeton du tableau de bord était volé, ses modifications resteraient visibles et annulables. Les envois normaux (VS Code, tableau de bord, collecte du lundi) ne changent pas. Pour réécrire l'historique une fois, par exemple pour retirer un secret envoyé par erreur : désactiver la règle le temps de l'opération.
-- **Conteneur durci** : image multi-stage (aucun outil de build dans l'image finale), système de fichiers en lecture seule, pas d'élévation de privilèges, version de nginx masquée, en-têtes de sécurité (anti-clickjacking, nosniff, Referrer-Policy, Permissions-Policy).
-- **Liens externes** ouverts avec `rel="noopener noreferrer"` : la page ouverte ne peut pas agir sur le portfolio.
-
-### Mesure d'audience
-
-- **GoatCounter** (gratuit pour un site personnel, open source) compte les écrans consultés : `#/`, `#/veille/intelligence-artificielle`, `#/realisations/glpi`, `#/jury`… Statistiques sur https://remim.goatcounter.com et dans le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses).
-- **Sans le script de GoatCounter** : `src/utils/audience.js` envoie lui-même une requête par écran affiché (`navigator.sendBeacon`, comme le script officiel), avec seulement la page, le site d'origine à l'arrivée et la largeur de l'écran. Le site garde sa règle « aucun script extérieur », et son poids ne change pas.
-- **Rien n'est compté** en dehors de https://remim.me (développement, tests, homelab), pour un navigateur piloté par un programme (tests, robots), ni quand le navigateur demande à ne pas être suivi (Do Not Track, Global Privacy Control).
-- **Ne pas compter ses propres visites** : ouvrir une fois https://remim.me/#toggle-goatcounter sur chaque appareil (Mac, téléphone). Un message confirme ; la même adresse réactive le comptage.
-- **Réglage** : `audience.goatcounter` dans `content/site.config.js`. Vide = aucune mesure : la CSP, la ligne nginx (vérifiée au build) et les mentions légales s'adaptent toutes seules.
-
-## Qualité mesurée
-
-Audit Lighthouse 13 sur le build (`npm run build` puis `npm run preview`), le 24 septembre 2026 :
-
-| Page | Performance | Accessibilité | Bonnes pratiques | SEO |
-|---|---|---|---|---|
-| Accueil (mobile) | 100 | 100 | 100 | 100 |
-| Accueil (ordinateur) | 100 | 100 | 100 | 100 |
-| Vue jury (mobile) | 100 | 100 | 100 | 100 |
-| Fiche de réalisation (mobile) | 100 | 100 | 100 | 100 |
-
-Même audit sur le site en ligne, **https://remim.me** (GitHub Pages), le 26 septembre 2026 : **100 / 100 / 100 / 100** sur mobile et sur ordinateur (plus grand élément affiché en 1,2 s sur mobile, 0,4 s sur ordinateur, aucun décalage de mise en page).
-
-Accueil mobile : premier affichage 1,1 s, plus grand élément affiché 1,2 s, aucun blocage du navigateur (TBT 0 ms), aucun décalage de mise en page (CLS 0). Poids total de la page : 53 Ko.
-
-Pendant la construction, chaque étape a aussi été testée dans un navigateur piloté par script (navigation au clavier, démarrage, terminal, sons, impression, mobile) et avec axe-core (règles d'accessibilité WCAG 2.2 AA) sur chaque écran : aucune erreur, et aucune page ne défile horizontalement, même sur un écran de 320 px. La politique de sécurité (CSP) a été vérifiée en servant le site avec les mêmes en-têtes que nginx : aucune ressource bloquée.
-
-**Mise à jour du 6 octobre 2026** (rubriques attendues pour l'épreuve E5) :
-
-- **Poids** : la page d'accueil passe de 61,2 à 65,9 Ko, mesurés de la même façon avant et après (fichiers réellement chargés, compressés en gzip comme les sert GitHub Pages). Le JavaScript gagne 4 Ko, le CSS 0,7 Ko. Le chiffre de 53 Ko ci-dessus vient de Lighthouse, qui compte autrement : les deux mesures ne se comparent pas entre elles.
-- **Mobile** : 16 écrans (toutes les rubriques, mentions légales, fiches, vue jury) testés à 320 et 390 px de large dans un navigateur piloté par script : aucun défilement horizontal. Sur petit écran, le tableau des compétences devient une liste de fiches.
-- **Clavier et terminal** : touches 1 à 8, Échap, nouvelles commandes (`cat competences.txt`, `open mentions-legales`) vérifiés.
-- **Sécurité** : site construit testé avec sa CSP, aucune erreur JavaScript ni ressource bloquée. Formulaire de contact testé de bout en bout : le message arrive bien par e-mail.
-- **Lighthouse** : audit à refaire après la mise en ligne.
-
-Pour refaire l'audit : ouvrir le site dans Chrome, outils de développement (F12), onglet **Lighthouse**.
-
-**Vérifications automatiques** (`npm run check`, et à chaque publication avant la mise en ligne) :
-
-- `npm run lint` : ESLint (JavaScript) et Stylelint (CSS), avec leurs règles « recommandées », qui signalent les vraies erreurs (variable non définie, propriété CSS inconnue…) et non les questions de style ;
-- `npm test` : html-validate sur les pages construites, puis 8 tests du site construit exécuté dans un navigateur simulé (jsdom) : chaque bloc écrit dans une page autorisé par sa CSP, aucun commentaire publié, page 503 autonome, chaque rubrique et chaque fiche (RémiOS et vue jury), sommaire de la vue jury, adresses inconnues ou mal encodées, terminal téléchargé à la demande et ses commandes. Les tests ne dépendent pas du texte des fiches : on peut modifier le contenu sans les toucher.
-
-**Mise à jour du 7 octobre 2026** (séparation des langages, optimisation) : poids de l'accueil, compressé en gzip comme le sert GitHub Pages (HTML, CSS, JavaScript et les deux polices), de 74,4 à 65,5 Ko, dont JavaScript de 36,1 à 27,8 Ko. Avant/après comparé écran par écran (34 écrans et états, terminal compris) : contenu identique, sauf l'adresse mal encodée `#/%E9`, qui affiche désormais l'écran d'erreur au lieu de laisser une page vide.
-
-**Mise à jour du 4 novembre 2026** (version anglaise, mode sombre) :
-
-- **Poids** (fichiers compressés en gzip) : le JavaScript principal passe de 79,7 à 86,3 Ko (+6,6 Ko : les textes anglais de l'interface et la gestion des langues), le CSS de 7,3 à 7,7 Ko. Un visiteur de la version française ne télécharge rien d'autre. La version anglaise ajoute 30 Ko (traductions du contenu), le terminal en anglais 27,5 Ko (textes sources anglais). Le site reste un seul fichier JavaScript principal.
-- **Tests** : 44 au total (`npm test`), dont neuf nouveaux : chaque rubrique et chaque fiche en anglais, dans RémiOS et la vue jury, avec des liens qui restent en anglais ; bascule de langue sur le même écran ; rien de l'anglais téléchargé par la version française ; terminal en anglais ; mode sombre (RémiOS, vue jury, choix mémorisé) ; contraste de chaque couple de couleurs dans les deux thèmes (texte 4,5:1, bords et barre de sélection 3:1) ; pages statiques anglaises et leurs `hreflang` ; en-tête des traductions.
-- **Mobile** : la largeur réservée à la barre fixe (vue jury, langue, son) est calculée pour laisser « RémiOS [tty2] » sur une ligne dès 360 px de large ; la version de RémiOS n'est plus affichée sous 720 px.
-- **Mode sombre** : remplacé le même jour par le thème « Graphite », choisi sur des aperçus du vrai site (pistes inspirées de Linear, Vercel, GitHub et Apple).
-- **À refaire** : audit Lighthouse.
-
-**Validation HTML (W3C)** : les pages construites (`index.html`, `404.html`, `403.html`, `503.html`) passent le [Nu Html Checker](https://validator.w3.org/nu/) sans erreur ni avertissement (6 octobre 2026). Pour vérifier le site en ligne : https://validator.w3.org/nu/?doc=https://remim.me/
+Les liens internes sont relatifs (`../projets/`) : le site fonctionne à la racine d'un domaine comme dans un sous-dossier (version Docker). Une politique de sécurité stricte (CSP) n'autorise que les fichiers du site ; elle est identique dans les pages et dans `docker/security-headers.conf` (le build vérifie les deux).
 
 ## Veille automatique
 
@@ -402,8 +116,7 @@ GitHub Actions ──►  flux RSS du sujet, articles ──►  choisit les plu
 - **Trois sujets**, collectés au même moment, l'un après l'autre : **Cybersécurité** (la cybersécurité des PME industrielles, 13 sources dont le CERT-FR), **Intelligence artificielle** (usages, risques et encadrement de l'IA en entreprise, 11 sources dont ActuIA et la CNIL) et **Facturation électronique** (la réforme 2026-2027, 13 sources dont la FNFE-MPE, Service-public.fr et DAF Magazine). IOPOLE n'a pas de flux RSS : ses actualités sont captées par mot-clé dans les autres sources.
 - `.github/workflows/veille.yml` lance `scripts/veille.mjs` chaque lundi vers 7 h, puis enregistre les fichiers d'actualités dans le dépôt et relance la publication du site. Un sujet en échec (IA indisponible…) n'empêche pas les autres d'être enregistrés. La première collecte d'un nouveau sujet remonte à 30 jours au lieu de 10, pour démarrer avec du contenu.
 - Le sujet, les mots-clés, les tags proposés, les sources et le modèle d'IA se règlent dans `content/site.config.js`, rubrique `veille`.
-- La rubrique « Veille technologique » a un onglet par sujet. Dans chacun : le sujet, pourquoi je l'ai choisi, puis deux onglets au même niveau, **Mes synthèses** (affiché d'abord ; texte personnel, dans `content/veille/<sujet>/syntheses.md`, écrit depuis le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses) ou à la main) et **Dernières actualités**, et enfin les sources suivies. Changer d'onglet ne change pas d'adresse et ne fait rien défiler (au clavier : ← et → sur les onglets) ; `#/veille/<sujet>` ouvre directement l'onglet d'un sujet.
-- L'onglet « Dernières actualités » affiche toutes les actualités, de la plus récente à la plus ancienne, 3 par page : la barre `< 1 2 3 >` sous la liste change de page sur place, sans changer d'adresse ni faire défiler l'écran (au clavier : Tab jusqu'à la barre, puis ← et →). Suivent la liste des tags du sujet. Un clic sur un tag (`#/veille/<sujet>/<tag>`) affiche toutes les actualités du sujet qui le portent, depuis le début de la veille, paginées de la même façon ; « < Retour > » ramène à l'onglet du sujet.
+- La page `veille/` a une section par sujet : pourquoi je l'ai choisi, **mes synthèses** (texte personnel, dans `content/veille/<sujet>/syntheses.md`, écrit depuis le [tableau de bord des synthèses](#tableau-de-bord-des-synthèses) ou à la main), puis les **5 dernières actualités**. `veille/#<sujet>` mène directement à un sujet.
 
 ### Choix et garde-fous
 
@@ -503,7 +216,7 @@ Les e-mails partent de mon propre compte, expéditeur « RémiOS veille » : ils
 
 ## Tableau de bord des synthèses
 
-Un tableau de bord privé, **https://dashboard.remim.me**, pilote le portfolio. Sa **vue d'ensemble** montre l'état de chaque veille (dernière synthèse, actualités à traiter, dernière collecte), le résultat de la dernière publication et de la dernière collecte, et les visites du site. Sa vue **Synthèses** sert à écrire l'onglet « Mes synthèses » de chaque sujet : choix du sujet, liste, ajout, modification, suppression, aperçu, actualités à citer en sources, et **Reformuler avec l'IA** sur un passage sélectionné. Chaque enregistrement est un commit de `content/veille/<sujet>/syntheses.md` sur `main`, qui republie le site. Le code de la page, sa mise en route (DNS, jeton) et ses choix de sécurité sont dans son propre dépôt : [moreauremi/veille-syntheses](https://github.com/moreauremi/veille-syntheses).
+Un tableau de bord privé, **https://dashboard.remim.me**, pilote le portfolio. Sa **vue d'ensemble** montre l'état de chaque veille (dernière synthèse, actualités à traiter, dernière collecte), le résultat de la dernière publication et de la dernière collecte, et les visites du site. Sa vue **Synthèses** sert à écrire les synthèses de chaque sujet : choix du sujet, liste, ajout, modification, suppression, aperçu, actualités à citer en sources, et **Reformuler avec l'IA** sur un passage sélectionné. Chaque enregistrement est un commit de `content/veille/<sujet>/syntheses.md` sur `main`, qui republie le site. Le code de la page, sa mise en route (DNS, jeton) et ses choix de sécurité sont dans son propre dépôt : [moreauremi/veille-syntheses](https://github.com/moreauremi/veille-syntheses).
 
 La page est statique (GitHub Pages) et n'a pas de serveur pour appeler l'IA. La reformulation passe donc par un workflow de **ce** dépôt, qui réutilise l'IA et le secret de la veille :
 
@@ -565,7 +278,7 @@ Le projet est déjà relié au dépôt GitHub (`git remote -v` affiche `origin`)
 - **dans VS Code** : onglet **Contrôle de code source** (icône des branches), bouton **Synchroniser les modifications** ou **Publier la branche** ; VS Code demande de se connecter à GitHub la première fois ;
 - **ou dans un terminal** : `git push -u origin main`.
 
-Suivre la publication dans l'onglet **Actions** du dépôt (1 à 2 minutes), puis ouvrir https://remim.me. Le lien à donner au jury : **https://remim.me/#/jury**.
+Suivre la publication dans l'onglet **Actions** du dépôt (1 à 2 minutes), puis ouvrir https://remim.me. Le lien à donner au jury : **https://remim.me**.
 
 Le dépôt est public : le code, le README et le CV sont visibles sur GitHub, comme ils le sont déjà sur le site. Le dossier `a-integrer/` (documents de travail) est exclu de git et n'est jamais publié.
 
@@ -757,7 +470,7 @@ ssh remi@homelab "cd ~/remios-portfolio && docker compose up -d --build && docke
 Le projet a été construit en 12 étapes, une par commit git (`git log --oneline` pour les voir) :
 
 1. Initialisation du projet (Vite, git, configuration de base)
-2. Police auto-hébergée et thème RémiOS
+2. Police auto-hébergée et thème RémiOS (remplacé à l'étape 19)
 3. Contenu en Markdown et fiches d'exemple
 4. Menu principal et navigation
 5. Fiches de réalisation et visionneuse d'images
@@ -777,6 +490,7 @@ Puis, après la construction :
 16. Grille officielle du tableau de synthèse E5, veille automatique (actualités résumées chaque semaine par l'IA, tags, onglets), niveaux de compétence (demi-niveaux permis)
 17. Un langage par fichier (HTML, CSS, SVG et JavaScript séparés), terminal téléchargé à la demande, découpage du code par rubrique, vérifications et tests automatiques avant chaque publication
 18. Veille par e-mail : actualités du lundi reçues par e-mail, synthèse écrite en y répondant, mise en forme par l'IA, publiée après validation (relais Gmail en Google Apps Script)
+19. Refonte « terminal minimal » (passage en option SLAM) : une vraie page HTML par rubrique et par fiche, gabarit court commun à toutes les réalisations, sphère de particules ASCII, terminal caché réécrit ; fin du démarrage façon Linux, du menu ncurses, de la vue jury et de la version anglaise
 
 ## Crédits et licences
 
@@ -784,4 +498,4 @@ Puis, après la construction :
 - **Contenu** (textes de `content/`, CV, photos, captures d'écran) : © Rémi Moreau, tous droits réservés. La licence MIT ne s'y applique pas.
 - **IBM Plex Mono** : © IBM Corp., licence SIL Open Font License 1.1 (`src/assets/fonts/OFL.txt`).
 - Outils de build (non envoyés aux visiteurs) : [Vite](https://vite.dev), [marked](https://marked.js.org), [gray-matter](https://github.com/jonschlinkert/gray-matter), tous sous licence MIT.
-- Outils de vérification (non envoyés aux visiteurs) : [ESLint](https://eslint.org), [Stylelint](https://stylelint.io), [html-validate](https://html-validate.org), [jsdom](https://github.com/jsdom/jsdom), tous sous licence MIT.
+- Outils de vérification (non envoyés aux visiteurs) : [ESLint](https://eslint.org), [Stylelint](https://stylelint.io) et [html-validate](https://html-validate.org), tous sous licence MIT.

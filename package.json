@@ -1,8 +1,8 @@
 {
-  "name": "remios-portfolio",
+  "name": "portfolio-remi-moreau",
   "private": true,
   "version": "0.1.0",
-  "description": "RémiOS — portfolio BTS SIO SISR de Rémi Moreau, façon démarrage Linux",
+  "description": "Portfolio BTS SIO SLAM de Rémi Moreau : site statique généré depuis des fichiers Markdown",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -10,7 +10,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . && stylelint \"src/**/*.css\"",
-    "test": "html-validate \"dist/*.html\" && node --experimental-vm-modules --disable-warning=ExperimentalWarning --test \"test/*.test.js\"",
+    "test": "html-validate \"dist/**/*.html\" && node --test \"test/*.test.js\"",
     "check": "npm run lint && npm run build && npm test",
     "veille": "node scripts/veille.mjs"
   },
@@ -23,7 +23,6 @@
     "globals": "^17.13.0",
     "gray-matter": "^4.0.3",
     "html-validate": "^11.16.2",
-    "jsdom": "^30.1.2",
     "marked": "^18.0.14",
     "stylelint": "^17.16.0",
     "stylelint-config-recommended": "^18.0.0",
